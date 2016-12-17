@@ -2,36 +2,28 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="**\*.cs" />
     <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.App">
-      <Version>1.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Sdk">
-      <Version>1.0.0-alpha-20161104-2</Version>
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk">
-      <Version>15.0.0-preview-20161123-03</Version>
-    </PackageReference>
-    <PackageReference Include="MSTest.TestAdapter">
-      <Version>1.1.6-preview</Version>
-    </PackageReference>
-    <PackageReference Include="MSTest.TestFramework">
-      <Version>1.0.7-preview</Version>
-    </PackageReference>
-    <PackageReference Include="prayzzz.Common">
-      <Version>1.0.0-ci-18</Version>
-    </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.App" Version="1.1.0" />
+    <PackageReference Include="Microsoft.NET.Sdk" Version="1.0.0-alpha-20161104-2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20161216-01" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.1.6-preview" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.0.7-preview" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-21" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
+    <ProjectReference Include="..\..\src\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
     <ProjectReference Include="..\..\src\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
+    <ProjectReference Include="..\prayzzz.Common.Test\prayzzz.Common.Test.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\Loaders\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

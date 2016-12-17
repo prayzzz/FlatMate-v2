@@ -1,6 +1,7 @@
 ﻿using System;
-using FlatMate.Module.Account.Domain.Entities;
-using FlatMate.Module.Lists.Domain.Entities;
+using FlatMate.Module.Account.Dtos;
+using FlatMate.Module.Common.Domain.Entities;
+using FlatMate.Module.Lists.Domain.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using prayzzz.Common.Result;
 
@@ -10,12 +11,34 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
     public class ItemTest
     {
         [TestMethod]
+        public void Test_Constructor_For_Existing_Item()
+        {
+            const int id = 1;
+            const string name = "MyItem";
+            var owner = new UserDto();
+
+            var itemList = ItemList.Create("MyList", owner).Data;
+            var itemGroup = ItemGroup.Create("MyGroup", owner, itemList).Data;
+            var item = Item.Create(id, name, owner, itemGroup).Data;
+
+            Assert.IsNotNull(item);
+            Assert.AreEqual(id, item.Id);
+            Assert.IsTrue(item.IsSaved);
+            Assert.AreSame(name, item.Name);
+            Assert.AreSame(owner, item.Owner);
+            Assert.IsTrue(item.CreationDate > DateTime.Now.AddSeconds(-1));
+            Assert.IsTrue(item.ModifiedDate > DateTime.Now.AddSeconds(-1));
+        }
+
+        [TestMethod]
         public void Test_Constructor_For_New_Item()
         {
             const string name = "MyItem";
-            var owner = new User();
+            var owner = new UserDto();
 
-            var item = new Item(name, owner);
+            var itemList = ItemList.Create("MyList", owner).Data;
+            var itemGroup = ItemGroup.Create("MyGroup", owner, itemList).Data;
+            var item = Item.Create(name, owner, itemGroup).Data;
 
             Assert.IsNotNull(item);
             Assert.AreEqual(Entity.DefaultId, item.Id);
@@ -26,40 +49,18 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         }
 
         [TestMethod]
-        public void Test_Constructor_For_Existing_Item()
-        {
-            const int id = 1;
-            const string name = "MyItem";
-            var owner = new User();
-            var creationDate = DateTime.Now.AddDays(-1);
-            var modifiedDate = DateTime.Now;
-
-            var item = new Item(id, name, owner, creationDate, modifiedDate);
-
-            Assert.IsNotNull(item);
-            Assert.AreEqual(id, item.Id);
-            Assert.IsTrue(item.IsSaved);
-            Assert.AreSame(name, item.Name);
-            Assert.AreSame(owner, item.Owner);
-            Assert.AreEqual(creationDate, item.CreationDate);
-            Assert.AreEqual(modifiedDate, item.ModifiedDate);
-        }
-
-        [TestMethod]
-        public void Test_Constructor_Invalid_Id()
-        {
-            const int id = -1;
-
-            Assert.ThrowsException<ArgumentException>(() => new Item(id, "MyItem", new User(), DateTime.Now, DateTime.Now));
-        }
-
-        [TestMethod]
         public void Test_Constructor_Invalid_Name_Empty()
         {
             const string name = "";
 
-            Assert.ThrowsException<ArgumentException>(() => new Item(name, new User()));
-            Assert.ThrowsException<ArgumentException>(() => new Item(1, name, new User(), DateTime.Now, DateTime.Now));
+            var itemList = ItemList.Create("MyList", new UserDto()).Data;
+            var itemGroup = ItemGroup.Create("MyGroup", new UserDto(), itemList).Data;
+
+            var result1 = Item.Create(name, new UserDto(), itemGroup);
+            Assert.IsInstanceOfType(result1, typeof(ErrorResult<Item>));
+
+            var result2 = Item.Create(1, name, new UserDto(), itemGroup);
+            Assert.IsInstanceOfType(result2, typeof(ErrorResult<Item>));
         }
 
         [TestMethod]
@@ -67,17 +68,14 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const string name = null;
 
-            Assert.ThrowsException<ArgumentException>(() => new Item(name, new User()));
-            Assert.ThrowsException<ArgumentException>(() => new Item(1, name, new User(), DateTime.Now, DateTime.Now));
-        }
+            var itemList = ItemList.Create("MyList", new UserDto()).Data;
+            var itemGroup = ItemGroup.Create("MyGroup", new UserDto(), itemList).Data;
 
-        [TestMethod]
-        public void Test_Constructor_Invalid_User()
-        {
-            User owner = null;
+            var result1 = Item.Create(name, new UserDto(), itemGroup);
+            Assert.IsInstanceOfType(result1, typeof(ErrorResult<Item>));
 
-            Assert.ThrowsException<ArgumentNullException>(() => new Item("MyItem", owner));
-            Assert.ThrowsException<ArgumentNullException>(() => new Item(1, "MyItem", owner, DateTime.Now, DateTime.Now));
+            var result2 = Item.Create(1, name, new UserDto(), itemGroup);
+            Assert.IsInstanceOfType(result2, typeof(ErrorResult<Item>));
         }
 
         [TestMethod]
@@ -85,17 +83,17 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const string initialName = "MyItem";
             const string newName = "MyAwesomeItem";
-            var modifiedDate = DateTime.Now.AddMinutes(-1);
 
-            var item = new Item(1, initialName, new User(), DateTime.Now, modifiedDate);
+            var itemList = ItemList.Create("MyList", new UserDto()).Data;
+            var itemGroup = ItemGroup.Create("MyGroup", new UserDto(), itemList).Data;
 
+            var item = Item.Create(1, initialName, new UserDto(), itemGroup).Data;
             Assert.AreSame(initialName, item.Name);
 
             var result = item.Rename(newName);
 
             Assert.IsInstanceOfType(result, typeof(SuccessResult));
             Assert.AreSame(newName, item.Name);
-            Assert.IsTrue(item.ModifiedDate > modifiedDate);
         }
     }
 }

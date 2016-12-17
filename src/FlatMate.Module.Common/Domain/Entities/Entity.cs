@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FlatMate.Module.Lists.Domain.Entities
+﻿namespace FlatMate.Module.Common.Domain.Entities
 {
     public abstract class Entity
     {
@@ -8,11 +6,6 @@ namespace FlatMate.Module.Lists.Domain.Entities
 
         protected Entity(int id)
         {
-            if (id != DefaultId && id < 0)
-            {
-                throw new ArgumentException($"{nameof(id)} must not be lower then 0.", nameof(id));
-            }
-
             Id = id;
         }
 
