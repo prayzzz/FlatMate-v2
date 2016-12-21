@@ -22,8 +22,5 @@
     <ProjectReference Include="..\..\src\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
     <ProjectReference Include="..\prayzzz.Common.Test\prayzzz.Common.Test.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\Loaders\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

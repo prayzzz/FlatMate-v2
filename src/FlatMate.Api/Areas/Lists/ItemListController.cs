@@ -2,6 +2,7 @@
 using FlatMate.Module.Lists.Domain.ApplicationServices;
 using FlatMate.Module.Lists.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using prayzzz.Common.Mapping;
 using prayzzz.Common.Result;
 
 namespace FlatMate.Api.Areas.Lists
@@ -10,10 +11,12 @@ namespace FlatMate.Api.Areas.Lists
     public class ItemListController : Controller
     {
         private readonly IItemListService _itemListService;
+        private readonly IMapper _mapper;
 
-        public ItemListController(IItemListService itemListService)
+        public ItemListController(IItemListService itemListService, IMapper mapper)
         {
             _itemListService = itemListService;
+            _mapper = mapper;
         }
 
         [HttpPost]

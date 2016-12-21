@@ -9,7 +9,7 @@ namespace FlatMate.Module.Account.Dtos
 
         public DateTime CreationDate { get; set; }
 
-        public string EMail { get; set; }
+        public string Email { get; set; }
 
         public string UserName { get; set; }
     }

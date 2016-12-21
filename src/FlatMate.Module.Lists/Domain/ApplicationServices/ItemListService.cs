@@ -45,7 +45,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 
         public Result<ItemListDto> Create(ItemListUpdateDto updateDto)
         {
-            if (CurrentUser == _userService.Anonymous)
+            if (_authenticationContext.IsAnonymous)
             {
                 return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
             }
@@ -68,20 +68,20 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 
         public Result Delete(int id)
         {
-            if (CurrentUser == _userService.Anonymous)
+            if (_authenticationContext.IsAnonymous)
             {
-                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
+                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
             }
 
             var getResult = _itemListRepository.GetById(id);
             if (!getResult.IsSuccess)
             {
-                return new ErrorResult<ItemList>(getResult);
+                return new ErrorResult(getResult);
             }
 
             if (!_authorizationService.CanDelete(getResult.Data))
             {
-                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
+                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
             }
 
             return _itemListRepository.Delete(id);
@@ -106,7 +106,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 
         public Result<ItemListDto> Update(int id, ItemListUpdateDto updateDto)
         {
-            if (CurrentUser == _userService.Anonymous)
+            if (_authenticationContext.IsAnonymous)
             {
                 return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
             }
