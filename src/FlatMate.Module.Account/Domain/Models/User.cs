@@ -6,26 +6,26 @@ namespace FlatMate.Module.Account.Domain.Models
 {
     internal class User : Entity
     {
-        private User(int id, string userName, string email, DateTime creationDate)
+        private User(int id, string userName, string email)
             : base(id)
         {
-            CreationDate = creationDate;
-            EMail = email;
+            CreationDate = DateTime.Now;
+            Email = email;
             UserName = userName;
         }
 
-        public DateTime CreationDate { get; }
+        public DateTime CreationDate { get; set; }
 
-        public string EMail { get; }
+        public string Email { get; }
 
         public string UserName { get; }
 
         internal static Result<User> Create(string userName, string email)
         {
-            return Create(DefaultId, userName, email, DateTime.Now);
+            return Create(DefaultId, userName, email);
         }
 
-        internal static Result<User> Create(int id, string userName, string email, DateTime creationDate)
+        internal static Result<User> Create(int id, string userName, string email)
         {
             #region Validation
 
@@ -35,7 +35,7 @@ namespace FlatMate.Module.Account.Domain.Models
                 return new ErrorResult<User>(result);
             }
 
-            result = ValidateEmail(userName);
+            result = ValidateEmail(email);
             if (!result.IsSuccess)
             {
                 return new ErrorResult<User>(result);
@@ -43,7 +43,7 @@ namespace FlatMate.Module.Account.Domain.Models
 
             #endregion
 
-            return new SuccessResult<User>(new User(id, userName, email, creationDate));
+            return new SuccessResult<User>(new User(id, userName, email));
         }
 
         private static Result ValidateEmail(string email)

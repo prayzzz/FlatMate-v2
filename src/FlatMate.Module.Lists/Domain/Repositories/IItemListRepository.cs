@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using FlatMate.Module.Lists.Dtos;
+using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Result;
 
 namespace FlatMate.Module.Lists.Domain.Repositories
@@ -13,5 +13,7 @@ namespace FlatMate.Module.Lists.Domain.Repositories
         Result<ItemListDto> GetById(int id);
 
         Result<ItemListDto> Save(ItemListDto dto);
+
+        Result<ItemGroupDto> Save(ItemGroupDto dto);
     }
 }

@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Api.Extensions;
 using FlatMate.Api.Filter;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
@@ -20,9 +23,33 @@ namespace FlatMate.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseSwagger();
-                //app.UseSwaggerUi();
             }
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "FlatMate",
+                LoginPath = new PathString("/Account/Login/"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                ClaimsIssuer = "FlatMate",
+                SlidingExpiration = true,
+                Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = context =>
+                    {
+                        if (context.Request.Path.StartsWithSegments("/api/v1"))
+                        {
+                            context.Response.StatusCode = 401;
+                        }
+                        else
+                        {
+                            context.Response.Redirect(context.RedirectUri);
+                        }
+
+                        return Task.FromResult(0);
+                    }
+                }
+            });
 
             app.UseMvc();
         }
@@ -30,8 +57,6 @@ namespace FlatMate.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)));
-
-            //services.AddSwaggerGen();
 
             var builder = new ContainerBuilder();
             builder.Populate(services);

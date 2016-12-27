@@ -1,6 +1,6 @@
 ﻿using FlatMate.Module.Common.Dtos;
 
-namespace FlatMate.Module.Account.Dtos
+namespace FlatMate.Module.Account.Shared.Dtos
 {
     public class OwnedDto : DtoBase
     {

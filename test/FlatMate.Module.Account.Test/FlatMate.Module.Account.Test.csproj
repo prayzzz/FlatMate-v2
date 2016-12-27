@@ -18,7 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
     <ProjectReference Include="..\..\src\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
-    <ProjectReference Include="..\..\src\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
     <ProjectReference Include="..\prayzzz.Common.Test\prayzzz.Common.Test.csproj" />
     <ProjectReference Include="..\..\..\prayzzz.Common\src\prayzzz.Common\prayzzz.Common.csproj" />
   </ItemGroup>

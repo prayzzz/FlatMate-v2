@@ -1,5 +1,5 @@
 ﻿using FlatMate.Module.Account.Domain;
-using FlatMate.Module.Account.Dtos;
+using FlatMate.Module.Account.Shared.Dtos;
 using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Lists.Domain.Services

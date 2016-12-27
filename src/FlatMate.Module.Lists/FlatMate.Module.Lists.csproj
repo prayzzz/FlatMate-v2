@@ -1,8 +1,7 @@
 ﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <PropertyGroup Label="Configuration">
-    <SignAssembly>
-    </SignAssembly>
+    <SignAssembly />
   </PropertyGroup>
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
@@ -19,11 +18,9 @@
       <Version>1.0.0-alpha-20161104-2</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="prayzzz.Common">
-      <Version>1.0.0-ci-21</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\prayzzz.Common\src\prayzzz.Common\prayzzz.Common.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
   </ItemGroup>

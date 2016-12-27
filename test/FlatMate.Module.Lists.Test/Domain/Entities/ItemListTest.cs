@@ -1,5 +1,5 @@
 using System;
-using FlatMate.Module.Account.Dtos;
+using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Common.Domain.Entities;
 using FlatMate.Module.Lists.Domain.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

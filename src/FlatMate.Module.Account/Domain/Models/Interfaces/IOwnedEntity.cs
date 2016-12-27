@@ -1,4 +1,4 @@
-﻿using FlatMate.Module.Account.Dtos;
+﻿using FlatMate.Module.Account.Shared.Dtos;
 
 namespace FlatMate.Module.Account.Domain.Models.Interfaces
 {

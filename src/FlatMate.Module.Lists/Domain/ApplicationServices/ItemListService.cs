@@ -2,26 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using FlatMate.Module.Account.Domain;
-using FlatMate.Module.Account.Domain.ApplicationServices;
-using FlatMate.Module.Account.Dtos;
+using FlatMate.Module.Account.Shared.Dtos;
+using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using FlatMate.Module.Lists.Domain.Services;
-using FlatMate.Module.Lists.Dtos;
+using FlatMate.Module.Lists.Shared.Dtos;
+using FlatMate.Module.Lists.Shared.Interfaces;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Result;
 
 namespace FlatMate.Module.Lists.Domain.ApplicationServices
 {
-    public interface IItemListService
-    {
-        Result<ItemListDto> Create(ItemListUpdateDto updateDto);
-        Result Delete(int id);
-        IEnumerable<ItemListDto> GetAll();
-        Result<ItemListDto> GetById(int id);
-        Result<ItemListDto> Update(int id, ItemListUpdateDto updateDto);
-    }
-
     [Inject]
     public class ItemListService : IItemListService
     {
@@ -47,7 +39,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
         {
             if (_authenticationContext.IsAnonymous)
             {
-                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
+                return ErrorResult<ItemListDto>.Unauthorized;
             }
 
             var createResult = ItemList.Create(updateDto.Name, CurrentUser);
@@ -64,6 +56,30 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             }
 
             return Save(itemList);
+        }
+
+        public Result<ItemGroupDto> Create(int listId, ItemGroupUpdateDto updateDto)
+        {
+            if (_authenticationContext.IsAnonymous)
+            {
+                return ErrorResult<ItemGroupDto>.Unauthorized;
+            }
+
+            var getList = GetList(listId);
+            if (!getList.IsSuccess)
+            {
+                return new ErrorResult<ItemGroupDto>(getList);
+            }
+
+            var itemList = getList.Data;
+
+            var addGroup = itemList.AddGroup(updateDto.Name, CurrentUser);
+            if (!addGroup.IsSuccess)
+            {
+                return new ErrorResult<ItemGroupDto>(addGroup);
+            }
+
+            return Save(addGroup.Data);
         }
 
         public Result Delete(int id)
@@ -127,12 +143,28 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return Save(itemList);
         }
 
-        public ItemListDto ModelToDto(ItemList model)
+        private ItemListDto ModelToDto(ItemList model)
         {
             return new ItemListDto
             {
                 CreationDate = model.CreationDate,
                 Description = model.Description,
+                Id = model.Id,
+                IsPublic = model.IsPublic,
+                LastEditor = model.LastEditor,
+                LastEditorId = model.LastEditor.Id,
+                ModifiedDate = model.ModifiedDate,
+                Name = model.Name,
+                Owner = model.Owner,
+                OwnerId = model.Owner.Id
+            };
+        }
+
+        private ItemGroupDto ModelToDto(ItemGroup model)
+        {
+            return new ItemGroupDto
+            {
+                CreationDate = model.CreationDate,
                 Id = model.Id,
                 IsPublic = model.IsPublic,
                 LastEditor = model.LastEditor,
@@ -199,15 +231,25 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 
             if (!_authorizationService.CanRead(getResult.Data))
             {
-                return new ErrorResult<ItemList>(ErrorType.Unauthorized, "Unauthorized");
+                return ErrorResult<ItemList>.Unauthorized;
             }
 
             return DtoToModel(getResult.Data);
         }
 
-        private Result<ItemListDto> Save(ItemList itemList)
+        private Result<ItemListDto> Save(ItemList model)
         {
-            var dto = ModelToDto(itemList);
+            var dto = ModelToDto(model);
+
+            dto.ModifiedDate = DateTime.Now;
+            dto.LastEditorId = CurrentUser.Id;
+
+            return _itemListRepository.Save(dto);
+        }
+
+        private Result<ItemGroupDto> Save(ItemGroup model)
+        {
+            var dto = ModelToDto(model);
 
             dto.ModifiedDate = DateTime.Now;
             dto.LastEditorId = CurrentUser.Id;

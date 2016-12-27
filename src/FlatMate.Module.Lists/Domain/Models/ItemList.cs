@@ -1,12 +1,12 @@
 ﻿using System;
 using FlatMate.Module.Account.Domain.Models.Interfaces;
-using FlatMate.Module.Account.Dtos;
+using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Common.Domain.Entities;
 using prayzzz.Common.Result;
 
 namespace FlatMate.Module.Lists.Domain.Models
 {
-    public class ItemList : Entity, IOwnedEntity
+    internal class ItemList : Entity, IOwnedEntity
     {
         /// <summary>
         /// Constructs an <see cref="ItemList"/>

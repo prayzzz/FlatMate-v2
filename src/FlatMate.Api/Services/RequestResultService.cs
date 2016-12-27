@@ -4,7 +4,7 @@ using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
 using prayzzz.Common.Result;
 
-namespace FlatMate.Web.Services
+namespace FlatMate.Api.Services
 {
     public interface IRequestResultService
     {

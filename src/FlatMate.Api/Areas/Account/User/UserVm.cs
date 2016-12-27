@@ -1,14 +1,18 @@
-﻿using System;
-
-namespace FlatMate.Api.Areas.Account.User
+﻿namespace FlatMate.Api.Areas.Account.User
 {
     public class UserVm
     {
-        public int Id { get; set; }
-        
-        public DateTime CreationDate { get; set; }
-
         public string Email { get; set; }
+        public int Id { get; set; }
+
+        public string UserName { get; set; }
+    }
+
+    public class CreateUserVm
+    {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
 
         public string UserName { get; set; }
     }

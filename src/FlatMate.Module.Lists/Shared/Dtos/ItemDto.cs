@@ -1,6 +1,6 @@
-﻿using FlatMate.Module.Account.Dtos;
+﻿using FlatMate.Module.Account.Shared.Dtos;
 
-namespace FlatMate.Module.Lists.Dtos
+namespace FlatMate.Module.Lists.Shared.Dtos
 {
     public class ItemDto : OwnedDto
     {

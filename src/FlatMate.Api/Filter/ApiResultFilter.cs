@@ -1,4 +1,4 @@
-﻿using FlatMate.Web.Services;
+﻿using FlatMate.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using prayzzz.Common.Attributes;
