@@ -13,11 +13,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.0" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-22" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
-    <ProjectReference Include="..\..\..\prayzzz.Common\src\prayzzz.Common\prayzzz.Common.csproj" />
   </ItemGroup>
 </Project>

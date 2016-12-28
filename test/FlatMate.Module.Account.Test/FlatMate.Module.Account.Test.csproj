@@ -14,12 +14,13 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20161216-01" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.8-rc" />
     <PackageReference Include="MSTest.TestFramework" Version="1.0.8-rc" />
+            <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-22" />
+
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
     <ProjectReference Include="..\..\src\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
     <ProjectReference Include="..\prayzzz.Common.Test\prayzzz.Common.Test.csproj" />
-    <ProjectReference Include="..\..\..\prayzzz.Common\src\prayzzz.Common\prayzzz.Common.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

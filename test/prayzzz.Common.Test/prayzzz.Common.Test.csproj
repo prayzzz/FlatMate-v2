@@ -10,5 +10,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.0" />
     <PackageReference Include="Moq" Version="4.6.38-alpha" />
     <PackageReference Include="NETStandard.Library" Version="1.6.1" />
+
   </ItemGroup>
 </Project>
