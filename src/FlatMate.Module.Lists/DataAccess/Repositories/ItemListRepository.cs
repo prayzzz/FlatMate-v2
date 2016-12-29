@@ -11,13 +11,15 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
     [Inject(DependencyLifetime.Singleton)]
     public class ItemListRepository : IItemListRepository
     {
-        private readonly Dictionary<int, ItemListDto> _lists;
         private readonly Dictionary<int, ItemGroupDto> _groups;
+        private readonly Dictionary<int, ItemDto> _items;
+        private readonly Dictionary<int, ItemListDto> _lists;
 
         public ItemListRepository()
         {
             _lists = new Dictionary<int, ItemListDto>();
             _groups = new Dictionary<int, ItemGroupDto>();
+            _items = new Dictionary<int, ItemDto>();
         }
 
         public Result Delete(int id)
@@ -36,7 +38,17 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
             return _lists.Values;
         }
 
-        public Result<ItemListDto> GetById(int id)
+        public Result<ItemGroupDto> GetGroup(int id)
+        {
+            if (_groups.TryGetValue(id, out var group))
+            {
+                return new SuccessResult<ItemGroupDto>(group);
+            }
+
+            return new ErrorResult<ItemGroupDto>(ErrorType.NotFound, "Not Found");
+        }
+
+        public Result<ItemListDto> GetList(int id)
         {
             if (_lists.TryGetValue(id, out var list))
             {
@@ -75,7 +87,7 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
             }
 
             var id = 1;
-            if (_lists.Count > 0)
+            if (_groups.Count > 0)
             {
                 id = _groups.Last().Key + 1;
             }
@@ -84,6 +96,26 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
             _groups.Add(id, dto);
 
             return new SuccessResult<ItemGroupDto>(dto);
+        }
+
+        public Result<ItemDto> Save(ItemDto dto)
+        {
+            if (dto.IsSaved)
+            {
+                _items[dto.Id] = dto;
+                return new SuccessResult<ItemDto>(dto);
+            }
+
+            var id = 1;
+            if (_items.Count > 0)
+            {
+                id = _items.Last().Key + 1;
+            }
+
+            dto.Id = id;
+            _items.Add(id, dto);
+
+            return new SuccessResult<ItemDto>(dto);
         }
     }
 }

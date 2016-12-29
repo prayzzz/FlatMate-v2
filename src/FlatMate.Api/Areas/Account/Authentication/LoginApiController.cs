@@ -9,26 +9,26 @@ using prayzzz.Common.Result;
 
 namespace FlatMate.Api.Areas.Account.Authentication
 {
-    [Route("api/v1/account/[controller]")]
-    public class LoginController : Controller
+    [Route("api/v1/account/login")]
+    public class LoginApiController : Controller
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public LoginController(IUserService userService, IMapper mapper)
+        public LoginApiController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<Result<UserVm>> LoginAsync([FromBody] LoginVm loginVm)
+        public async Task<Result<UserJso>> LoginAsync([FromBody] LoginJso loginJso)
         {
-            var result = _userService.Authorize(loginVm.UserName, loginVm.Password).WithDataAs(dto => _mapper.Map<UserVm>(dto));
+            var result = _userService.Authorize(loginJso.UserName, loginJso.Password).WithDataAs(dto => _mapper.Map<UserJso>(dto));
 
             if (!result.IsSuccess)
             {
-                return new ErrorResult<UserVm>(ErrorType.Unauthorized, "Unauthorized");
+                return new ErrorResult<UserJso>(ErrorType.Unauthorized, "Unauthorized");
             }
 
             var user = result.Data;
@@ -40,7 +40,7 @@ namespace FlatMate.Api.Areas.Account.Authentication
             var principal = new ClaimsPrincipal();
             principal.AddIdentity(identity);
 
-            await HttpContext.Authentication.SignInAsync("FlatMate", principal, new AuthenticationProperties { IsPersistent = true });
+            await HttpContext.Authentication.SignInAsync("FlatMate", principal, new AuthenticationProperties {IsPersistent = true});
 
             return result;
         }

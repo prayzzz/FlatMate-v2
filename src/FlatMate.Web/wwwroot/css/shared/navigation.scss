@@ -1,0 +1,108 @@
+﻿@import "../colors.scss";
+@import "../sizes.scss";
+
+$nav-width: 20em;
+$nav-width-small: 15em;
+
+$icon-burger-size: 32px;
+
+/* large devices */
+@media all and (min-width: 1201px) {
+    nav {
+        width: $nav-width;
+    }
+
+    #menu-checkbox:not(:checked) ~ main {
+        margin-left: $nav-width;
+        width: calc(100% - #{$nav-width});
+    }
+
+    #menu-checkbox:checked ~ main {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* medium devices */
+@media all and (max-width: 1200px) {
+    nav {
+        width: $nav-width-small;
+    }
+
+    #menu-checkbox:not(:checked) ~ main {
+        margin-left: 0;
+    }
+
+    #menu-checkbox:checked ~ main {
+        margin-left: $nav-width-small;
+    }
+}
+
+nav {
+    height: 100vh;
+    position: fixed;
+    overflow: hidden;
+    background-color: $color-background;
+    border-right: 1px solid $color-border;
+    box-shadow: 0 0 5px $color-border;
+    z-index: 1;
+
+    .title {
+        display: block;
+        margin-top: 1rem;
+        font-weight: 300;
+        margin-left: calc(#{$icon-burger-size} + 1em);
+        line-height: $icon-burger-size;
+        font-size: $icon-burger-size;
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        list-style: none;
+        margin: 0;
+        border-bottom: $border-thickness solid $color-border;
+
+        a {
+            width: 100%;
+            height: 100%;
+            display: block;
+            padding: 10px;
+            color: $color-font;
+
+            &:hover {
+                color: #fff;
+                background-color: $color-primary;
+                transition: all linear .2s;
+            }
+        }
+    }
+}
+
+#menu-checkbox {
+    display: none;
+}
+
+.menu-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    cursor: pointer;
+    margin: 0;
+    z-index: 200;
+
+    input {
+        display: none;
+    }
+}
+
+nav + main {
+    padding-top: calc(2rem + #{$icon-burger-size});
+    padding-bottom: calc(2rem + #{$icon-burger-size});
+    transition: margin-left .25s ease-out, width .25s ease-out;
+}

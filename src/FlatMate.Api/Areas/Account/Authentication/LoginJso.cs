@@ -1,6 +1,6 @@
 ﻿namespace FlatMate.Api.Areas.Account.Authentication
 {
-    public class LoginVm
+    public class LoginJso
     {
         public string Password { get; set; }
 

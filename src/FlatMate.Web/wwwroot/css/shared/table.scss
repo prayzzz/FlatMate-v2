@@ -1,0 +1,68 @@
+﻿@import '../colors.scss';
+
+th, td {
+    &.centered {
+        text-align: center;
+    }
+
+    &.icon {
+        width: 32px;
+        padding: 0;
+        text-align: center;
+    }
+
+    &.show-large {
+        display: none;
+    }
+}
+
+td {
+    input {
+        margin-bottom: 0;
+    }
+}
+
+/* desktop */
+@media all and (min-width: 769px) {
+    th, td {
+        &.show-large {
+            display: table-cell;
+        }
+    }
+}
+
+div.table {
+    display: table;
+    width: 100%;
+
+    .body {
+        display: table-row-group;
+    }
+
+    .row {
+        display: table-row;
+        width: 100%;
+
+        .cell {
+            display: table-cell;
+            border-bottom: .1rem solid $color-border;
+            padding: 1.2rem 1.5rem;
+            vertical-align: middle;
+
+            &.icon {
+                width: 32px;
+                padding: 1.2rem 0;
+                text-align: center;
+            }
+
+            &.collapsed {
+                width: 0;
+            }
+        }
+    }
+
+
+    input {
+        margin-bottom: 0;
+    }
+}

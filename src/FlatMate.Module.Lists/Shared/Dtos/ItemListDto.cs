@@ -3,7 +3,7 @@ using FlatMate.Module.Account.Shared.Dtos;
 
 namespace FlatMate.Module.Lists.Shared.Dtos
 {
-    public class ItemListUpdateDto
+    public class ItemListInputDto
     {
         public string Description { get; set; }
 

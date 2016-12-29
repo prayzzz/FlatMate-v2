@@ -9,22 +9,22 @@ namespace FlatMate.Api.Areas.Account.User
     {
         public void Configure(IMapperConfiguration mapper)
         {
-            mapper.Configure<UserDto, UserVm>(DtoToModel);
-            mapper.Configure<CreateUserVm, UserUpdateDto>(DtoToModel);
+            mapper.Configure<UserDto, UserJso>(DtoToModel);
+            mapper.Configure<CreateUserJso, UserUpdateDto>(DtoToModel);
         }
 
-        private UserUpdateDto DtoToModel(CreateUserVm vm, MappingContext mappingContext)
+        private UserUpdateDto DtoToModel(CreateUserJso jso, MappingContext mappingContext)
         {
             return new UserUpdateDto
             {
-                Email = vm.Email,
-                UserName = vm.UserName
+                Email = jso.Email,
+                UserName = jso.UserName
             };
         }
 
-        private UserVm DtoToModel(UserDto dto, MappingContext mappingContext)
+        private UserJso DtoToModel(UserDto dto, MappingContext mappingContext)
         {
-            return new UserVm
+            return new UserJso
             {
                 Email = dto.Email,
                 Id = dto.Id,

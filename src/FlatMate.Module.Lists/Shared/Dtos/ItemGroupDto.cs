@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using FlatMate.Module.Account.Shared.Dtos;
 
 namespace FlatMate.Module.Lists.Shared.Dtos
 {
-    public class ItemGroupUpdateDto
+    public class ItemGroupInputDto
     {
         public string Name { get; set; }
     }
@@ -13,7 +12,7 @@ namespace FlatMate.Module.Lists.Shared.Dtos
     {
         public DateTime CreationDate { get; set; }
 
-        public List<ItemDto> Items { get; set; }
+        public int ItemListId { get; set; }
 
         public UserDto LastEditor { get; set; }
 
@@ -22,5 +21,7 @@ namespace FlatMate.Module.Lists.Shared.Dtos
         public DateTime ModifiedDate { get; set; }
 
         public string Name { get; set; }
+
+        public int SortIndex { get; set; }
     }
 }

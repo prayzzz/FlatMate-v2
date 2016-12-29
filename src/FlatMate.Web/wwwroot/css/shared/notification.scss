@@ -1,0 +1,33 @@
+﻿@import "../colors.scss";
+
+.notification-row {
+    min-height: 1rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 300;
+
+    .notification {
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+
+        div {
+            padding-right: 1rem;
+        }
+
+        &.error {
+            background-color: $color-danger;
+            color: #fff;
+        }
+
+        &.success {
+            background-color: $color-success;
+            color: #fff;
+        }
+
+        .dismiss {
+            width: 50px;
+        }
+    }
+}

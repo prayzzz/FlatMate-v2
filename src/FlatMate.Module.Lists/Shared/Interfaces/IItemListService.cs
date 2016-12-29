@@ -6,10 +6,18 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 {
     public interface IItemListService
     {
-        Result<ItemListDto> Create(ItemListUpdateDto updateDto);
+        Result<ItemListDto> Create(ItemListInputDto inputDto);
+
+        Result<ItemGroupDto> Create(int listId, ItemGroupInputDto inputDto);
+
+        Result<ItemDto> Create(int groupId, ItemInputDto inputDto);
+
         Result Delete(int id);
+
         IEnumerable<ItemListDto> GetAll();
+
         Result<ItemListDto> GetById(int id);
-        Result<ItemListDto> Update(int id, ItemListUpdateDto updateDto);
+
+        Result<ItemListDto> Update(int id, ItemListInputDto inputDto);
     }
 }

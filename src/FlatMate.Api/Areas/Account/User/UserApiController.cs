@@ -6,30 +6,30 @@ using prayzzz.Common.Result;
 
 namespace FlatMate.Api.Areas.Account.User
 {
-    [Route("api/v1/account/[controller]")]
-    public class UserController : Controller
+    [Route("api/v1/account/user")]
+    public class UserApiController : Controller
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, IMapper mapper)
+        public UserApiController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public Result<UserVm> Create([FromBody] CreateUserVm userVm)
+        public Result<UserJso> Create([FromBody] CreateUserJso jso)
         {
-            return _userService.Create(_mapper.Map<UserUpdateDto>(userVm), userVm.Password)
-                               .WithDataAs(dto => _mapper.Map<UserVm>(dto));
+            return _userService.Create(_mapper.Map<UserUpdateDto>(jso), jso.Password)
+                               .WithDataAs(dto => _mapper.Map<UserJso>(dto));
         }
 
         [HttpGet("{id}")]
-        public Result<UserVm> GetById(int id)
+        public Result<UserJso> GetById(int id)
         {
             return _userService.GetById(id)
-                               .WithDataAs(dto => _mapper.Map<UserVm>(dto));
+                               .WithDataAs(dto => _mapper.Map<UserJso>(dto));
         }
     }
 }

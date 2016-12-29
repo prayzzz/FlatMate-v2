@@ -10,10 +10,14 @@ namespace FlatMate.Module.Lists.Domain.Repositories
 
         IEnumerable<ItemListDto> GetAll();
 
-        Result<ItemListDto> GetById(int id);
+        Result<ItemGroupDto> GetGroup(int id);
+
+        Result<ItemListDto> GetList(int id);
 
         Result<ItemListDto> Save(ItemListDto dto);
 
         Result<ItemGroupDto> Save(ItemGroupDto dto);
+
+        Result<ItemDto> Save(ItemDto dto);
     }
 }

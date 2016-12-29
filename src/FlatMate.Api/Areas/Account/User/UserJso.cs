@@ -1,14 +1,15 @@
 ﻿namespace FlatMate.Api.Areas.Account.User
 {
-    public class UserVm
+    public class UserJso
     {
         public string Email { get; set; }
+
         public int Id { get; set; }
 
         public string UserName { get; set; }
     }
 
-    public class CreateUserVm
+    public class CreateUserJso
     {
         public string Email { get; set; }
 

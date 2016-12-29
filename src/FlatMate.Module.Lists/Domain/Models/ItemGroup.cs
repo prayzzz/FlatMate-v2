@@ -22,7 +22,7 @@ namespace FlatMate.Module.Lists.Domain.Models
             SortIndex = 0;
         }
 
-        public DateTime CreationDate { get; }
+        public DateTime CreationDate { get; set; }
 
         public ItemList ItemList { get; }
 
