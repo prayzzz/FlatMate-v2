@@ -1,6 +1,6 @@
 ﻿using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
-using FlatMate.Web.Mvc;
+using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlatMate.Web.Areas.Account.Controllers

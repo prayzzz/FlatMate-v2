@@ -4,20 +4,25 @@
     Layout = "_LayoutBlank";
 }
 
-<section class="container login">
+<section class="container">
     <div style="width: 100%;">
         <h1 style="text-align: center">FlatMate</h1>
         <form asp-area="Account" asp-controller="Login" method="post">
             <fieldset>
-                <label asp-for="UserName"></label>
-                <input asp-for="UserName" autofocus/>
-
-                <label asp-for="Password"></label>
-                <input asp-for="Password"/>
-
-                <div class="pull-right">
-                    <input class="button-primary" type="submit" value="Login">
+                <div class="form-group">
+                    <label asp-for="UserName"></label>
+                    <input asp-for="UserName" autofocus />
                 </div>
+
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" />
+                </div>
+
+                <div class="form-group align-center">
+                    <input class="btn-primary" type="submit" value="Login">
+                </div>
+
             </fieldset>
         </form>
     </div>

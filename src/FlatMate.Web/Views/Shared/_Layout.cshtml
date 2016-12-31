@@ -1,94 +1,48 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlatMate - @ViewData["Title"]</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700">
 
-        <link rel="stylesheet" asp-href-include="~/css/**/*.min.css" asp-href-exclude="~/css/flatmate.min.css"/>
+        <link rel="stylesheet" asp-href-include="~/css/**/*.min.css" asp-href-exclude="~/css/flatmate.min.css" />
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
 
-        <link rel="stylesheet" href="~/css/flatmate.min.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/dist/css/flatmate.min.css" asp-append-version="true" />
     </environment>
+
 </head>
 <body>
-<notification-bar></notification-bar>
 
-<input id="menu-checkbox" type="checkbox"/>
-<label class="menu-toggle icon-32 icon-burger" for="menu-checkbox"></label>
+    <input id="menu-checkbox" type="checkbox" />
+    <label class="menu-toggle icon-32 icon-burger" for="menu-checkbox"></label>
 
-<nav>
-    <span class="title">FlatMate</span>
-    <ul>
-        <li>
-            <a asp-area="Home" asp-controller="Dashboard" asp-action="">Übersicht</a>
-        </li>
-        <li>
-            <a asp-area="ItemLists" asp-controller="Home" asp-action="">ItemListen</a>
-        </li>
-        <li>
-            <a href="#">Angebote</a>
-        </li>
-        <li>
-            <a asp-area="Account" asp-controller="Logout" asp-action="">Logout</a>
-        </li>
-    </ul>
-</nav>
+    <nav>
+        <span class="title">FlatMate</span>
+        <ul>
+            <li>
+                <a asp-area="Home" asp-controller="Dashboard" asp-action="">Übersicht</a>
+            </li>
+            <li>
+                @*<a asp-area="ItemLists" asp-controller="Home" asp-action="">ItemListen</a>*@
+            </li>
+            <li>
+                <a href="#">Angebote</a>
+            </li>
+            <li>
+                <a asp-area="Account" asp-controller="Logout" asp-action="">Logout</a>
+            </li>
+        </ul>
+    </nav>
 
-<main>
-    @RenderBody()
-</main>
+    <main>
+        @RenderBody()
+    </main>
 
-<!-- Scripts -->
-<environment names="Development">
-    <script src="~/lib/js/atomic.min.js"></script>
-    <script src="~/lib/js/vue.js"></script>
-    <script src="~/js/flatmate.js"></script>
-</environment>
-
-<environment names="Staging,Production">
-    <script src="~/js/flatmate.min.js"></script>
-</environment>
-
-<!-- View Data -->
-@await RenderSectionAsync("viewData", false)
-
-@if (Model != null)
-{
-    <script type="application/json" id="userData">
-            @Html.Raw(JsonConvert.SerializeObject(Model.CurrentUser, Json.ViewSerializerSettings))
-        </script>
-}
-
-<!-- Vue Templates -->
-@await RenderSectionAsync("vueTemplates", false)
-
-<script type="application/json" id="notification-bar-template">
-        <section class="notification-row">
-            <notification v-for="n in notifications" :model="n"></notification>
-        </section>
-    </script>
-
-<script type="application/json" id="notification-template">
-        <div class="notification {{model.TypeClass}}">
-            <div class="dismiss">
-                <a class="icon-24 icon-cross-circle" v-on:click="dismissNotification"></a>
-            </div>
-            {{model.Message}}
-        </div>
-    </script>
-
-<!-- Vue Init-->
-@await RenderSectionAsync("vueInit", false)
-
-<script type="text/javascript">
-        Vue.component("notification-bar", new FlatMate.Shared.NotificationBarComponent());
-        Vue.component("notification", new FlatMate.Shared.NotificationComponent());
-    </script>
 </body>
 </html>

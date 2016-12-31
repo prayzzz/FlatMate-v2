@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using FlatMate.Web.Mvc;
+using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Account.Data
 {

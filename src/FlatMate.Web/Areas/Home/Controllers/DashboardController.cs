@@ -1,4 +1,5 @@
 ﻿using FlatMate.Web.Mvc;
+using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlatMate.Web.Areas.Home.Controllers

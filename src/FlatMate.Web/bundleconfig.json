@@ -1,8 +1,8 @@
 ﻿[
   {
-    "outputFileName": "wwwroot/css/site.min.css",
+    "outputFileName": "wwwroot/css/flatmate.min.css",
     "inputFiles": [
-      "wwwroot/css/site.css"
+      "wwwroot/css/*.min.css"
     ]
   },
   {

@@ -1,38 +1,9 @@
 ﻿[
   {
-    "outputFile": "wwwroot/css/account/login.css",
-    "inputFile": "wwwroot/css/account/login.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/shared/navigation.css",
-    "inputFile": "wwwroot/css/shared/navigation.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/main.css",
-    "inputFile": "wwwroot/css/main.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/account/register.css",
-    "inputFile": "wwwroot/css/account/register.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/shared/milligram.css",
-    "inputFile": "wwwroot/css/shared/milligram.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/shared/table.css",
-    "inputFile": "wwwroot/css/shared/table.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/icons.css",
-    "inputFile": "wwwroot/css/icons.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/shared/notification.css",
-    "inputFile": "wwwroot/css/shared/notification.scss"
-  },
-  {
-    "outputFile": "wwwroot/css/shared/form.css",
-    "inputFile": "wwwroot/css/shared/form.scss"
+    "outputFile": "wwwroot/dist/css/flatmate.css",
+    "inputFile": "wwwroot/css/flatmate.scss",
+    "minify": {
+      "enabled": false
+    }
   }
 ]

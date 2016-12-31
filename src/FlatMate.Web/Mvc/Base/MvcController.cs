@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Security.Claims;
 using FlatMate.Api.Areas.Account.User;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace FlatMate.Web.Mvc
+namespace FlatMate.Web.Mvc.Base
 {
     //[Authorize]
     [ServiceFilter(typeof(MvcResultFilter))]

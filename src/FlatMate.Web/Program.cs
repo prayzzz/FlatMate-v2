@@ -11,6 +11,7 @@ namespace FlatMate.Web
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
+                .UseUrls("http://::7432")
                 .Build();
 
             host.Run();

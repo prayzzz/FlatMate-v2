@@ -1,7 +1,7 @@
 ﻿using FlatMate.Api.Areas.Account.User;
 using prayzzz.Common.Result;
 
-namespace FlatMate.Web.Mvc
+namespace FlatMate.Web.Mvc.Base
 {
     public class EmptyViewModel : BaseViewModel
     {

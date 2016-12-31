@@ -2,7 +2,6 @@
   "name": "flatmate",
   "version": "1.0.0",
   "dependencies": {
-    "node-sass": "^3.10.1",
-    "typescript": "^2.0.6"
+    "typescript": "^2.1.4"
   }
 }

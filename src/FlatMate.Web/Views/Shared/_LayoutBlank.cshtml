@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FlatMate</title>
 
-    <environment names="Development">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,700">
 
-        <link rel="stylesheet" asp-href-include="~/lib/css/**/*.css"/>
-        <link rel="stylesheet" asp-href-include="~/css/**/*.css"/>
+    <environment names="Development">
+        <link rel="stylesheet" asp-href-include="~/dist/css/**/*.css"/>
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
-
-        <link rel="stylesheet" href="~/css/flatmate.min.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/dist/css/flatmate.min.css" asp-append-version="true"/>
     </environment>
 </head>
 <body>
