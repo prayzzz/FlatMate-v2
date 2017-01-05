@@ -1,5 +1,4 @@
-﻿using FlatMate.Web.Mvc;
-using FlatMate.Web.Mvc.Base;
+﻿using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlatMate.Web.Areas.Home.Controllers
@@ -9,7 +8,7 @@ namespace FlatMate.Web.Areas.Home.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectPermanent("/account/login");
+            return View(new EmptyViewModel());
         } 
     }
 }

@@ -8,5 +8,6 @@ namespace FlatMate.Module.Account.Domain.Repositories
         Result<UserDto> GetById(int id);
         Result<UserDto> GetByUserName(string username);
         Result<UserDto> Save(UserDto dto);
+        Result<UserDto> GetByEmail(string email);
     }
 }

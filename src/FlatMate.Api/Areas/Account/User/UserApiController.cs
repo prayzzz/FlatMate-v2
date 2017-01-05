@@ -1,11 +1,13 @@
 ﻿using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Result;
 
 namespace FlatMate.Api.Areas.Account.User
 {
+    [Authorize]
     [Route("api/v1/account/user")]
     public class UserApiController : Controller
     {
@@ -30,6 +32,12 @@ namespace FlatMate.Api.Areas.Account.User
         {
             return _userService.GetById(id)
                                .WithDataAs(dto => _mapper.Map<UserJso>(dto));
+        }
+
+        [HttpPost("password")]
+        public Result ChangePassword([FromBody] ChangePasswordJso jso)
+        {
+            return _userService.ChangePassword(jso.OldPassword, jso.NewPassword);
         }
     }
 }

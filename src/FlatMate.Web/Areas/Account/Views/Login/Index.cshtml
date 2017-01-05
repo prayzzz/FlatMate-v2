@@ -2,28 +2,40 @@
 
 @{
     Layout = "_LayoutBlank";
+    ViewData["Title"] = "Login";
 }
 
-<section class="container">
-    <div style="width: 100%;">
-        <h1 style="text-align: center">FlatMate</h1>
-        <form asp-area="Account" asp-controller="Login" method="post">
-            <fieldset>
-                <div class="form-group">
-                    <label asp-for="UserName"></label>
-                    <input asp-for="UserName" autofocus />
-                </div>
+<section class="container centered-form login">
 
-                <div class="form-group">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" />
-                </div>
+    <h1 style="text-align: center">FlatMate</h1>
 
-                <div class="form-group align-center">
-                    <input class="btn-primary" type="submit" value="Login">
-                </div>
-
-            </fieldset>
-        </form>
+    <div class="alert-wrapper">
+        @if (Model.IsError)
+        {
+            <div class="alert alert-danger">@Model.ErrorMessage</div>
+        }
     </div>
+
+    <form asp-area="Account" asp-controller="Login" method="post">
+        <fieldset>
+
+            <div class="form-group">
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" autofocus Value="fake" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" Value="123456789" required />
+            </div>
+
+            <input asp-for="ReturnUrl" type="hidden" />
+
+            <div class="form-group align-right">
+                <input class="btn-primary" type="submit" value="Login">
+            </div>
+
+        </fieldset>
+    </form>
+
 </section>

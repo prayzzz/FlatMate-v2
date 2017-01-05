@@ -1,0 +1,28 @@
+﻿@import '../var/colors.scss';
+@import '../var/sizes.scss';
+
+@mixin alert-variant($color) {
+    background-color: lighten($color, 30%);
+    border-color: lighten($color, 10%);
+    color: darken($color, 20%);
+}
+
+.alert-wrapper {
+    width: 100%;
+}
+
+.alert {
+    border: 1px solid transparent;    
+    padding: .5rem .5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.alert-danger {
+    @include alert-variant($color-danger);
+}
+
+.alert-success {
+    @include alert-variant($color-success);
+}
+

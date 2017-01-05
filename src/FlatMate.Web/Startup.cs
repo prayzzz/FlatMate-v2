@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Api.Extensions;
 using FlatMate.Api.Filter;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,8 +46,34 @@ namespace FlatMate.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            
             app.UseStaticFiles();
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "FlatMate",
+                LoginPath = new PathString("/Account/Login/"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                ClaimsIssuer = "FlatMate",
+                SlidingExpiration = true,
+                Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = context =>
+                    {
+                        if (context.Request.Path.StartsWithSegments("/api/v1"))
+                        {
+                            context.Response.StatusCode = 401;
+                        }
+                        else
+                        {
+                            context.Response.Redirect(context.RedirectUri);
+                        }
+
+                        return Task.FromResult(0);
+                    }
+                }
+            });
 
             app.UseMvc(routes =>
             {

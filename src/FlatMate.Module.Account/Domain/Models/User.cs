@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using FlatMate.Module.Common.Domain.Entities;
 using prayzzz.Common.Result;
 
@@ -6,6 +7,8 @@ namespace FlatMate.Module.Account.Domain.Models
 {
     internal class User : Entity
     {
+        private static readonly Regex EmailRegex = new Regex("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
         private User(int id, string userName, string email)
             : base(id)
         {
@@ -29,7 +32,7 @@ namespace FlatMate.Module.Account.Domain.Models
         {
             #region Validation
 
-            var result = ValidateName(userName);
+            var result = ValidateUserName(userName);
             if (!result.IsSuccess)
             {
                 return new ErrorResult<User>(result);
@@ -50,17 +53,22 @@ namespace FlatMate.Module.Account.Domain.Models
         {
             if (string.IsNullOrEmpty(email))
             {
-                return new ErrorResult(ErrorType.ValidationError, $"{nameof(email)} must not be empty.");
+                return new ErrorResult(ErrorType.ValidationError, "Email must not be empty.");
+            }
+            
+            if (!EmailRegex.IsMatch(email))
+            {
+                return new ErrorResult(ErrorType.ValidationError, "Invalid email address");
             }
 
             return SuccessResult.Default;
         }
 
-        private static Result ValidateName(string name)
+        private static Result ValidateUserName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return new ErrorResult(ErrorType.ValidationError, $"{nameof(name)} must not be empty.");
+                return new ErrorResult(ErrorType.ValidationError, "UserName must not be empty.");
             }
 
             return SuccessResult.Default;

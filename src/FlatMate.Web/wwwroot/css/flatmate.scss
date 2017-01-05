@@ -5,6 +5,10 @@
 @import 'shared/table.scss';
 @import 'shared/notification.scss';
 @import 'shared/navigation.scss';
+@import 'shared/alert.scss';
+@import 'shared/layout.scss';
 
 @import 'account/login.scss';
-@import 'account/register.scss';
+@import 'account/create.scss';
+@import 'account/changepassword.scss';
+@import 'account/myprofile.scss';

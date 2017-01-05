@@ -15,6 +15,7 @@ namespace FlatMate.Module.Account.DataAccess.Repositories
         public AuthenticationRepository()
         {
             _auth = new Dictionary<int, AuthenticationInformationDto>();
+            _auth.Add(UserDto.Fake.Id, new AuthenticationInformationDto { PasswordHash = "yW85+CZVyIHSMlqgBx71N4h7Ku+qE32f3cWZbBmGSrUS9eXCmMvKIbchXd7G9SxsPus48ximHcKm6YG/UmAh7Q==", Salt = "CwvDrFV38guhMmq0P0rp+w==", UserId = UserDto.Fake.Id });
         }
 
         public Result<AuthenticationInformationDto> GetById(int userId)

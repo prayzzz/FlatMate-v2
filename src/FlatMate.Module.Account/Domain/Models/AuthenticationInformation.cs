@@ -49,7 +49,7 @@ namespace FlatMate.Module.Account.Domain.Models
         {
             if (password.Length < 8)
             {
-                return new ErrorResult(ErrorType.ValidationError, $"{password} must contain atleast 8 characters.");
+                return new ErrorResult(ErrorType.ValidationError, "Password must contain atleast 8 characters.");
             }
 
             return SuccessResult.Default;

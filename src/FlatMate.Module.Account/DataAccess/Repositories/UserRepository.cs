@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FlatMate.Module.Account.Domain.Repositories;
 using FlatMate.Module.Account.Shared.Dtos;
@@ -35,7 +36,7 @@ namespace FlatMate.Module.Account.DataAccess.Repositories
 
         public Result<UserDto> GetByUserName(string username)
         {
-            var user = _users.Values.FirstOrDefault(x => x.UserName == username);
+            var user = _users.Values.FirstOrDefault(x => string.Equals(x.UserName, username, StringComparison.CurrentCultureIgnoreCase));
 
             if (user != null)
             {
@@ -63,6 +64,18 @@ namespace FlatMate.Module.Account.DataAccess.Repositories
             _users.Add(id, dto);
 
             return new SuccessResult<UserDto>(dto);
+        }
+
+        public Result<UserDto> GetByEmail(string email)
+        {
+            var user = _users.Values.FirstOrDefault(x => string.Equals(x.Email, email, StringComparison.CurrentCultureIgnoreCase));
+
+            if (user != null)
+            {
+                return new SuccessResult<UserDto>(user);
+            }
+
+            return new ErrorResult<UserDto>(ErrorType.NotFound, "Not Found");
         }
 
         public Result<AuthenticationInformationDto> GetAuthenticationInformation(int userId)

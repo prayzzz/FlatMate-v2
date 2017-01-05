@@ -1,41 +1,60 @@
-﻿<!DOCTYPE html>
+﻿@model FlatMate.Web.Mvc.Base.BaseViewModel
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FlatMate - @ViewData["Title"]</title>
+    <title>@ViewData["Title"] - FlatMate</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700">
-
-        <link rel="stylesheet" asp-href-include="~/css/**/*.min.css" asp-href-exclude="~/css/flatmate.min.css" />
+        <link rel="stylesheet" asp-href-include="~/dist/css/**/*.css" />
     </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
 
+    <environment names="Staging,Production">
         <link rel="stylesheet" href="~/dist/css/flatmate.min.css" asp-append-version="true" />
     </environment>
 
 </head>
 <body>
+    <header>
+        <div class="header-wrapper">
+            <div class="page-title">
+                <h1>@ViewData["PageTitle"]</h1>
+            </div>
+            <div class="flex-row nav-toggle">
+                <div class="menu-toggle">
+                    <label class=" icon-32 icon-burger" for="menu-checkbox"></label>
+                </div>
 
-    <input id="menu-checkbox" type="checkbox" />
-    <label class="menu-toggle icon-32 icon-burger" for="menu-checkbox"></label>
+                <div class="welcome-wrapper">
+                    @if (Model.CurrentUser != null)
+                    {
+                        <span class="welcome">Hallo @Model.CurrentUser.UserName!</span>
+                    }
+                    else
+                    {
+                        <span class="welcome">Hallo!</span>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    </header>
+
+    <input id="menu-checkbox" type="checkbox" style="display: none" />
 
     <nav>
-        <span class="title">FlatMate</span>
         <ul>
             <li>
-                <a asp-area="Home" asp-controller="Dashboard" asp-action="">Übersicht</a>
+                <a asp-area="Home" asp-controller="Dashboard" asp-action="Index">Home</a>
             </li>
             <li>
-                @*<a asp-area="ItemLists" asp-controller="Home" asp-action="">ItemListen</a>*@
+                <a asp-area="Account" asp-controller="MyProfile" asp-action="Index">Mein Profil</a>
             </li>
             <li>
-                <a href="#">Angebote</a>
-            </li>
-            <li>
-                <a asp-area="Account" asp-controller="Logout" asp-action="">Logout</a>
+                <a asp-area="Account" asp-controller="Logout" asp-action="Index">Logout</a>
             </li>
         </ul>
     </nav>

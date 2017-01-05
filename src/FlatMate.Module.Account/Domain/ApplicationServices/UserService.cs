@@ -95,6 +95,20 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         /// </summary>
         public Result<UserDto> Create(UserUpdateDto userDto, string password)
         {
+            // get user by name
+            var existingUser = _userRepository.GetByUserName(userDto.UserName);
+            if (existingUser.IsSuccess)
+            {
+                return new ErrorResult<UserDto>(ErrorType.ValidationError, "Username already in use");
+            }
+
+            // get user by mail
+            existingUser = _userRepository.GetByEmail(userDto.Email);
+            if (existingUser.IsSuccess)
+            {
+                return new ErrorResult<UserDto>(ErrorType.ValidationError, "Email already in use");
+            }
+
             // instantiate user
             var createUser = User.Create(userDto.UserName, userDto.Email);
             if (!createUser.IsSuccess)

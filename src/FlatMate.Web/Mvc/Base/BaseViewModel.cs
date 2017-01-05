@@ -16,8 +16,12 @@ namespace FlatMate.Web.Mvc.Base
         /// </summary>
         public string ErrorMessage { get; set; }
 
+        public string SuccessMessage { get; set; }
+
         public Result ErrorResult { get; set; }
 
-        public bool HasError => ErrorResult != null || !string.IsNullOrEmpty(ErrorMessage);
+        public bool IsError => ErrorResult != null || !string.IsNullOrEmpty(ErrorMessage);
+
+        public bool IsSuccess => SuccessMessage != null || !string.IsNullOrEmpty(SuccessMessage);
     }
 }

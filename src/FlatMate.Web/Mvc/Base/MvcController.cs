@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Security.Claims;
 using FlatMate.Api.Areas.Account.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace FlatMate.Web.Mvc.Base
 {
-    //[Authorize]
+    [Authorize]
     [ServiceFilter(typeof(MvcResultFilter))]
     public class MvcController : Controller
     {
@@ -14,7 +15,7 @@ namespace FlatMate.Web.Mvc.Base
         {
             get
             {
-                var userId = User?.FindFirst(ClaimTypes.Sid).Value;
+                var userId = User?.FindFirst(ClaimTypes.Sid)?.Value;
                 return userId == null ? 0 : Convert.ToInt32(userId);
             }
         }
@@ -23,7 +24,7 @@ namespace FlatMate.Web.Mvc.Base
         {
             get
             {
-                var userId = User?.FindFirst(ClaimTypes.Name).Value;
+                var userId = User?.FindFirst(ClaimTypes.Name)?.Value;
                 return userId ?? "";
             }
         }

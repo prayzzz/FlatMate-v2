@@ -1,0 +1,35 @@
+﻿@model FlatMate.Web.Areas.Account.Data.MyProfileVm
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Mein Profil";
+    ViewData["PageTitle"] = "Mein Profil";
+}
+
+<section class="container">
+
+    <div class="flex-row align-right actions">
+        <a href="#">Profil bearbeiten</a>
+        <a asp-action="ChangePassword">Passwort ändern</a>
+    </div>
+
+</section>
+
+<section class="container">
+    
+    <h3>@Model.UserJso.UserName</h3>
+    
+    <div class="flex-row">
+        <div class="picture-wrapper">
+            <img src="~/img/account/user-default.png" alt="profil picture" class="picture"/>
+        </div>
+
+        <div class="informations">
+            <div class="flex-row">
+                <div class="key">Email</div>
+                <div class="value">@Model.UserJso.Email</div>
+            </div>
+
+        </div>
+    </div>
+</section>
