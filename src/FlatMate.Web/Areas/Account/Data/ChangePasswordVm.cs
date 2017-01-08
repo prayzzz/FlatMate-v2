@@ -7,11 +7,6 @@ namespace FlatMate.Web.Areas.Account.Data
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Aktuelles Passwort")]
-        public string OldPassword { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
         [Display(Name = "Neues Passwort")]
         public string NewPassword { get; set; }
 
@@ -19,5 +14,10 @@ namespace FlatMate.Web.Areas.Account.Data
         [DataType(DataType.Password)]
         [Display(Name = "Neues Passwort bestätigen")]
         public string NewPasswordConfirmation { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Aktuelles Passwort")]
+        public string OldPassword { get; set; }
     }
 }

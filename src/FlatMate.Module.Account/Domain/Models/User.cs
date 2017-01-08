@@ -55,7 +55,7 @@ namespace FlatMate.Module.Account.Domain.Models
             {
                 return new ErrorResult(ErrorType.ValidationError, "Email must not be empty.");
             }
-            
+
             if (!EmailRegex.IsMatch(email))
             {
                 return new ErrorResult(ErrorType.ValidationError, "Invalid email address");

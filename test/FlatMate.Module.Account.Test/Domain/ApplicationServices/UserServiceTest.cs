@@ -219,7 +219,7 @@ namespace FlatMate.Module.Account.Test.Domain.ApplicationServices
             const int userId = 5;
             const string userPassword = "12345678";
 
-            var newUser = new UserUpdateDto {Email = "mail@mail.de", UserName = "UserName"};
+            var newUser = new UserInputDto {Email = "mail@mail.de", UserName = "UserName"};
             var createdUser = new UserDto {Id = userId, CreationDate = DateTime.Now, Email = "mail@mail.de", UserName = "UserName"};
 
             var userRepository = TestHelper.Mock<IUserRepository>();
@@ -260,7 +260,7 @@ namespace FlatMate.Module.Account.Test.Domain.ApplicationServices
             var logger = TestHelper.MockLogger<UserService>();
 
             // Act
-            var user = new UserUpdateDto {UserName = "test", Email = ""};
+            var user = new UserInputDto {UserName = "test", Email = ""};
             var password = "123456789";
 
             var service = new UserService(userRepository.Object, authRepository.Object, authContext.Object, logger.Object);
@@ -285,7 +285,7 @@ namespace FlatMate.Module.Account.Test.Domain.ApplicationServices
             var logger = TestHelper.MockLogger<UserService>();
 
             // Act
-            var user = new UserUpdateDto {UserName = "", Email = "test@test.de"};
+            var user = new UserInputDto {UserName = "", Email = "test@test.de"};
             var password = "123456789";
 
             var service = new UserService(userRepository.Object, authRepository.Object, authContext.Object, logger.Object);
@@ -310,7 +310,7 @@ namespace FlatMate.Module.Account.Test.Domain.ApplicationServices
             var logger = TestHelper.MockLogger<UserService>();
 
             // Act
-            var user = new UserUpdateDto {UserName = "test", Email = "test@test.de"};
+            var user = new UserInputDto {UserName = "test", Email = "test@test.de"};
             var password = "12345";
 
             var service = new UserService(userRepository.Object, authRepository.Object, authContext.Object, logger.Object);
@@ -339,7 +339,7 @@ namespace FlatMate.Module.Account.Test.Domain.ApplicationServices
             var logger = TestHelper.MockLogger<UserService>();
 
             // Act
-            var user = new UserUpdateDto {UserName = "test", Email = "test@test.de"};
+            var user = new UserInputDto {UserName = "test", Email = "test@test.de"};
             var password = "123456789";
 
             var service = new UserService(userRepository.Object, authRepository.Object, authContext.Object, logger.Object);
@@ -366,7 +366,7 @@ namespace FlatMate.Module.Account.Test.Domain.ApplicationServices
             var logger = TestHelper.MockLogger<UserService>();
 
             // Act
-            var user = new UserUpdateDto {UserName = "test", Email = "test@test.de"};
+            var user = new UserInputDto {UserName = "test", Email = "test@test.de"};
             var password = "123456789";
 
             var service = new UserService(userRepository.Object, authRepository.Object, authContext.Object, logger.Object);

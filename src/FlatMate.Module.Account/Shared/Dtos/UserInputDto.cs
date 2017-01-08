@@ -1,6 +1,6 @@
 ﻿namespace FlatMate.Module.Account.Shared.Dtos
 {
-    public class UserUpdateDto
+    public class UserInputDto
     {
         public string Email { get; set; }
 

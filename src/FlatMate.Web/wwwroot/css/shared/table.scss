@@ -1,6 +1,15 @@
 ﻿@import '../var/colors.scss';
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
 th, td {
+    border-bottom: 1px solid lighten($color-border, 10%);
+    padding: .5rem 1rem;
+    text-align: left;
+
     &.centered {
         text-align: center;
     }
@@ -14,6 +23,11 @@ th, td {
     &.show-large {
         display: none;
     }
+}
+
+th {
+    border-bottom: 3px solid $color-border;
+    font-weight:400;
 }
 
 td {

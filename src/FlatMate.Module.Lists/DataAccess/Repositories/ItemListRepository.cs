@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FlatMate.Module.Lists.Domain.Repositories;
 using FlatMate.Module.Lists.Shared.Dtos;
@@ -20,6 +21,13 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
             _lists = new Dictionary<int, ItemListDto>();
             _groups = new Dictionary<int, ItemGroupDto>();
             _items = new Dictionary<int, ItemDto>();
+
+            _lists.Add(1, new ItemListDto { Id = 1, Name = "List#1", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1 });
+            _lists.Add(2, new ItemListDto { Id = 2, Name = "List#2", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1 });
+            _lists.Add(3, new ItemListDto { Id = 3, Name = "List#3", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1 });
+
+            _groups.Add(1, new ItemGroupDto { Id = 1, ItemListId = 1, Name = "Group#1", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1 });
+            _items.Add(1, new ItemDto { Id = 1, ItemGroupId = 1, Name = "Item#1", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1 });
         }
 
         public Result Delete(int id)
@@ -35,7 +43,36 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
 
         public IEnumerable<ItemListDto> GetAll()
         {
-            return _lists.Values;
+            return _lists.Values.Select(list =>
+            {
+                list.ItemGroupCount = _groups.Count(group => group.Value.ItemListId == list.Id);
+                list.ItemCount = _items.Count(item => _groups[item.Value.ItemGroupId].ItemListId == list.Id);
+                return list;
+            });
+        }
+
+        public IEnumerable<ItemListDto> GetAllFromUser(int userId)
+        {
+            return _lists.Values.Where(list => list.OwnerId == userId).Select(list =>
+            {
+                list.ItemGroupCount = _groups.Count(x => x.Value.ItemListId == list.Id);
+                list.ItemCount = _items.Count(i => _groups[i.Value.ItemGroupId].ItemListId == list.Id);
+                return list;
+            });
+        }
+
+        public IEnumerable<ItemGroupDto> GetAllGroups(int listId)
+        {
+            return _groups.Values.Where(group => group.ItemListId == listId).Select(group =>
+            {
+                group.ItemCount = _items.Count(i => i.Value.ItemGroupId == group.Id);
+                return group;
+            });
+        }
+
+        public IEnumerable<ItemDto> GetAllItems(int groupId)
+        {
+            return _items.Values.Where(item => item.ItemGroupId == groupId);
         }
 
         public Result<ItemGroupDto> GetGroup(int id)
@@ -50,8 +87,11 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
 
         public Result<ItemListDto> GetList(int id)
         {
-            if (_lists.TryGetValue(id, out var list))
+            ItemListDto list;
+            if (_lists.TryGetValue(id, out list))
             {
+                list.ItemGroupCount = _groups.Count(group => group.Value.ItemListId == list.Id);
+                list.ItemCount = _items.Count(item => _groups[item.Value.ItemGroupId].ItemListId == list.Id);
                 return new SuccessResult<ItemListDto>(list);
             }
 

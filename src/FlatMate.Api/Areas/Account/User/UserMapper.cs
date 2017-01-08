@@ -10,12 +10,12 @@ namespace FlatMate.Api.Areas.Account.User
         public void Configure(IMapperConfiguration mapper)
         {
             mapper.Configure<UserDto, UserJso>(DtoToModel);
-            mapper.Configure<CreateUserJso, UserUpdateDto>(DtoToModel);
+            mapper.Configure<CreateUserJso, UserInputDto>(DtoToModel);
         }
 
-        private UserUpdateDto DtoToModel(CreateUserJso jso, MappingContext mappingContext)
+        private UserInputDto DtoToModel(CreateUserJso jso, MappingContext mappingContext)
         {
-            return new UserUpdateDto
+            return new UserInputDto
             {
                 Email = jso.Email,
                 UserName = jso.UserName

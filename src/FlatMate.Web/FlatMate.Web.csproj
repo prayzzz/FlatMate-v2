@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />
+    <Folder Include="wwwroot\css\lists\" />
     <Folder Include="wwwroot\dist\css\" />
     <Folder Include="wwwroot\dist\css\" />
     <Folder Include="wwwroot\dist\css\" />

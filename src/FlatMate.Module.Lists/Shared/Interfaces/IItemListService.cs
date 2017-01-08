@@ -14,10 +14,16 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 
         Result Delete(int id);
 
-        IEnumerable<ItemListDto> GetAll();
+        IEnumerable<ItemListDto> GetAllLists();
 
-        Result<ItemListDto> GetById(int id);
+        IEnumerable<ItemListDto> GetAllListsFromUser(int userId);
 
-        Result<ItemListDto> Update(int id, ItemListInputDto inputDto);
+        Result<ItemListDto> GetById(int listId);
+
+        Result<ItemListDto> Update(int listId, ItemListInputDto inputDto);
+
+        IEnumerable<ItemGroupDto> GetAllGroups(int listId);
+
+        IEnumerable<ItemDto> GetAllItems(int groupId);
     }
 }

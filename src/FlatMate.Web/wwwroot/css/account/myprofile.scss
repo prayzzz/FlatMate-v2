@@ -1,16 +1,6 @@
 ﻿@import '../var/colors.scss';
 @import '../var/sizes.scss';
 
-.actions {
-    margin-bottom: 1rem;
-
-    a {
-        border-bottom: 2px $color-border solid;
-        margin: 0 .5rem 0 0;
-        padding: .5rem;
-    }
-}
-
 .picture-wrapper {
     border: 2px $color-border solid;
     margin-right: 1rem;

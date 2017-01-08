@@ -20,9 +20,9 @@ namespace FlatMate.Web.Areas.Account.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Index([FromQuery]string returnUrl)
+        public IActionResult Index([FromQuery] string returnUrl)
         {
-            return View(new LoginVm { ReturnUrl = returnUrl });
+            return View(new LoginVm {ReturnUrl = returnUrl});
         }
 
         [HttpPost]
@@ -36,7 +36,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View(model);
             }
 
-            var result = await _loginApi.LoginAsync(new LoginJso { UserName = model.UserName, Password = model.Password });
+            var result = await _loginApi.LoginAsync(new LoginJso {UserName = model.UserName, Password = model.Password});
 
             if (!result.IsSuccess)
             {

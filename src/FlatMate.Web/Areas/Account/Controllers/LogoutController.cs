@@ -1,6 +1,5 @@
 ﻿using FlatMate.Api.Areas.Account.Authentication;
 using FlatMate.Web.Mvc.Base;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -15,7 +14,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
         {
             _logoutApi = logoutApi;
         }
-        
+
         [HttpGet]
         public IActionResult Index()
         {

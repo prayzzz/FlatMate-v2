@@ -20,10 +20,16 @@ namespace FlatMate.Api.Areas.Account.User
             _mapper = mapper;
         }
 
+        [HttpPost("password")]
+        public Result ChangePassword([FromBody] ChangePasswordJso jso)
+        {
+            return _userService.ChangePassword(jso.OldPassword, jso.NewPassword);
+        }
+
         [HttpPost]
         public Result<UserJso> Create([FromBody] CreateUserJso jso)
         {
-            return _userService.Create(_mapper.Map<UserUpdateDto>(jso), jso.Password)
+            return _userService.Create(_mapper.Map<UserInputDto>(jso), jso.Password)
                                .WithDataAs(dto => _mapper.Map<UserJso>(dto));
         }
 
@@ -32,12 +38,6 @@ namespace FlatMate.Api.Areas.Account.User
         {
             return _userService.GetById(id)
                                .WithDataAs(dto => _mapper.Map<UserJso>(dto));
-        }
-
-        [HttpPost("password")]
-        public Result ChangePassword([FromBody] ChangePasswordJso jso)
-        {
-            return _userService.ChangePassword(jso.OldPassword, jso.NewPassword);
         }
     }
 }

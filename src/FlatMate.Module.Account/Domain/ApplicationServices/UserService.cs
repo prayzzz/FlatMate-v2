@@ -93,7 +93,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         /// <summary>
         /// Creates a new user with the given password
         /// </summary>
-        public Result<UserDto> Create(UserUpdateDto userDto, string password)
+        public Result<UserDto> Create(UserInputDto userDto, string password)
         {
             // get user by name
             var existingUser = _userRepository.GetByUserName(userDto.UserName);

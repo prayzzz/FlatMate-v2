@@ -127,14 +127,29 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return _itemListRepository.Delete(id);
         }
 
-        public IEnumerable<ItemListDto> GetAll()
+        public IEnumerable<ItemListDto> GetAllLists()
         {
             return _itemListRepository.GetAll().Where(list => _authorizationService.CanRead(list));
         }
 
-        public Result<ItemListDto> GetById(int id)
+        public IEnumerable<ItemListDto> GetAllListsFromUser(int userId)
         {
-            var getList = GetList(id);
+            return _itemListRepository.GetAllFromUser(userId).Where(list => _authorizationService.CanRead(list));
+        }
+        
+        public IEnumerable<ItemGroupDto> GetAllGroups(int listId)
+        {
+            return _itemListRepository.GetAllGroups(listId).Where(group => _authorizationService.CanRead(group));
+        }
+
+        public IEnumerable<ItemDto> GetAllItems(int groupId)
+        {
+            return _itemListRepository.GetAllItems(groupId).Where(item => _authorizationService.CanRead(item));
+        }
+
+        public Result<ItemListDto> GetById(int listId)
+        {
+            var getList = GetList(listId);
 
             if (!getList.IsSuccess)
             {
@@ -144,14 +159,14 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return new SuccessResult<ItemListDto>(ModelToDto(getList.Data));
         }
 
-        public Result<ItemListDto> Update(int id, ItemListInputDto inputDto)
+        public Result<ItemListDto> Update(int listId, ItemListInputDto inputDto)
         {
             if (_authenticationContext.IsAnonymous)
             {
                 return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
             }
 
-            var getResult = GetList(id);
+            var getResult = GetList(listId);
             if (!getResult.IsSuccess)
             {
                 return new ErrorResult<ItemListDto>(getResult);
@@ -288,6 +303,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 Description = model.Description,
                 Id = model.Id,
                 IsPublic = model.IsPublic,
+                ItemGroupCount = _itemListRepository.GetAllGroups(model.Id).Count(),
                 LastEditor = model.LastEditor,
                 LastEditorId = model.LastEditor.Id,
                 ModifiedDate = model.ModifiedDate,

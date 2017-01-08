@@ -2,24 +2,24 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FlatMate</title>
 
     <environment names="Development">
-        <link rel="stylesheet" asp-href-include="~/dist/css/**/*.css" />
+        <link rel="stylesheet" asp-href-include="~/dist/css/**/*.css"/>
     </environment>
 
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/dist/css/flatmate.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/dist/css/flatmate.min.css" asp-append-version="true"/>
     </environment>
 
 </head>
 
 <body>
-    <main class="wrapper">
-        @RenderBody()
-    </main>
+<main>
+    @RenderBody()
+</main>
 </body>
 
 </html>

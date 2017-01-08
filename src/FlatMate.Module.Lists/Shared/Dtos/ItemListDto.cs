@@ -18,6 +18,10 @@ namespace FlatMate.Module.Lists.Shared.Dtos
 
         public string Description { get; set; }
 
+        public int ItemCount { get; set; }
+
+        public int ItemGroupCount { get; set; }
+
         public UserDto LastEditor { get; set; }
 
         public int LastEditorId { get; set; }

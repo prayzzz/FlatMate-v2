@@ -7,10 +7,6 @@ namespace FlatMate.Web.Areas.Account.Data
     public class CreateUserVm : BaseViewModel
     {
         [Required]
-        [DisplayName("Benutzername")]
-        public string UserName { get; set; }
-
-        [Required]
         [DisplayName("Email")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
@@ -24,5 +20,9 @@ namespace FlatMate.Web.Areas.Account.Data
         [DataType(DataType.Password)]
         [DisplayName("Passwort bestätigen")]
         public string PasswordConfirmation { get; set; }
+
+        [Required]
+        [DisplayName("Benutzername")]
+        public string UserName { get; set; }
     }
 }

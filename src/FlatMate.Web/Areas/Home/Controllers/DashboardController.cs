@@ -9,6 +9,6 @@ namespace FlatMate.Web.Areas.Home.Controllers
         public IActionResult Index()
         {
             return View(new EmptyViewModel());
-        } 
+        }
     }
 }

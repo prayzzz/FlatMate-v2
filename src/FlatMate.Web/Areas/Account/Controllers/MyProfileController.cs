@@ -11,28 +11,14 @@ namespace FlatMate.Web.Areas.Account.Controllers
     public class MyProfileController : MvcController
     {
         private static readonly Type ControllerType = typeof(MyProfileController);
+        private readonly ILogger _logger;
 
         private readonly UserApiController _userApi;
-        private readonly ILogger _logger;
 
         public MyProfileController(UserApiController userApi, ILoggerFactory loggerFactory)
         {
             _userApi = userApi;
             _logger = loggerFactory.CreateLogger(ControllerType);
-        }
-
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var result = _userApi.GetById(CurrentUserId);
-
-            if (!result.IsSuccess)
-            {
-                _logger.LogError($"No profile found for user #${CurrentUserId}");
-                return View("Error");
-            }
-
-            return View(new MyProfileVm { UserJso = result.Data  });
         }
 
         [HttpGet]
@@ -56,7 +42,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View(model);
             }
 
-            var result = _userApi.ChangePassword(new ChangePasswordJso { NewPassword = model.NewPassword, OldPassword = model.OldPassword });
+            var result = _userApi.ChangePassword(new ChangePasswordJso {NewPassword = model.NewPassword, OldPassword = model.OldPassword});
             if (!result.IsSuccess)
             {
                 model.ErrorResult = result;
@@ -64,7 +50,21 @@ namespace FlatMate.Web.Areas.Account.Controllers
             }
 
             ModelState.Clear();
-            return View(new ChangePasswordVm { SuccessMessage = "Passwort geändert" });
+            return View(new ChangePasswordVm {SuccessMessage = "Passwort geändert"});
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var result = _userApi.GetById(CurrentUserId);
+
+            if (!result.IsSuccess)
+            {
+                _logger.LogError($"No profile found for user #${CurrentUserId}");
+                return View("Error");
+            }
+
+            return View(new MyProfileVm {UserJso = result.Data});
         }
     }
 }

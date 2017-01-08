@@ -7,14 +7,14 @@ namespace FlatMate.Web.Areas.Account.Data
     public class LoginVm : BaseViewModel
     {
         [Required]
-        [DisplayName("Benutzername")]
-        public string UserName { get; set; }
-
-        [Required]
         [DataType(DataType.Password)]
         [DisplayName("Passwort")]
         public string Password { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        [Required]
+        [DisplayName("Benutzername")]
+        public string UserName { get; set; }
     }
 }

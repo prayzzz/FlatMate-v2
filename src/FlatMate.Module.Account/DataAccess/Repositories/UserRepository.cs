@@ -24,6 +24,18 @@ namespace FlatMate.Module.Account.DataAccess.Repositories
             _users.Add(defaultUser.Id, defaultUser);
         }
 
+        public Result<UserDto> GetByEmail(string email)
+        {
+            var user = _users.Values.FirstOrDefault(x => string.Equals(x.Email, email, StringComparison.CurrentCultureIgnoreCase));
+
+            if (user != null)
+            {
+                return new SuccessResult<UserDto>(user);
+            }
+
+            return new ErrorResult<UserDto>(ErrorType.NotFound, "Not Found");
+        }
+
         public Result<UserDto> GetById(int id)
         {
             if (_users.TryGetValue(id, out var user))
@@ -64,18 +76,6 @@ namespace FlatMate.Module.Account.DataAccess.Repositories
             _users.Add(id, dto);
 
             return new SuccessResult<UserDto>(dto);
-        }
-
-        public Result<UserDto> GetByEmail(string email)
-        {
-            var user = _users.Values.FirstOrDefault(x => string.Equals(x.Email, email, StringComparison.CurrentCultureIgnoreCase));
-
-            if (user != null)
-            {
-                return new SuccessResult<UserDto>(user);
-            }
-
-            return new ErrorResult<UserDto>(ErrorType.NotFound, "Not Found");
         }
 
         public Result<AuthenticationInformationDto> GetAuthenticationInformation(int userId)

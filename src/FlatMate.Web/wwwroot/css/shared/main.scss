@@ -50,7 +50,7 @@ h3 {
 }
 
 header {
-    background-color: #fff;
+    background-color:#fff;
     border-bottom: 1px solid $color-border;
     box-shadow: 0 1px 10px rgba(0,0,0,.15);
     position: fixed;
@@ -67,7 +67,7 @@ header {
         height: 100%;
         position: absolute;
         top: 0;
-        align-items:center;
+        align-items: center;
 
         .welcome {
             display: block;
@@ -95,8 +95,10 @@ main {
 }
 
 a {
+    box-sizing: border-box;
     color: $color-primary;
     text-decoration: none;
+    transition: color linear .1s, border-color linear .1s;
 
     &:hover, &:active {
         color: darken($color-primary, 10%);

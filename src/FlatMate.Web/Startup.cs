@@ -40,13 +40,13 @@ namespace FlatMate.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            
+
             app.UseStaticFiles();
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
@@ -89,7 +89,7 @@ namespace FlatMate.Web
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
-                .AddControllersAsServices();
+                    .AddControllersAsServices();
 
             var builder = new ContainerBuilder();
             builder.Populate(services);

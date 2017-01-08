@@ -7,7 +7,7 @@ namespace FlatMate.Module.Account.Shared.Interfaces
     {
         Result<UserDto> Authorize(string username, string password);
         Result ChangePassword(string oldPassword, string newPassword);
-        Result<UserDto> Create(UserUpdateDto userDto, string password);
+        Result<UserDto> Create(UserInputDto userDto, string password);
         Result<UserDto> GetById(int id);
     }
 }
