@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using FlatMate.Api.Areas.Account.User;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,15 @@ namespace FlatMate.Api.Areas.Lists.ItemList
     {
         private readonly IItemListService _itemListService;
         private readonly IMapper _mapper;
+        private readonly MappingContext _ctx;
 
-        public ItemListApiController(IItemListService itemListService, IMapper mapper)
+        public ItemListApiController(UserApiController userApi, IItemListService itemListService, IMapper mapper)
         {
             _itemListService = itemListService;
             _mapper = mapper;
+
+            _ctx = new MappingContext();
+            _ctx.PutParam(ItemListMapper.UserApiKey, userApi);
         }
 
         [HttpPost]
@@ -26,16 +31,11 @@ namespace FlatMate.Api.Areas.Lists.ItemList
             return _itemListService.Create(_mapper.Map<ItemListInputDto>(jso)).WithDataAs(dto => _mapper.Map<ItemListJso>(dto));
         }
 
-        [HttpPost("{listId}/group")]
-        public Result<ItemGroupDto> Create(int listId, [FromBody] ItemGroupInputDto dto)
+        [HttpPost("{listId}/item")]
+        public Result<ItemDto> Create(int listId, [FromBody] ItemInputDto dto)
         {
-            return _itemListService.Create(listId, dto);
-        }
-
-        [HttpPost("{listId}/group/{groupId}/item")]
-        public Result<ItemDto> Create(int groupId, [FromBody] ItemInputDto dto)
-        {
-            return _itemListService.Create(groupId, dto);
+            dto.ItemListId = listId;
+            return _itemListService.Create(dto);
         }
 
         [HttpDelete("{id}")]
@@ -49,16 +49,16 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         {
             if (userId.HasValue)
             {
-                return _itemListService.GetAllListsFromUser(userId.Value).Select(dto => _mapper.Map<ItemListJso>(dto));
+                return _itemListService.GetAllListsFromUser(userId.Value).Select(dto => _mapper.Map<ItemListJso>(dto, _ctx));
             }
 
-            return _itemListService.GetAllLists().Select(dto => _mapper.Map<ItemListJso>(dto));
+            return _itemListService.GetAllLists().Select(dto => _mapper.Map<ItemListJso>(dto, _ctx));
         }
 
         [HttpGet("{id}")]
         public Result<ItemListJso> GetById(int id, [FromQuery] bool full = false)
         {
-            var listResult = _itemListService.GetById(id).WithDataAs(dto => _mapper.Map<ItemListJso>(dto));
+            var listResult = _itemListService.GetList(id).WithDataAs(dto => _mapper.Map<ItemListJso>(dto, _ctx));
 
             if (!listResult.IsSuccess || !full)
             {
@@ -66,12 +66,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
             }
 
             var list = listResult.Data;
-            list.Groups = _itemListService.GetAllGroups(id).Select(group => _mapper.Map<ItemGroupJso>(group)).ToList();
-
-            foreach (var group in list.Groups)
-            {
-                group.Items = _itemListService.GetAllItems(id).Select(item => _mapper.Map<ItemJso>(item)).ToList();
-            }
+            list.Items = _itemListService.GetItems(id).Select(item => _mapper.Map<ItemJso>(item, _ctx)).ToList();
 
             return new SuccessResult<ItemListJso>(list);
         }

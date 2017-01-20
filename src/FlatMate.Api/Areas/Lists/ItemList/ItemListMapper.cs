@@ -8,40 +8,31 @@ namespace FlatMate.Api.Areas.Lists.ItemList
     [Inject]
     public class ItemListMapper : IDboMapper
     {
+        public const string UserApiKey = "UserApi";
+
         public void Configure(IMapperConfiguration mapper)
         {
-            mapper.Configure<ItemListDto, ItemListJso>(DtoToModel);
-            mapper.Configure<ItemGroupDto, ItemGroupJso>(DtoToModel);
-            mapper.Configure<ItemDto, ItemJso>(DtoToModel);
-            mapper.Configure<ItemListCreateJso, ItemListInputDto>(DtoToModel);
-            mapper.Configure<ItemListUpdateJso, ItemListInputDto>(DtoToModel);
+            mapper.Configure<ItemListDto, ItemListJso>(DtoToJso);
+            mapper.Configure<ItemDto, ItemJso>(DtoToJso);
+            mapper.Configure<ItemListCreateJso, ItemListInputDto>(JsoToDto);
+            mapper.Configure<ItemListUpdateJso, ItemListInputDto>(JsoToDto);
         }
 
-        private ItemJso DtoToModel(ItemDto dto, MappingContext mappingContext)
+        private ItemJso DtoToJso(ItemDto dto, MappingContext mappingContext)
         {
+            var userApi = mappingContext.GetParam<UserApiController>(UserApiKey);
+
             return new ItemJso
             {
                 Id = dto.Id,
-                LastEditor = mappingContext.Mapper.Map<UserJso>(dto.LastEditor),
+                LastEditor = userApi.GetById(dto.LastEditorId).Data,
                 Name = dto.Name,
-                Owner = mappingContext.Mapper.Map<UserJso>(dto.Owner),
+                Owner = userApi.GetById(dto.OwnerId).Data,
                 SortIndex = dto.SortIndex
             };
         }
 
-        private ItemGroupJso DtoToModel(ItemGroupDto dto, MappingContext mappingContext)
-        {
-            return new ItemGroupJso
-            {
-                Id = dto.Id,
-                LastEditor = mappingContext.Mapper.Map<UserJso>(dto.LastEditor),
-                Name = dto.Name,
-                Owner = mappingContext.Mapper.Map<UserJso>(dto.Owner),
-                SortIndex = dto.SortIndex
-            };
-        }
-
-        private ItemListInputDto DtoToModel(ItemListInputJso jso, MappingContext mappingContext)
+        private ItemListInputDto JsoToDto(ItemListInputJso jso, MappingContext mappingContext)
         {
             return new ItemListInputDto
             {
@@ -51,18 +42,19 @@ namespace FlatMate.Api.Areas.Lists.ItemList
             };
         }
 
-        private ItemListJso DtoToModel(ItemListDto dto, MappingContext mappingContext)
+        private ItemListJso DtoToJso(ItemListDto dto, MappingContext mappingContext)
         {
+            var userApi = mappingContext.GetParam<UserApiController>(UserApiKey);
+
             return new ItemListJso
             {
                 Description = dto.Description,
                 Id = dto.Id,
                 IsPublic = dto.IsPublic,
-                ItemCount = dto.ItemCount,
-                ItemGroupCount = dto.ItemGroupCount,
-                LastEditor = mappingContext.Mapper.Map<UserJso>(dto.LastEditor),
+                ItemCount = dto.Meta.ItemCount,
+                LastEditor = userApi.GetById(dto.LastEditorId).Data,
                 Name = dto.Name,
-                Owner = mappingContext.Mapper.Map<UserJso>(dto.Owner)
+                Owner = userApi.GetById(dto.OwnerId).Data,
             };
         }
     }

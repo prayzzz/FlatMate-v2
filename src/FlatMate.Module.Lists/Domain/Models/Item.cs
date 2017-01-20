@@ -11,20 +11,21 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         /// Constructs an exisiting Item
         /// </summary>
-        private Item(int id, string name, UserDto owner, ItemGroup itemGroup)
-            : base(id)
+        private Item(int id, string name, UserDto owner, ItemList list) : base(id)
         {
             Rename(name);
 
             CreationDate = ModifiedDate = DateTime.Now;
-            ItemGroup = itemGroup;
+            ItemList = list;
             Owner = LastEditor = owner;
             SortIndex = 0;
         }
 
         public DateTime CreationDate { get; set; }
 
-        public ItemGroup ItemGroup { get; }
+        public Item ParentItem { get; set; }
+
+        public ItemList ItemList { get; set; }
 
         public UserDto LastEditor { get; set; }
 
@@ -34,22 +35,22 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public int SortIndex { get; set; }
 
-        public bool IsPublic => ItemGroup.IsPublic;
+        public bool IsPublic => ItemList.IsPublic;
 
         public UserDto Owner { get; }
 
         /// <summary>
         /// Creates a new <see cref="Item"/>
         /// </summary>
-        internal static Result<Item> Create(string name, UserDto owner, ItemGroup itemGroup)
+        public static Result<Item> Create(string name, UserDto owner, ItemList list)
         {
-            return Create(DefaultId, name, owner, itemGroup);
+            return Create(DefaultId, name, owner, list);
         }
 
         /// <summary>
         /// Creates an exisiting <see cref="Item"/>
         /// </summary>
-        internal static Result<Item> Create(int id, string name, UserDto owner, ItemGroup itemGroup)
+        public static Result<Item> Create(int id, string name, UserDto owner, ItemList list)
         {
             #region Validation
 
@@ -61,13 +62,13 @@ namespace FlatMate.Module.Lists.Domain.Models
 
             #endregion
 
-            return new SuccessResult<Item>(new Item(id, name, owner, itemGroup));
+            return new SuccessResult<Item>(new Item(id, name, owner, list));
         }
 
         /// <summary>
         /// Renames the list to the given <paramref name="name"/>
         /// </summary>
-        internal Result Rename(string name)
+        public Result Rename(string name)
         {
             var validationResult = ValidateName(name);
             if (!validationResult.IsSuccess)
@@ -82,7 +83,7 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         /// Sets the given <paramref name="sortIndex"/>
         /// </summary>
-        internal Result SetSortIndex(int sortIndex, UserDto currentUserDto)
+        public Result SetSortIndex(int sortIndex, UserDto currentUserDto)
         {
             if (sortIndex < 0)
             {
@@ -95,7 +96,7 @@ namespace FlatMate.Module.Lists.Domain.Models
             return SuccessResult.Default;
         }
 
-        private static Result ValidateName(string name)
+        protected static Result ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {

@@ -17,3 +17,13 @@
     </div>
 
 </section>
+
+@section viewData {
+    @Json.Serialize(Model.List)
+}
+
+@section pageScript {
+    <script type="text/javascript">
+        new Flatmate.Areas.Lists.ItemListEditor();
+    </script>
+}

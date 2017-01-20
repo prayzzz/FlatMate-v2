@@ -24,7 +24,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
     public class ItemListJso
     {
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public int Id { get; set; }
 
@@ -32,28 +32,11 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
         public int ItemCount { get; set; }
 
-        public int ItemGroupCount { get; set; }
-
         public UserJso LastEditor { get; set; }
 
         public string Name { get; set; }
 
         public UserJso Owner { get; set; }
-
-        public List<ItemGroupJso> Groups { get; set; }
-    }
-
-    public class ItemGroupJso
-    {
-        public int Id { get; set; }
-
-        public UserJso LastEditor { get; set; }
-
-        public UserJso Owner { get; set; }
-
-        public string Name { get; set; }
-
-        public int SortIndex { get; set; }
 
         public List<ItemJso> Items { get; set; }
     }

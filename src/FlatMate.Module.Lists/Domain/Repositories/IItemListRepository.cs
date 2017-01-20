@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Result;
 
@@ -12,19 +11,15 @@ namespace FlatMate.Module.Lists.Domain.Repositories
         IEnumerable<ItemListDto> GetAll();
 
         IEnumerable<ItemListDto> GetAllFromUser(int userId);
-
-        Result<ItemGroupDto> GetGroup(int id);
-
+        
         Result<ItemListDto> GetList(int id);
 
         Result<ItemListDto> Save(ItemListDto dto);
 
-        Result<ItemGroupDto> Save(ItemGroupDto dto);
-
         Result<ItemDto> Save(ItemDto dto);
 
-        IEnumerable<ItemGroupDto> GetAllGroups(int listId);
+        IEnumerable<ItemDto> GetItems(int listId);
 
-        IEnumerable<ItemDto> GetAllItems(int groupId);
+        Result<ItemListMetaDto> GetItemListMeta(int listId);
     }
 }

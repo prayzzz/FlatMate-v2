@@ -11,15 +11,6 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
     public class ItemListTest
     {
         [TestMethod]
-        public void Test_AddGroup()
-        {
-            var itemList = ItemList.Create(1, "MyList", new UserDto()).Data;
-            var result = itemList.AddGroup("MyGroup", new UserDto());
-
-            Assert.IsInstanceOfType(result, typeof(SuccessResult<ItemGroup>));
-        }
-
-        [TestMethod]
         public void Test_Constructor_For_Existing_ItemList()
         {
             const int id = 1;

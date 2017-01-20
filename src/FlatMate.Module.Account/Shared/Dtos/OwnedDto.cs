@@ -6,8 +6,6 @@ namespace FlatMate.Module.Account.Shared.Dtos
     {
         public bool IsPublic { get; set; }
 
-        public UserDto Owner { get; set; }
-
         public int OwnerId { get; set; }
     }
 }

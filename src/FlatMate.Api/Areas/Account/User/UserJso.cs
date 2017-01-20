@@ -9,6 +9,13 @@
         public string UserName { get; set; }
     }
 
+    public class UserInfoJso
+    {
+        public int Id { get; set; }
+
+        public string UserName { get; set; }
+    }
+
     public class CreateUserJso
     {
         public string Email { get; set; }

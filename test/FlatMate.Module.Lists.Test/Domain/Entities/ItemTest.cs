@@ -18,8 +18,7 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             var owner = new UserDto();
 
             var itemList = ItemList.Create("MyList", owner).Data;
-            var itemGroup = ItemGroup.Create("MyGroup", owner, itemList).Data;
-            var item = Item.Create(id, name, owner, itemGroup).Data;
+            var item = Item.Create(id, name, owner, itemList).Data;
 
             Assert.IsNotNull(item);
             Assert.AreEqual(id, item.Id);
@@ -37,8 +36,7 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             var owner = new UserDto();
 
             var itemList = ItemList.Create("MyList", owner).Data;
-            var itemGroup = ItemGroup.Create("MyGroup", owner, itemList).Data;
-            var item = Item.Create(name, owner, itemGroup).Data;
+            var item = Item.Create(name, owner, itemList).Data;
 
             Assert.IsNotNull(item);
             Assert.AreEqual(Entity.DefaultId, item.Id);
@@ -54,12 +52,11 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             const string name = "";
 
             var itemList = ItemList.Create("MyList", new UserDto()).Data;
-            var itemGroup = ItemGroup.Create("MyGroup", new UserDto(), itemList).Data;
 
-            var result1 = Item.Create(name, new UserDto(), itemGroup);
+            var result1 = Item.Create(name, new UserDto(), itemList);
             Assert.IsInstanceOfType(result1, typeof(ErrorResult<Item>));
 
-            var result2 = Item.Create(1, name, new UserDto(), itemGroup);
+            var result2 = Item.Create(1, name, new UserDto(), itemList);
             Assert.IsInstanceOfType(result2, typeof(ErrorResult<Item>));
         }
 
@@ -69,12 +66,11 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             const string name = null;
 
             var itemList = ItemList.Create("MyList", new UserDto()).Data;
-            var itemGroup = ItemGroup.Create("MyGroup", new UserDto(), itemList).Data;
 
-            var result1 = Item.Create(name, new UserDto(), itemGroup);
+            var result1 = Item.Create(name, new UserDto(), itemList);
             Assert.IsInstanceOfType(result1, typeof(ErrorResult<Item>));
 
-            var result2 = Item.Create(1, name, new UserDto(), itemGroup);
+            var result2 = Item.Create(1, name, new UserDto(), itemList);
             Assert.IsInstanceOfType(result2, typeof(ErrorResult<Item>));
         }
 
@@ -85,9 +81,8 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             const string newName = "MyAwesomeItem";
 
             var itemList = ItemList.Create("MyList", new UserDto()).Data;
-            var itemGroup = ItemGroup.Create("MyGroup", new UserDto(), itemList).Data;
 
-            var item = Item.Create(1, initialName, new UserDto(), itemGroup).Data;
+            var item = Item.Create(1, initialName, new UserDto(), itemList).Data;
             Assert.AreSame(initialName, item.Name);
 
             var result = item.Rename(newName);

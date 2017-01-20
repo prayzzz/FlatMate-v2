@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace FlatMate.Web
 {
@@ -41,6 +42,11 @@ namespace FlatMate.Web
             {
                 app.UseDeveloperExceptionPage();
                 //app.UseBrowserLink();
+                app.UseSwagger();
+                app.UseSwaggerUi(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API");
+                });
             }
             else
             {
@@ -90,6 +96,11 @@ namespace FlatMate.Web
         {
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
                     .AddControllersAsServices();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" });
+            });
 
             var builder = new ContainerBuilder();
             builder.Populate(services);

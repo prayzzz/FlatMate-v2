@@ -8,9 +8,7 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
     {
         Result<ItemListDto> Create(ItemListInputDto inputDto);
 
-        Result<ItemGroupDto> Create(int listId, ItemGroupInputDto inputDto);
-
-        Result<ItemDto> Create(int groupId, ItemInputDto inputDto);
+        Result<ItemDto> Create(ItemInputDto inputDto);
 
         Result Delete(int id);
 
@@ -18,12 +16,10 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 
         IEnumerable<ItemListDto> GetAllListsFromUser(int userId);
 
-        Result<ItemListDto> GetById(int listId);
+        Result<ItemListDto> GetList(int listId);
+
+        IEnumerable<ItemDto> GetItems(int listId);
 
         Result<ItemListDto> Update(int listId, ItemListInputDto inputDto);
-
-        IEnumerable<ItemGroupDto> GetAllGroups(int listId);
-
-        IEnumerable<ItemDto> GetAllItems(int groupId);
     }
 }

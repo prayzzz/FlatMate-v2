@@ -36,17 +36,9 @@ namespace FlatMate.Module.Lists.Domain.Models
         public UserDto Owner { get; }
 
         /// <summary>
-        /// Creates a new <see cref="ItemGroup"/> with the given parameters and adds it to the <see cref="ItemList"/>.
-        /// </summary>
-        internal Result<ItemGroup> AddGroup(string name, UserDto owner)
-        {
-            return ItemGroup.Create(name, owner, this);
-        }
-
-        /// <summary>
         /// Creates a new <see cref="ItemList"/>
         /// </summary>
-        internal static Result<ItemList> Create(string name, UserDto owner)
+        public static Result<ItemList> Create(string name, UserDto owner)
         {
             return Create(DefaultId, name, owner);
         }
@@ -54,7 +46,7 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         /// Creates an exisiting <see cref="ItemList"/>
         /// </summary>
-        internal static Result<ItemList> Create(int id, string name, UserDto owner)
+        public static Result<ItemList> Create(int id, string name, UserDto owner)
         {
             #region Validation
 
@@ -72,7 +64,7 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         /// Renames the list to the given <paramref name="name"/>
         /// </summary>
-        internal Result Rename(string name)
+        public Result Rename(string name)
         {
             var validationResult = ValidateName(name);
             if (!validationResult.IsSuccess)

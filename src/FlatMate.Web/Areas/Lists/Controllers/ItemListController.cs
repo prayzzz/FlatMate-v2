@@ -98,7 +98,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public IActionResult View(int id)
         {
-            var result = _listApi.GetById(id);
+            var result = _listApi.GetById(id, true);
 
             if (!result.IsSuccess)
             {
