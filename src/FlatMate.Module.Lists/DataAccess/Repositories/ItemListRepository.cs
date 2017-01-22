@@ -12,8 +12,8 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
     [Inject(DependencyLifetime.Singleton)]
     public class ItemListRepository : IItemListRepository
     {
-        private readonly Dictionary<int, ItemListDto> _lists;
         private readonly Dictionary<int, ItemDto> _items;
+        private readonly Dictionary<int, ItemListDto> _lists;
 
         public ItemListRepository()
         {
@@ -24,8 +24,11 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
             _lists.Add(2, new ItemListDto { Id = 2, Name = "List#2", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1 });
             _lists.Add(3, new ItemListDto { Id = 3, Name = "List#3", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1 });
 
-            _items.Add(1, new ItemDto { Id = 1, Name = "Item#1", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1, ItemListId = 1 });
-            _items.Add(2, new ItemDto { Id = 2, Name = "Item#2", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1, ItemListId = 1 });
+            _items.Add(1, new ItemDto { Id = 1, Name = "Group#1", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1, ItemListId = 1 });
+            _items.Add(2, new ItemDto { Id = 2, Name = "Group#2", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1, ItemListId = 1 });
+
+            _items.Add(3, new ItemDto { Id = 3, Name = "Item#3", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1, ItemListId = 1, ParentItemId = 1 });
+            _items.Add(4, new ItemDto { Id = 4, Name = "Item#4", CreationDate = DateTime.Now, LastEditorId = 1, OwnerId = 1, ItemListId = 1, ParentItemId = 1 });
         }
 
         public Result Delete(int id)
@@ -47,6 +50,21 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
         public IEnumerable<ItemListDto> GetAllFromUser(int userId)
         {
             return _lists.Values.Where(list => list.OwnerId == userId);
+        }
+
+        public Result<ItemListMetaDto> GetItemListMeta(int listId)
+        {
+            var dto = new ItemListMetaDto
+            {
+                ItemCount = _items.Count(i => i.Value.ItemListId == listId && i.Value.ParentItemId != null)
+            };
+
+            return new SuccessResult<ItemListMetaDto>(dto);
+        }
+
+        public IEnumerable<ItemDto> GetItems(int listId)
+        {
+            return _items.Values.Where(x => x.ItemListId == listId);
         }
 
         public Result<ItemListDto> GetList(int id)
@@ -78,21 +96,6 @@ namespace FlatMate.Module.Lists.DataAccess.Repositories
             _lists.Add(id, dto);
 
             return new SuccessResult<ItemListDto>(dto);
-        }
-
-        public IEnumerable<ItemDto> GetItems(int listId)
-        {
-            return _items.Values.Where(x => x.ItemListId == listId);
-        }
-
-        public Result<ItemListMetaDto> GetItemListMeta(int listId)
-        {
-            var dto = new ItemListMetaDto
-            {
-                ItemCount = _items.Count(i => i.Value.ItemListId == listId)
-            };
-
-            return new SuccessResult<ItemListMetaDto>(dto);
         }
 
         public Result<ItemDto> Save(ItemDto dto)

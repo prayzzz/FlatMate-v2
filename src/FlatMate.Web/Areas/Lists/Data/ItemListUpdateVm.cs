@@ -6,11 +6,11 @@ namespace FlatMate.Web.Areas.Lists.Data
 {
     public class ItemListUpdateVm : BaseViewModel
     {
-        [HiddenInput]
-        public int Id { get; set; }
-
         [Display(Name = "Beschreibung")]
         public string Description { get; set; }
+
+        [HiddenInput]
+        public int Id { get; set; }
 
         [Required]
         [Display(Name = "Öffentlich")]

@@ -2,6 +2,10 @@
   "name": "flatmate",
   "version": "1.0.0",
   "dependencies": {
+    "knockout": "^3.4.1",
     "typescript": "^2.1.4"
+  },
+  "devDependencies": {
+    "typings": "^2.1.0"
   }
 }

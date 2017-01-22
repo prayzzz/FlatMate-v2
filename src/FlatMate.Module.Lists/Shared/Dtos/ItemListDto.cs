@@ -20,10 +20,10 @@ namespace FlatMate.Module.Lists.Shared.Dtos
 
         public int LastEditorId { get; set; }
 
+        public ItemListMetaDto Meta { get; set; }
+
         public DateTime ModifiedDate { get; set; }
 
         public string Name { get; set; }
-
-        public ItemListMetaDto Meta { get; set; }
     }
 }

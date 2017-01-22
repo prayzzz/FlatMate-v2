@@ -139,7 +139,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
         public void Test_Delete()
         {
             const int itemListId = 5;
-            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, /*LastEditorId = CurrentUser.Id*/};
+            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id /*LastEditorId = CurrentUser.Id*/};
 
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();
@@ -212,7 +212,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             const int itemListId = 5;
 
             var userDto = new UserDto {Id = CurrentUser.Id};
-            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id };
+            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id};
 
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();
@@ -308,7 +308,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             const int itemListId = 5;
 
             var userDto = new UserDto {Id = CurrentUser.Id};
-            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id };
+            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id};
 
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();

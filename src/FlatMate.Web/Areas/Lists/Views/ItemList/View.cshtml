@@ -16,7 +16,76 @@
         <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
     </div>
 
+    <item-list-editor params="model: model" style="width:100%"></item-list-editor>
+
 </section>
+
+<script type="text/x-template" id="item-list-editor-template">
+
+    <div class="table">
+
+        <div class="body">
+
+            <!-- ko foreach: model.groups -->
+            <div class="row">
+                <div class="cell"><strong><span data-bind="text: name"></span></strong></div>
+                <div class="cell">
+                    @*<div v-if="showOwner()">
+                            von {{group.user.userName}}
+                        </div>*@
+                </div>
+                <div class="cell icon">
+                    <a class="icon-24 icon-cross-circle"></a>
+                </div>
+            </div>
+
+
+            <!-- ko foreach: items -->
+            <div class="row">
+                <div class="cell">
+                    <div style="display:flex; align-items:center">
+                        <div class="icon-16 icon-grip" style="margin-right: 1.5rem;"></div>
+                        <div style="flex:1">
+                            <span data-bind="text: name"></span>
+                            @*<input type="text" v-model="item.value" v-if="isEditMode" v-el:iteminput v-on:blur="leaveEditMode" v-on:keyup.enter="leaveEditMode" />*@
+                        </div>
+                        @*<div v-if="showOwner()">
+                                von {{item.user.userName}}
+                            </div>*@
+                    </div>
+                </div>
+                <div class="cell icon"></div>
+                <div class="cell icon">
+                    <a class="icon-24 icon-cross-circle"></a>
+                </div>
+            </div>
+            <!-- /ko -->
+
+            <div class="row">
+                <div class="cell" style="padding-left:calc(1rem + 16px)">
+                    <input type="text" placeholder="Neuen Eintrag hinzufügen" />
+                </div>
+                <div class="cell icon">
+                    <a class="icon-24 icon-plus-circle"></a>
+                </div>
+                <div class="cell icon"></div>
+            </div>
+
+            <!-- /ko -->
+        </div>
+
+        <div class="row">
+            <div class="cell">
+                <input type="text" placeholder="Neue Gruppe hinzufügen" />
+            </div>
+            <div class="cell icon">
+                <a class="icon-24 icon-plus-circle"></a>
+            </div>
+            <div class="cell icon"></div>
+        </div>
+    </div>
+
+</script>
 
 @section viewData {
     @Json.Serialize(Model.List)

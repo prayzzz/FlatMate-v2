@@ -23,8 +23,6 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public DateTime CreationDate { get; set; }
 
-        public Item ParentItem { get; set; }
-
         public ItemList ItemList { get; set; }
 
         public UserDto LastEditor { get; set; }
@@ -32,6 +30,8 @@ namespace FlatMate.Module.Lists.Domain.Models
         public DateTime ModifiedDate { get; set; }
 
         public string Name { get; private set; }
+
+        public Item ParentItem { get; set; }
 
         public int SortIndex { get; set; }
 

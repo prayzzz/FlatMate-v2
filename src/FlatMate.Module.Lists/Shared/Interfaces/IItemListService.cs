@@ -16,9 +16,9 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 
         IEnumerable<ItemListDto> GetAllListsFromUser(int userId);
 
-        Result<ItemListDto> GetList(int listId);
-
         IEnumerable<ItemDto> GetItems(int listId);
+
+        Result<ItemListDto> GetList(int listId);
 
         Result<ItemListDto> Update(int listId, ItemListInputDto inputDto);
     }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FlatMate.Api.Areas.Account.User;
-using FlatMate.Module.Account.Shared.Dtos;
 
 namespace FlatMate.Api.Areas.Lists.ItemList
 {
@@ -32,13 +30,13 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
         public int ItemCount { get; set; }
 
+        public List<ItemJso> Items { get; set; }
+
         public UserJso LastEditor { get; set; }
 
         public string Name { get; set; }
 
         public UserJso Owner { get; set; }
-
-        public List<ItemJso> Items { get; set; }
     }
 
     public class ItemJso
@@ -47,9 +45,11 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
         public UserJso LastEditor { get; set; }
 
+        public string Name { get; set; }
+
         public UserJso Owner { get; set; }
 
-        public string Name { get; set; }
+        public int? ParentItemId { get; set; }
 
         public int SortIndex { get; set; }
     }
