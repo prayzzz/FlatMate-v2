@@ -12,9 +12,9 @@ namespace FlatMate.Api.Areas.Lists.ItemList
     [Route("api/v1/lists/itemlist")]
     public class ItemListApiController : Controller
     {
+        private readonly MappingContext _ctx;
         private readonly IItemListService _itemListService;
         private readonly IMapper _mapper;
-        private readonly MappingContext _ctx;
 
         public ItemListApiController(UserApiController userApi, IItemListService itemListService, IMapper mapper)
         {

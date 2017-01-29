@@ -30,14 +30,14 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return View(model);
             }
 
-            var result = _listApi.Create(new ItemListCreateJso { Description = model.Description, IsPublic = model.IsPublic, Name = model.Name });
+            var result = _listApi.Create(new ItemListCreateJso {Description = model.Description, IsPublic = model.IsPublic, Name = model.Name});
             if (!result.IsSuccess)
             {
                 model.ErrorResult = result;
                 return View(model);
             }
 
-            return RedirectToAction("View", new { id = result.Data.Id });
+            return RedirectToAction("View", new {id = result.Data.Id});
         }
 
         [HttpGet]
@@ -70,7 +70,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             }
 
             var list = result.Data;
-            var model = new ItemListUpdateVm { Description = list.Description, Id = list.Id, IsPublic = list.IsPublic, Name = list.Name };
+            var model = new ItemListUpdateVm {Description = list.Description, Id = list.Id, IsPublic = list.IsPublic, Name = list.Name};
             return View(model);
         }
 
@@ -83,7 +83,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return View(model);
             }
 
-            var result = _listApi.Update(id, new ItemListUpdateJso { Description = model.Description, IsPublic = model.IsPublic, Name = model.Name });
+            var result = _listApi.Update(id, new ItemListUpdateJso {Description = model.Description, IsPublic = model.IsPublic, Name = model.Name});
             if (!result.IsSuccess)
             {
                 model.ErrorResult = result;
@@ -105,7 +105,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return RedirectToAction("My");
             }
 
-            var model = new ItemListViewVm { List = result.Data };
+            var model = new ItemListViewVm {List = result.Data};
             return View(model);
         }
     }

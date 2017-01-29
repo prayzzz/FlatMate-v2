@@ -28,17 +28,8 @@ namespace FlatMate.Api.Areas.Lists.ItemList
                 LastEditor = userApi.GetById(dto.LastEditorId).Data,
                 Name = dto.Name,
                 Owner = userApi.GetById(dto.OwnerId).Data,
+                ParentItemId = dto.ParentItemId,
                 SortIndex = dto.SortIndex
-            };
-        }
-
-        private ItemListInputDto JsoToDto(ItemListInputJso jso, MappingContext mappingContext)
-        {
-            return new ItemListInputDto
-            {
-                Description = jso.Description,
-                IsPublic = jso.IsPublic,
-                Name = jso.Name
             };
         }
 
@@ -54,7 +45,17 @@ namespace FlatMate.Api.Areas.Lists.ItemList
                 ItemCount = dto.Meta.ItemCount,
                 LastEditor = userApi.GetById(dto.LastEditorId).Data,
                 Name = dto.Name,
-                Owner = userApi.GetById(dto.OwnerId).Data,
+                Owner = userApi.GetById(dto.OwnerId).Data
+            };
+        }
+
+        private ItemListInputDto JsoToDto(ItemListInputJso jso, MappingContext mappingContext)
+        {
+            return new ItemListInputDto
+            {
+                Description = jso.Description,
+                IsPublic = jso.IsPublic,
+                Name = jso.Name
             };
         }
     }

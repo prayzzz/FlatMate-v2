@@ -78,6 +78,8 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 return new ErrorResult<ItemDto>(addItem);
             }
 
+            // TODO set parent item
+
             return Save(addItem.Data);
         }
 

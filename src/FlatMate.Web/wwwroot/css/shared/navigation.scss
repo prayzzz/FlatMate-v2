@@ -65,6 +65,13 @@ nav + main {
     padding-top: 64px;
 }
 
+@media all and (min-width: 1201px) {
+    nav + main {
+        margin-left: $nav-width;
+        width:auto;
+    }
+}
+
 .menu-toggle {
     margin: 0 1rem;
 
