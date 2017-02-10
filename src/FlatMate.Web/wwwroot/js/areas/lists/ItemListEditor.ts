@@ -77,7 +77,7 @@ namespace Flatmate.Areas.Lists {
 
     class ItemModel {
         id: number;
-        lastEditor: IUserJso;
+        lastEditor: IUserJso;t
         name: KnockoutObservable<string>;
         owner: IUserJso;
         sortIndex: KnockoutObservable<number>;
@@ -93,9 +93,22 @@ namespace Flatmate.Areas.Lists {
 
     export class ItemListEditorViewModel {
         model: ItemListModel;
+        newGroupName: KnockoutObservable<String>;
 
         constructor(params: any) {
             this.model = params.model;
+
+            this.newGroupName = ko.observable<String>();
+        }
+
+        public addGroup(): void {
+            const groupName = this.newGroupName();
+
+            if (!groupName || groupName === "") {
+                return;
+            }
+            
+            console.log(this.newGroupName());
         }
     }
 

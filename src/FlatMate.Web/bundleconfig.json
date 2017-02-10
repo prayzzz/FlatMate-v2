@@ -14,6 +14,7 @@
     "outputFileName": "wwwroot/dist/flatmate.min.js",
     "inputFiles": [
       "wwwroot/node_modules/knockout/build/output/knockout-latest.js",
+      "wwwroot/node_modules/atomicjs/dist/atomic.js",
       "wwwroot/dist/flatmate.js"
     ],
     "minify": {

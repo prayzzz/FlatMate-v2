@@ -76,10 +76,10 @@
 
         <div class="row">
             <div class="cell">
-                <input type="text" placeholder="Neue Gruppe hinzufügen" />
+                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: newGroupName"/>
             </div>
             <div class="cell icon">
-                <a class="icon-24 icon-plus-circle"></a>
+                <a class="icon-24 icon-plus-circle" data-bind="click: addGroup"></a>
             </div>
             <div class="cell icon"></div>
         </div>
