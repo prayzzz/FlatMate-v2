@@ -1,4 +1,5 @@
-﻿const ExtractTextPlugin = require("extract-text-webpack-plugin");
+﻿const glob = require("glob");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = [
     {
@@ -19,13 +20,7 @@ module.exports = [
     },
     {
         name: "css",
-        entry: {
-            styles: [
-                "./css/main.scss",
-                "./css/header.scss",
-                "./css/match.scss"
-            ]
-        },
+        entry: glob.sync("./css/**/*.scss"),
         output: {
             filename: "./dist/bundle.css"
         },
