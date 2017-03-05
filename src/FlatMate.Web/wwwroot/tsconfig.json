@@ -1,12 +1,10 @@
-﻿{
-  "compileOnSave": true,
+{
   "compilerOptions": {
+    "target": "ES6",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "sourceMap": true,
-    "outFile": "dist/flatmate.js"
+    "strictNullChecks": true
   }
 }

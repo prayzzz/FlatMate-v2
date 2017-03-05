@@ -1,12 +1,27 @@
 {
-  "name": "flatmate",
+  "name": "odd-monitor",
   "version": "1.0.0",
+  "main": "index.js",
+  "repository": {},
+  "license": "MIT",
   "dependencies": {
     "atomicjs": "^2.1.0",
-    "knockout": "^3.4.1",
-    "typescript": "^2.1.4"
+    "knockout": "^3.4.1"
   },
   "devDependencies": {
-    "@types/knockout": "^3.4.39"
+    "@types/knockout": "^3.4.39",
+    "node-sass": "^4.5.0",
+    "ts-loader": "^2.0.0",
+    "typescript": "^2.2.1",
+    "tslint": "^4.4.2",
+    "webpack": "^2.2.1",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/webpack",
+    "watch": "./node_modules/.bin/webpack --watch"
   }
 }
