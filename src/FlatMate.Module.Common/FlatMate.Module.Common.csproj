@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-22" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-25" />
   </ItemGroup>
 </Project>
