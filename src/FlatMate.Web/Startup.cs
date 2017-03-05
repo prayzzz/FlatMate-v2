@@ -43,7 +43,7 @@ namespace FlatMate.Web
                 app.UseDeveloperExceptionPage();
                 //app.UseBrowserLink();
                 app.UseSwagger();
-                app.UseSwaggerUi(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"); });
+                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"); });
             }
             else
             {
