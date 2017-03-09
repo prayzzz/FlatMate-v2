@@ -6,13 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FlatMate</title>
 
-    <environment names="Development">
-        <link rel="stylesheet" asp-href-include="~/dist/css/**/*.css"/>
-    </environment>
-
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/dist/css/flatmate.min.css" asp-append-version="true"/>
-    </environment>
+    <link asp-href-include="~/dist/bundle.css" rel="stylesheet" />
+    <script asp-src-include="~/dist/bundle.js" type="text/javascript"></script>
 
 </head>
 
