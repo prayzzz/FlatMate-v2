@@ -3,13 +3,16 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FlatMate.Api;
 using FlatMate.Api.Extensions;
 using FlatMate.Api.Filter;
+using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -41,6 +44,7 @@ namespace FlatMate.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
                 //app.UseBrowserLink();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"); });
@@ -78,6 +82,8 @@ namespace FlatMate.Web
                 }
             });
 
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -92,17 +98,23 @@ namespace FlatMate.Web
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
+                    .AddJsonOptions(o => o.SerializerSettings.ContractResolver = FlatMateContractResolver.Instance)
                     .AddControllersAsServices();
 
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "FlatMate API", Version = "v1"}); });
+            services.AddSession();
+
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }); });
+
+            // Configure Module
+            Module.Lists.Module.ConfigureServices(services);
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
 
-            builder.InjectDependencies(typeof(Api.Startup));
             builder.RegisterType<Mapper>().As<IMapper>().As<IMapperConfiguration>().SingleInstance();
 
             builder.InjectDependencies(GetType());
+            builder.InjectDependencies(typeof(ApiController));
             builder.InjectDependencies(typeof(Module.Account.Module));
             builder.InjectDependencies(typeof(Module.Lists.Module));
 

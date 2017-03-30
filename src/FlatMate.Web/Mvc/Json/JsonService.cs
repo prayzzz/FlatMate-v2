@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
 
@@ -7,7 +6,11 @@ namespace FlatMate.Web.Mvc.Json
 {
     public interface IJsonService
     {
-        JsonSerializerSettings ViewSerializerSettings { get; }
+        JsonSerializerSettings SerializerSettings { get; }
+
+        string Serialize(object result);
+
+        T Deserialize<T>(string obj);
     }
 
     [Inject(DependencyLifetime.Singleton)]
@@ -15,10 +18,20 @@ namespace FlatMate.Web.Mvc.Json
     {
         public JsonService()
         {
-            ViewSerializerSettings = new JsonSerializerSettings();
-            ViewSerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            SerializerSettings = new JsonSerializerSettings();
+            SerializerSettings.ContractResolver = FlatMateContractResolver.Instance;
         }
 
-        public JsonSerializerSettings ViewSerializerSettings { get; }
+        public JsonSerializerSettings SerializerSettings { get; }
+
+        public string Serialize(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, SerializerSettings);
+        }
+
+        public T Deserialize<T>(string obj)
+        {
+            return JsonConvert.DeserializeObject<T>(obj, SerializerSettings);
+        }
     }
 }

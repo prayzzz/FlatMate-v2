@@ -15,7 +15,7 @@ namespace FlatMate.Module.Account.Domain
     [Inject]
     public class AuthenticationContext : IAuthenticationContext
     {
-        private static readonly UserDto AnonymousUser = new UserDto {Id = -1, UserName = "Anonymous"};
+        private static readonly UserDto AnonymousUser = new UserDto { Id = -1, UserName = "Anonymous" };
 
         public UserDto Anonymous => AnonymousUser;
 

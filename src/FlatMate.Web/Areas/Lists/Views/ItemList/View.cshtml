@@ -1,4 +1,5 @@
-﻿@model FlatMate.Web.Areas.Lists.Data.ItemListViewVm
+﻿@using FlatMate.Web.Mvc.Json
+@model FlatMate.Web.Areas.Lists.Data.ItemListViewVm
 
 @{
     Layout = "_Layout";
@@ -9,14 +10,14 @@
 <section class="container flex-row">
 
     <div class="flex-row actions" style="width: 50%">
-        <a href="javascript:history.back()">Zurück</a>
+        <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Meine Listen</a>
     </div>
 
     <div class="flex-row align-right actions" style="width: 50%">
         <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
     </div>
 
-    <item-list-editor params="model: model" style="width:100%"></item-list-editor>
+    <item-list-editor params="model: model" style="width: 100%"></item-list-editor>
 
 </section>
 
@@ -76,7 +77,7 @@
 
         <div class="row">
             <div class="cell">
-                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: newGroupName"/>
+                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: newGroupName" />
             </div>
             <div class="cell icon">
                 <a class="icon-24 icon-plus-circle" data-bind="click: addGroup"></a>

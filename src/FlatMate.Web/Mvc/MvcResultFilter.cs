@@ -25,7 +25,7 @@ namespace FlatMate.Web.Mvc
                 return;
             }
 
-            model.ErrorMessage = string.Format(model.ErrorResult.ErrorMessage, model.ErrorResult.ErrorMessageArgs);
+            model.ErrorMessage = string.Format(model.ErrorResult.Message, model.ErrorResult.MessageArgs);
         }
     }
 }

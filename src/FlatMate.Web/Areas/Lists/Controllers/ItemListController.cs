@@ -1,7 +1,11 @@
-﻿using FlatMate.Api.Areas.Lists.ItemList;
+﻿using System.Threading.Tasks;
+using FlatMate.Api.Areas.Lists.ItemList;
 using FlatMate.Web.Areas.Lists.Data;
+using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
+using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
+using prayzzz.Common.Result;
 
 namespace FlatMate.Web.Areas.Lists.Controllers
 {
@@ -9,10 +13,12 @@ namespace FlatMate.Web.Areas.Lists.Controllers
     public class ItemListController : MvcController
     {
         private readonly ItemListApiController _listApi;
+        private readonly IJsonService _jsonService;
 
-        public ItemListController(ItemListApiController listApi)
+        public ItemListController(ItemListApiController listApi, IJsonService jsonService)
         {
             _listApi = listApi;
+            _jsonService = jsonService;
         }
 
         [HttpGet]
@@ -22,7 +28,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromForm] ItemListCreateVm model)
+        public async Task<IActionResult> Create([FromForm] ItemListCreateVm model)
         {
             if (!ModelState.IsValid)
             {
@@ -30,52 +36,66 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return View(model);
             }
 
-            var result = _listApi.Create(new ItemListCreateJso {Description = model.Description, IsPublic = model.IsPublic, Name = model.Name});
+            var result = await _listApi.Create(new ItemListJso { Description = model.Description, IsPublic = model.IsPublic, Name = model.Name });
             if (!result.IsSuccess)
             {
                 model.ErrorResult = result;
                 return View(model);
             }
 
-            return RedirectToAction("View", new {id = result.Data.Id});
+            return RedirectToAction("View", new { id = result.Data.Id });
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var delete = _listApi.Delete(id);
+            var result = await _listApi.DeleteAsync(id);
 
-            return RedirectToAction("My");
+            TempData[Constants.TempData.Result] = _jsonService.Serialize(result);
+
+            return RedirectToAction("My", new { IsSuccess = true });
         }
 
         [HttpGet]
-        public IActionResult My()
+        public async Task<IActionResult> My()
         {
-            var listDtos = _listApi.GetAll(CurrentUserId);
-
             var model = new ItemListMyVm();
-            model.Lists = listDtos;
 
+            // check for passed result from redirect
+            if (TempData.TryGetValue(Constants.TempData.Result, out var data))
+            {
+                var result = _jsonService.Deserialize<Result>(data as string);
+
+                if (result != null && result.IsSuccess)
+                {
+                    // TODO refactor Result to allow success messages
+                    model.SuccessMessage = "Aktion erfolgreich";
+                }
+
+                TempData.Remove(Constants.TempData.Result);
+            }
+
+            model.Lists = await _listApi.GetAll(CurrentUserId);
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            var result = _listApi.GetById(id);
+            var result = await _listApi.GetById(id);
 
             if (!result.IsSuccess)
             {
                 return RedirectToAction("My");
             }
 
-            var list = result.Data;
-            var model = new ItemListUpdateVm {Description = list.Description, Id = list.Id, IsPublic = list.IsPublic, Name = list.Name};
+            var itemList = result.Data;
+            var model = new ItemListUpdateVm { Description = itemList.Description, Id = itemList.Id.Value, IsPublic = itemList.IsPublic, Name = itemList.Name };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Update(int id, [FromForm] ItemListUpdateVm model)
+        public async Task<IActionResult> Update(int id, [FromForm] ItemListUpdateVm model)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +103,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return View(model);
             }
 
-            var result = _listApi.Update(id, new ItemListUpdateJso {Description = model.Description, IsPublic = model.IsPublic, Name = model.Name});
+            var result = await _listApi.Update(id, new ItemListJso { Description = model.Description, Id = model.Id, IsPublic = model.IsPublic, Name = model.Name });
             if (!result.IsSuccess)
             {
                 model.ErrorResult = result;
@@ -96,16 +116,16 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpGet]
-        public IActionResult View(int id)
+        public async Task<IActionResult> View(int id)
         {
-            var result = _listApi.GetById(id, true);
+            var result = await _listApi.GetById(id, true);
 
             if (!result.IsSuccess)
             {
                 return RedirectToAction("My");
             }
 
-            var model = new ItemListViewVm {List = result.Data};
+            var model = new ItemListViewVm { List = result.Data };
             return View(model);
         }
     }

@@ -24,8 +24,8 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             Assert.IsTrue(itemList.IsSaved);
             Assert.AreSame(name, itemList.Name);
             Assert.AreSame(owner, itemList.Owner);
-            Assert.IsTrue(itemList.CreationDate > DateTime.Now.AddSeconds(-1));
-            Assert.IsTrue(itemList.ModifiedDate > DateTime.Now.AddSeconds(-1));
+            Assert.IsTrue(itemList.Created > DateTime.Now.AddSeconds(-1));
+            Assert.IsTrue(itemList.Modified > DateTime.Now.AddSeconds(-1));
         }
 
         [TestMethod]
@@ -40,8 +40,8 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             Assert.AreEqual(Entity.DefaultId, itemList.Id);
             Assert.AreSame(name, itemList.Name);
             Assert.AreSame(owner, itemList.Owner);
-            Assert.IsTrue(itemList.CreationDate > DateTime.Now.AddSeconds(-1));
-            Assert.IsTrue(itemList.ModifiedDate > DateTime.Now.AddSeconds(-1));
+            Assert.IsTrue(itemList.Created > DateTime.Now.AddSeconds(-1));
+            Assert.IsTrue(itemList.Modified > DateTime.Now.AddSeconds(-1));
         }
 
         [TestMethod]

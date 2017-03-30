@@ -40,7 +40,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             }
 
             // get authentication information
-            var authInfo = _authenticationRepository.GetById(user.Data.Id).ContinueWith(DtoToModel);
+            var authInfo = _authenticationRepository.GetById(user.Data.Id.Value).ContinueWith(DtoToModel);
             if (!authInfo.IsSuccess)
             {
                 return new ErrorResult<UserDto>(ErrorType.Unauthorized, "Unknown login");
@@ -56,7 +56,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         }
 
         /// <summary>
-        /// Changes the password of the current user
+        ///     Changes the password of the current user
         /// </summary>
         public Result ChangePassword(string oldPassword, string newPassword)
         {
@@ -67,7 +67,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             }
 
             // get authentication information of current user
-            var authInfoResult = GetAuthenticationInformation(CurrentUser.Id);
+            var authInfoResult = GetAuthenticationInformation(CurrentUser.Id.Value);
             if (!authInfoResult.IsSuccess)
             {
                 return authInfoResult;
@@ -91,7 +91,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         }
 
         /// <summary>
-        /// Creates a new user with the given password
+        ///     Creates a new user with the given password
         /// </summary>
         public Result<UserDto> Create(UserInputDto userDto, string password)
         {
@@ -131,7 +131,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             }
 
             // instantiate authentication-information
-            var createAuthInfo = AuthenticationInformation.Create(password, saveUser.Data.Id);
+            var createAuthInfo = AuthenticationInformation.Create(password, saveUser.Data.Id.Value);
             if (!createAuthInfo.IsSuccess)
             {
                 return new ErrorResult<UserDto>(createAuthInfo);
@@ -159,7 +159,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
 
         private Result<User> DtoToModel(UserDto dto)
         {
-            var userCreation = User.Create(dto.Id, dto.UserName, dto.Email);
+            var userCreation = User.Create(dto.Id.Value, dto.UserName, dto.Email);
             if (userCreation.IsSuccess)
             {
                 return userCreation;
@@ -182,7 +182,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             var authInfo = DtoToModel(getResult.Data);
             if (!authInfo.IsSuccess)
             {
-                _logger.LogError($"Received faulty {nameof(AuthenticationInformationDto)} (#{userId}) from repository. Error: {authInfo.ErrorMessage}");
+                _logger.LogError($"Received faulty {nameof(AuthenticationInformationDto)} (#{userId}) from repository. Error: {authInfo.Message}");
                 return new ErrorResult<AuthenticationInformation>(ErrorType.InternalError, "Internal Error");
             }
 
@@ -200,7 +200,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             var user = DtoToModel(getResult.Data);
             if (user.IsSuccess)
             {
-                _logger.LogError($"Received faulty {nameof(UserDto)} (#{id}) from repository. Error: {user.ErrorMessage}");
+                _logger.LogError($"Received faulty {nameof(UserDto)} (#{id}) from repository. Error: {user.Message}");
                 return new ErrorResult<User>(ErrorType.InternalError, "Internal Error");
             }
 

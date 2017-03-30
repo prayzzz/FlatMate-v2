@@ -40,7 +40,7 @@ namespace FlatMate.Api.Areas.Account.Authentication
             var principal = new ClaimsPrincipal();
             principal.AddIdentity(identity);
 
-            await HttpContext.Authentication.SignInAsync("FlatMate", principal, new AuthenticationProperties {IsPersistent = true});
+            await HttpContext.Authentication.SignInAsync("FlatMate", principal, new AuthenticationProperties { IsPersistent = true });
 
             return result;
         }

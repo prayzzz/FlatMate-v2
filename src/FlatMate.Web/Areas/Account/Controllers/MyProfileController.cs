@@ -42,7 +42,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View(model);
             }
 
-            var result = _userApi.ChangePassword(new ChangePasswordJso {NewPassword = model.NewPassword, OldPassword = model.OldPassword});
+            var result = _userApi.ChangePassword(new ChangePasswordJso { NewPassword = model.NewPassword, OldPassword = model.OldPassword });
             if (!result.IsSuccess)
             {
                 model.ErrorResult = result;
@@ -50,7 +50,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
             }
 
             ModelState.Clear();
-            return View(new ChangePasswordVm {SuccessMessage = "Passwort geändert"});
+            return View(new ChangePasswordVm { SuccessMessage = "Passwort geändert" });
         }
 
         [HttpGet]
@@ -64,7 +64,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View("Error");
             }
 
-            return View(new MyProfileVm {UserJso = result.Data});
+            return View(new MyProfileVm { UserJso = result.Data });
         }
     }
 }

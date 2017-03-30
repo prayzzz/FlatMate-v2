@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
@@ -10,71 +11,71 @@ using prayzzz.Common.Result;
 namespace FlatMate.Api.Areas.Lists.ItemList
 {
     [Route("api/v1/lists/itemlist")]
-    public class ItemListApiController : Controller
+    public class ItemListApiController : ApiController
     {
-        private readonly MappingContext _ctx;
         private readonly IItemListService _itemListService;
-        private readonly IMapper _mapper;
 
         public ItemListApiController(UserApiController userApi, IItemListService itemListService, IMapper mapper)
+            : base(mapper)
         {
             _itemListService = itemListService;
-            _mapper = mapper;
 
-            _ctx = new MappingContext();
-            _ctx.PutParam(ItemListMapper.UserApiKey, userApi);
+            MappingContext.PutParam(ItemListMapper.UserApiKey, userApi);
         }
 
         [HttpPost]
-        public Result<ItemListJso> Create([FromBody] ItemListCreateJso jso)
+        public async Task<Result<ItemListJso>> Create([FromBody] ItemListJso jso)
         {
-            return _itemListService.Create(_mapper.Map<ItemListInputDto>(jso)).WithDataAs(dto => _mapper.Map<ItemListJso>(dto));
+            var create = await _itemListService.CreateAsync(Map<ItemListDto>(jso));
+            return create.WithDataAs(dto => Map<ItemListJso>(dto));
         }
 
         [HttpPost("{listId}/item")]
-        public Result<ItemDto> Create(int listId, [FromBody] ItemInputDto dto)
+        public Result<ItemDto> Create(int listId, [FromBody] ItemJso jso)
         {
-            dto.ItemListId = listId;
-            return _itemListService.Create(dto);
+            //var itemDto = Map<ItemDto>(jso);
+            //itemDto.ItemListId = listId;
+
+            //return _itemListService.Create(itemDto);
+
+            return new SuccessResult<ItemDto>((ItemDto)null);
         }
 
         [HttpDelete("{id}")]
-        public Result Delete(int id)
+        public Task<Result> DeleteAsync(int id)
         {
-            return _itemListService.Delete(id);
+            return _itemListService.DeleteAsync(id);
         }
 
         [HttpGet]
-        public IEnumerable<ItemListJso> GetAll([FromQuery] int? userId)
+        public async Task<IEnumerable<ItemListJso>> GetAll([FromQuery] int? ownerId)
         {
-            if (userId.HasValue)
+            IEnumerable<ItemListDto> lists;
+            if (ownerId.HasValue)
             {
-                return _itemListService.GetAllListsFromUser(userId.Value).Select(dto => _mapper.Map<ItemListJso>(dto, _ctx));
+                lists = await _itemListService.GetListsAsync(ownerId.Value);
+            }
+            else
+            {
+                lists = await _itemListService.GetListsAsync();
             }
 
-            return _itemListService.GetAllLists().Select(dto => _mapper.Map<ItemListJso>(dto, _ctx));
+            return lists.Select(Map<ItemListJso>);
         }
 
         [HttpGet("{id}")]
-        public Result<ItemListJso> GetById(int id, [FromQuery] bool full = false)
+        public async Task<Result<ItemListJso>> GetById(int id, [FromQuery] bool full = false)
         {
-            var listResult = _itemListService.GetList(id).WithDataAs(dto => _mapper.Map<ItemListJso>(dto, _ctx));
-
-            if (!listResult.IsSuccess || !full)
-            {
-                return listResult;
-            }
-
-            var list = listResult.Data;
-            list.Items = _itemListService.GetItems(id).Select(item => _mapper.Map<ItemJso>(item, _ctx)).ToList();
-
-            return new SuccessResult<ItemListJso>(list);
+            // TODO full load
+            var listResult = await _itemListService.GetListAsync(id);
+            return listResult.WithDataAs(dto => Map<ItemListJso>(dto));
         }
 
         [HttpPut("{id}")]
-        public Result<ItemListJso> Update(int id, [FromBody] ItemListUpdateJso jso)
+        public async Task<Result<ItemListJso>> Update(int id, [FromBody] ItemListJso jso)
         {
-            return _itemListService.Update(id, _mapper.Map<ItemListInputDto>(jso)).WithDataAs(dto => _mapper.Map<ItemListJso>(dto));
+            var update = await _itemListService.UpdateAsync(id, Map<ItemListDto>(jso));
+            return update.WithDataAs(dto => Map<ItemListJso>(dto));
         }
     }
 }

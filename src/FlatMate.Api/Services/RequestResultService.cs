@@ -69,9 +69,9 @@ namespace FlatMate.Api.Services
                 case ErrorType.SqlError:
                     return new StatusCodeResult(500);
                 case ErrorType.NotFound:
-                    return new NotFoundObjectResult(string.Format(result.ErrorMessage, result.ErrorMessageArgs));
+                    return new NotFoundObjectResult(string.Format(result.Message, result.MessageArgs));
                 case ErrorType.ValidationError:
-                    return new BadRequestObjectResult(string.Format(result.ErrorMessage, result.ErrorMessageArgs));
+                    return new BadRequestObjectResult(string.Format(result.Message, result.MessageArgs));
                 case ErrorType.Unauthorized:
                     return new UnauthorizedResult();
                 default:

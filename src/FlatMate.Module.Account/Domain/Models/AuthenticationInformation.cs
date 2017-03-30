@@ -14,14 +14,14 @@ namespace FlatMate.Module.Account.Domain.Models
             UserId = userId;
         }
 
-        public string PasswordHash { get; private set; }
+        public string PasswordHash { get; }
 
         public string Salt { get; }
 
         public int UserId { get; }
 
         /// <summary>
-        /// Creates new PasswordInformations
+        ///     Creates new PasswordInformations
         /// </summary>
         public static Result<AuthenticationInformation> Create(string password, int userId)
         {
@@ -38,7 +38,7 @@ namespace FlatMate.Module.Account.Domain.Models
         }
 
         /// <summary>
-        /// Creates existing AuthenticationInformation
+        ///     Creates existing AuthenticationInformation
         /// </summary>
         public static Result<AuthenticationInformation> Create(string passwordHash, string salt, int userId)
         {

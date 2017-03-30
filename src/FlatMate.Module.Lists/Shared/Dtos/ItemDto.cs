@@ -14,13 +14,13 @@ namespace FlatMate.Module.Lists.Shared.Dtos
 
     public class ItemDto : OwnedDto
     {
-        public DateTime CreationDate { get; set; }
+        public DateTime Created { get; set; }
 
         public int ItemListId { get; set; }
 
         public int LastEditorId { get; set; }
 
-        public DateTime ModifiedDate { get; set; }
+        public DateTime Modified { get; set; }
 
         public string Name { get; set; }
 

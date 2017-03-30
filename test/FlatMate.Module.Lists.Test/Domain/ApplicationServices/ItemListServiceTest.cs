@@ -15,14 +15,14 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
     [TestClass]
     public class ItemListServiceTest
     {
-        private static readonly UserDto CurrentUser = new UserDto {Id = 1, UserName = "CurrentUser"};
+        private static readonly UserDto CurrentUser = new UserDto { Id = 1, UserName = "CurrentUser" };
 
         [TestMethod]
         public void Test_Create()
         {
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();
-            repository.Setup(x => x.Save(It.IsAny<ItemListDto>())).Returns((ItemListDto x) => new SuccessResult<ItemListDto>(x));
+            repository.Setup(x => x.AddAsync(It.IsAny<ItemListDto>())).Returns((ItemListDto x) => new SuccessResult<ItemListDto>(x));
 
             var authService = TestHelper.Mock<IItemListAuthorizationService>();
             var userService = TestHelper.Mock<IUserService>();
@@ -32,7 +32,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             authContext.SetupGet(x => x.CurrentUser).Returns(() => CurrentUser);
 
             // Act
-            var updateDto = new ItemListInputDto {Name = "MyList", Description = "MyDescription", IsPublic = true};
+            var updateDto = new ItemListDto { Name = "MyList", Description = "MyDescription", IsPublic = true };
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
             var result = service.Create(updateDto);
             var createdDto = result.Data;
@@ -67,7 +67,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
 
             // Act
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
-            var result = service.Create(new ItemListInputDto());
+            var result = service.Create(new ItemListDto());
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(ErrorResult<ItemListDto>));
@@ -84,7 +84,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
         {
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();
-            repository.Setup(x => x.Save(It.IsAny<ItemListDto>())).Returns(() => new ErrorResult<ItemListDto>(ErrorType.InternalError, ""));
+            repository.Setup(x => x.AddAsync(It.IsAny<ItemListDto>())).Returns(() => new ErrorResult<ItemListDto>(ErrorType.InternalError, ""));
 
             var authService = TestHelper.Mock<IItemListAuthorizationService>();
             var userService = TestHelper.Mock<IUserService>();
@@ -94,7 +94,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             authContext.SetupGet(x => x.CurrentUser).Returns(() => CurrentUser);
 
             // Act
-            var updateDto = new ItemListInputDto {Name = "MyList"};
+            var updateDto = new ItemListDto { Name = "MyList" };
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
             var result = service.Create(updateDto);
 
@@ -121,7 +121,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             authContext.SetupGet(x => x.CurrentUser).Returns(() => CurrentUser);
 
             // Act
-            var updateDto = new ItemListInputDto {Name = string.Empty};
+            var updateDto = new ItemListDto { Name = string.Empty };
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
             var result = service.Create(updateDto);
 
@@ -139,7 +139,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
         public void Test_Delete()
         {
             const int itemListId = 5;
-            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id /*LastEditorId = CurrentUser.Id*/};
+            var itemListDto = new ItemListDto { Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id /*LastEditorId = CurrentUser.Id*/};
 
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();
@@ -211,13 +211,13 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
         {
             const int itemListId = 5;
 
-            var userDto = new UserDto {Id = CurrentUser.Id};
-            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id};
+            var userDto = new UserDto { Id = CurrentUser.Id };
+            var itemListDto = new ItemListDto { Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id };
 
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();
             repository.Setup(x => x.GetList(itemListId)).Returns(() => new SuccessResult<ItemListDto>(itemListDto));
-            repository.Setup(x => x.Save(It.IsAny<ItemListDto>())).Returns((ItemListDto x) => new SuccessResult<ItemListDto>(x));
+            repository.Setup(x => x.AddAsync(It.IsAny<ItemListDto>())).Returns((ItemListDto x) => new SuccessResult<ItemListDto>(x));
 
             var authService = TestHelper.Mock<IItemListAuthorizationService>();
             authService.Setup(x => x.CanRead(itemListDto)).Returns(() => true);
@@ -230,7 +230,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             authContext.SetupGet(x => x.CurrentUser).Returns(() => CurrentUser);
 
             // Act
-            var updateDto = new ItemListInputDto {Name = "MyList", Description = "MyDescription", IsPublic = false};
+            var updateDto = new ItemListDto { Name = "MyList", Description = "MyDescription", IsPublic = false };
 
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
             var result = service.Update(itemListId, updateDto);
@@ -264,7 +264,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
 
             // Act
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
-            var result = service.Update(1, new ItemListInputDto());
+            var result = service.Update(1, new ItemListDto());
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(ErrorResult<ItemListDto>));
@@ -287,7 +287,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             authContext.SetupGet(x => x.IsAnonymous).Returns(() => false);
 
             // Act
-            var updateDto = new ItemListInputDto {Name = "MyList"};
+            var updateDto = new ItemListDto { Name = "MyList" };
 
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
             var result = service.Update(itemListId, updateDto);
@@ -307,8 +307,8 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
         {
             const int itemListId = 5;
 
-            var userDto = new UserDto {Id = CurrentUser.Id};
-            var itemListDto = new ItemListDto {Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id};
+            var userDto = new UserDto { Id = CurrentUser.Id };
+            var itemListDto = new ItemListDto { Id = itemListId, Name = "ListName", Description = "ListDescription", IsPublic = false, OwnerId = CurrentUser.Id, LastEditorId = CurrentUser.Id };
 
             // Mocks
             var repository = TestHelper.Mock<IItemListRepository>();
@@ -324,7 +324,7 @@ namespace FlatMate.Module.Lists.Test.Domain.ApplicationServices
             authContext.SetupGet(x => x.IsAnonymous).Returns(() => false);
 
             // Act
-            var updateDto = new ItemListInputDto {Name = ""};
+            var updateDto = new ItemListDto { Name = "" };
 
             var service = new ItemListService(repository.Object, authService.Object, userService.Object, authContext.Object);
             var result = service.Update(itemListId, updateDto);

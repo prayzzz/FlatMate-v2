@@ -1,25 +1,21 @@
 ﻿using System.Collections.Generic;
-using FlatMate.Module.Lists.Shared.Dtos;
+using System.Threading.Tasks;
+using FlatMate.Module.Common.Domain.Repositories;
+using FlatMate.Module.Lists.Domain.Models;
 using prayzzz.Common.Result;
 
 namespace FlatMate.Module.Lists.Domain.Repositories
 {
-    public interface IItemListRepository
+    public interface IItemListRepository : IRepository<ItemList>
     {
-        Result Delete(int id);
+        Task<Result<ItemList>> SaveAsync(ItemList entity);
 
-        IEnumerable<ItemListDto> GetAll();
+        Task<Result<ItemList>> GetAsync(int id);
 
-        IEnumerable<ItemListDto> GetAllFromUser(int userId);
+        Task<IEnumerable<ItemList>> GetAllAsync();
 
-        Result<ItemListMetaDto> GetItemListMeta(int listId);
+        Task<IEnumerable<ItemList>> GetAllAsync(int ownerId);
 
-        IEnumerable<ItemDto> GetItems(int listId);
-
-        Result<ItemListDto> GetList(int id);
-
-        Result<ItemListDto> Save(ItemListDto dto);
-
-        Result<ItemDto> Save(ItemDto dto);
+        Task<Result> DeleteAsync(int id);
     }
 }

@@ -37,7 +37,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View(model);
             }
 
-            var result = _userApi.Create(new CreateUserJso {Email = model.Email, Password = model.Password, UserName = model.UserName});
+            var result = _userApi.Create(new CreateUserJso { Email = model.Email, Password = model.Password, UserName = model.UserName });
             if (!result.IsSuccess)
             {
                 model.ErrorResult = result;
@@ -45,7 +45,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
             }
 
             ModelState.Clear();
-            return View(new CreateUserVm {SuccessMessage = $"Neuer Nutzer angelegt: {model.UserName}"});
+            return View(new CreateUserVm { SuccessMessage = $"Neuer Nutzer angelegt: {model.UserName}" });
         }
     }
 }

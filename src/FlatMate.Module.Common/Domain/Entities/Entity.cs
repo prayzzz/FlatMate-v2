@@ -2,15 +2,15 @@
 {
     public abstract class Entity
     {
-        public const int DefaultId = -123456;
+        //public const int DefaultId = -123456;
 
-        protected Entity(int id)
+        protected Entity(int? id)
         {
             Id = id;
         }
 
-        public int Id { get; }
+        public int? Id { get; }
 
-        public bool IsSaved => Id != DefaultId;
+        public bool IsSaved => Id.HasValue;
     }
 }

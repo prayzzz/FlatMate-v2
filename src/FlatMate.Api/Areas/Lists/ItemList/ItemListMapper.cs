@@ -13,9 +13,9 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         public void Configure(IMapperConfiguration mapper)
         {
             mapper.Configure<ItemListDto, ItemListJso>(DtoToJso);
+            mapper.Configure<ItemListJso, ItemListDto>(JsoToDto);
             mapper.Configure<ItemDto, ItemJso>(DtoToJso);
-            mapper.Configure<ItemListCreateJso, ItemListInputDto>(JsoToDto);
-            mapper.Configure<ItemListUpdateJso, ItemListInputDto>(JsoToDto);
+            mapper.Configure<ItemJso, ItemDto>(JsoToDto);
         }
 
         private ItemJso DtoToJso(ItemDto dto, MappingContext mappingContext)
@@ -24,8 +24,10 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
             return new ItemJso
             {
+                Created = dto.Created,
                 Id = dto.Id,
                 LastEditor = userApi.GetById(dto.LastEditorId).Data,
+                Modified = dto.Modified,
                 Name = dto.Name,
                 Owner = userApi.GetById(dto.OwnerId).Data,
                 ParentItemId = dto.ParentItemId,
@@ -39,23 +41,37 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
             return new ItemListJso
             {
+                Created = dto.Created,
                 Description = dto.Description,
                 Id = dto.Id,
                 IsPublic = dto.IsPublic,
                 ItemCount = dto.Meta.ItemCount,
                 LastEditor = userApi.GetById(dto.LastEditorId).Data,
+                Modified = dto.Modified,
                 Name = dto.Name,
                 Owner = userApi.GetById(dto.OwnerId).Data
             };
         }
 
-        private ItemListInputDto JsoToDto(ItemListInputJso jso, MappingContext mappingContext)
+        private ItemListDto JsoToDto(ItemListJso jso, MappingContext mappingContext)
         {
-            return new ItemListInputDto
+            return new ItemListDto
             {
                 Description = jso.Description,
+                Id = jso.Id,
                 IsPublic = jso.IsPublic,
                 Name = jso.Name
+            };
+        }
+
+        private ItemDto JsoToDto(ItemJso jso, MappingContext mappingContext)
+        {
+            return new ItemDto
+            {
+                Id = jso.Id,
+                Name = jso.Name,
+                ParentItemId = jso.ParentItemId,
+                SortIndex = jso.SortIndex
             };
         }
     }

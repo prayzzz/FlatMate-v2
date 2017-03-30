@@ -1,6 +1,5 @@
 ﻿using System;
 using FlatMate.Module.Account.Domain.Models.Interfaces;
-using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Common.Domain.Entities;
 using prayzzz.Common.Result;
 
@@ -9,15 +8,15 @@ namespace FlatMate.Module.Lists.Domain.Models
     internal class Item : Entity, IOwnedEntity
     {
         /// <summary>
-        /// Constructs an exisiting Item
+        ///     Constructs an exisiting Item
         /// </summary>
-        private Item(int id, string name, UserDto owner, ItemList list) : base(id)
+        private Item(int? id, string name, int owner, ItemList list) : base(id)
         {
             Rename(name);
 
             CreationDate = ModifiedDate = DateTime.Now;
             ItemList = list;
-            Owner = LastEditor = owner;
+            OwnerId = LastEditorId = owner;
             SortIndex = 0;
         }
 
@@ -25,7 +24,7 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public ItemList ItemList { get; set; }
 
-        public UserDto LastEditor { get; set; }
+        public int LastEditorId { get; set; }
 
         public DateTime ModifiedDate { get; set; }
 
@@ -37,20 +36,20 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public bool IsPublic => ItemList.IsPublic;
 
-        public UserDto Owner { get; }
+        public int OwnerId { get; }
 
         /// <summary>
-        /// Creates a new <see cref="Item"/>
+        ///     Creates a new <see cref="Item" />
         /// </summary>
-        public static Result<Item> Create(string name, UserDto owner, ItemList list)
+        public static Result<Item> Create(string name, int ownerId, ItemList list)
         {
-            return Create(DefaultId, name, owner, list);
+            return Create(null, name, ownerId, list);
         }
 
         /// <summary>
-        /// Creates an exisiting <see cref="Item"/>
+        ///     Creates an exisiting <see cref="Item" />
         /// </summary>
-        public static Result<Item> Create(int id, string name, UserDto owner, ItemList list)
+        public static Result<Item> Create(int? id, string name, int ownerId, ItemList list)
         {
             #region Validation
 
@@ -62,11 +61,11 @@ namespace FlatMate.Module.Lists.Domain.Models
 
             #endregion
 
-            return new SuccessResult<Item>(new Item(id, name, owner, list));
+            return new SuccessResult<Item>(new Item(id, name, ownerId, list));
         }
 
         /// <summary>
-        /// Renames the list to the given <paramref name="name"/>
+        ///     Renames the list to the given <paramref name="name" />
         /// </summary>
         public Result Rename(string name)
         {
@@ -81,9 +80,9 @@ namespace FlatMate.Module.Lists.Domain.Models
         }
 
         /// <summary>
-        /// Sets the given <paramref name="sortIndex"/>
+        ///     Sets the given <paramref name="sortIndex" />
         /// </summary>
-        public Result SetSortIndex(int sortIndex, UserDto currentUserDto)
+        public Result SetSortIndex(int sortIndex, int userId)
         {
             if (sortIndex < 0)
             {
@@ -91,7 +90,7 @@ namespace FlatMate.Module.Lists.Domain.Models
             }
 
             SortIndex = sortIndex;
-            LastEditor = currentUserDto;
+            LastEditorId = userId;
 
             return SuccessResult.Default;
         }

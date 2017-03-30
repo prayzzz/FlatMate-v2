@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FlatMate.Module.Account.Domain;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
@@ -35,259 +36,122 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 
         private UserDto CurrentUser => _authenticationContext.CurrentUser;
 
-        public Result<ItemListDto> Create(ItemListInputDto inputDto)
-        {
-            if (_authenticationContext.IsAnonymous)
-            {
-                return ErrorResult<ItemListDto>.Unauthorized;
-            }
-
-            var createResult = ItemList.Create(inputDto.Name, CurrentUser);
-            if (!createResult.IsSuccess)
-            {
-                return new ErrorResult<ItemListDto>(createResult);
-            }
-
-            var itemList = createResult.Data;
-            var mapResult = DtoToModel(inputDto, itemList);
-            if (!mapResult.IsSuccess)
-            {
-                return new ErrorResult<ItemListDto>(mapResult);
-            }
-
-            return Save(itemList);
-        }
-
-        public Result<ItemDto> Create(ItemInputDto inputDto)
-        {
-            if (_authenticationContext.IsAnonymous)
-            {
-                return ErrorResult<ItemDto>.Unauthorized;
-            }
-
-            var result = TryGetListModel(inputDto.ItemListId);
-            if (!result.IsSuccess)
-            {
-                return new ErrorResult<ItemDto>(result);
-            }
-
-            var itemList = result.Data;
-            var addItem = Item.Create(inputDto.Name, CurrentUser, itemList);
-            if (!addItem.IsSuccess)
-            {
-                return new ErrorResult<ItemDto>(addItem);
-            }
-
-            // TODO set parent item
-
-            return Save(addItem.Data);
-        }
-
-        public Result Delete(int id)
-        {
-            if (_authenticationContext.IsAnonymous)
-            {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
-            }
-
-            var getResult = _itemListRepository.GetList(id);
-            if (!getResult.IsSuccess)
-            {
-                return new ErrorResult(getResult);
-            }
-
-            if (!_authorizationService.CanDelete(getResult.Data))
-            {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
-            }
-
-            return _itemListRepository.Delete(id);
-        }
-
-        public IEnumerable<ItemListDto> GetAllLists()
-        {
-            return _itemListRepository.GetAll()
-                                      .Where(list => _authorizationService.CanRead(list))
-                                      .Select(list =>
-                                      {
-                                          list.Meta = _itemListRepository.GetItemListMeta(list.Id).Data;
-                                          return list;
-                                      });
-        }
-
-        public IEnumerable<ItemListDto> GetAllListsFromUser(int userId)
-        {
-            return _itemListRepository.GetAllFromUser(userId)
-                                      .Where(list => _authorizationService.CanRead(list))
-                                      .Select(list =>
-                                      {
-                                          list.Meta = _itemListRepository.GetItemListMeta(list.Id).Data;
-                                          return list;
-                                      });
-        }
-
-        public IEnumerable<ItemDto> GetItems(int listId)
-        {
-            var list = TryGetListModel(listId);
-            if (!list.IsSuccess)
-            {
-                return Enumerable.Empty<ItemDto>();
-            }
-
-            return _itemListRepository.GetItems(listId);
-        }
-
-        public Result<ItemListDto> GetList(int listId)
-        {
-            var getList = TryGetListModel(listId);
-            if (!getList.IsSuccess)
-            {
-                return new ErrorResult<ItemListDto>(getList);
-            }
-
-            var getMeta = _itemListRepository.GetItemListMeta(listId);
-            if (!getMeta.IsSuccess)
-            {
-                return new ErrorResult<ItemListDto>(getMeta);
-            }
-
-            return new SuccessResult<ItemListDto>(ModelToDto(getList.Data, getMeta.Data));
-        }
-
-        public Result<ItemListDto> Update(int listId, ItemListInputDto inputDto)
+        public async Task<Result<ItemListDto>> CreateAsync(ItemListDto dto)
         {
             if (_authenticationContext.IsAnonymous)
             {
                 return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
             }
 
-            var getResult = TryGetListModel(listId);
+            var createResult = ItemList.Create(dto.Name, CurrentUser.Id.Value);
+            if (!createResult.IsSuccess)
+            {
+                return new ErrorResult<ItemListDto>(createResult);
+            }
+
+            var itemList = createResult.Data;
+            itemList.Description = dto.Description;
+            itemList.IsPublic = dto.IsPublic;
+
+            return await SaveAsync(itemList);
+        }
+
+        public async Task<Result<ItemListDto>> GetListAsync(int id)
+        {
+            var itemList = await _itemListRepository.GetAsync(id);
+
+            return itemList.WithDataAs(ModelToDto);
+        }
+
+        public async Task<Result<ItemListDto>> UpdateAsync(int id, ItemListDto dto)
+        {
+            if (_authenticationContext.IsAnonymous)
+            {
+                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
+            }
+
+            var getResult = await _itemListRepository.GetAsync(id);
             if (!getResult.IsSuccess)
             {
                 return new ErrorResult<ItemListDto>(getResult);
             }
 
             var itemList = getResult.Data;
-            var mapResult = DtoToModel(inputDto, itemList);
-            if (!mapResult.IsSuccess)
+            if (itemList.OwnerId != CurrentUser.Id)
             {
-                return new ErrorResult<ItemListDto>(mapResult);
+                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
             }
 
-            return Save(itemList);
+            itemList.Rename(dto.Name);
+            itemList.Description = dto.Description;
+            itemList.IsPublic = dto.IsPublic;
+
+            return await SaveAsync(itemList);
         }
 
-        private Result<ItemList> DtoToModel(ItemListDto listDto)
+        public async Task<IEnumerable<ItemListDto>> GetListsAsync()
         {
-            var owner = _userService.GetById(listDto.OwnerId);
-            if (!owner.IsSuccess)
+            var lists = await _itemListRepository.GetAllAsync();
+            return lists.Where(x => x.IsPublic || x.OwnerId == CurrentUser.Id).Select(ModelToDto);
+        }
+
+        public async Task<IEnumerable<ItemListDto>> GetListsAsync(int ownerId)
+        {
+            var lists = await _itemListRepository.GetAllAsync(ownerId);
+
+            if (ownerId != CurrentUser.Id)
             {
-                return new ErrorResult<ItemList>(owner);
+                lists = lists.Where(x => x.IsPublic);
             }
 
-            var lastEditor = _userService.GetById(listDto.LastEditorId);
-            if (!lastEditor.IsSuccess)
+            return lists.Select(ModelToDto);
+        }
+
+        public async Task<Result> DeleteAsync(int id)
+        {
+            if (_authenticationContext.IsAnonymous)
             {
-                return new ErrorResult<ItemList>(lastEditor);
+                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
             }
 
-            var createResult = ItemList.Create(listDto.Id, listDto.Name, owner.Data);
-            if (!createResult.IsSuccess)
-            {
-                return createResult;
-            }
-
-            var itemList = createResult.Data;
-            itemList.CreationDate = listDto.CreationDate;
-            itemList.Description = listDto.Description;
-            itemList.IsPublic = listDto.IsPublic;
-            itemList.LastEditor = lastEditor.Data;
-            itemList.ModifiedDate = listDto.ModifiedDate;
-
-            return new SuccessResult<ItemList>(itemList);
-        }
-
-        private Result DtoToModel(ItemListInputDto dto, ItemList model)
-        {
-            model.Description = dto.Description;
-            model.IsPublic = dto.IsPublic;
-
-            var result = model.Rename(dto.Name);
-            if (!result.IsSuccess)
-            {
-                return result;
-            }
-
-            return SuccessResult.Default;
-        }
-
-        private ItemListDto ModelToDto(ItemList model, ItemListMetaDto metaDto)
-        {
-            return new ItemListDto
-            {
-                CreationDate = model.CreationDate,
-                Description = model.Description,
-                Id = model.Id,
-                IsPublic = model.IsPublic,
-                LastEditorId = model.LastEditor.Id,
-                Meta = metaDto,
-                ModifiedDate = model.ModifiedDate,
-                Name = model.Name,
-                OwnerId = model.Owner.Id
-            };
-        }
-
-        private ItemDto ModelToDto(Item model)
-        {
-            return new ItemDto
-            {
-                CreationDate = model.CreationDate,
-                Id = model.Id,
-                IsPublic = model.IsPublic,
-                LastEditorId = model.LastEditor.Id,
-                ModifiedDate = model.ModifiedDate,
-                Name = model.Name,
-                OwnerId = model.Owner.Id,
-                ParentItemId = model.ParentItem.Id,
-                SortIndex = model.SortIndex
-            };
-        }
-
-        private Result<ItemListDto> Save(ItemList model)
-        {
-            var dto = ModelToDto(model, new ItemListMetaDto());
-
-            dto.ModifiedDate = DateTime.Now;
-            dto.LastEditorId = CurrentUser.Id;
-
-            return _itemListRepository.Save(dto);
-        }
-
-        private Result<ItemDto> Save(Item model)
-        {
-            var dto = ModelToDto(model);
-
-            dto.ModifiedDate = DateTime.Now;
-            dto.LastEditorId = CurrentUser.Id;
-
-            return _itemListRepository.Save(dto);
-        }
-
-        private Result<ItemList> TryGetListModel(int id)
-        {
-            var getResult = _itemListRepository.GetList(id);
+            var getResult = await _itemListRepository.GetAsync(id);
 
             if (!getResult.IsSuccess)
             {
-                return new ErrorResult<ItemList>(getResult);
+                return getResult;
             }
 
-            if (!_authorizationService.CanRead(getResult.Data))
+            var itemList = getResult.Data;
+            if (itemList.OwnerId != CurrentUser.Id)
             {
-                return ErrorResult<ItemList>.Unauthorized;
+                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
             }
 
-            return DtoToModel(getResult.Data);
+            return await _itemListRepository.DeleteAsync(id);
+        }
+
+        private async Task<Result<ItemListDto>> SaveAsync(ItemList itemList)
+        {
+            itemList.Modified = DateTime.Now;
+            itemList.LastEditor = CurrentUser.Id.Value;
+
+            var result = await _itemListRepository.SaveAsync(itemList);
+            return result.WithDataAs(ModelToDto);
+        }
+
+        private ItemListDto ModelToDto(ItemList itemList)
+        {
+            var dto = new ItemListDto();
+            dto.Created = itemList.Created;
+            dto.Description = itemList.Description;
+            dto.LastEditorId = itemList.LastEditor;
+            dto.Id = itemList.Id;
+            dto.IsPublic = itemList.IsPublic;
+            dto.Modified = itemList.Modified;
+            dto.Name = itemList.Name;
+            dto.OwnerId = itemList.OwnerId;
+
+            return dto;
         }
     }
 }

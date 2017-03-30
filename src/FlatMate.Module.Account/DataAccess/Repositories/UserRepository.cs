@@ -21,7 +21,7 @@ namespace FlatMate.Module.Account.DataAccess.Repositories
             _auth = new Dictionary<int, AuthenticationInformationDto>();
 
             var defaultUser = UserDto.Fake;
-            _users.Add(defaultUser.Id, defaultUser);
+            _users.Add(defaultUser.Id.Value, defaultUser);
         }
 
         public Result<UserDto> GetByEmail(string email)
@@ -62,7 +62,7 @@ namespace FlatMate.Module.Account.DataAccess.Repositories
         {
             if (dto.IsSaved)
             {
-                _users[dto.Id] = dto;
+                _users[dto.Id.Value] = dto;
                 return new SuccessResult<UserDto>(dto);
             }
 

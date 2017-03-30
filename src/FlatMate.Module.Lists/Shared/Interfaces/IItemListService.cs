@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Result;
 
@@ -6,20 +7,29 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 {
     public interface IItemListService
     {
-        Result<ItemListDto> Create(ItemListInputDto inputDto);
+        Task<Result<ItemListDto>> CreateAsync(ItemListDto dto);
 
-        Result<ItemDto> Create(ItemInputDto inputDto);
+        Task<Result<ItemListDto>> GetListAsync(int id);
 
-        Result Delete(int id);
+        Task<Result<ItemListDto>> UpdateAsync(int id, ItemListDto dto);
 
-        IEnumerable<ItemListDto> GetAllLists();
+        Task<IEnumerable<ItemListDto>> GetListsAsync();
 
-        IEnumerable<ItemListDto> GetAllListsFromUser(int userId);
+        Task<IEnumerable<ItemListDto>> GetListsAsync(int ownerId);
 
-        IEnumerable<ItemDto> GetItems(int listId);
+        //IEnumerable<ItemDto> GetItems(int listId);
 
-        Result<ItemListDto> GetList(int listId);
+        //IEnumerable<ItemListDto> GetAllListsFromUser(int userId);
 
-        Result<ItemListDto> Update(int listId, ItemListInputDto inputDto);
+        //IEnumerable<ItemListDto> GetAllLists();
+
+        //Result Delete(int id);
+
+        //Result<ItemDto> Create(ItemDto dto);
+
+        //Result<ItemListDto> GetList(int listId);
+
+        //Result<ItemListDto> Update(int listId, ItemListDto dto);
+        Task<Result> DeleteAsync(int id);
     }
 }

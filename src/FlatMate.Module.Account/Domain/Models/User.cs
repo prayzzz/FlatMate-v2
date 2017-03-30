@@ -9,7 +9,7 @@ namespace FlatMate.Module.Account.Domain.Models
     {
         private static readonly Regex EmailRegex = new Regex("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-        private User(int id, string userName, string email)
+        private User(int? id, string userName, string email)
             : base(id)
         {
             CreationDate = DateTime.Now;
@@ -25,10 +25,10 @@ namespace FlatMate.Module.Account.Domain.Models
 
         internal static Result<User> Create(string userName, string email)
         {
-            return Create(DefaultId, userName, email);
+            return Create(null, userName, email);
         }
 
-        internal static Result<User> Create(int id, string userName, string email)
+        internal static Result<User> Create(int? id, string userName, string email)
         {
             #region Validation
 

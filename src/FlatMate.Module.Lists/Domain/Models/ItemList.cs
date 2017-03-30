@@ -1,52 +1,51 @@
 ﻿using System;
 using FlatMate.Module.Account.Domain.Models.Interfaces;
-using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Common.Domain.Entities;
 using prayzzz.Common.Result;
 
 namespace FlatMate.Module.Lists.Domain.Models
 {
-    internal class ItemList : Entity, IOwnedEntity
+    public class ItemList : Entity, IOwnedEntity
     {
         /// <summary>
-        /// Constructs an <see cref="ItemList"/>
+        ///     Constructs an <see cref="ItemList" />
         /// </summary>
-        private ItemList(int id, string name, UserDto owner)
+        private ItemList(int? id, string name, int ownerId)
             : base(id)
         {
             Rename(name);
 
-            CreationDate = ModifiedDate = DateTime.Now;
+            Created = Modified = DateTime.Now;
             Description = string.Empty;
-            Owner = LastEditor = owner;
+            OwnerId = LastEditor = ownerId;
         }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime Created { get; set; }
 
         public string Description { get; set; }
 
-        public UserDto LastEditor { get; set; }
+        public int LastEditor { get; set; }
 
-        public DateTime ModifiedDate { get; set; }
+        public DateTime Modified { get; set; }
 
         public string Name { get; private set; }
 
         public bool IsPublic { get; set; }
 
-        public UserDto Owner { get; }
+        public int OwnerId { get; }
 
         /// <summary>
-        /// Creates a new <see cref="ItemList"/>
+        ///     Creates a new <see cref="ItemList" />
         /// </summary>
-        public static Result<ItemList> Create(string name, UserDto owner)
+        public static Result<ItemList> Create(string name, int ownerId)
         {
-            return Create(DefaultId, name, owner);
+            return Create(null, name, ownerId);
         }
 
         /// <summary>
-        /// Creates an exisiting <see cref="ItemList"/>
+        ///     Creates an exisiting <see cref="ItemList" />
         /// </summary>
-        public static Result<ItemList> Create(int id, string name, UserDto owner)
+        public static Result<ItemList> Create(int? id, string name, int ownerId)
         {
             #region Validation
 
@@ -58,11 +57,11 @@ namespace FlatMate.Module.Lists.Domain.Models
 
             #endregion
 
-            return new SuccessResult<ItemList>(new ItemList(id, name, owner));
+            return new SuccessResult<ItemList>(new ItemList(id, name, ownerId));
         }
 
         /// <summary>
-        /// Renames the list to the given <paramref name="name"/>
+        ///     Renames the list to the given <paramref name="name" />
         /// </summary>
         public Result Rename(string name)
         {

@@ -7,6 +7,7 @@ namespace FlatMate.Module.Lists.Domain.Services
     public interface IItemListAuthorizationService
     {
         bool CanDelete(OwnedDto getResultData);
+
         bool CanRead(OwnedDto dto);
     }
 
