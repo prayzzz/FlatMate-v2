@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Api.Services
 {
@@ -66,12 +66,11 @@ namespace FlatMate.Api.Services
             {
                 case ErrorType.Unknown:
                 case ErrorType.InternalError:
-                case ErrorType.SqlError:
                     return new StatusCodeResult(500);
                 case ErrorType.NotFound:
-                    return new NotFoundObjectResult(string.Format(result.Message, result.MessageArgs));
+                    return new NotFoundObjectResult(result.ToString());
                 case ErrorType.ValidationError:
-                    return new BadRequestObjectResult(string.Format(result.Message, result.MessageArgs));
+                    return new BadRequestObjectResult(result.ToString());
                 case ErrorType.Unauthorized:
                     return new UnauthorizedResult();
                 default:

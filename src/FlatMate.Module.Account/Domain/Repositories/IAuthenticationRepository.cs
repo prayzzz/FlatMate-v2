@@ -1,5 +1,5 @@
 ﻿using FlatMate.Module.Account.Shared.Dtos;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Repositories
 {

@@ -5,15 +5,15 @@ using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Lists.Controllers
 {
     [Area("Lists")]
     public class ItemListController : MvcController
     {
-        private readonly ItemListApiController _listApi;
         private readonly IJsonService _jsonService;
+        private readonly ItemListApiController _listApi;
 
         public ItemListController(ItemListApiController listApi, IJsonService jsonService)
         {
@@ -32,14 +32,14 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.ErrorMessage = "Bitte füll das Formular korrekt aus";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
                 return View(model);
             }
 
             var result = await _listApi.Create(new ItemListJso { Description = model.Description, IsPublic = model.IsPublic, Name = model.Name });
             if (!result.IsSuccess)
             {
-                model.ErrorResult = result;
+                model.Result = result;
                 return View(model);
             }
 
@@ -49,11 +49,22 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            var getResult = await _listApi.GetListById(id);
+            if (getResult.IsError)
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(getResult);
+                return RedirectToAction("My");
+            }
+
             var result = await _listApi.DeleteAsync(id);
+            if (result.IsError)
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(new ErrorResult(result.ErrorType, $"Die Liste '{getResult.Data.Name}' konnte nicht gelöscht werden."));
+                return RedirectToAction("My");
+            }
 
-            TempData[Constants.TempData.Result] = _jsonService.Serialize(result);
-
-            return RedirectToAction("My", new { IsSuccess = true });
+            TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult($"Die Liste '{getResult.Data.Name}' wurde gelöscht."));
+            return RedirectToAction("My");
         }
 
         [HttpGet]
@@ -64,14 +75,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             // check for passed result from redirect
             if (TempData.TryGetValue(Constants.TempData.Result, out var data))
             {
-                var result = _jsonService.Deserialize<Result>(data as string);
-
-                if (result != null && result.IsSuccess)
-                {
-                    // TODO refactor Result to allow success messages
-                    model.SuccessMessage = "Aktion erfolgreich";
-                }
-
+                model.Result = _jsonService.Deserialize<Result>(data as string);
                 TempData.Remove(Constants.TempData.Result);
             }
 
@@ -82,7 +86,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var result = await _listApi.GetById(id);
+            var result = await _listApi.GetListById(id);
 
             if (!result.IsSuccess)
             {
@@ -99,26 +103,26 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.ErrorMessage = "Bitte füll das Formular korrekt aus";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
                 return View(model);
             }
 
             var result = await _listApi.Update(id, new ItemListJso { Description = model.Description, Id = model.Id, IsPublic = model.IsPublic, Name = model.Name });
             if (!result.IsSuccess)
             {
-                model.ErrorResult = result;
+                model.Result = result;
                 return View(model);
             }
 
             ModelState.Clear();
-            model.SuccessMessage = "Änderungen gespeichert";
+            model.Result = new SuccessResult("Änderungen gespeichert");
             return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> View(int id)
         {
-            var result = await _listApi.GetById(id, true);
+            var result = await _listApi.GetListById(id, true);
 
             if (!result.IsSuccess)
             {

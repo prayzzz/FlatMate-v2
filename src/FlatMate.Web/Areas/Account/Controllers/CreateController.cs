@@ -2,6 +2,7 @@
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
@@ -27,25 +28,25 @@ namespace FlatMate.Web.Areas.Account.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.ErrorMessage = "Bitte füll das Formular korrekt aus";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
                 return View(model);
             }
 
             if (model.Password != model.PasswordConfirmation)
             {
-                model.ErrorMessage = "Das eingebenene Passwort stimmt nicht überein";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Das eingebenene Passwort stimmt nicht überein");
                 return View(model);
             }
 
             var result = _userApi.Create(new CreateUserJso { Email = model.Email, Password = model.Password, UserName = model.UserName });
             if (!result.IsSuccess)
             {
-                model.ErrorResult = result;
+                model.Result = result;
                 return View(model);
             }
 
             ModelState.Clear();
-            return View(new CreateUserVm { SuccessMessage = $"Neuer Nutzer angelegt: {model.UserName}" });
+            return View(new CreateUserVm { Result = new SuccessResult($"Neuer Nutzer angelegt: {model.UserName}") });
         }
     }
 }

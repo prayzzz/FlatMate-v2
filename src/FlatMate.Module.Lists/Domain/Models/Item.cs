@@ -1,11 +1,11 @@
 ﻿using System;
 using FlatMate.Module.Account.Domain.Models.Interfaces;
 using FlatMate.Module.Common.Domain.Entities;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Domain.Models
 {
-    internal class Item : Entity, IOwnedEntity
+    public class Item : Entity, IOwnedEntity
     {
         /// <summary>
         ///     Constructs an exisiting Item
@@ -76,22 +76,6 @@ namespace FlatMate.Module.Lists.Domain.Models
             }
 
             Name = name;
-            return SuccessResult.Default;
-        }
-
-        /// <summary>
-        ///     Sets the given <paramref name="sortIndex" />
-        /// </summary>
-        public Result SetSortIndex(int sortIndex, int userId)
-        {
-            if (sortIndex < 0)
-            {
-                return new ErrorResult(ErrorType.ValidationError, $"{sortIndex} must be >= 0");
-            }
-
-            SortIndex = sortIndex;
-            LastEditorId = userId;
-
             return SuccessResult.Default;
         }
 

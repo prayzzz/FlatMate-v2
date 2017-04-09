@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FlatMate.Module.Lists.Shared.Dtos;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Shared.Interfaces
 {
@@ -17,19 +17,12 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 
         Task<IEnumerable<ItemListDto>> GetListsAsync(int ownerId);
 
-        //IEnumerable<ItemDto> GetItems(int listId);
-
-        //IEnumerable<ItemListDto> GetAllListsFromUser(int userId);
-
-        //IEnumerable<ItemListDto> GetAllLists();
-
-        //Result Delete(int id);
-
-        //Result<ItemDto> Create(ItemDto dto);
-
-        //Result<ItemListDto> GetList(int listId);
-
-        //Result<ItemListDto> Update(int listId, ItemListDto dto);
         Task<Result> DeleteAsync(int id);
+
+        //Task<Result<ItemDto>> CreateAsync(int listId, ItemDto itemDto);
+
+        Task<Result<ItemGroupDto>> CreateAsync(int listId, ItemGroupDto dto);
+
+        Task<Result<ItemGroupDto>> GetGroupAsync(int id);
     }
 }

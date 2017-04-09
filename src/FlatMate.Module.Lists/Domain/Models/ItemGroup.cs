@@ -5,59 +5,61 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Domain.Models
 {
-    public class ItemList : Entity, IOwnedEntity
+    public class ItemGroup : Entity, IOwnedEntity
     {
         /// <summary>
-        ///     Constructs an <see cref="ItemList" />
+        ///     Constructs an ItemGroup
         /// </summary>
-        private ItemList(int? id, string name, int ownerId)
-            : base(id)
+        private ItemGroup(int? id, string name, int owner, ItemList list) : base(id)
         {
             Rename(name);
 
             Created = Modified = DateTime.Now;
-            Description = string.Empty;
-            OwnerId = LastEditor = ownerId;
+            ItemList = list;
+            OwnerId = LastEditorId = owner;
+            SortIndex = 0;
         }
 
         public DateTime Created { get; set; }
 
-        public string Description { get; set; }
+        public ItemList ItemList { get; set; }
 
-        public int LastEditor { get; set; }
+        public int LastEditorId { get; set; }
 
         public DateTime Modified { get; set; }
 
         public string Name { get; private set; }
 
-        public bool IsPublic { get; set; }
+        public int SortIndex { get; set; }
 
         public int OwnerId { get; }
 
+        public bool IsPublic => ItemList.IsPublic;
+
         /// <summary>
-        ///     Creates a new <see cref="ItemList" />
+        ///     Creates a new <see cref="Item" />
         /// </summary>
-        public static Result<ItemList> Create(string name, int ownerId)
+        public static Result<ItemGroup> Create(string name, int ownerId, ItemList list)
         {
-            return Create(null, name, ownerId);
+            return Create(null, name, ownerId, list);
         }
 
         /// <summary>
-        ///     Creates an exisiting <see cref="ItemList" />
+        ///     Creates an exisiting <see cref="Item" />
         /// </summary>
-        public static Result<ItemList> Create(int? id, string name, int ownerId)
+        public static Result<ItemGroup> Create(int? id, string name, int ownerId, ItemList list)
         {
             #region Validation
 
             var result = ValidateName(name);
             if (!result.IsSuccess)
             {
-                return new ErrorResult<ItemList>(result);
+                return new ErrorResult<ItemGroup>(result);
             }
 
             #endregion
 
-            return new SuccessResult<ItemList>(new ItemList(id, name, ownerId));
+            return new SuccessResult<ItemGroup>(new ItemGroup(id, name, ownerId, list));
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace FlatMate.Module.Lists.Domain.Models
             return SuccessResult.Default;
         }
 
-        private static Result ValidateName(string name)
+        protected static Result ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {

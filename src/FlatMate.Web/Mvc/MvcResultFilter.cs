@@ -20,12 +20,12 @@ namespace FlatMate.Web.Mvc
 
             var model = viewResult.Model as BaseViewModel;
 
-            if (model == null || !model.IsError || model.ErrorResult == null)
+            if (model == null || !model.IsError || model.Result == null)
             {
-                return;
             }
 
-            model.ErrorMessage = string.Format(model.ErrorResult.Message, model.ErrorResult.MessageArgs);
+            // TODO
+            //model.ErrorMessage = string.Format(model.Result.Message, model.Result.MessageArgs);
         }
     }
 }

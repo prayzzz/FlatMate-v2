@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using FlatMate.Module.Common.Domain.Entities;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Models
 {

@@ -5,7 +5,7 @@ using FlatMate.Module.Account.Domain.Repositories;
 using FlatMate.Module.Account.Shared.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.DataAccess.Repositories
 {

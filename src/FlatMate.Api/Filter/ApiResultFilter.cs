@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Api.Filter
 {
@@ -20,6 +20,7 @@ namespace FlatMate.Api.Filter
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             var objectResult = context.Result as ObjectResult;
+            var requestMethod = context.HttpContext.Request.Method;
 
             if (objectResult == null)
             {
@@ -27,18 +28,14 @@ namespace FlatMate.Api.Filter
             }
 
             // check for generic result
-            var genericResult = objectResult.Value as IResult<object>;
-
-            if (genericResult != null)
+            if (objectResult.Value is IResult<object> genericResult)
             {
                 context.Result = _resultService.Get(genericResult);
                 return;
             }
 
             // check for non-generic result
-            var result = objectResult.Value as Result;
-
-            if (result != null)
+            if (objectResult.Value is Result result)
             {
                 context.Result = _resultService.Get(result);
             }

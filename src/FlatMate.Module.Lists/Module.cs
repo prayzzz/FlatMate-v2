@@ -8,7 +8,7 @@ namespace FlatMate.Module.Lists
     {
         public static void ConfigureServices(IServiceCollection service)
         {
-            service.AddDbContext<ItemListContext>(options => { options.UseInMemoryDatabase("FlatMate"); });
+            service.AddDbContext<ListsContext>(options => { options.UseInMemoryDatabase("FlatMate"); });
         }
     }
 }

@@ -4,6 +4,7 @@ using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
@@ -32,25 +33,25 @@ namespace FlatMate.Web.Areas.Account.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.ErrorMessage = "Bitte füll das Formular korrekt aus";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
                 return View(model);
             }
 
             if (model.NewPassword != model.NewPasswordConfirmation)
             {
-                model.ErrorMessage = "Das eingebenene Passwort stimmt nicht überein";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Das eingebenene Passwort stimmt nicht überein");
                 return View(model);
             }
 
             var result = _userApi.ChangePassword(new ChangePasswordJso { NewPassword = model.NewPassword, OldPassword = model.OldPassword });
             if (!result.IsSuccess)
             {
-                model.ErrorResult = result;
+                model.Result = result;
                 return View(model);
             }
 
             ModelState.Clear();
-            return View(new ChangePasswordVm { SuccessMessage = "Passwort geändert" });
+            return View(new ChangePasswordVm { Result = new SuccessResult("Passwort geändert") });
         }
 
         [HttpGet]

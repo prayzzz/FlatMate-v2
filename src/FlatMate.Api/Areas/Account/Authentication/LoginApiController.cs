@@ -5,7 +5,7 @@ using FlatMate.Module.Account.Shared.Interfaces;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Api.Areas.Account.Authentication
 {

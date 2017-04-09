@@ -3,7 +3,7 @@ using FlatMate.Module.Account.Shared.Dtos;
 
 namespace FlatMate.Module.Lists.Shared.Dtos
 {
-    public class ItemDto : OwnedDto
+    public class ItemGroupDto : OwnedDto
     {
         public DateTime Created { get; set; }
 
@@ -14,8 +14,6 @@ namespace FlatMate.Module.Lists.Shared.Dtos
         public DateTime Modified { get; set; }
 
         public string Name { get; set; }
-
-        public int? ParentItemId { get; set; }
 
         public int SortIndex { get; set; }
     }

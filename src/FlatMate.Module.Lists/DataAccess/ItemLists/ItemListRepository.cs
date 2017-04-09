@@ -7,19 +7,18 @@ using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
-using prayzzz.Common.Enums;
 using prayzzz.Common.Mapping;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemLists
 {
-    [Inject(DependencyLifetime.Singleton)]
+    [Inject]
     public class ItemListRepository : IItemListRepository
     {
-        private readonly ItemListContext _context;
+        private readonly ListsContext _context;
         private readonly IMapper _mapper;
 
-        public ItemListRepository(ItemListContext context, IMapper mapper)
+        public ItemListRepository(ListsContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -23,8 +23,7 @@ namespace FlatMate.Web.Mvc.Json
         {
             var value = reader.Value.ToString();
 
-            DateTime dateTime;
-            return DateTime.TryParse(value, out dateTime) ? dateTime : DateTime.MinValue;
+            return DateTime.TryParse(value, out DateTime dateTime) ? dateTime : DateTime.MinValue;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

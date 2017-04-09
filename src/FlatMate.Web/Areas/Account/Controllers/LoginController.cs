@@ -5,6 +5,7 @@ using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
@@ -32,7 +33,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.ErrorMessage = "Bitte füll das Formular korrekt aus";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
                 return View(model);
             }
 
@@ -40,7 +41,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
 
             if (!result.IsSuccess)
             {
-                model.ErrorMessage = "Login fehlgeschlagen";
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Login fehlgeschlagen");
                 return View(model);
             }
 

@@ -4,7 +4,7 @@ using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.ApplicationServices
 {
