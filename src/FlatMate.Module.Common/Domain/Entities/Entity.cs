@@ -2,8 +2,6 @@
 {
     public abstract class Entity
     {
-        //public const int DefaultId = -123456;
-
         protected Entity(int? id)
         {
             Id = id;

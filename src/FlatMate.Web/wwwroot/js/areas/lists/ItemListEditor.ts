@@ -1,15 +1,26 @@
-﻿"use strict";
+﻿import * as ko from "knockout";
+import { ApiClient } from "../../api/apiClient";
 
 interface IItemJso {
     id: number;
-    lastEditor: IUserJso;
+    lastEditor: IUserInfoJso;
     name: string;
-    owner: IUserJso;
-    parentItemId: number | null;
+    owner: IUserInfoJso;
+    itemGroupId: number | null;
+    itemListId: number;
     sortIndex: number;
 }
 
-interface IUserJso {
+interface IItemGroupJso {
+    id: number;
+    lastEditor: IUserInfoJso;
+    name: string;
+    owner: IUserInfoJso;
+    itemListId: number;
+    sortIndex: number;
+}
+
+interface IUserInfoJso {
     id: number;
     name: string;
 }
@@ -20,9 +31,10 @@ interface IItemListJso {
     isPublic: boolean;
     itemCount: number;
     items: Array<IItemJso>;
-    lastEditor: IUserJso;
+    itemGroups: Array<IItemGroupJso>;
+    lastEditor: IUserInfoJso;
     name: string;
-    owner: IUserJso;
+    owner: IUserInfoJso;
 }
 
 class ItemListModel {
@@ -30,38 +42,42 @@ class ItemListModel {
     public groups: KnockoutObservableArray<ItemGroupModel>;
     public id: number;
     public isPublic: boolean;
-    public lastEditor: IUserJso;
+    public items: KnockoutObservableArray<ItemModel>;
+    public lastEditor: IUserInfoJso;
     public name: string;
-    public owner: IUserJso;
+    public owner: IUserInfoJso;
 
     constructor(data: IItemListJso) {
         this.description = data.description;
         this.groups = ko.observableArray<ItemGroupModel>();
         this.id = data.id;
         this.isPublic = data.isPublic;
+        this.items = ko.observableArray<ItemGroupModel>();
         this.lastEditor = data.lastEditor;
         this.name = data.name;
         this.owner = data.owner;
 
-        data.items
-            .filter(g => g.parentItemId == null)
+        data.itemGroups
             .forEach(g => {
-                const items = data.items.filter(i => i.parentItemId === g.id);
+                const items = data.items.filter(i => i.itemGroupId === g.id);
                 this.groups.push(new ItemGroupModel(g, items));
             });
 
+        data.items
+            .filter(i => i.itemGroupId == null)
+            .forEach(i => this.items.push(new ItemModel(i)));
     }
 }
 
 class ItemGroupModel {
     public id: number;
-    public lastEditor: IUserJso;
+    public lastEditor: IUserInfoJso;
     public items: Array<ItemModel>;
     public name: KnockoutObservable<string>;
-    public owner: IUserJso;
+    public owner: IUserInfoJso;
     public sortIndex: KnockoutObservable<number>;
 
-    constructor(data: IItemJso, items: IItemJso[]) {
+    constructor(data: IItemGroupJso, items: IItemJso[] = new Array()) {
         this.id = data.id;
         this.lastEditor = data.lastEditor;
         this.items = new Array();
@@ -71,13 +87,17 @@ class ItemGroupModel {
 
         items.forEach(i => this.items.push(new ItemModel(i)));
     }
+
+    public get itemsSorted(): ItemModel[] {
+        return this.items.sort((a, b) => a.sortIndex() - b.sortIndex());
+    }
 }
 
 class ItemModel {
     public id: number;
-    public lastEditor: IUserJso;
+    public lastEditor: IUserInfoJso;
     public name: KnockoutObservable<string>;
-    public owner: IUserJso;
+    public owner: IUserInfoJso;
     public sortIndex: KnockoutObservable<number>;
 
     constructor(data: IItemJso) {
@@ -90,6 +110,7 @@ class ItemModel {
 }
 
 export class ItemListEditorViewModel {
+    private apiClient: ApiClient;
     public model: ItemListModel;
     public newGroupName: KnockoutObservable<String>;
 
@@ -97,6 +118,8 @@ export class ItemListEditorViewModel {
         this.model = params.model;
 
         this.newGroupName = ko.observable<String>();
+
+        this.apiClient = new ApiClient();
     }
 
     public addGroup(): void {
@@ -106,7 +129,13 @@ export class ItemListEditorViewModel {
             return;
         }
 
-        console.log(this.newGroupName());
+        var groupToAdd = { name: groupName, sortIndex: 0 };
+        var done = (g: IItemGroupJso) => {
+            this.model.groups.push(new ItemGroupModel(g));
+            this.newGroupName("");
+        }
+
+        this.apiClient.post(`lists/itemlist/${this.model.id}/group`, groupToAdd, done);
     }
 }
 

@@ -35,7 +35,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
                 if (dbo == null)
                 {
-                    return new ErrorResult<ItemList>(ErrorType.NotFound, $"ItemList not found: #{entity.Id}");
+                    return new ErrorResult<ItemList>(ErrorType.NotFound, "Entity not found");
                 }
             }
             else
@@ -63,7 +63,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
             if (dbo == null)
             {
-                return new ErrorResult<ItemList>(ErrorType.NotFound, $"ItemList #{id} not found");
+                return new ErrorResult<ItemList>(ErrorType.NotFound, "Entity not found");
             }
 
             return new SuccessResult<ItemList>(_mapper.Map<ItemList>(dbo));
@@ -87,7 +87,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
             if (dbo == null)
             {
-                return new ErrorResult(ErrorType.NotFound, $"ItemList #{id} not found");
+                return new ErrorResult(ErrorType.NotFound, "Entity not found");
             }
 
             _context.Remove(dbo);

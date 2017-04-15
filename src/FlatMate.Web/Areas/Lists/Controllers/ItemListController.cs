@@ -56,7 +56,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return RedirectToAction("My");
             }
 
-            var result = await _listApi.DeleteAsync(id);
+            var result = await _listApi.DeleteListAsync(id);
             if (result.IsError)
             {
                 TempData[Constants.TempData.Result] = _jsonService.Serialize(new ErrorResult(result.ErrorType, $"Die Liste '{getResult.Data.Name}' konnte nicht gelöscht werden."));
@@ -79,7 +79,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 TempData.Remove(Constants.TempData.Result);
             }
 
-            model.Lists = await _listApi.GetAll(CurrentUserId);
+            model.Lists = await _listApi.GetAllLists(CurrentUserId);
             return View(model);
         }
 

@@ -26,6 +26,53 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
 
         public IUnitOfWork UnitOfWork => _context;
 
+        public async Task<Result> DeleteAsync(int id)
+        {
+            var dbo = await _context.ItemGroups.FindAsync(id);
+
+            if (dbo == null)
+            {
+                return new ErrorResult(ErrorType.NotFound, "Entity not found");
+            }
+
+            _context.Remove(dbo);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return new ErrorResult(ErrorType.InternalError, e.Message);
+            }
+
+            return new SuccessResult();
+        }
+
+        public async Task<IEnumerable<ItemGroup>> GetAllAsync(int listId)
+        {
+            var lists = await _context.ItemGroups
+                                      .Include(g => g.ItemList)
+                                      .Where(g => g.ItemListId == listId)
+                                      .ToListAsync();
+
+            return lists.Select(_mapper.Map<ItemGroup>).ToList();
+        }
+
+        public async Task<Result<ItemGroup>> GetAsync(int id)
+        {
+            var dbo = await _context.ItemGroups
+                                    .Include(g => g.ItemList)
+                                    .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (dbo == null)
+            {
+                return new ErrorResult<ItemGroup>(ErrorType.NotFound, "Entity not found");
+            }
+
+            return new SuccessResult<ItemGroup>(_mapper.Map<ItemGroup>(dbo));
+        }
+
         public async Task<Result<ItemGroup>> SaveAsync(ItemGroup entity)
         {
             ItemGroupDbo dbo;
@@ -35,7 +82,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
 
                 if (dbo == null)
                 {
-                    return new ErrorResult<ItemGroup>(ErrorType.NotFound, $"ItemGroup not found: #{entity.Id}");
+                    return new ErrorResult<ItemGroup>(ErrorType.NotFound, "Entity not found");
                 }
             }
             else
@@ -55,24 +102,6 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
             }
 
             return new SuccessResult<ItemGroup>(_mapper.Map<ItemGroup>(dbo));
-        }
-
-        public async Task<Result<ItemGroup>> GetAsync(int id)
-        {
-            var dbo = await _context.ItemGroups.FindAsync(id);
-
-            if (dbo == null)
-            {
-                return new ErrorResult<ItemGroup>(ErrorType.NotFound, $"ItemGroup #{id} not found");
-            }
-
-            return new SuccessResult<ItemGroup>(_mapper.Map<ItemGroup>(dbo));
-        }
-
-        public async Task<IEnumerable<ItemGroup>> GetAllAsync()
-        {
-            var lists = await _context.ItemGroups.ToListAsync();
-            return lists.Select(_mapper.Map<ItemGroup>).ToList();
         }
     }
 }

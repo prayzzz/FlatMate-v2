@@ -1,14 +1,16 @@
 ﻿using FlatMate.Module.Account.Domain;
-using FlatMate.Module.Account.Shared.Dtos;
+using FlatMate.Module.Account.Domain.Models.Interfaces;
 using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Lists.Domain.Services
 {
     public interface IItemListAuthorizationService
     {
-        bool CanDelete(OwnedDto getResultData);
+        bool CanDelete(IOwnedEntity entity);
 
-        bool CanRead(OwnedDto dto);
+        bool CanRead(IOwnedEntity entity);
+
+        bool CanEdit(IOwnedEntity entity);
     }
 
     [Inject]
@@ -21,9 +23,9 @@ namespace FlatMate.Module.Lists.Domain.Services
             _authenticationContext = authenticationContext;
         }
 
-        public bool CanDelete(OwnedDto dto)
+        public bool CanDelete(IOwnedEntity entity)
         {
-            if (dto.OwnerId == _authenticationContext.CurrentUser.Id)
+            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
             {
                 return true;
             }
@@ -31,14 +33,29 @@ namespace FlatMate.Module.Lists.Domain.Services
             return false;
         }
 
-        public bool CanRead(OwnedDto dto)
+        public bool CanRead(IOwnedEntity entity)
         {
-            if (dto.IsPublic)
+            if (entity.IsPublic)
             {
                 return true;
             }
 
-            if (dto.OwnerId == _authenticationContext.CurrentUser.Id)
+            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanEdit(IOwnedEntity entity)
+        {
+            if (entity.IsPublic)
+            {
+                return true;
+            }
+
+            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
             {
                 return true;
             }

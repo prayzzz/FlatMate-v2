@@ -6,35 +6,33 @@ namespace FlatMate.Web.Mvc.Json
 {
     public class FlatMateContractResolver : DefaultContractResolver
     {
-        private static readonly DateTimeConverter DateTimeConverter;
-        private static readonly ResultConverter ResultConverter;
+        private static FlatMateContractResolver _instance;
 
-        static FlatMateContractResolver()
-        {
-            Instance = new FlatMateContractResolver();
-            DateTimeConverter = new DateTimeConverter();
-            ResultConverter = new ResultConverter();
-        }
+        private readonly DateTimeConverter _dateTimeConverter;
+        private readonly ResultConverter _resultConverter;
 
         private FlatMateContractResolver()
         {
+            _dateTimeConverter = new DateTimeConverter();
+            _resultConverter = new ResultConverter();
+
             NamingStrategy = new CamelCaseNamingStrategy();
         }
 
-        public static FlatMateContractResolver Instance { get; }
+        public static FlatMateContractResolver Instance => _instance ?? (_instance = new FlatMateContractResolver());
 
         protected override JsonContract CreateContract(Type objectType)
         {
             var contract = base.CreateContract(objectType);
 
-            if (DateTimeConverter.CanConvert(objectType))
+            if (_dateTimeConverter.CanConvert(objectType))
             {
-                contract.Converter = DateTimeConverter;
+                contract.Converter = _dateTimeConverter;
             }
 
-            if (ResultConverter.CanConvert(objectType))
+            if (_resultConverter.CanConvert(objectType))
             {
-                contract.Converter = ResultConverter;
+                contract.Converter = _resultConverter;
             }
 
             return contract;

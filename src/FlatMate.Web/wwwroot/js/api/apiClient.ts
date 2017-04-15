@@ -1,4 +1,4 @@
-﻿import Ajax from "../shared/ajax"
+﻿import Ajax from "../shared/ajax";
 
 export interface IApiClient {
     get<TData>(path: string, doneCallback?: (d: TData) => void, failCallback?: (e: IApiError) => void): void;
@@ -62,6 +62,7 @@ export class ApiClient implements IApiClient {
 
         Ajax.post(url, JSON.stringify(data))
             .success((d: TResult) => { if (doneCallback) doneCallback(d) })
-            .error((e: IApiError) => { if (failCallback) failCallback(e) });
+            .error((e: IApiError) => { if (failCallback) failCallback(e) })
+            .send();
     }
 }

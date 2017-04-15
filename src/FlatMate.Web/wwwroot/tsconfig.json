@@ -6,5 +6,9 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "strictNullChecks": true
-  }
+  },
+  "include": [
+    "js/**/*.ts",
+    "node_modules/knockout/build/output/knockout_latest.js"
+  ]
 }

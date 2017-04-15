@@ -34,10 +34,10 @@ namespace FlatMate.Api.Areas.Account.User
         }
 
         [HttpGet("{id}")]
-        public Result<UserJso> GetById(int id)
+        public Result<UserInfoJso> GetById(int id)
         {
             return _userService.GetById(id)
-                               .WithDataAs(dto => _mapper.Map<UserJso>(dto));
+                               .WithDataAs(dto => _mapper.Map<UserInfoJso>(dto));
         }
     }
 }

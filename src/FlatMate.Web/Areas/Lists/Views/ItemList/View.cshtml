@@ -6,14 +6,16 @@
     ViewData["PageTitle"] = Model.List.Name;
 }
 
-<section class="container flex-row">
+<section class="container">
 
-    <div class="flex-row actions" style="width: 50%">
-        <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Meine Listen</a>
-    </div>
+    <div class="flex-row">
+        <div class="flex-row actions" style="width: 50%">
+            <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Meine Listen</a>
+        </div>
 
-    <div class="flex-row align-right actions" style="width: 50%">
-        <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
+        <div class="flex-row align-right actions" style="width: 50%">
+            <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
+        </div>
     </div>
 
     <item-list-editor params="model: model" style="width: 100%"></item-list-editor>
@@ -76,7 +78,7 @@
 
         <div class="row">
             <div class="cell">
-                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: newGroupName" />
+                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: newGroupName, enterkey:addGroup" />
             </div>
             <div class="cell icon">
                 <a class="icon-24 icon-plus-circle" data-bind="click: addGroup"></a>
@@ -89,10 +91,4 @@
 
 @section viewData {
     @Json.Serialize(Model.List)
-}
-
-@section pageScript {
-    <script type="text/javascript">
-        new Flatmate.Areas.Lists.ItemListEditor();
-    </script>
 }

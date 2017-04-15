@@ -27,7 +27,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
             itemList.Created = dbo.Created;
             itemList.Description = dbo.Description;
             itemList.IsPublic = dbo.IsPublic;
-            itemList.LastEditor = dbo.LastEditorId;
+            itemList.LastEditorId = dbo.LastEditorId;
             itemList.Modified = dbo.Modified;
 
             return createResult.Data;
@@ -43,7 +43,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
             dbo.Created = entity.Created;
             dbo.Description = entity.Description;
             dbo.IsPublic = entity.IsPublic;
-            dbo.LastEditorId = entity.LastEditor;
+            dbo.LastEditorId = entity.LastEditorId;
             dbo.Modified = entity.Modified;
             dbo.Name = entity.Name;
             dbo.OwnerId = entity.OwnerId;

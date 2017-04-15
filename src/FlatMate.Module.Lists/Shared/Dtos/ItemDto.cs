@@ -15,8 +15,8 @@ namespace FlatMate.Module.Lists.Shared.Dtos
 
         public string Name { get; set; }
 
-        public int? ParentItemId { get; set; }
-
         public int SortIndex { get; set; }
+
+        public int? ItemGroupId { get; set; }
     }
 }

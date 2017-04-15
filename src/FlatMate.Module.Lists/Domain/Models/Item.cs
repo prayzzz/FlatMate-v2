@@ -10,27 +10,28 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         ///     Constructs an exisiting Item
         /// </summary>
-        private Item(int? id, string name, int owner, ItemList list) : base(id)
+        private Item(int? id, string name, int owner, ItemList list, ItemGroup group) : base(id)
         {
             Rename(name);
 
-            CreationDate = ModifiedDate = DateTime.Now;
+            Created = Modified = DateTime.Now;
             ItemList = list;
+            ItemGroup = group;
             OwnerId = LastEditorId = owner;
             SortIndex = 0;
         }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime Created { get; set; }
 
         public ItemList ItemList { get; set; }
 
+        public ItemGroup ItemGroup { get; set; }
+
         public int LastEditorId { get; set; }
 
-        public DateTime ModifiedDate { get; set; }
+        public DateTime Modified { get; set; }
 
         public string Name { get; private set; }
-
-        public Item ParentItem { get; set; }
 
         public int SortIndex { get; set; }
 
@@ -47,9 +48,40 @@ namespace FlatMate.Module.Lists.Domain.Models
         }
 
         /// <summary>
+        ///     Creates a new <see cref="Item" />
+        /// </summary>
+        public static Result<Item> Create(string name, int ownerId, ItemGroup group)
+        {
+            return Create(null, name, ownerId, group);
+        }
+
+        /// <summary>
         ///     Creates an exisiting <see cref="Item" />
         /// </summary>
         public static Result<Item> Create(int? id, string name, int ownerId, ItemList list)
+        {
+            #region Validation
+
+            var result = ValidateName(name);
+            if (result.IsError)
+            {
+                return new ErrorResult<Item>(result);
+            }
+
+            if (list == null)
+            {
+                return new ErrorResult<Item>(ErrorType.ValidationError, "ItemList should'nt be null");
+            }
+
+            #endregion
+
+            return new SuccessResult<Item>(new Item(id, name, ownerId, list, ItemGroup.Default));
+        }
+
+        /// <summary>
+        ///     Creates an exisiting <see cref="Item" />
+        /// </summary>
+        public static Result<Item> Create(int? id, string name, int ownerId, ItemGroup group)
         {
             #region Validation
 
@@ -59,9 +91,14 @@ namespace FlatMate.Module.Lists.Domain.Models
                 return new ErrorResult<Item>(result);
             }
 
+            if (group == null)
+            {
+                return new ErrorResult<Item>(ErrorType.ValidationError, "ItemList cannot be null");
+            }
+
             #endregion
 
-            return new SuccessResult<Item>(new Item(id, name, ownerId, list));
+            return new SuccessResult<Item>(new Item(id, name, ownerId, group.ItemList, group));
         }
 
         /// <summary>

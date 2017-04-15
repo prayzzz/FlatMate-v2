@@ -1,27 +1,37 @@
-using FlatMate.Module.Account.Shared.Dtos;
 using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Account.Domain
 {
+    public class CurrentUser
+    {
+        private static CurrentUser _anonymous;
+
+        private CurrentUser()
+        {
+            Id = -1;
+        }
+
+        public CurrentUser(int id)
+        {
+            Id = id;
+        }
+
+        public static CurrentUser Anonymous => _anonymous ?? (_anonymous = new CurrentUser());
+
+        public int Id { get; }
+
+        public bool IsAnonymous => Id == -1;
+    }
+
     public interface IAuthenticationContext
     {
-        UserDto Anonymous { get; }
-
-        UserDto CurrentUser { get; }
-
-        bool IsAnonymous { get; }
+        CurrentUser CurrentUser { get; }
     }
 
     [Inject]
     public class AuthenticationContext : IAuthenticationContext
     {
-        private static readonly UserDto AnonymousUser = new UserDto { Id = -1, UserName = "Anonymous" };
-
-        public UserDto Anonymous => AnonymousUser;
-
         // TODO add real implementation
-        public UserDto CurrentUser { get; } = UserDto.Fake;
-
-        public bool IsAnonymous => CurrentUser == Anonymous;
+        public CurrentUser CurrentUser { get; } = new CurrentUser(1);
     }
 }

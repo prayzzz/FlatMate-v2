@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -22,29 +23,27 @@ namespace FlatMate.Web
 {
     public class Startup
     {
+        private readonly IConfigurationRoot _configuration;
+
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-                .AddEnvironmentVariables();
+            var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
+                                                    .AddJsonFile("appsettings.json", true, true)
+                                                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                                                    .AddEnvironmentVariables();
 
-            Configuration = builder.Build();
+            _configuration = builder.Build();
         }
-
-        public IConfigurationRoot Configuration { get; }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
 
-                //app.UseBrowserLink();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"); });
             }
@@ -91,13 +90,13 @@ namespace FlatMate.Web
 
             // load api controllers
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            applicationPartManager.ApplicationParts.Add(new AssemblyPart(Assembly.Load(new AssemblyName("FlatMate.Api"))));
+            applicationPartManager.ApplicationParts.Add(new AssemblyPart(typeof(ApiController).GetTypeInfo().Assembly));
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
-                    .AddJsonOptions(o => o.SerializerSettings.ContractResolver = FlatMateContractResolver.Instance)
+                    .AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings))
                     .AddControllersAsServices();
 
             services.AddSession();

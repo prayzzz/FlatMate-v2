@@ -6,6 +6,6 @@
     <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-36" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-39" />
   </ItemGroup>
 </Project>

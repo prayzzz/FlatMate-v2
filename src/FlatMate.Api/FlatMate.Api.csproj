@@ -5,6 +5,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Filter\EnsureBodyFilter.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
@@ -13,7 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.0.0" />
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-36" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-39" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />

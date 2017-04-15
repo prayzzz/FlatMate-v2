@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using FlatMate.Api.Areas.Account.User;
 
@@ -12,10 +13,11 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         [ReadOnly(true)]
         public int? Id { get; set; }
 
+        [ReadOnly(true)]
         public int ItemListId { get; set; }
 
         [ReadOnly(true)]
-        public UserJso LastEditor { get; set; }
+        public UserInfoJso LastEditor { get; set; }
 
         [ReadOnly(true)]
         public DateTime Modified { get; set; }
@@ -23,8 +25,11 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         public string Name { get; set; }
 
         [ReadOnly(true)]
-        public UserJso Owner { get; set; }
+        public UserInfoJso Owner { get; set; }
 
         public int SortIndex { get; set; }
+
+        [ReadOnly(true)]
+        public IEnumerable<ItemJso> Items { get; set; }
     }
 }

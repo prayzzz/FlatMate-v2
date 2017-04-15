@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
+using FlatMate.Api.Filter;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,27 +25,72 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         }
 
         [HttpPost]
-        public async Task<Result<ItemListJso>> Create([FromBody] ItemListJso jso)
+        public Task<Result<ItemListJso>> Create([FromBody] ItemListJso jso)
         {
-            var create = await _itemListService.CreateAsync(Map<ItemListDto>(jso));
-            return create.WithDataAs(dto => Map<ItemListJso>(dto));
+            return _itemListService.CreateAsync(Map<ItemListDto>(jso))
+                                   .WithResultDataAs(Map<ItemListJso>);
+        }
+
+        [HttpPost("{listId}/group")]
+        public Task<Result<ItemGroupJso>> Create(int listId, [FromBody] ItemGroupJso jso)
+        {
+            return _itemListService.CreateAsync(listId, Map<ItemGroupDto>(jso))
+                                   .WithResultDataAs(Map<ItemGroupJso>);
         }
 
         [HttpPost("{listId}/item")]
-        public async Task<Result<ItemGroupJso>> Create(int listId, [FromBody] ItemGroupJso jso)
+        public Task<Result<ItemJso>> Create(int listId, [FromBody] ItemJso jso)
         {
-            var create = await _itemListService.CreateAsync(listId, Map<ItemGroupDto>(jso));
-            return create.WithDataAs(dto => Map<ItemGroupJso>(dto));
+            return _itemListService.CreateAsync(listId, null, Map<ItemDto>(jso))
+                                   .WithResultDataAs(Map<ItemJso>);
+        }
+
+        [HttpPost("{listId}/group/{groupId}/item")]
+        public Task<Result<ItemJso>> Create(int listId, int groupId, [FromBody] ItemJso jso)
+        {
+            return _itemListService.CreateAsync(listId, groupId, Map<ItemDto>(jso))
+                                   .WithResultDataAs(Map<ItemJso>);
+        }
+
+        [HttpDelete("{listId}/group/{groupId}")]
+        public Task<Result> DeleteGroupAsync(int groupId)
+        {
+            return _itemListService.DeleteGroupAsync(groupId);
         }
 
         [HttpDelete("{listId}")]
-        public Task<Result> DeleteAsync(int listId)
+        public Task<Result> DeleteListAsync(int listId)
         {
-            return _itemListService.DeleteAsync(listId);
+            return _itemListService.DeleteListAsync(listId);
+        }
+
+        [HttpDelete("{listId}/item/{itemId}")]
+        [HttpDelete("{listId}/group/{groupId}/item/{itemId}")]
+        public Task<Result> DeletItemAsync(int itemId)
+        {
+            return _itemListService.DeleteItemAsync(itemId);
+        }
+
+        [HttpGet("{listId}/group")]
+        public async Task<IEnumerable<ItemGroupJso>> GetAllGroups(int listId)
+        {
+            return (await _itemListService.GetGroupsAsync(listId)).Select(Map<ItemGroupJso>);
+        }
+
+        [HttpGet("{listId}/item")]
+        public async Task<IEnumerable<ItemJso>> GetAllListItems(int listId)
+        {
+            return (await _itemListService.GetListItemsAsync(listId)).Select(Map<ItemJso>);
+        }
+
+        [HttpGet("{listId}/group/{groupId}/item")]
+        public async Task<IEnumerable<ItemJso>> GetAllGroupItems(int listId, int groupId)
+        {
+            return (await _itemListService.GetGroupItemsAsync(listId, groupId)).Select(Map<ItemJso>);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ItemListJso>> GetAll([FromQuery] int? ownerId)
+        public async Task<IEnumerable<ItemListJso>> GetAllLists([FromQuery] int? ownerId)
         {
             IEnumerable<ItemListDto> lists;
             if (ownerId.HasValue)
@@ -59,26 +105,60 @@ namespace FlatMate.Api.Areas.Lists.ItemList
             return lists.Select(Map<ItemListJso>);
         }
 
+        [HttpGet("{listId}/group/{groupId}")]
+        public async Task<Result<ItemGroupJso>> GetGroupById(int listId, int groupId, [FromQuery] bool full = false)
+        {
+            var getGroup = await _itemListService.GetGroupAsync(groupId);
+            if (getGroup.IsError)
+            {
+                return new ErrorResult<ItemGroupJso>(getGroup);
+            }
+
+            if (!full)
+            {
+                return getGroup.WithDataAs(Map<ItemGroupJso>);
+            }
+
+            var itemGroup = Map<ItemGroupJso>(getGroup.Data);
+            itemGroup.Items = await GetAllGroupItems(listId, groupId);
+
+            return new SuccessResult<ItemGroupJso>(itemGroup);
+        }
+
+        [HttpDelete("{listId}/item/{itemId}")]
+        [HttpDelete("{listId}/group/{groupId}/item/{itemId}")]
+        public Task<Result<ItemJso>> GetItemById(int itemId)
+        {
+            return _itemListService.GetItemAsync(itemId)
+                                   .WithResultDataAs(dto => Map<ItemJso>(dto));
+        }
+
         [HttpGet("{listId}")]
         public async Task<Result<ItemListJso>> GetListById(int listId, [FromQuery] bool full = false)
         {
-            // TODO full load
-            var listResult = await _itemListService.GetListAsync(listId);
-            return listResult.WithDataAs(dto => Map<ItemListJso>(dto));
-        }
+            var getList = await _itemListService.GetListAsync(listId);
+            if (getList.IsError)
+            {
+                return new ErrorResult<ItemListJso>(getList);
+            }
 
-        [HttpGet("{listId}/group/{groupId}")]
-        public async Task<Result<ItemGroupJso>> GetGroupById(int groupId, [FromQuery] bool full = false)
-        {
-            var groupResult = await _itemListService.GetGroupAsync(groupId);
-            return groupResult.WithDataAs(dto => Map<ItemGroupJso>(dto));
+            if (!full)
+            {
+                return getList.WithDataAs(Map<ItemListJso>);
+            }
+
+            var itemList = Map<ItemListJso>(getList.Data);
+            itemList.ItemGroups = await GetAllGroups(listId);
+            itemList.Items = await GetAllListItems(listId);
+
+            return new SuccessResult<ItemListJso>(itemList);
         }
 
         [HttpPut("{listId}")]
-        public async Task<Result<ItemListJso>> Update(int listId, [FromBody] ItemListJso jso)
+        public Task<Result<ItemListJso>> Update(int listId, [FromBody] ItemListJso jso)
         {
-            var update = await _itemListService.UpdateAsync(listId, Map<ItemListDto>(jso));
-            return update.WithDataAs(dto => Map<ItemListJso>(dto));
+            return _itemListService.UpdateAsync(listId, Map<ItemListDto>(jso))
+                                   .WithResultDataAs(Map<ItemListJso>);
         }
     }
 }

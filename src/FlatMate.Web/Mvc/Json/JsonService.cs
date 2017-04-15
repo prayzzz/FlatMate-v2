@@ -20,6 +20,7 @@ namespace FlatMate.Web.Mvc.Json
         {
             SerializerSettings = new JsonSerializerSettings();
             SerializerSettings.ContractResolver = FlatMateContractResolver.Instance;
+            SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         }
 
         public JsonSerializerSettings SerializerSettings { get; }

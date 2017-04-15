@@ -7,9 +7,8 @@ namespace FlatMate.Module.Lists.Domain.Models
 {
     public class ItemGroup : Entity, IOwnedEntity
     {
-        /// <summary>
-        ///     Constructs an ItemGroup
-        /// </summary>
+        private static ItemGroup _defaultInstance;
+
         private ItemGroup(int? id, string name, int owner, ItemList list) : base(id)
         {
             Rename(name);
@@ -19,6 +18,8 @@ namespace FlatMate.Module.Lists.Domain.Models
             OwnerId = LastEditorId = owner;
             SortIndex = 0;
         }
+
+        public static ItemGroup Default => _defaultInstance ?? (_defaultInstance = new ItemGroup(null, "Default", 0, ItemList.Default));
 
         public DateTime Created { get; set; }
 
@@ -55,6 +56,11 @@ namespace FlatMate.Module.Lists.Domain.Models
             if (!result.IsSuccess)
             {
                 return new ErrorResult<ItemGroup>(result);
+            }
+
+            if (list == null)
+            {
+                return new ErrorResult<ItemGroup>(ErrorType.ValidationError, "ItemList cannot be null");
             }
 
             #endregion

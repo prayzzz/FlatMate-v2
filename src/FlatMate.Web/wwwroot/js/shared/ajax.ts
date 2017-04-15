@@ -10,10 +10,10 @@ export default class Ajax {
         return new AjaxRequest<T>("GET", url);
     }
     public static put<T>(url: string, data: any): IAjaxRequest<T> {
-        return new AjaxRequest<T>("PUT", url);
+        return new AjaxRequest<T>("PUT", url, data);
     }
     public static post<T>(url: string, data: any): IAjaxRequest<T> {
-        return new AjaxRequest<T>("POST", url);
+        return new AjaxRequest<T>("POST", url, data);
     }
     public static delete<T>(url: string): IAjaxRequest<T> {
         return new AjaxRequest<T>("DELETE", url);
@@ -23,14 +23,16 @@ export default class Ajax {
 class AjaxRequest<T> implements IAjaxRequest<T> {
     private readonly method: string;
     private readonly url: string;
+    private readonly data: any;
 
     private successCb: (data: T | null) => void;
     private errorCb: (data: T | null) => void;
     private alwaysCb: (data: T | null) => void;
 
-    constructor(method: string, url: string) {
+    constructor(method: string, url: string, data?: any) {
         this.method = method;
         this.url = url;
+        this.data = data;
 
         this.successCb = (): void => { };
         this.errorCb = (): void => { };
@@ -62,22 +64,25 @@ class AjaxRequest<T> implements IAjaxRequest<T> {
             }
 
             this.alwaysCb(this.parse(request));
-        }
+        };
 
         request.onerror = () => {
             this.errorCb(this.parse(request));
-        }
+        };
 
         request.onloadend = () => {
             if (request.status >= 200 && request.status < 300) {
                 this.successCb(this.parse(request));
-            }
-            else {
+            } else {
                 this.errorCb(this.parse(request));
             }
-        }
+        };
 
-        request.send();
+        if (this.data) {
+            request.send(this.data);
+        } else {
+            request.send();
+        }
     }
 
     private parse(request: XMLHttpRequest): T | null {
@@ -91,6 +96,7 @@ class AjaxRequest<T> implements IAjaxRequest<T> {
         } catch (e) {
             throw e;
         }
+
         return result;
     };
 }

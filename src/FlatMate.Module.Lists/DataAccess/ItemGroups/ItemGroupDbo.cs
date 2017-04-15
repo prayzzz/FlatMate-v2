@@ -8,6 +8,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
     [Table("ItemGroup")]
     public class ItemGroupDbo
     {
+        [Required]
         public DateTime Created { get; set; }
 
         [Key]
@@ -16,17 +17,22 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
         [ForeignKey("ItemListId")]
         public ItemListDbo ItemList { get; set; }
 
+        [Required]
         public int ItemListId { get; set; }
 
+        [Required]
         public int LastEditorId { get; set; }
 
+        [Required]
         public DateTime Modified { get; set; }
 
         [Required]
         public string Name { get; set; }
 
+        [Required]
         public int OwnerId { get; set; }
 
+        [Required]
         public int SortIndex { get; set; }
     }
 }

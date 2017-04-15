@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
@@ -66,13 +67,19 @@ namespace FlatMate.Api.Services
             {
                 case ErrorType.Unknown:
                 case ErrorType.InternalError:
-                    return new StatusCodeResult(500);
+                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToString() } })
+                    {
+                        StatusCode = 500
+                    };
                 case ErrorType.NotFound:
-                    return new NotFoundObjectResult(result.ToString());
+                    return new NotFoundObjectResult(new Dictionary<string, string> { { "error", result.ToString() } });
                 case ErrorType.ValidationError:
-                    return new BadRequestObjectResult(result.ToString());
+                    return new BadRequestObjectResult(new Dictionary<string, string> { { "error", result.ToString() } });
                 case ErrorType.Unauthorized:
-                    return new UnauthorizedResult();
+                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToString() } })
+                    {
+                        StatusCode = 401
+                    };
                 default:
                     throw new ArgumentOutOfRangeException();
             }

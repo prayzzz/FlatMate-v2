@@ -21,10 +21,13 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         public int ItemCount { get; set; }
 
         [ReadOnly(true)]
-        public List<ItemJso> Items { get; set; }
+        public IEnumerable<ItemGroupJso> ItemGroups { get; set; }
 
         [ReadOnly(true)]
-        public UserJso LastEditor { get; set; }
+        public IEnumerable<ItemJso> Items { get; set; }
+
+        [ReadOnly(true)]
+        public UserInfoJso LastEditor { get; set; }
 
         [ReadOnly(true)]
         public DateTime Modified { get; set; }
@@ -32,6 +35,6 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         public string Name { get; set; }
 
         [ReadOnly(true)]
-        public UserJso Owner { get; set; }
+        public UserInfoJso Owner { get; set; }
     }
 }

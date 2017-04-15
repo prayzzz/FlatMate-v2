@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FlatMate.Api.Filter;
+using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 
 namespace FlatMate.Api
 {
+    [EnsureBodyFilter]
     public class ApiController : Controller
     {
         private readonly IMapper _mapper;

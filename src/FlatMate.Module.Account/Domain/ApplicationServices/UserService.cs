@@ -28,7 +28,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             _logger = loggerFactory.CreateLogger(GetType());
         }
 
-        public UserDto CurrentUser => _authenticationContext.CurrentUser;
+        public CurrentUser CurrentUser => _authenticationContext.CurrentUser;
 
         public Result<UserDto> Authorize(string username, string password)
         {
@@ -61,13 +61,13 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         public Result ChangePassword(string oldPassword, string newPassword)
         {
             // must be logged in
-            if (_authenticationContext.IsAnonymous)
+            if (CurrentUser.IsAnonymous)
             {
                 return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
             }
 
             // get authentication information of current user
-            var authInfoResult = GetAuthenticationInformation(CurrentUser.Id.Value);
+            var authInfoResult = GetAuthenticationInformation(CurrentUser.Id);
             if (!authInfoResult.IsSuccess)
             {
                 return authInfoResult;
