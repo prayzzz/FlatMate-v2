@@ -16,7 +16,7 @@ export interface IApiError {
  * Singleton
  * new ApiV1Client() returns the singleton instance
  */
-export class ApiClient implements IApiClient {
+export default class ApiClient implements IApiClient {
     private static instance: ApiClient;
     private host = `//${window.location.host}/api/v1/`;
 
@@ -35,34 +35,35 @@ export class ApiClient implements IApiClient {
         const url = this.host + path;
 
         Ajax.get(url)
-            .success((d: TData) => { if (doneCallback) doneCallback(d) })
-            .error((e: IApiError) => { if (failCallback) failCallback(e) });
+            .success((d: TData) => { if (doneCallback) { doneCallback(d) } })
+            .error((e: IApiError) => { if (failCallback) { failCallback(e) } })
+            .send();
     }
 
     public delete(path: string, doneCallback?: () => void, failCallback?: (e: IApiError) => void): void {
         const url = this.host + path;
 
         Ajax.delete(url)
-            .success(() => { if (doneCallback) doneCallback() })
-            .error((e: IApiError) => {
-                if (failCallback) failCallback(e);
-            });
+            .success(() => { if (doneCallback) { doneCallback(); } })
+            .error((e: IApiError) => { if (failCallback) { failCallback(e); } })
+            .send();
     }
 
     public put<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: IApiError) => void): void {
         const url = this.host + path;
 
         Ajax.put(url, JSON.stringify(data))
-            .success((d: TResult) => { if (doneCallback) doneCallback(d) })
-            .error((e: IApiError) => { if (failCallback) failCallback(e) });
+            .success((d: TResult) => { if (doneCallback) { doneCallback(d); } })
+            .error((e: IApiError) => { if (failCallback) { failCallback(e); } })
+            .send();
     }
 
     public post<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: IApiError) => void): void {
         const url = this.host + path;
 
         Ajax.post(url, JSON.stringify(data))
-            .success((d: TResult) => { if (doneCallback) doneCallback(d) })
-            .error((e: IApiError) => { if (failCallback) failCallback(e) })
+            .success((d: TResult) => { if (doneCallback) { doneCallback(d); } })
+            .error((e: IApiError) => { if (failCallback) { failCallback(e); } })
             .send();
     }
 }

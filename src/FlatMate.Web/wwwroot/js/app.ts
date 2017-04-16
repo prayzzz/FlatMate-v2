@@ -1,11 +1,16 @@
 ﻿import * as ko from "knockout";
 
-import { ItemListEditor } from "./areas/lists/ItemListEditor";
+import ItemListEditor from "./areas/lists/itemListEditor";
+import { IWindow } from "./window";
 
-console.log(ko);
+// add knockout to window
+declare var window: IWindow;
+window.ko = ko;
 
+// init ItemListEditor
 document.addEventListener("DOMContentLoaded", () => new ItemListEditor(), false);
 
+// add EnterKey event
 ko.bindingHandlers.enterkey = {
     init: (element: HTMLElement, valueAccessor, allBindings, viewModel) => {
         var callback = valueAccessor();

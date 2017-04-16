@@ -67,16 +67,16 @@ namespace FlatMate.Api.Services
             {
                 case ErrorType.Unknown:
                 case ErrorType.InternalError:
-                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToString() } })
+                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } })
                     {
                         StatusCode = 500
                     };
                 case ErrorType.NotFound:
-                    return new NotFoundObjectResult(new Dictionary<string, string> { { "error", result.ToString() } });
+                    return new NotFoundObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } });
                 case ErrorType.ValidationError:
-                    return new BadRequestObjectResult(new Dictionary<string, string> { { "error", result.ToString() } });
+                    return new BadRequestObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } });
                 case ErrorType.Unauthorized:
-                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToString() } })
+                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } })
                     {
                         StatusCode = 401
                     };
