@@ -4,6 +4,7 @@ import ApiClient from "../../api/apiClient";
 
 export default class ItemGroupViewModel {
     public newItemName: KnockoutObservable<String>;
+    public isNewItemFocused: KnockoutObservable<Boolean>;
     public model: IItemGroupJso;
     public items: KnockoutObservableArray<IItemJso>;
     private apiClient: ApiClient;
@@ -12,6 +13,7 @@ export default class ItemGroupViewModel {
         this.model = model;
 
         this.newItemName = ko.observable<String>();
+        this.isNewItemFocused = ko.observable<Boolean>();
         this.items = ko.observableArray(items);
         this.apiClient = new ApiClient();
     }

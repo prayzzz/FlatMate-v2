@@ -65,7 +65,7 @@
 
             <div class="row">
                 <div class="cell" style="padding-left:calc(1rem + 16px)">
-                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, enterkey: addItem"/>
+                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem"/>
                 </div>
                 <div class="cell icon">
                     <a class="icon-24 icon-plus-circle" data-bind="click: addItem"></a>

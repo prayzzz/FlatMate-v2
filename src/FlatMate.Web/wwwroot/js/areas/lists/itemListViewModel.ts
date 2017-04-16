@@ -37,7 +37,10 @@ export default class ItemListViewModel {
 
         const groupToAdd = { name: groupName, sortIndex: 0 };
         const done = (g: IItemGroupJso) => {
-            self.groups.push(new ItemGroupViewModel(g, []));
+            const group = new ItemGroupViewModel(g, []);
+            group.isNewItemFocused(true);
+
+            self.groups.push(group);
             self.newGroupName("");
         };
 
