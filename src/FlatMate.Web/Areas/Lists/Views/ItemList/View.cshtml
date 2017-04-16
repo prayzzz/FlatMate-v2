@@ -28,7 +28,7 @@
 
         <div class="body">
 
-            <!-- ko foreach: model.groups -->
+            <!-- ko foreach: groups -->
             <div class="row">
                 <div class="cell"><strong><span data-bind="text: name"></span></strong></div>
                 <div class="cell">
@@ -37,7 +37,7 @@
                         </div>*@
                 </div>
                 <div class="cell icon">
-                    <a class="icon-24 icon-cross-circle" data-bind="click: $component.removeGroup"></a>
+                    <a class="icon-24 icon-cross-circle" data-bind="click: $parent.removeGroup"></a>
                 </div>
             </div>
 
@@ -58,17 +58,17 @@
                 </div>
                 <div class="cell icon"></div>
                 <div class="cell icon">
-                    <a class="icon-24 icon-cross-circle"></a>
+                    <a class="icon-24 icon-cross-circle" data-bind="click: $parent.removeItem"></a>
                 </div>
             </div>
             <!-- /ko -->
 
             <div class="row">
                 <div class="cell" style="padding-left:calc(1rem + 16px)">
-                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: $component.newItemName, enterkey: $component.addItem"/>
+                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, enterkey: addItem"/>
                 </div>
                 <div class="cell icon">
-                    <a class="icon-24 icon-plus-circle" data-bind="click: $component.addItem"></a>
+                    <a class="icon-24 icon-plus-circle" data-bind="click: addItem"></a>
                 </div>
                 <div class="cell icon"></div>
             </div>
@@ -78,10 +78,10 @@
 
         <div class="row">
             <div class="cell">
-                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: $component.newGroupName, enterkey: $component.addGroup" />
+                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: $component.newGroupName, enterkey: addGroup" />
             </div>
             <div class="cell icon">
-                <a class="icon-24 icon-plus-circle" data-bind="click: $component.addGroup"></a>
+                <a class="icon-24 icon-plus-circle" data-bind="click: addGroup"></a>
             </div>
             <div class="cell icon"></div>
         </div>

@@ -1,29 +1,28 @@
 ﻿import * as ko from "knockout";
 import ItemListViewModel from "./itemListViewModel";
-import ItemListModel from "./models/itemListModel";
+import { IItemListJso } from "./jso";
 
 export default class ItemListEditor {
-    public model: ItemListModel;
+    public model: IItemListJso;
 
     constructor() {
         this.model = this.readModel();
-        const template = this.readTemplate();
 
         ko.components.register("item-list-editor", {
-            template: template,
+            template: this.readTemplate(),
             viewModel: ItemListViewModel,
         });
 
         ko.applyBindings(this);
     }
 
-    private readModel(): ItemListModel {
+    private readModel(): IItemListJso {
         const element = document.getElementById("view-data");
         if (!element) {
             throw "no data available";
         }
 
-        return new ItemListModel(JSON.parse(element.innerText));
+        return <IItemListJso> JSON.parse(element.innerText);
     }
 
     private readTemplate(): string {

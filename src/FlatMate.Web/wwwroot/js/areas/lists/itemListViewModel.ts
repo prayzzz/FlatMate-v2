@@ -1,40 +1,29 @@
-import { IItemGroupJso, IItemJso } from "jso";
+import { IItemListJso, IItemGroupJso } from "jso";
 import * as ko from "knockout";
 import ApiClient from "../../api/apiClient";
-import ItemGroupModel from "./models/itemGroupModel";
-import ItemListModel from "./models/itemListModel";
-import ItemModel from "./models/itemModel";
+import ItemGroupViewModel from "./itemGroupViewModel";
+
+interface IViewModelParams {
+    model: IItemListJso;
+}
 
 export default class ItemListViewModel {
     public newGroupName: KnockoutObservable<String>;
-    public newItemName: KnockoutObservable<String>;
-    public model: ItemListModel;
+    public model: IItemListJso;
+    public groups: KnockoutObservableArray<ItemGroupViewModel>;
     private apiClient: ApiClient;
 
-    constructor(params: any) {
+    constructor(params: IViewModelParams) {
         this.model = params.model;
 
         this.newGroupName = ko.observable<String>();
-        this.newItemName = ko.observable<String>();
         this.apiClient = new ApiClient();
-    }
+        this.groups = ko.observableArray<ItemGroupViewModel>();
 
-    public addItem = (group: ItemGroupModel) => {
-        const self = this;
-
-        const itemName = self.newItemName().trim();
-
-        if (!itemName || itemName === "") {
-            return;
-        }
-
-        const itemToAdd = { name: itemName, sortIndex: 0 };
-        const done = (i: IItemJso) => {
-            group.items.push(new ItemModel(i));
-            self.newItemName("");
-        };
-
-        self.apiClient.post(`lists/itemlist/${self.model.id}/group/${group.id}/item`, itemToAdd, done);
+        this.groups(this.model.itemGroups.map(g => {
+            const items = this.model.items.filter(i => i.itemGroupId === g.id);
+            return new ItemGroupViewModel(g, items);
+        }));
     }
 
     public addGroup = () => {
@@ -48,17 +37,17 @@ export default class ItemListViewModel {
 
         const groupToAdd = { name: groupName, sortIndex: 0 };
         const done = (g: IItemGroupJso) => {
-            self.model.groups.push(new ItemGroupModel(g));
+            self.groups.push(new ItemGroupViewModel(g, []));
             self.newGroupName("");
         };
 
         self.apiClient.post(`lists/itemlist/${self.model.id}/group`, groupToAdd, done);
     }
 
-    public removeGroup = (group: ItemGroupModel) => {
+    public removeGroup = (group: ItemGroupViewModel) => {
         const self = this;
 
-        const done = () => { self.model.groups.remove(group); };
+        const done = () => { self.groups.remove(group); };
 
         self.apiClient.delete(`lists/itemlist/${self.model.id}/group/${group.id}`, done);
     }

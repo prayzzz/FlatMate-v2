@@ -125,8 +125,8 @@ namespace FlatMate.Api.Areas.Lists.ItemList
             return new SuccessResult<ItemGroupJso>(itemGroup);
         }
 
-        [HttpDelete("{listId}/item/{itemId}")]
-        [HttpDelete("{listId}/group/{groupId}/item/{itemId}")]
+        [HttpGet("{listId}/item/{itemId}")]
+        [HttpGet("{listId}/group/{groupId}/item/{itemId}")]
         public Task<Result<ItemJso>> GetItemById(int itemId)
         {
             return _itemListService.GetItemAsync(itemId)
