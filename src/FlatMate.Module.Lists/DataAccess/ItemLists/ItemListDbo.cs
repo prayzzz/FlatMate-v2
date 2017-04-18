@@ -1,20 +1,18 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemLists
 {
     [Table("ItemList")]
-    public class ItemListDbo
+    public class ItemListDbo : DboBase
     {
         [Required]
         public DateTime Created { get; set; }
 
         [Required]
         public string Description { get; set; }
-
-        [Key]
-        public int Id { get; set; }
 
         [Required]
         public bool IsPublic { get; set; }

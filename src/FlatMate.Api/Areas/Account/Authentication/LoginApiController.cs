@@ -22,16 +22,15 @@ namespace FlatMate.Api.Areas.Account.Authentication
         }
 
         [HttpPost]
-        public async Task<Result<UserJso>> LoginAsync([FromBody] LoginJso loginJso)
+        public async Task<Result<UserInfoJso>> LoginAsync([FromBody] LoginJso loginJso)
         {
-            var result = _userService.Authorize(loginJso.UserName, loginJso.Password).WithDataAs(dto => _mapper.Map<UserJso>(dto));
-
-            if (!result.IsSuccess)
+            var authorize = _userService.Authorize(loginJso.UserName, loginJso.Password);
+            if (authorize.IsError)
             {
-                return new ErrorResult<UserJso>(ErrorType.Unauthorized, "Unauthorized");
+                return new ErrorResult<UserInfoJso>(ErrorType.Unauthorized, "Unauthorized");
             }
 
-            var user = result.Data;
+            var user = authorize.Data;
 
             var identity = new ClaimsIdentity("Basic");
             identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
@@ -42,7 +41,7 @@ namespace FlatMate.Api.Areas.Account.Authentication
 
             await HttpContext.Authentication.SignInAsync("FlatMate", principal, new AuthenticationProperties { IsPersistent = true });
 
-            return result;
+            return authorize.WithDataAs(dto => _mapper.Map<UserInfoJso>(dto));
         }
     }
 }

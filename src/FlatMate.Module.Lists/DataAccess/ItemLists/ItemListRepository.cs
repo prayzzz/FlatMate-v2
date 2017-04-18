@@ -1,107 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Common.Domain.Repositories;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemLists
 {
     [Inject]
-    public class ItemListRepository : IItemListRepository
+    public class ItemListRepository : Repository<ItemList, ItemListDbo>, IItemListRepository
     {
         private readonly ListsContext _context;
-        private readonly IMapper _mapper;
 
-        public ItemListRepository(ListsContext context, IMapper mapper)
+        public ItemListRepository(ListsContext context, IMapper mapper) : base(mapper)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        public IUnitOfWork UnitOfWork => _context;
+        protected override FlatMateDbContext Context => _context;
 
-        public async Task<Result<ItemList>> SaveAsync(ItemList entity)
-        {
-            ItemListDbo dbo;
-            if (entity.IsSaved)
-            {
-                dbo = await _context.ItemLists.Where(e => e.Id == entity.Id).SingleOrDefaultAsync();
+        protected override IQueryable<ItemListDbo> Dbos => _context.ItemLists;
 
-                if (dbo == null)
-                {
-                    return new ErrorResult<ItemList>(ErrorType.NotFound, "Entity not found");
-                }
-            }
-            else
-            {
-                dbo = _context.ItemLists.Add(new ItemListDbo()).Entity;
-            }
-
-            _mapper.Map(entity, dbo);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return new ErrorResult<ItemList>(ErrorType.InternalError, e.Message);
-            }
-
-            return new SuccessResult<ItemList>(_mapper.Map<ItemList>(dbo));
-        }
-
-        public async Task<Result<ItemList>> GetAsync(int id)
-        {
-            var dbo = await _context.ItemLists.FindAsync(id);
-
-            if (dbo == null)
-            {
-                return new ErrorResult<ItemList>(ErrorType.NotFound, "Entity not found");
-            }
-
-            return new SuccessResult<ItemList>(_mapper.Map<ItemList>(dbo));
-        }
+        protected override IQueryable<ItemListDbo> DbosIncluded => Dbos;
 
         public async Task<IEnumerable<ItemList>> GetAllAsync()
         {
             var lists = await _context.ItemLists.ToListAsync();
-            return lists.Select(_mapper.Map<ItemList>).ToList();
+            return lists.Select(Mapper.Map<ItemList>).ToList();
         }
 
         public async Task<IEnumerable<ItemList>> GetAllAsync(int ownerId)
         {
             var lists = await _context.ItemLists.Where(x => x.OwnerId == ownerId).ToListAsync();
-            return lists.Select(_mapper.Map<ItemList>).ToList();
-        }
-
-        public async Task<Result> DeleteAsync(int id)
-        {
-            var dbo = await _context.ItemLists.FindAsync(id);
-
-            if (dbo == null)
-            {
-                return new ErrorResult(ErrorType.NotFound, "Entity not found");
-            }
-
-            _context.Remove(dbo);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return new ErrorResult<ItemList>(ErrorType.InternalError, e.Message);
-            }
-
-            return new SuccessResult();
+            return lists.Select(Mapper.Map<ItemList>).ToList();
         }
     }
 }

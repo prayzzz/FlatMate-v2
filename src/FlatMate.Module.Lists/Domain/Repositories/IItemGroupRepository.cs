@@ -13,7 +13,5 @@ namespace FlatMate.Module.Lists.Domain.Repositories
         Task<Result<ItemGroup>> GetAsync(int id);
 
         Task<IEnumerable<ItemGroup>> GetAllAsync(int listId);
-
-        Task<Result> DeleteAsync(int id);
     }
 }

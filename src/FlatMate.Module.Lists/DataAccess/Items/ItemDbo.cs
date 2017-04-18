@@ -1,19 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Lists.DataAccess.ItemGroups;
 using FlatMate.Module.Lists.DataAccess.ItemLists;
 
 namespace FlatMate.Module.Lists.DataAccess.Items
 {
     [Table("Item")]
-    public class ItemDbo
+    public class ItemDbo : DboBase
     {
         [Required]
         public DateTime Created { get; set; }
-
-        [Key]
-        public int Id { get; set; }
 
         [ForeignKey("ItemGroupId")]
         public ItemGroupDbo ItemGroup { get; set; }

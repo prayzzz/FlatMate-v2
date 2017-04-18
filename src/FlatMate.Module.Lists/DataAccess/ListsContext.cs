@@ -1,4 +1,4 @@
-using FlatMate.Module.Common.Domain.Repositories;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Lists.DataAccess.ItemGroups;
 using FlatMate.Module.Lists.DataAccess.ItemLists;
 using FlatMate.Module.Lists.DataAccess.Items;
@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlatMate.Module.Lists.DataAccess
 {
-    public class ListsContext : DbContext, IUnitOfWork
+    public class ListsContext : FlatMateDbContext
     {
-        public ListsContext(DbContextOptions options)
-            : base(options)
+        public ListsContext(DbContextOptions options) : base(options)
         {
         }
 
