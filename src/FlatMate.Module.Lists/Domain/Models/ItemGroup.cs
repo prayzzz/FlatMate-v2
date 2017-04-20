@@ -19,11 +19,13 @@ namespace FlatMate.Module.Lists.Domain.Models
             SortIndex = 0;
         }
 
-        public static ItemGroup Default => _defaultInstance ?? (_defaultInstance = new ItemGroup(null, "Default", 0, ItemList.Default));
-
         public DateTime Created { get; set; }
 
-        public ItemList ItemList { get; set; }
+        public static ItemGroup Default => _defaultInstance ?? (_defaultInstance = new ItemGroup(null, "Default", 0, ItemList.Default));
+
+        public bool IsPublic => ItemList.IsPublic;
+
+        public ItemList ItemList { get; }
 
         public int LastEditorId { get; set; }
 
@@ -31,11 +33,9 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public string Name { get; private set; }
 
-        public int SortIndex { get; set; }
-
         public int OwnerId { get; }
 
-        public bool IsPublic => ItemList.IsPublic;
+        public int SortIndex { get; set; }
 
         /// <summary>
         ///     Creates a new <see cref="Item" />
@@ -83,7 +83,7 @@ namespace FlatMate.Module.Lists.Domain.Models
             return SuccessResult.Default;
         }
 
-        protected static Result ValidateName(string name)
+        private static Result ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {

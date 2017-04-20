@@ -30,10 +30,10 @@ namespace FlatMate.Api.Areas.Lists.ItemList
                 Id = dto.Id,
                 ItemListId = dto.ItemListId,
                 ItemGroupId = dto.ItemGroupId,
-                LastEditor = userApi.GetById(dto.LastEditorId).Data,
+                LastEditor = userApi.Get(dto.LastEditorId).Data,
                 Modified = dto.Modified,
                 Name = dto.Name,
-                Owner = userApi.GetById(dto.OwnerId).Data,
+                Owner = userApi.Get(dto.OwnerId).Data,
                 SortIndex = dto.SortIndex
             };
         }
@@ -47,10 +47,10 @@ namespace FlatMate.Api.Areas.Lists.ItemList
                 Created = dto.Created,
                 Id = dto.Id,
                 ItemListId = dto.ItemListId,
-                LastEditor = userApi.GetById(dto.LastEditorId).Data,
+                LastEditor = userApi.Get(dto.LastEditorId).Data,
                 Modified = dto.Modified,
                 Name = dto.Name,
-                Owner = userApi.GetById(dto.OwnerId).Data,
+                Owner = userApi.Get(dto.OwnerId).Data,
                 SortIndex = dto.SortIndex
             };
         }
@@ -66,10 +66,10 @@ namespace FlatMate.Api.Areas.Lists.ItemList
                 Id = dto.Id,
                 IsPublic = dto.IsPublic,
                 ItemCount = dto.Meta.ItemCount,
-                LastEditor = userApi.GetById(dto.LastEditorId).Data,
+                LastEditor = userApi.Get(dto.LastEditorId).Data,
                 Modified = dto.Modified,
                 Name = dto.Name,
-                Owner = userApi.GetById(dto.OwnerId).Data
+                Owner = userApi.Get(dto.OwnerId).Data
             };
         }
 

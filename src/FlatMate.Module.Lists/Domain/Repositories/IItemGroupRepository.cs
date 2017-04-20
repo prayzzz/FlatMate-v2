@@ -8,10 +8,10 @@ namespace FlatMate.Module.Lists.Domain.Repositories
 {
     public interface IItemGroupRepository : IRepository<ItemGroup>
     {
-        Task<Result<ItemGroup>> SaveAsync(ItemGroup itemGroup);
+        Task<IEnumerable<ItemGroup>> GetAllAsync(int listId);
 
         Task<Result<ItemGroup>> GetAsync(int id);
 
-        Task<IEnumerable<ItemGroup>> GetAllAsync(int listId);
+        Task<Result<ItemGroup>> SaveAsync(ItemGroup itemGroup);
     }
 }

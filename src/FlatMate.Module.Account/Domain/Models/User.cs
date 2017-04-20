@@ -5,19 +5,18 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Models
 {
-    internal class User : Entity
+    public class User : Entity
     {
         private static readonly Regex EmailRegex = new Regex("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-        private User(int? id, string userName, string email)
-            : base(id)
+        private User(int? id, string userName, string email) : base(id)
         {
-            CreationDate = DateTime.Now;
+            Created = DateTime.Now;
             Email = email;
             UserName = userName;
         }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime Created { get; set; }
 
         public string Email { get; }
 

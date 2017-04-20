@@ -7,9 +7,6 @@ namespace FlatMate.Module.Lists.Domain.Models
 {
     public class Item : Entity, IOwnedEntity
     {
-        /// <summary>
-        ///     Constructs an exisiting Item
-        /// </summary>
         private Item(int? id, string name, int owner, ItemList list, ItemGroup group) : base(id)
         {
             Rename(name);
@@ -23,9 +20,11 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public DateTime Created { get; set; }
 
-        public ItemList ItemList { get; set; }
+        public bool IsPublic => ItemList.IsPublic;
 
-        public ItemGroup ItemGroup { get; set; }
+        public ItemGroup ItemGroup { get; }
+
+        public ItemList ItemList { get; }
 
         public int LastEditorId { get; set; }
 
@@ -33,11 +32,9 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public string Name { get; private set; }
 
-        public int SortIndex { get; set; }
-
-        public bool IsPublic => ItemList.IsPublic;
-
         public int OwnerId { get; }
+
+        public int SortIndex { get; set; }
 
         /// <summary>
         ///     Creates a new <see cref="Item" />
@@ -116,7 +113,7 @@ namespace FlatMate.Module.Lists.Domain.Models
             return SuccessResult.Default;
         }
 
-        protected static Result ValidateName(string name)
+        private static Result ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {

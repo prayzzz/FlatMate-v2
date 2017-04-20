@@ -12,4 +12,9 @@
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.Services.Client">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2\System.Data.Services.Client.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

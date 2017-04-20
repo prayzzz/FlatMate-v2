@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
@@ -29,7 +30,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangePassword(ChangePasswordVm model)
+        public async Task<IActionResult> ChangePassword(ChangePasswordVm model)
         {
             if (!ModelState.IsValid)
             {
@@ -43,10 +44,10 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View(model);
             }
 
-            var result = _userApi.ChangePassword(new ChangePasswordJso { NewPassword = model.NewPassword, OldPassword = model.OldPassword });
-            if (!result.IsSuccess)
+            var changePassword = await _userApi.ChangePasswordAsync(new ChangePasswordJso { NewPassword = model.NewPassword, OldPassword = model.OldPassword });
+            if (!changePassword.IsSuccess)
             {
-                model.Result = result;
+                model.Result = changePassword;
                 return View(model);
             }
 
@@ -55,18 +56,18 @@ namespace FlatMate.Web.Areas.Account.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var result = _userApi.GetById(CurrentUserId);
+            var result = await _userApi.GetAsync(CurrentUserId);
 
-            if (!result.IsSuccess)
+            if (result.IsError)
             {
                 _logger.LogError($"No profile found for user #${CurrentUserId}");
                 return View("Error");
             }
 
             // todo { UserJso = result.Data }
-            return View(new MyProfileVm() );
+            return View(new MyProfileVm());
         }
     }
 }

@@ -49,7 +49,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var getResult = await _listApi.GetListById(id);
+            var getResult = await _listApi.GetList(id);
             if (getResult.IsError)
             {
                 TempData[Constants.TempData.Result] = _jsonService.Serialize(getResult);
@@ -86,7 +86,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var result = await _listApi.GetListById(id);
+            var result = await _listApi.GetList(id);
 
             if (!result.IsSuccess)
             {
@@ -122,7 +122,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> View(int id)
         {
-            var result = await _listApi.GetListById(id, true);
+            var result = await _listApi.GetList(id, true);
 
             if (!result.IsSuccess)
             {

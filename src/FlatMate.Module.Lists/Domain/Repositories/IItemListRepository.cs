@@ -8,14 +8,14 @@ namespace FlatMate.Module.Lists.Domain.Repositories
 {
     public interface IItemListRepository : IRepository<ItemList>
     {
-        Task<Result<ItemList>> SaveAsync(ItemList entity);
-
-        Task<Result<ItemList>> GetAsync(int id);
+        Task<Result> DeleteAsync(int id);
 
         Task<IEnumerable<ItemList>> GetAllAsync();
 
         Task<IEnumerable<ItemList>> GetAllAsync(int ownerId);
 
-        Task<Result> DeleteAsync(int id);
+        Task<Result<ItemList>> GetAsync(int id);
+
+        Task<Result<ItemList>> SaveAsync(ItemList entity);
     }
 }

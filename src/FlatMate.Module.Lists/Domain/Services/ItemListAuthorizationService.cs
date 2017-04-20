@@ -8,9 +8,9 @@ namespace FlatMate.Module.Lists.Domain.Services
     {
         bool CanDelete(IOwnedEntity entity);
 
-        bool CanRead(IOwnedEntity entity);
-
         bool CanEdit(IOwnedEntity entity);
+
+        bool CanRead(IOwnedEntity entity);
     }
 
     [Inject]
@@ -33,7 +33,7 @@ namespace FlatMate.Module.Lists.Domain.Services
             return false;
         }
 
-        public bool CanRead(IOwnedEntity entity)
+        public bool CanEdit(IOwnedEntity entity)
         {
             if (entity.IsPublic)
             {
@@ -48,7 +48,7 @@ namespace FlatMate.Module.Lists.Domain.Services
             return false;
         }
 
-        public bool CanEdit(IOwnedEntity entity)
+        public bool CanRead(IOwnedEntity entity)
         {
             if (entity.IsPublic)
             {

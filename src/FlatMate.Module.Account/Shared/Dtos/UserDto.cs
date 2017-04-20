@@ -5,7 +5,7 @@ namespace FlatMate.Module.Account.Shared.Dtos
 {
     public class UserDto : DtoBase
     {
-        public DateTime CreationDate { get; set; }
+        public DateTime Created { get; set; }
 
         public string Email { get; set; }
 

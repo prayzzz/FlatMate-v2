@@ -1,16 +1,15 @@
-﻿using FlatMate.Module.Account.Shared.Dtos;
+﻿using System;
+using System.Threading.Tasks;
+using FlatMate.Module.Account.Domain.Models;
+using FlatMate.Module.Common.Domain.Repositories;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Repositories
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
-        Result<UserDto> GetByEmail(string email);
+        Task<Result<User>> GetByEmailAsync(string email, StringComparison stringComparison);
 
-        Result<UserDto> GetById(int id);
-
-        Result<UserDto> GetByUserName(string username);
-
-        Result<UserDto> Save(UserDto dto);
+        Task<Result<User>> GetByUserNameAsync(string username, StringComparison stringComparison);
     }
 }

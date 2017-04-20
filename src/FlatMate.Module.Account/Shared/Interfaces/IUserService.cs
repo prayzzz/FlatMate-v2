@@ -1,16 +1,17 @@
-﻿using FlatMate.Module.Account.Shared.Dtos;
+﻿using System.Threading.Tasks;
+using FlatMate.Module.Account.Shared.Dtos;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Shared.Interfaces
 {
     public interface IUserService
     {
-        Result<UserDto> Authorize(string username, string password);
+        Task<Result<UserDto>> AuthorizeAsync(string username, string password);
 
-        Result ChangePassword(string oldPassword, string newPassword);
+        Task<Result> ChangePasswordAsync(string oldPassword, string newPassword);
 
-        Result<UserDto> Create(UserInputDto userDto, string password);
+        Task<Result<UserDto>> CreateAsync(UserDto userDto, string password);
 
-        Result<UserDto> GetById(int id);
+        Task<Result<UserDto>> GetAsync(int id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using FlatMate.Module.Account.Shared.Dtos;
+﻿using System.Threading.Tasks;
+using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,35 +10,43 @@ namespace FlatMate.Api.Areas.Account.User
 {
     [Authorize]
     [Route("api/v1/account/user")]
-    public class UserApiController : Controller
+    public class UserApiController : ApiController
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserApiController(IUserService userService, IMapper mapper)
+        public UserApiController(IUserService userService, IMapper mapper) : base(mapper)
         {
             _userService = userService;
             _mapper = mapper;
         }
 
         [HttpPost("password")]
-        public Result ChangePassword([FromBody] ChangePasswordJso jso)
+        public Task<Result> ChangePasswordAsync([FromBody] ChangePasswordJso jso)
         {
-            return _userService.ChangePassword(jso.OldPassword, jso.NewPassword);
+            return _userService.ChangePasswordAsync(jso.OldPassword, jso.NewPassword);
         }
 
         [HttpPost]
-        public Result<UserJso> Create([FromBody] CreateUserJso jso)
+        public Task<Result<UserJso>> CreateAsync([FromBody] CreateUserJso jso)
         {
-            return _userService.Create(_mapper.Map<UserInputDto>(jso), jso.Password)
-                               .WithDataAs(dto => _mapper.Map<UserJso>(dto));
+            return _userService.CreateAsync(Map<UserDto>(jso), jso.Password)
+                               .WithResultDataAs(dto => _mapper.Map<UserJso>(dto));
+        }
+
+        public Result<UserInfoJso> Get(int id)
+        {
+            var get = _userService.GetAsync(id);
+            get.Wait();
+
+            return get.Result.WithDataAs(Map<UserInfoJso>);
         }
 
         [HttpGet("{id}")]
-        public Result<UserInfoJso> GetById(int id)
+        public Task<Result<UserInfoJso>> GetAsync(int id)
         {
-            return _userService.GetById(id)
-                               .WithDataAs(dto => _mapper.Map<UserInfoJso>(dto));
+            return _userService.GetAsync(id)
+                               .WithResultDataAs(Map<UserInfoJso>);
         }
     }
 }

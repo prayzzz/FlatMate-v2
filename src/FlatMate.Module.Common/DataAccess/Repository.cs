@@ -78,16 +78,27 @@ namespace FlatMate.Module.Common.DataAccess
 
             Mapper.Map(entity, dbo);
 
+            var save = await SaveChanges();
+            if (save.IsError)
+            {
+                return new ErrorResult<TEntity>(save);
+            }
+
+            return new SuccessResult<TEntity>(Mapper.Map<TEntity>(dbo));
+        }
+
+        protected async Task<Result> SaveChanges()
+        {
             try
             {
                 await Context.SaveChangesAsync();
             }
             catch (Exception e)
             {
-                return new ErrorResult<TEntity>(ErrorType.InternalError, e.Message);
+                return new ErrorResult(ErrorType.InternalError, e.Message);
             }
 
-            return new SuccessResult<TEntity>(Mapper.Map<TEntity>(dbo));
+            return SuccessResult.Default;
         }
     }
 }

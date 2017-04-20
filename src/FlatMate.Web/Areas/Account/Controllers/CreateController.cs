@@ -1,4 +1,5 @@
-﻿using FlatMate.Api.Areas.Account.User;
+﻿using System.Threading.Tasks;
+using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(CreateUserVm model)
+        public async Task<IActionResult> Index(CreateUserVm model)
         {
             if (!ModelState.IsValid)
             {
@@ -38,10 +39,10 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View(model);
             }
 
-            var result = _userApi.Create(new CreateUserJso { Email = model.Email, Password = model.Password, UserName = model.UserName });
-            if (!result.IsSuccess)
+            var create = await _userApi.CreateAsync(new CreateUserJso { Email = model.Email, Password = model.Password, UserName = model.UserName });
+            if (create.IsError)
             {
-                model.Result = result;
+                model.Result = create;
                 return View(model);
             }
 

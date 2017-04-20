@@ -8,9 +8,9 @@ namespace FlatMate.Web.Mvc.Json
     {
         JsonSerializerSettings SerializerSettings { get; }
 
-        string Serialize(object result);
-
         T Deserialize<T>(string obj);
+
+        string Serialize(object result);
     }
 
     [Inject(DependencyLifetime.Singleton)]
@@ -25,14 +25,14 @@ namespace FlatMate.Web.Mvc.Json
 
         public JsonSerializerSettings SerializerSettings { get; }
 
-        public string Serialize(object obj)
-        {
-            return JsonConvert.SerializeObject(obj, SerializerSettings);
-        }
-
         public T Deserialize<T>(string obj)
         {
             return JsonConvert.DeserializeObject<T>(obj, SerializerSettings);
+        }
+
+        public string Serialize(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, SerializerSettings);
         }
     }
 }

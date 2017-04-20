@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
 

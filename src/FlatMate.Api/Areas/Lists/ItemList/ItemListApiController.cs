@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
-using FlatMate.Api.Filter;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +70,12 @@ namespace FlatMate.Api.Areas.Lists.ItemList
             return _itemListService.DeleteItemAsync(itemId);
         }
 
+        [HttpGet("{listId}/group/{groupId}/item")]
+        public async Task<IEnumerable<ItemJso>> GetAllGroupItems(int listId, int groupId)
+        {
+            return (await _itemListService.GetGroupItemsAsync(listId, groupId)).Select(Map<ItemJso>);
+        }
+
         [HttpGet("{listId}/group")]
         public async Task<IEnumerable<ItemGroupJso>> GetAllGroups(int listId)
         {
@@ -81,12 +86,6 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         public async Task<IEnumerable<ItemJso>> GetAllListItems(int listId)
         {
             return (await _itemListService.GetListItemsAsync(listId)).Select(Map<ItemJso>);
-        }
-
-        [HttpGet("{listId}/group/{groupId}/item")]
-        public async Task<IEnumerable<ItemJso>> GetAllGroupItems(int listId, int groupId)
-        {
-            return (await _itemListService.GetGroupItemsAsync(listId, groupId)).Select(Map<ItemJso>);
         }
 
         [HttpGet]
@@ -106,7 +105,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         }
 
         [HttpGet("{listId}/group/{groupId}")]
-        public async Task<Result<ItemGroupJso>> GetGroupById(int listId, int groupId, [FromQuery] bool full = false)
+        public async Task<Result<ItemGroupJso>> GetGroup(int listId, int groupId, [FromQuery] bool full = false)
         {
             var getGroup = await _itemListService.GetGroupAsync(groupId);
             if (getGroup.IsError)
@@ -127,14 +126,14 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
         [HttpGet("{listId}/item/{itemId}")]
         [HttpGet("{listId}/group/{groupId}/item/{itemId}")]
-        public Task<Result<ItemJso>> GetItemById(int itemId)
+        public Task<Result<ItemJso>> GetItem(int itemId)
         {
             return _itemListService.GetItemAsync(itemId)
                                    .WithResultDataAs(dto => Map<ItemJso>(dto));
         }
 
         [HttpGet("{listId}")]
-        public async Task<Result<ItemListJso>> GetListById(int listId, [FromQuery] bool full = false)
+        public async Task<Result<ItemListJso>> GetList(int listId, [FromQuery] bool full = false)
         {
             var getList = await _itemListService.GetListAsync(listId);
             if (getList.IsError)

@@ -13,6 +13,12 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         public int? Id { get; set; }
 
         [ReadOnly(true)]
+        public int? ItemGroupId { get; set; }
+
+        [ReadOnly(true)]
+        public int ItemListId { get; set; }
+
+        [ReadOnly(true)]
         public UserInfoJso LastEditor { get; set; }
 
         [ReadOnly(true)]
@@ -22,12 +28,6 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
         [ReadOnly(true)]
         public UserInfoJso Owner { get; set; }
-
-        [ReadOnly(true)]
-        public int ItemListId { get; set; }
-
-        [ReadOnly(true)]
-        public int? ItemGroupId { get; set; }
 
         public int SortIndex { get; set; }
     }

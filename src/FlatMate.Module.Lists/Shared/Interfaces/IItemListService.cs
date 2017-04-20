@@ -15,26 +15,26 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 
         Task<Result> DeleteGroupAsync(int groupId);
 
+        Task<Result> DeleteItemAsync(int itemId);
+
         Task<Result> DeleteListAsync(int listId);
 
         Task<Result<ItemGroupDto>> GetGroupAsync(int groupId);
 
+        Task<IEnumerable<ItemDto>> GetGroupItemsAsync(int listId, int groupId);
+
         Task<IEnumerable<ItemGroupDto>> GetGroupsAsync(int listId);
 
+        Task<Result<ItemDto>> GetItemAsync(int itemId);
+
         Task<Result<ItemListDto>> GetListAsync(int listId);
+
+        Task<IEnumerable<ItemDto>> GetListItemsAsync(int listId);
 
         Task<IEnumerable<ItemListDto>> GetListsAsync();
 
         Task<IEnumerable<ItemListDto>> GetListsAsync(int ownerId);
 
         Task<Result<ItemListDto>> UpdateAsync(int listId, ItemListDto dto);
-
-        Task<Result> DeleteItemAsync(int itemId);
-
-        Task<Result<ItemDto>> GetItemAsync(int itemId);
-
-        Task<IEnumerable<ItemDto>> GetListItemsAsync(int listId);
-
-        Task<IEnumerable<ItemDto>> GetGroupItemsAsync(int listId, int groupId);
     }
 }

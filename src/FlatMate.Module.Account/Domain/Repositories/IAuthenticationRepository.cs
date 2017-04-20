@@ -1,12 +1,13 @@
-﻿using FlatMate.Module.Account.Shared.Dtos;
+﻿using System.Threading.Tasks;
+using FlatMate.Module.Account.Domain.Models;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Repositories
 {
     public interface IAuthenticationRepository
     {
-        Result<AuthenticationInformationDto> GetById(int userId);
+        Task<Result<AuthenticationInformation>> GetAuthenticationAsync(int userId);
 
-        Result Save(AuthenticationInformationDto dto);
+        Task<Result> SaveAsync(AuthenticationInformation entity);
     }
 }

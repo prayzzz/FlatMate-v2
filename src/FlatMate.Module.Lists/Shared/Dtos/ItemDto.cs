@@ -7,6 +7,8 @@ namespace FlatMate.Module.Lists.Shared.Dtos
     {
         public DateTime Created { get; set; }
 
+        public int? ItemGroupId { get; set; }
+
         public int ItemListId { get; set; }
 
         public int LastEditorId { get; set; }
@@ -16,7 +18,5 @@ namespace FlatMate.Module.Lists.Shared.Dtos
         public string Name { get; set; }
 
         public int SortIndex { get; set; }
-
-        public int? ItemGroupId { get; set; }
     }
 }

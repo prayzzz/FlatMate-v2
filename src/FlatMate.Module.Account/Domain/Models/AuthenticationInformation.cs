@@ -5,7 +5,7 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Models
 {
-    internal class AuthenticationInformation
+    public class AuthenticationInformation
     {
         private AuthenticationInformation(string passwordHash, string salt, int userId)
         {

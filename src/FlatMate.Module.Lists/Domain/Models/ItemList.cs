@@ -8,7 +8,7 @@ namespace FlatMate.Module.Lists.Domain.Models
     public class ItemList : Entity, IOwnedEntity
     {
         private static ItemList _defaultInstance;
-        
+
         private ItemList(int? id, string name, int ownerId)
             : base(id)
         {
@@ -19,19 +19,19 @@ namespace FlatMate.Module.Lists.Domain.Models
             OwnerId = LastEditorId = ownerId;
         }
 
-        public static ItemList Default => _defaultInstance ?? (_defaultInstance = new ItemList(null, "Default", 0));
-
         public DateTime Created { get; set; }
 
+        public static ItemList Default => _defaultInstance ?? (_defaultInstance = new ItemList(null, "Default", 0));
+
         public string Description { get; set; }
+
+        public bool IsPublic { get; set; }
 
         public int LastEditorId { get; set; }
 
         public DateTime Modified { get; set; }
 
         public string Name { get; private set; }
-
-        public bool IsPublic { get; set; }
 
         public int OwnerId { get; }
 
