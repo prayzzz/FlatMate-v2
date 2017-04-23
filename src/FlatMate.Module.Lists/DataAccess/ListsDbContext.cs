@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlatMate.Module.Lists.DataAccess
 {
-    public class ListsContext : FlatMateDbContext
+    public class ListsDbContext : FlatMateDbContext
     {
-        public ListsContext(DbContextOptions options) : base(options)
+        public ListsDbContext(DbContextOptions<ListsDbContext> options) : base(options)
         {
         }
 
@@ -17,5 +17,10 @@ namespace FlatMate.Module.Lists.DataAccess
         public DbSet<ItemListDbo> ItemLists { get; set; }
 
         public DbSet<ItemDbo> Items { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // modelBuilder.HasDefaultSchema("Lists");
+        }
     }
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Account.Domain;
+using FlatMate.Module.Account.Shared;
+using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using FlatMate.Module.Lists.Domain.Services;

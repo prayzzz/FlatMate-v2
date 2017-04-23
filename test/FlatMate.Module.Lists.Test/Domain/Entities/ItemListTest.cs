@@ -1,9 +1,7 @@
 using System;
-using FlatMate.Module.Account.Shared.Dtos;
-using FlatMate.Module.Common.Domain.Entities;
 using FlatMate.Module.Lists.Domain.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Test.Domain.Entities
 {
@@ -15,15 +13,15 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const int id = 1;
             const string name = "MyList";
-            var owner = new UserDto();
+            const int ownerId = 1;
 
-            var itemList = ItemList.Create(id, name, owner).Data;
+            var itemList = ItemList.Create(id, name, ownerId).Data;
 
             Assert.IsNotNull(itemList);
             Assert.AreEqual(id, itemList.Id);
             Assert.IsTrue(itemList.IsSaved);
             Assert.AreSame(name, itemList.Name);
-            Assert.AreSame(owner, itemList.Owner);
+            Assert.AreEqual(ownerId, itemList.OwnerId);
             Assert.IsTrue(itemList.Created > DateTime.Now.AddSeconds(-1));
             Assert.IsTrue(itemList.Modified > DateTime.Now.AddSeconds(-1));
         }
@@ -32,14 +30,14 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         public void Test_Constructor_For_New_ItemList()
         {
             const string name = "MyList";
-            var owner = new UserDto();
+            const int ownerId = 1;
 
-            var itemList = ItemList.Create(name, owner).Data;
+            var itemList = ItemList.Create(name, ownerId).Data;
 
             Assert.IsNotNull(itemList);
-            Assert.AreEqual(Entity.DefaultId, itemList.Id);
+            Assert.IsNull(itemList.Id);
             Assert.AreSame(name, itemList.Name);
-            Assert.AreSame(owner, itemList.Owner);
+            Assert.AreEqual(ownerId, itemList.OwnerId);
             Assert.IsTrue(itemList.Created > DateTime.Now.AddSeconds(-1));
             Assert.IsTrue(itemList.Modified > DateTime.Now.AddSeconds(-1));
         }
@@ -49,10 +47,10 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const string name = "";
 
-            var result1 = ItemList.Create(name, new UserDto());
+            var result1 = ItemList.Create(name, 1);
             Assert.IsInstanceOfType(result1, typeof(ErrorResult<ItemList>));
 
-            var result2 = ItemList.Create(1, name, new UserDto());
+            var result2 = ItemList.Create(1, name, 1);
             Assert.IsInstanceOfType(result2, typeof(ErrorResult<ItemList>));
         }
 
@@ -61,10 +59,10 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const string name = null;
 
-            var result1 = ItemList.Create(name, new UserDto()).Data;
+            var result1 = ItemList.Create(name, 1).Data;
             Assert.IsInstanceOfType(result1, typeof(ErrorResult<ItemList>));
 
-            var result2 = ItemList.Create(1, name, new UserDto()).Data;
+            var result2 = ItemList.Create(1, name, 1).Data;
             Assert.IsInstanceOfType(result2, typeof(ErrorResult<ItemList>));
         }
 
@@ -74,7 +72,7 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             const string initialName = "MyList";
             const string newName = "MyAwesomeList";
 
-            var itemList = ItemList.Create(1, initialName, new UserDto()).Data;
+            var itemList = ItemList.Create(1, initialName, 1).Data;
 
             Assert.AreSame(initialName, itemList.Name);
 

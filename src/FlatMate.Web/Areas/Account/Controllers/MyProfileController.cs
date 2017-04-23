@@ -66,8 +66,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View("Error");
             }
 
-            // todo { UserJso = result.Data }
-            return View(new MyProfileVm());
+            return View(new MyProfileVm { UserJso = result.Data });
         }
     }
 }

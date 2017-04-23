@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FlatMate.Module.Account.Domain.Models;
 using FlatMate.Module.Account.Domain.Repositories;
+using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -161,7 +162,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             return new SuccessResult<UserDto>(ModelToDto(get.Data));
         }
 
-        private UserDto ModelToDto(User user)
+        private static UserDto ModelToDto(User user)
         {
             return new UserDto
             {

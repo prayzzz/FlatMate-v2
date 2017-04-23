@@ -1,4 +1,4 @@
-﻿namespace FlatMate.Module.Account.Domain.Models.Interfaces
+﻿namespace FlatMate.Module.Account.Shared.Interfaces
 {
     public interface IOwnedEntity
     {

@@ -1,18 +1,25 @@
-﻿namespace FlatMate.Api.Areas.Account.User
+﻿using System.ComponentModel;
+
+namespace FlatMate.Api.Areas.Account.User
 {
     public class UserJso
     {
+        [ReadOnly(true)]
         public string Email { get; set; }
 
+        [ReadOnly(true)]
         public int? Id { get; set; }
 
+        [ReadOnly(true)]
         public string UserName { get; set; }
     }
 
     public class UserInfoJso
     {
-        public int Id { get; set; }
+        [ReadOnly(true)]
+        public int? Id { get; set; }
 
+        [ReadOnly(true)]
         public string UserName { get; set; }
     }
 

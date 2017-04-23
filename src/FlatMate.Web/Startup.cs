@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
@@ -98,11 +99,13 @@ namespace FlatMate.Web
                     .AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings))
                     .AddControllersAsServices();
 
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }); });
 
             // Configure Module
+            Module.Account.Module.ConfigureServices(services);
             Module.Lists.Module.ConfigureServices(services);
 
             var builder = new ContainerBuilder();

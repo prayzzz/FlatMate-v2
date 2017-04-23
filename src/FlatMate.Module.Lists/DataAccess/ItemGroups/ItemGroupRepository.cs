@@ -13,22 +13,22 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
     [Inject]
     public class ItemGroupRepository : Repository<ItemGroup, ItemGroupDbo>, IItemGroupRepository
     {
-        private readonly ListsContext _context;
+        private readonly ListsDbContext _dbContext;
 
-        public ItemGroupRepository(ListsContext context, IMapper mapper) : base(mapper)
+        public ItemGroupRepository(ListsDbContext dbContext, IMapper mapper) : base(mapper)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
-        protected override FlatMateDbContext Context => _context;
+        protected override FlatMateDbContext Context => _dbContext;
 
-        protected override IQueryable<ItemGroupDbo> Dbos => _context.ItemGroups;
+        protected override IQueryable<ItemGroupDbo> Dbos => _dbContext.ItemGroups;
 
         protected override IQueryable<ItemGroupDbo> DbosIncluded => Dbos.Include(x => x.ItemList);
 
         public async Task<IEnumerable<ItemGroup>> GetAllAsync(int listId)
         {
-            var lists = await _context.ItemGroups
+            var lists = await _dbContext.ItemGroups
                                       .Include(g => g.ItemList)
                                       .Where(g => g.ItemListId == listId)
                                       .ToListAsync();

@@ -5,6 +5,6 @@ namespace FlatMate.Web.Areas.Account.Data
 {
     public class MyProfileVm : BaseViewModel
     {
-        public UserJso UserJso { get; set; }
+        public UserInfoJso UserJso { get; set; }
     }
 }

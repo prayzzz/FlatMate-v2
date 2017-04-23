@@ -13,28 +13,28 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
     [Inject]
     public class ItemListRepository : Repository<ItemList, ItemListDbo>, IItemListRepository
     {
-        private readonly ListsContext _context;
+        private readonly ListsDbContext _dbContext;
 
-        public ItemListRepository(ListsContext context, IMapper mapper) : base(mapper)
+        public ItemListRepository(ListsDbContext dbContext, IMapper mapper) : base(mapper)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
-        protected override FlatMateDbContext Context => _context;
+        protected override FlatMateDbContext Context => _dbContext;
 
-        protected override IQueryable<ItemListDbo> Dbos => _context.ItemLists;
+        protected override IQueryable<ItemListDbo> Dbos => _dbContext.ItemLists;
 
         protected override IQueryable<ItemListDbo> DbosIncluded => Dbos;
 
         public async Task<IEnumerable<ItemList>> GetAllAsync()
         {
-            var lists = await _context.ItemLists.ToListAsync();
+            var lists = await _dbContext.ItemLists.ToListAsync();
             return lists.Select(Mapper.Map<ItemList>).ToList();
         }
 
         public async Task<IEnumerable<ItemList>> GetAllAsync(int ownerId)
         {
-            var lists = await _context.ItemLists.Where(x => x.OwnerId == ownerId).ToListAsync();
+            var lists = await _dbContext.ItemLists.Where(x => x.OwnerId == ownerId).ToListAsync();
             return lists.Select(Mapper.Map<ItemList>).ToList();
         }
     }

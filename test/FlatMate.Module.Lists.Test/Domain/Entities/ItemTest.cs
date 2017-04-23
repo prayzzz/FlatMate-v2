@@ -1,9 +1,7 @@
 ﻿using System;
-using FlatMate.Module.Account.Shared.Dtos;
-using FlatMate.Module.Common.Domain.Entities;
 using FlatMate.Module.Lists.Domain.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using prayzzz.Common.Result;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Test.Domain.Entities
 {
@@ -15,35 +13,35 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const int id = 1;
             const string name = "MyItem";
-            var owner = new UserDto();
+            const int ownerId = 1;
 
-            var itemList = ItemList.Create("MyList", owner).Data;
-            var item = Item.Create(id, name, owner, itemList).Data;
+            var itemList = ItemList.Create("MyList", ownerId).Data;
+            var item = Item.Create(id, name, ownerId, itemList).Data;
 
             Assert.IsNotNull(item);
             Assert.AreEqual(id, item.Id);
             Assert.IsTrue(item.IsSaved);
             Assert.AreSame(name, item.Name);
-            Assert.AreSame(owner, item.Owner);
-            Assert.IsTrue(item.CreationDate > DateTime.Now.AddSeconds(-1));
-            Assert.IsTrue(item.ModifiedDate > DateTime.Now.AddSeconds(-1));
+            Assert.AreEqual(ownerId, item.OwnerId);
+            Assert.IsTrue(item.Created > DateTime.Now.AddSeconds(-1));
+            Assert.IsTrue(item.Modified > DateTime.Now.AddSeconds(-1));
         }
 
         [TestMethod]
         public void Test_Constructor_For_New_Item()
         {
             const string name = "MyItem";
-            var owner = new UserDto();
+            const int ownerId = 1;
 
-            var itemList = ItemList.Create("MyList", owner).Data;
-            var item = Item.Create(name, owner, itemList).Data;
+            var itemList = ItemList.Create("MyList", ownerId).Data;
+            var item = Item.Create(name, ownerId, itemList).Data;
 
             Assert.IsNotNull(item);
-            Assert.AreEqual(Entity.DefaultId, item.Id);
+            Assert.IsNull(item.Id);
             Assert.AreSame(name, item.Name);
-            Assert.AreSame(owner, item.Owner);
-            Assert.IsTrue(item.CreationDate > DateTime.Now.AddSeconds(-1));
-            Assert.IsTrue(item.ModifiedDate > DateTime.Now.AddSeconds(-1));
+            Assert.AreEqual(ownerId, item.OwnerId);
+            Assert.IsTrue(item.Created > DateTime.Now.AddSeconds(-1));
+            Assert.IsTrue(item.Modified > DateTime.Now.AddSeconds(-1));
         }
 
         [TestMethod]
@@ -51,12 +49,12 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const string name = "";
 
-            var itemList = ItemList.Create("MyList", new UserDto()).Data;
+            var itemList = ItemList.Create("MyList", 1).Data;
 
-            var result1 = Item.Create(name, new UserDto(), itemList);
+            var result1 = Item.Create(name, 1, itemList);
             Assert.IsInstanceOfType(result1, typeof(ErrorResult<Item>));
 
-            var result2 = Item.Create(1, name, new UserDto(), itemList);
+            var result2 = Item.Create(1, name, 1, itemList);
             Assert.IsInstanceOfType(result2, typeof(ErrorResult<Item>));
         }
 
@@ -65,12 +63,12 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const string name = null;
 
-            var itemList = ItemList.Create("MyList", new UserDto()).Data;
+            var itemList = ItemList.Create("MyList", 1).Data;
 
-            var result1 = Item.Create(name, new UserDto(), itemList);
+            var result1 = Item.Create(name, 1, itemList);
             Assert.IsInstanceOfType(result1, typeof(ErrorResult<Item>));
 
-            var result2 = Item.Create(1, name, new UserDto(), itemList);
+            var result2 = Item.Create(1, name, 1, itemList);
             Assert.IsInstanceOfType(result2, typeof(ErrorResult<Item>));
         }
 
@@ -80,9 +78,9 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
             const string initialName = "MyItem";
             const string newName = "MyAwesomeItem";
 
-            var itemList = ItemList.Create("MyList", new UserDto()).Data;
+            var itemList = ItemList.Create("MyList", 1).Data;
 
-            var item = Item.Create(1, initialName, new UserDto(), itemList).Data;
+            var item = Item.Create(1, initialName, 1, itemList).Data;
             Assert.AreSame(initialName, item.Name);
 
             var result = item.Rename(newName);

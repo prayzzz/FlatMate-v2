@@ -9,8 +9,6 @@ namespace FlatMate.Module.Account.Shared.Dtos
 
         public string Email { get; set; }
 
-        public static UserDto Fake { get; } = new UserDto { Id = 1, UserName = "Fake" };
-
         public string UserName { get; set; }
     }
 }

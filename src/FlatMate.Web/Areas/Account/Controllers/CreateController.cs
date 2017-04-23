@@ -2,12 +2,14 @@
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
     [Area("Account")]
+    [AllowAnonymous] // TODO
     public class CreateController : MvcController
     {
         private readonly UserApiController _userApi;

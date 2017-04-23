@@ -22,12 +22,12 @@ namespace FlatMate.Module.Account.Domain.Models
 
         public string UserName { get; }
 
-        internal static Result<User> Create(string userName, string email)
+        public static Result<User> Create(string userName, string email)
         {
             return Create(null, userName, email);
         }
 
-        internal static Result<User> Create(int? id, string userName, string email)
+        public static Result<User> Create(int? id, string userName, string email)
         {
             #region Validation
 

@@ -1,37 +1,17 @@
+using FlatMate.Module.Account.Shared;
+using FlatMate.Module.Account.Shared.Interfaces;
 using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Account.Domain
 {
-    public class CurrentUser
-    {
-        private static CurrentUser _anonymous;
-
-        private CurrentUser()
-        {
-            Id = -1;
-        }
-
-        public CurrentUser(int id)
-        {
-            Id = id;
-        }
-
-        public static CurrentUser Anonymous => _anonymous ?? (_anonymous = new CurrentUser());
-
-        public int Id { get; }
-
-        public bool IsAnonymous => Id == -1;
-    }
-
-    public interface IAuthenticationContext
-    {
-        CurrentUser CurrentUser { get; }
-    }
-
     [Inject]
     public class AuthenticationContext : IAuthenticationContext
     {
-        // TODO add real implementation
-        public CurrentUser CurrentUser { get; } = new CurrentUser(1);
+        public AuthenticationContext(ICurrentSession session)
+        {
+            CurrentUser = session.CurrentUserId.HasValue ? new CurrentUser(session.CurrentUserId.Value) : CurrentUser.Anonymous;
+        }
+
+        public CurrentUser CurrentUser { get; }
     }
 }

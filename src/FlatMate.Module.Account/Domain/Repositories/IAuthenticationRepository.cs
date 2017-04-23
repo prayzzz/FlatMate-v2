@@ -8,6 +8,6 @@ namespace FlatMate.Module.Account.Domain.Repositories
     {
         Task<Result<AuthenticationInformation>> GetAuthenticationAsync(int userId);
 
-        Task<Result> SaveAsync(AuthenticationInformation entity);
+        Task<Result> SaveAsync(AuthenticationInformation authInfo);
     }
 }

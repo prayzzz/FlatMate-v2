@@ -1,9 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using FlatMate.Module.Common.DataAccess;
 
-namespace FlatMate.Module.Account.DataAccess.User
+namespace FlatMate.Module.Account.DataAccess.Users
 {
+    [Table("User")]
     public class UserDbo : DboBase
     {
         [Required]

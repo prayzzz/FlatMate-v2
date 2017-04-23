@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FlatMate.Api.Filter
 {
-    public class EnsureBodyFilter : ActionFilterAttribute
+    public class EnsurePostBodyFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
