@@ -10,7 +10,7 @@
     <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.0.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.1" />
@@ -27,8 +27,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.1" />
     <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-ci-39" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0-rc3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="1.0.0-rc3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Api\FlatMate.Api.csproj" />
@@ -38,9 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0-msbuild3-final" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Mvc\Json\FlatMateSerializerSettings.cs" />
   </ItemGroup>
   <Target Name="BundleFrontend" AfterTargets="PrepareForPublish">
     <Exec Command="yarn" WorkingDirectory="wwwroot" />

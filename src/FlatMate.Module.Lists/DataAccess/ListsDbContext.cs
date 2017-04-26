@@ -20,7 +20,7 @@ namespace FlatMate.Module.Lists.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.HasDefaultSchema("Lists");
+            modelBuilder.HasDefaultSchema("Lists");
         }
     }
 }

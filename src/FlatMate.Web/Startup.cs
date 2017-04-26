@@ -106,7 +106,7 @@ namespace FlatMate.Web
 
             // Configure Module
             Module.Account.Module.ConfigureServices(services);
-            Module.Lists.Module.ConfigureServices(services);
+            Module.Lists.Module.ConfigureServices(services, _configuration);
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
