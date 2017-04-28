@@ -1,20 +1,93 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
-using Microsoft.Extensions.Logging;
+using System.IO;
+using System.Reflection;
 
 namespace FlatMate.Migration
 {
     public class Migrator
     {
-        private const string MigrationsTableName = "Migrations";
-
         private readonly MigrationSettings _settings;
-        private readonly ILogger _logger;
 
-        public Migrator(ILoggerFactory loggerFactory, MigrationSettings settings)
+        public Migrator(MigrationSettings settings)
         {
             _settings = settings;
-            _logger = loggerFactory.CreateLogger<Migrator>();
+        }
+
+        public void Run()
+        {
+            Console.WriteLine("Running Migrations...");
+
+            using (var connection = GetConnection())
+            {
+                EnsureMigrationTable(connection);
+            }
+
+            Console.WriteLine();
+        }
+
+        private void CreateSchema(SqlConnection connection)
+        {
+            WriteInfo($"Creating schema {_settings.DbSchemaEscaped}");
+
+            var query = $"CREATE SCHEMA {_settings.DbSchemaEscaped}";
+            using (var command = new SqlCommand(query, connection))
+            {
+                ExecuteNonQuery(command);
+            }
+        }
+
+        private void CreateTable(SqlConnection connection)
+        {
+            WriteInfo($"Creating migration table {_settings.DbTableEscaped}");
+
+            var assemblyName = GetType().GetTypeInfo().Assembly.GetName().Name;
+            var templateFilePath = $"{assemblyName}.Resources.MigrationsTable.sql";
+            var script = ResourceHelper.GetEmbeddedFile(GetType().GetTypeInfo().Assembly, templateFilePath);
+            script = script.Replace("##SCRIPTTABLE##", _settings.DbSchemaAndTableEscaped);
+
+            if (string.IsNullOrEmpty(script))
+            {
+                throw new FileNotFoundException(templateFilePath);
+            }
+
+            using (var command = new SqlCommand(script, connection))
+            {
+                ExecuteNonQuery(command);
+            }
+        }
+
+        private void EnsureMigrationTable(SqlConnection connection)
+        {
+            if (_settings.IsSchemaSet && !IsSchemaAvailable(connection))
+            {
+                if (_settings.CreateMissingSchema)
+                {
+                    CreateSchema(connection);
+                }
+                else
+                {
+                    throw new Exception($"Missing database schema for migration table {_settings.DbSchemaEscaped}.");
+                }
+            }
+
+            if (!IsTableAvailable(connection))
+            {
+                CreateTable(connection);
+            }
+        }
+
+        private int ExecuteNonQuery(IDbCommand sqlCommand)
+        {
+            WriteDebug($"Executing query '{sqlCommand.CommandText}'");
+            return sqlCommand.ExecuteNonQuery();
+        }
+
+        private object ExecuteScalar(IDbCommand sqlCommand)
+        {
+            WriteDebug($"Executing  query '{sqlCommand.CommandText}'");
+            return sqlCommand.ExecuteScalar();
         }
 
         private SqlConnection GetConnection()
@@ -25,49 +98,9 @@ namespace FlatMate.Migration
             return connection;
         }
 
-        private void EnsureMigrationTable(SqlConnection connection)
-        {
-            if (!string.IsNullOrEmpty(_settings.Schema) && !IsSchemaAvailable(connection))
-            {
-                CreateSchema(connection);
-            }
-
-            if (!IsTableAvailable(connection))
-            {
-                CreateTable(connection);
-            }
-        }
-
-        private void CreateTable(SqlConnection connection)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private void CreateSchema(SqlConnection connection)
-        {
-            _logger.LogDebug($"Creating schema '{_settings.Schema}'");
-
-            var query = $"CREATE SCHEMA [{_settings.Schema}]";
-            using (var command = new SqlCommand(query, connection))
-            {
-                ExecuteNonQuery(command);
-            }
-        }
-
-        private bool IsTableAvailable(SqlConnection connection)
-        {
-            _logger.LogDebug($"Checking for table '{_settings.Schema}.{MigrationsTableName}'");
-
-            var query = $"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{_settings.Schema}' AND TABLE_NAME = '{MigrationsTableName}'";
-            using (var command = new SqlCommand(query, connection))
-            {
-                return ExecuteScalar(command) != null;
-            }
-        }
-
         private bool IsSchemaAvailable(SqlConnection connection)
         {
-            _logger.LogDebug($"Checking for schema '{_settings.Schema}'");
+            WriteInfo($"Checking for schema {_settings.DbSchemaEscaped}");
 
             var query = $"SELECT name FROM sys.schemas WHERE [name] = '{_settings.Schema}'";
             using (var command = new SqlCommand(query, connection))
@@ -76,35 +109,51 @@ namespace FlatMate.Migration
             }
         }
 
-        private object ExecuteScalar(IDbCommand sqlCommand)
+        private bool IsTableAvailable(SqlConnection connection)
         {
-            _logger.LogDebug($"Executing  query '{sqlCommand.CommandText}'");
-            return sqlCommand.ExecuteScalar();
+            WriteInfo($"Checking for table {_settings.DbSchemaAndTableEscaped}");
+
+            var query = $"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{_settings.Table}'";
+            if (_settings.IsSchemaSet)
+            {
+                query = $"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{_settings.Schema}' AND TABLE_NAME = '{_settings.Table}'";
+            }
+
+            using (var command = new SqlCommand(query, connection))
+            {
+                return ExecuteScalar(command) != null;
+            }
         }
 
-        private int ExecuteNonQuery(IDbCommand sqlCommand)
+        private void WriteDebug(string message)
         {
-            _logger.LogDebug($"Executing query '{sqlCommand.CommandText}'");
-            return sqlCommand.ExecuteNonQuery();
+            if (_settings.LogDebug)
+            {
+                Console.WriteLine("debug: " + message);
+            }
         }
 
-
-        //public int Execute(IEnumerable<string> arguments, Settings settings)
-        //{
-        //    if (!MsSqlDatabase.IsDbScriptsTableAvailable(settings))
-        //    {
-        //        return 1;
-        //    }
-
-        //    var scriptFilePaths = ShowMissingScriptsCommand.GetMissingScripts(settings).ToList();
-
-        //    if (!scriptFilePaths.Any())
-        //    {
-        //        _console.WriteLine("No missing scripts");
-        //        return 0;
-        //    }
+        private void WriteInfo(string message)
+        {
+            Console.WriteLine("info: " + message);
+        }
 
         //    using (var connection = new SqlConnection(MsSqlDatabase.GetConnectionString(settings)))
+        //    }
+        //        return 0;
+        //        _console.WriteLine("No missing scripts");
+        //    {
+
+        //    if (!scriptFilePaths.Any())
+
+        //    var scriptFilePaths = ShowMissingScriptsCommand.GetMissingScripts(settings).ToList();
+        //    }
+        //        return 1;
+        //    {
+        //    if (!MsSqlDatabase.IsDbScriptsTableAvailable(settings))
+        //{
+
+        //public int Execute(IEnumerable<string> arguments, Settings settings)
         //    {
         //        connection.Open();
 

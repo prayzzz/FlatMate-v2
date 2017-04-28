@@ -95,16 +95,18 @@ namespace FlatMate.Web
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            // Framework
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
                     .AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings))
                     .AddControllersAsServices();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddSession();
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }); });
 
-            // Configure Module
+            // Modules
             Module.Account.Module.ConfigureServices(services);
             Module.Lists.Module.ConfigureServices(services, _configuration);
 

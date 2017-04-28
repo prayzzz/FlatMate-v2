@@ -1,3 +1,12 @@
 {
-  "server.urls": "http://*:5000"
+  "Server": {
+    "Urls": "http://*:5000"
+  },
+  "Migration": {
+    "ConnectionString": "Server=(LocalDB)\\MSSQLLocalDB;Database=flatmate;Integrated Security=true",
+    "MigrationsFolder": "",
+    "Schema": "Infrastructure",
+    "CreateMissingSchema": true,
+    "LogDebug": true
+  }
 }
