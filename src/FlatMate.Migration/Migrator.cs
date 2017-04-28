@@ -1,10 +1,13 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 
 namespace FlatMate.Migration
 {
     public class Migrator
     {
+        private const string MigrationsTableName = "Migrations";
+
         private readonly MigrationSettings _settings;
         private readonly ILogger _logger;
 
@@ -14,12 +17,75 @@ namespace FlatMate.Migration
             _logger = loggerFactory.CreateLogger<Migrator>();
         }
 
-        public SqlConnection GetConnection()
+        private SqlConnection GetConnection()
         {
             var connection = new SqlConnection(_settings.ConnectionString);
             connection.Open();
 
             return connection;
+        }
+
+        private void EnsureMigrationTable(SqlConnection connection)
+        {
+            if (!string.IsNullOrEmpty(_settings.Schema) && !IsSchemaAvailable(connection))
+            {
+                CreateSchema(connection);
+            }
+
+            if (!IsTableAvailable(connection))
+            {
+                CreateTable(connection);
+            }
+        }
+
+        private void CreateTable(SqlConnection connection)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void CreateSchema(SqlConnection connection)
+        {
+            _logger.LogDebug($"Creating schema '{_settings.Schema}'");
+
+            var query = $"CREATE SCHEMA [{_settings.Schema}]";
+            using (var command = new SqlCommand(query, connection))
+            {
+                ExecuteNonQuery(command);
+            }
+        }
+
+        private bool IsTableAvailable(SqlConnection connection)
+        {
+            _logger.LogDebug($"Checking for table '{_settings.Schema}.{MigrationsTableName}'");
+
+            var query = $"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{_settings.Schema}' AND TABLE_NAME = '{MigrationsTableName}'";
+            using (var command = new SqlCommand(query, connection))
+            {
+                return ExecuteScalar(command) != null;
+            }
+        }
+
+        private bool IsSchemaAvailable(SqlConnection connection)
+        {
+            _logger.LogDebug($"Checking for schema '{_settings.Schema}'");
+
+            var query = $"SELECT name FROM sys.schemas WHERE [name] = '{_settings.Schema}'";
+            using (var command = new SqlCommand(query, connection))
+            {
+                return ExecuteScalar(command) != null;
+            }
+        }
+
+        private object ExecuteScalar(IDbCommand sqlCommand)
+        {
+            _logger.LogDebug($"Executing  query '{sqlCommand.CommandText}'");
+            return sqlCommand.ExecuteScalar();
+        }
+
+        private int ExecuteNonQuery(IDbCommand sqlCommand)
+        {
+            _logger.LogDebug($"Executing query '{sqlCommand.CommandText}'");
+            return sqlCommand.ExecuteNonQuery();
         }
 
 

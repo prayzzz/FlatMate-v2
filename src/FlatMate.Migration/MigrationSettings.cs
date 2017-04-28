@@ -7,5 +7,7 @@ namespace FlatMate.Migration
         public string ConnectionString { get; set; }
 
         public string MigrationsFolder { get; set; }
+
+        public string Schema { get; set; }
     }
 }
