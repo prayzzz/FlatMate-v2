@@ -4,7 +4,7 @@
   },
   "Migration": {
     "ConnectionString": "Server=(LocalDB)\\MSSQLLocalDB;Database=flatmate;Integrated Security=true",
-    "MigrationsFolder": "",
+    "MigrationsFolder": "./_Migrations/",
     "Schema": "Infrastructure",
     "CreateMissingSchema": true,
     "LogDebug": true

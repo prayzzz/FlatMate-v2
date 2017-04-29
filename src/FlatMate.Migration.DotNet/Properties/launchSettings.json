@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlatMate.Migration.DotNet": {
+      "commandName": "Project",
+      "commandLineArgs": "create --migrations \".\" --schema \"Infrastructure\""
+    }
+  }
+}

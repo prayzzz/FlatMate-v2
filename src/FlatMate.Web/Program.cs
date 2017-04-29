@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using FlatMate.Migration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

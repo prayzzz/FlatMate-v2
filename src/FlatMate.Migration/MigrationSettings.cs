@@ -16,7 +16,9 @@
 
         public bool LogDebug { get; set; } = false;
 
-        public string MigrationsFolder { get; set; }
+        public string MigrationsFolder { get; set; } = ".";
+
+        public string BackupFolder { get; set; }
 
         public string Schema { get; set; }
 

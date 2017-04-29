@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Migration
 {
     public class Migrator
     {
+        private static readonly Regex GoRegexPattern = new Regex("^GO", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private readonly MigrationSettings _settings;
 
         public Migrator(MigrationSettings settings)
@@ -15,16 +20,20 @@ namespace FlatMate.Migration
             _settings = settings;
         }
 
-        public void Run()
+        public Result Run()
         {
             Console.WriteLine("Running Migrations...");
 
             using (var connection = GetConnection())
             {
                 EnsureMigrationTable(connection);
+
+                var missingScripts = GetMissingScripts(connection);
+                ExecuteMissingScripts(connection, missingScripts);
             }
 
             Console.WriteLine();
+            return SuccessResult.Default;
         }
 
         private void CreateSchema(SqlConnection connection)
@@ -78,6 +87,40 @@ namespace FlatMate.Migration
             }
         }
 
+        private void ExecuteMissingScripts(SqlConnection connection, IEnumerable<string> scriptFilePaths)
+        {
+            foreach (var filePath in scriptFilePaths)
+            {
+                var transaction = connection.BeginTransaction();
+
+                Console.WriteLine($" {Path.GetFileName(filePath)}");
+                var scriptContent = File.ReadAllText(filePath);
+
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = transaction;
+                    command.Connection = connection;
+
+                    foreach (var sqlBatch in GoRegexPattern.Split(scriptContent))
+                    {
+                        command.CommandText = sqlBatch;
+
+                        try
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+            }
+        }
+
         private int ExecuteNonQuery(IDbCommand sqlCommand)
         {
             WriteDebug($"Executing query '{sqlCommand.CommandText}'");
@@ -96,6 +139,45 @@ namespace FlatMate.Migration
             connection.Open();
 
             return connection;
+        }
+
+        private IEnumerable<string> GetMissingScripts(SqlConnection connection)
+        {
+            var dbScripts = new List<string>();
+            var localScripts = Directory.GetFiles(Path.GetFullPath(_settings.MigrationsFolder), "*.sql")
+                                        .OrderBy(x => x)
+                                        .ToList();
+
+            using (var sqlConnection = new SqlConnection(_settings.ConnectionString))
+            {
+                sqlConnection.Open();
+
+                using (var command = new SqlCommand($"SELECT * FROM {_settings.DbSchemaAndTableEscaped}", sqlConnection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        dbScripts.Add(reader.GetString(1));
+                    }
+                }
+            }
+
+            if (!dbScripts.Any())
+            {
+                return localScripts;
+            }
+
+            var missingScripts = new List<string>();
+
+            foreach (var localScriptName in localScripts)
+            {
+                if (dbScripts.All(name => name != Path.GetFileNameWithoutExtension(localScriptName)))
+                {
+                    missingScripts.Add(localScriptName);
+                }
+            }
+
+            return missingScripts;
         }
 
         private bool IsSchemaAvailable(SqlConnection connection)
@@ -138,10 +220,13 @@ namespace FlatMate.Migration
             Console.WriteLine("info: " + message);
         }
 
+        //        foreach (var filePath in scriptFilePaths)
+        //        connection.Open();
+
         //    using (var connection = new SqlConnection(MsSqlDatabase.GetConnectionString(settings)))
         //    }
         //        return 0;
-        //        _console.WriteLine("No missing scripts");
+        //        Console.WriteLine("No missing scripts");
         //    {
 
         //    if (!scriptFilePaths.Any())
@@ -154,14 +239,12 @@ namespace FlatMate.Migration
         //{
 
         //public int Execute(IEnumerable<string> arguments, Settings settings)
-        //    {
-        //        connection.Open();
 
-        //        foreach (var filePath in scriptFilePaths)
+        //    {
         //        {
         //            var transaction = connection.BeginTransaction();
 
-        //            _console.WriteLine($" {Path.GetFileName(filePath)}");
+        //            Console.WriteLine($" {Path.GetFileName(filePath)}");
         //            var scriptContent = File.ReadAllText(filePath);
 
         //            using (var command = new SqlCommand())
