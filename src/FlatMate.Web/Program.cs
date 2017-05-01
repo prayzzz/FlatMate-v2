@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using FlatMate.Migration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace FlatMate.Web
 {
@@ -14,7 +14,8 @@ namespace FlatMate.Web
                                                           .AddJsonFile("hosting.json", true)
                                                           .Build();
 
-            new Migrator(configuration.GetSection("Migration").Get<MigrationSettings>()).Run();
+            var loggerFactory = new LoggerFactory().AddConsole();
+            new Migrator(loggerFactory, configuration.GetSection("Migration").Get<MigrationSettings>()).Run();
 
             var host = new WebHostBuilder().UseKestrel()
                                            .UseConfiguration(configuration)

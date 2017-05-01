@@ -2,6 +2,8 @@
 {
     public class MigrationSettings
     {
+        public string BackupFolder { get; set; }
+
         public string ConnectionString { get; set; }
 
         public bool CreateMissingSchema { get; set; } = false;
@@ -17,8 +19,6 @@
         public bool LogDebug { get; set; } = false;
 
         public string MigrationsFolder { get; set; } = ".";
-
-        public string BackupFolder { get; set; }
 
         public string Schema { get; set; }
 

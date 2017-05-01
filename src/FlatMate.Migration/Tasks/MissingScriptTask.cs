@@ -1,0 +1,60 @@
+﻿using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using FlatMate.Migration.Common;
+using Microsoft.Extensions.Logging;
+
+namespace FlatMate.Migration.Tasks
+{
+    public class MissingScriptTask
+    {
+        private readonly SqlCommandExecutor _commandExecutor;
+        private readonly ILogger _logger;
+
+        public MissingScriptTask(ILoggerFactory loggerFactory, SqlCommandExecutor commandExecutor)
+        {
+            _logger = loggerFactory.CreateLogger(GetType());
+            _commandExecutor = commandExecutor;
+        }
+
+        public IEnumerable<string> GetMissingScripts(IDbConnection connection, MigrationSettings settings)
+        {
+            _logger.LogInformation("Looking for missing scripts");
+
+            var dbScripts = new List<string>();
+            var localScripts = Directory.GetFiles(Path.GetFullPath(settings.MigrationsFolder), "*.sql")
+                                        .OrderBy(x => x)
+                                        .ToList();
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = $"SELECT * FROM {settings.DbSchemaAndTableEscaped}";
+                using (var reader = _commandExecutor.ExecuteReader(command))
+                {
+                    while (reader.Read())
+                    {
+                        dbScripts.Add(reader.GetString(1));
+                    }
+                }
+            }
+
+            if (!dbScripts.Any())
+            {
+                return localScripts;
+            }
+
+            var missingScripts = new List<string>();
+            foreach (var localScriptName in localScripts)
+            {
+                if (dbScripts.All(name => name != Path.GetFileNameWithoutExtension(localScriptName)))
+                {
+                    missingScripts.Add(localScriptName);
+                }
+            }
+
+            _logger.LogInformation($"Found {missingScripts.Count} scripts");
+            return missingScripts;
+        }
+    }
+}

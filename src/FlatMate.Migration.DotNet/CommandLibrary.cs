@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using FlatMate.Migration.Common;
+using FlatMate.Migration.DotNet.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace FlatMate.Migration.DotNet
 {
@@ -6,11 +9,11 @@ namespace FlatMate.Migration.DotNet
     {
         private readonly Dictionary<string, ICommand> _nameToCommand;
 
-        public CommandLibrary(MigrationSettings settings)
+        public CommandLibrary(ILoggerFactory loggerFactory, MigrationSettings settings)
         {
             _nameToCommand = new Dictionary<string, ICommand>();
 
-            AddCommand(new CreateCommand(settings));
+            AddCommand(new CreateCommand(loggerFactory, settings));
         }
 
         public ICommand Get(string parameter)

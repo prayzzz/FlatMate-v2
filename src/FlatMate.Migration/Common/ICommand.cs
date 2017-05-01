@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Migration
+namespace FlatMate.Migration.Common
 {
     public interface ICommand
     {

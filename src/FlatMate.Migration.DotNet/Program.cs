@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Migration.DotNet
 {
     public class Program
     {
-        private static CommandLibrary _commandLibrary;
-
         private static readonly Dictionary<string, string> SwitchMappings = new Dictionary<string, string>
         {
             { "--backup", "Settings:BackupDirectory" },
@@ -21,9 +20,16 @@ namespace FlatMate.Migration.DotNet
 
             { "--migrations", "Settings:MigrationsFolder" },
 
-            { "--table", "Settings:Table" },
+            { "--table", "Settings:Table" }
         };
 
+        private static readonly ILoggerFactory LoggerFactory;
+        private static CommandLibrary _commandLibrary;
+
+        static Program()
+        {
+            LoggerFactory = new LoggerFactory().AddConsole();
+        }
 
         public static void Main(string[] args)
         {
@@ -34,7 +40,7 @@ namespace FlatMate.Migration.DotNet
             }
 
             var settings = loadSettings.Data;
-            _commandLibrary = new CommandLibrary(settings);
+            _commandLibrary = new CommandLibrary(LoggerFactory, settings);
 
             var checkSettings = CheckSettings(settings);
             if (checkSettings.IsError)

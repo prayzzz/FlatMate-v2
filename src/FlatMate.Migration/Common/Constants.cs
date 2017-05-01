@@ -1,4 +1,4 @@
-﻿namespace FlatMate.Migration
+﻿namespace FlatMate.Migration.Common
 {
     public static class Constants
     {
