@@ -20,6 +20,7 @@ export default class Ajax {
     }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 class AjaxRequest<T> implements IAjaxRequest<T> {
     private readonly method: string;
     private readonly url: string;

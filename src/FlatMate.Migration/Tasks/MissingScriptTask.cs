@@ -20,7 +20,7 @@ namespace FlatMate.Migration.Tasks
 
         public IEnumerable<string> GetMissingScripts(IDbConnection connection, MigrationSettings settings)
         {
-            _logger.LogInformation("Looking for missing scripts");
+            _logger.LogDebug("Looking for missing scripts");
 
             var dbScripts = new List<string>();
             var localScripts = Directory.GetFiles(Path.GetFullPath(settings.MigrationsFolder), "*.sql")
@@ -39,11 +39,6 @@ namespace FlatMate.Migration.Tasks
                 }
             }
 
-            if (!dbScripts.Any())
-            {
-                return localScripts;
-            }
-
             var missingScripts = new List<string>();
             foreach (var localScriptName in localScripts)
             {
@@ -53,7 +48,7 @@ namespace FlatMate.Migration.Tasks
                 }
             }
 
-            _logger.LogInformation($"Found {missingScripts.Count} scripts");
+            _logger.LogInformation($"Found {missingScripts.Count} missing scripts");
             return missingScripts;
         }
     }

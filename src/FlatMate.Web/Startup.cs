@@ -107,7 +107,7 @@ namespace FlatMate.Web
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }); });
 
             // Modules
-            Module.Account.Module.ConfigureServices(services);
+            Module.Account.Module.ConfigureServices(services, _configuration);
             Module.Lists.Module.ConfigureServices(services, _configuration);
 
             var builder = new ContainerBuilder();

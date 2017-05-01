@@ -22,6 +22,10 @@ export default class ItemGroupViewModel {
         return this.model.name;
     }
 
+    public get sortIndex(): number {
+        return this.model.sortIndex;
+    }
+
     public get id(): number {
         return this.model.id;
     }
@@ -35,7 +39,10 @@ export default class ItemGroupViewModel {
             return;
         }
 
-        const itemToAdd = { name: groupName, sortIndex: 0 };
+        let maxSortIndex = -1;
+        self.items().forEach(i => maxSortIndex = i.sortIndex > maxSortIndex ? i.sortIndex : maxSortIndex);
+
+        const itemToAdd = { name: groupName, sortIndex: maxSortIndex + 1 };
         const done = (i: IItemJso) => {
             self.items.push(i);
             self.newItemName("");

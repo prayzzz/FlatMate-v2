@@ -11,7 +11,6 @@ namespace FlatMate.Migration
     public class Migrator
     {
         private readonly SqlCommandExecutor _commandExecutor;
-        private readonly ILogger _logger;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ResourceLoader _resourceLoader;
         private readonly MigrationSettings _settings;
@@ -19,25 +18,24 @@ namespace FlatMate.Migration
         public Migrator(ILoggerFactory loggerFactory, MigrationSettings settings)
         {
             _loggerFactory = loggerFactory;
-            _logger = loggerFactory.CreateLogger(GetType());
             _settings = settings;
+
             _commandExecutor = new SqlCommandExecutor(loggerFactory);
             _resourceLoader = new ResourceLoader(_loggerFactory);
         }
 
         public Result Run()
         {
-            _logger.LogInformation("Running Migrator");
+            var missingTask = new MissingScriptTask(_loggerFactory, _commandExecutor);
+            var executeTask = new ExecuteScriptTask(_loggerFactory, _commandExecutor);
 
-            var missingScriptTask = new MissingScriptTask(_loggerFactory, _commandExecutor);
-            var executeScriptTask = new ExecuteScriptTask(_loggerFactory, _commandExecutor);
             using (var connection = GetConnection())
             {
                 EnsureMigrationStructure(connection);
 
-                foreach (var script in missingScriptTask.GetMissingScripts(connection, _settings))
+                foreach (var script in missingTask.GetMissingScripts(connection, _settings))
                 {
-                    executeScriptTask.ExecuteScript(script, connection);
+                    executeTask.ExecuteScript(script, connection);
                 }
             }
 

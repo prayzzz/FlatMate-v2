@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => new ItemListEditor(), false)
 // add EnterKey event
 ko.bindingHandlers.enterkey = {
     init: (element: HTMLElement, valueAccessor, allBindings, viewModel) => {
-        var callback = valueAccessor();
+        const callback = valueAccessor();
 
         element.addEventListener("keypress", (event) => {
-            var keyCode = event.which ? event.which : event.keyCode;
+            const keyCode = event.which ? event.which : event.keyCode;
             if (keyCode === 13) {
                 callback.call(viewModel);
                 return false;

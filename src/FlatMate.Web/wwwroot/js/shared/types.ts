@@ -1,1 +1,3 @@
-export interface IStringDictionary<T> { [c: string]: T }
+export interface IStringDictionary<T> {
+    [c: string]: T;
+};

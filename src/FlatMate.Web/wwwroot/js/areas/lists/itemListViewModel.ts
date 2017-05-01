@@ -35,7 +35,10 @@ export default class ItemListViewModel {
             return;
         }
 
-        const groupToAdd = { name: groupName, sortIndex: 0 };
+        let maxSortIndex = -1;
+        self.groups().forEach(g => maxSortIndex = g.sortIndex > maxSortIndex ? g.sortIndex : maxSortIndex);
+
+        const groupToAdd = { name: groupName, sortIndex: maxSortIndex + 1 };
         const done = (g: IItemGroupJso) => {
             const group = new ItemGroupViewModel(g, []);
             group.isNewItemFocused(true);

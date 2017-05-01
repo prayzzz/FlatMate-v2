@@ -34,7 +34,7 @@ namespace FlatMate.Migration.Tasks
 
         public bool IsTableAvailable(IDbConnection connection, MigrationSettings settings)
         {
-            _logger.LogInformation($"Checking for migration table {settings.DbSchemaAndTableEscaped}");
+            _logger.LogDebug($"Checking for migration table {settings.DbSchemaAndTableEscaped}");
 
             string selectTable;
             if (settings.IsSchemaSet)

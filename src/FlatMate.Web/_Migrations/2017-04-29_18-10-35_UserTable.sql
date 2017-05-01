@@ -11,7 +11,7 @@ CREATE TABLE [Account].[User](
 	[Email] [varchar](255) NOT NULL,
 	[PasswordHash] [varchar](255) NOT NULL,
 	[Salt] [varchar](255) NOT NULL,
-	[UserName] [varbinary](255) NOT NULL,
+	[UserName] [varchar](255) NOT NULL,
   CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED ( [Id] ASC )
 )
 GO

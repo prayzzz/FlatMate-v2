@@ -28,7 +28,7 @@ namespace FlatMate.Migration.Tasks
 
         public bool IsSchemaAvailable(IDbConnection connection, MigrationSettings settings)
         {
-            _logger.LogInformation($"Checking for schema {settings.DbSchemaEscaped}");
+            _logger.LogDebug($"Checking for schema {settings.DbSchemaEscaped}");
 
             using (var command = connection.CreateCommand())
             {

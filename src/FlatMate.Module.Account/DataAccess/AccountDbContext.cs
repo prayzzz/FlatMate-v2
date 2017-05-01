@@ -14,7 +14,7 @@ namespace FlatMate.Module.Account.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.HasDefaultSchema("Account");
+            modelBuilder.HasDefaultSchema("Account");
         }
     }
 }

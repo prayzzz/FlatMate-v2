@@ -19,7 +19,7 @@ namespace FlatMate.Migration.Tasks
 
         public void CreateScript(string scriptName, MigrationSettings settings)
         {
-            _logger.LogInformation($"Creating script {scriptName}");
+            _logger.LogDebug($"Creating script {scriptName}");
 
             var script = _resourceLoader.GetEmbeddedFile(GetType().GetTypeInfo().Assembly, "Resources.ScriptTemplate.sql");
 
