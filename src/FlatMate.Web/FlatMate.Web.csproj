@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never" />
+    <Content Include="_Migrations/**" CopyToPublishDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />

@@ -22,8 +22,15 @@ namespace FlatMate.Migration.Tasks
         {
             _logger.LogDebug("Looking for missing scripts");
 
+            var migrationFolderPath = Path.GetFullPath(settings.MigrationsFolder);
+            if (!Directory.Exists(migrationFolderPath))
+            {
+                _logger.LogWarning($"Migrations folder {migrationFolderPath} not found");
+                return Enumerable.Empty<string>();
+            }
+
             var dbScripts = new List<string>();
-            var localScripts = Directory.GetFiles(Path.GetFullPath(settings.MigrationsFolder), "*.sql")
+            var localScripts = Directory.GetFiles(migrationFolderPath, "*.sql")
                                         .OrderBy(x => x)
                                         .ToList();
 
