@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
@@ -12,74 +13,55 @@ namespace FlatMate.Api.Services
         /// <summary>
         ///     Creates a new <see cref="IActionResult" /> from the given <see cref="Result" />
         /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        IActionResult Get(Result result);
+        IActionResult Get(Result result, string httpMethod);
 
         /// <summary>
         ///     Creates a new <see cref="IActionResult" /> from the given <see cref="Result" />
         /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        IActionResult Get<T>(IResult<T> result);
+        IActionResult Get<T>(IResult<T> result, string httpMethod);
     }
 
     /// <summary>
-    ///     This service creates <see cref="IActionResult" /> from <see cref="Result" /> by converting the
-    ///     <see cref="ErrorType" /> into a http statuscode
+    ///     This service creates <see cref="IActionResult" /> from <see cref="Result" /> 
+    ///     by converting the <see cref="ErrorType" /> into a http statuscode
     /// </summary>
     [Inject(DependencyLifetime.Singleton)]
     public class RequestResultService : IRequestResultService
     {
-        /// <summary>
-        ///     Creates a new <see cref="IActionResult" /> from the given <see cref="Result" />
-        /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        public IActionResult Get(Result result)
+        public IActionResult Get(Result result, string httpMethod)
         {
-            if (!result.IsSuccess)
+            if (result.IsError)
             {
                 return GetErrorResult(result);
             }
 
-            return new OkResult();
+            return HttpMethods.IsPost(httpMethod) ? new StatusCodeResult(201) : new OkResult();
         }
 
-        /// <summary>
-        ///     Creates a new <see cref="IActionResult" /> from the given <see cref="Result" />
-        /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        public IActionResult Get<T>(IResult<T> result)
+        public IActionResult Get<T>(IResult<T> result, string httpMethod)
         {
-            if (result.IsSuccess)
+            if (result.IsError)
             {
-                return new OkObjectResult(result.Data);
+                return GetErrorResult(result as Result);
             }
 
-            return GetErrorResult(result as Result);
+            return HttpMethods.IsPost(httpMethod) ? new ObjectResult(result.Data) { StatusCode = 201 } : new OkObjectResult(result.Data);
         }
 
-        private IActionResult GetErrorResult(Result result)
+        private static IActionResult GetErrorResult(Result result)
         {
             switch (result.ErrorType)
             {
+                case ErrorType.None:
                 case ErrorType.Unknown:
                 case ErrorType.InternalError:
-                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } })
-                    {
-                        StatusCode = 500
-                    };
+                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } }) { StatusCode = 500 };
                 case ErrorType.NotFound:
                     return new NotFoundObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } });
                 case ErrorType.ValidationError:
                     return new BadRequestObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } });
                 case ErrorType.Unauthorized:
-                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } })
-                    {
-                        StatusCode = 401
-                    };
+                    return new ObjectResult(new Dictionary<string, string> { { "error", result.ToMessageString() } }) { StatusCode = 401 };
                 default:
                     throw new ArgumentOutOfRangeException();
             }

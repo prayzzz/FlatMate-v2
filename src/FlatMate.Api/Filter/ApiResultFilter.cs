@@ -30,14 +30,14 @@ namespace FlatMate.Api.Filter
             // check for generic result
             if (objectResult.Value is IResult<object> genericResult)
             {
-                context.Result = _resultService.Get(genericResult);
+                context.Result = _resultService.Get(genericResult, requestMethod);
                 return;
             }
 
             // check for non-generic result
             if (objectResult.Value is Result result)
             {
-                context.Result = _resultService.Get(result);
+                context.Result = _resultService.Get(result, requestMethod);
             }
         }
     }

@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
+using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace FlatMate.Web
@@ -33,13 +34,16 @@ namespace FlatMate.Web
                                                     .AddEnvironmentVariables();
 
             _configuration = builder.Build();
+
+            Log.Logger = new LoggerConfiguration().ReadFrom
+                                                  .Configuration(_configuration)
+                                                  .CreateLogger();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
+            loggerFactory.AddSerilog();
+            
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();

@@ -17,7 +17,7 @@ namespace FlatMate.Migration.Common
         {
             _logger.LogDebug($"Loading file '{filePath}' from '{assembly.FullName}'");
 
-            var name = assembly.GetName().Name + filePath;
+            var name = $"{assembly.GetName().Name}.{filePath}";
             using (var stream = assembly.GetManifestResourceStream(name))
             {
                 if (stream == null)
