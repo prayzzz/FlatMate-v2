@@ -28,12 +28,11 @@ namespace FlatMate.Web
 
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
-                                                    .AddJsonFile("appsettings.json", true, true)
-                                                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-                                                    .AddEnvironmentVariables();
-
-            _configuration = builder.Build();
+            _configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
+                                                       .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                                                       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange:true)
+                                                       .AddEnvironmentVariables("flatmate.")
+                                                       .Build();
 
             Log.Logger = new LoggerConfiguration().ReadFrom
                                                   .Configuration(_configuration)
@@ -104,11 +103,11 @@ namespace FlatMate.Web
                     .AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings))
                     .AddControllersAsServices();
 
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddSession();
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }); });
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Modules
             Module.Account.Module.ConfigureServices(services, _configuration);
