@@ -1,7 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\build\common.props" />
+  
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170427-09" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.17" />
@@ -9,11 +13,13 @@
     <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-39" />
     <PackageReference Include="prayzzz.Common.Test" Version="1.0.0-ci-39" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
     <ProjectReference Include="..\..\src\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
     <ProjectReference Include="..\..\src\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
