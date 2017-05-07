@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
 using Serilog;
+using SodaPop.ConfigExplorer;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace FlatMate.Web
@@ -29,9 +30,10 @@ namespace FlatMate.Web
         public Startup(IHostingEnvironment env)
         {
             _configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
-                                                       .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                                                       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange:true)
-                                                       .AddEnvironmentVariables("flatmate.")
+                                                       .AddJsonFile("appsettings.json", true, true)
+                                                       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
+                                                       .AddEnvironmentVariables("flatmate_")
+                                                       .AddProductionConnection(env)
                                                        .Build();
 
             Log.Logger = new LoggerConfiguration().ReadFrom
@@ -41,8 +43,9 @@ namespace FlatMate.Web
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+                app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
             loggerFactory.AddSerilog();
-            
+
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
