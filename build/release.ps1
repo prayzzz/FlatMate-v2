@@ -56,7 +56,7 @@ Test-ExitCode $LASTEXITCODE "git commit"
 git tag $version $dryrun | Out-Null
 Test-ExitCode $LASTEXITCODE "git tag"
 
-git push $dryrun | Out-Null
+git push --tags $dryrun | Out-Null
 Test-ExitCode $LASTEXITCODE "git push"
 
 
