@@ -6,6 +6,7 @@ using Autofac.Extensions.DependencyInjection;
 using FlatMate.Api;
 using FlatMate.Api.Extensions;
 using FlatMate.Api.Filter;
+using FlatMate.Web.Common;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
