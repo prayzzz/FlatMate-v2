@@ -6,6 +6,7 @@ using Autofac.Extensions.DependencyInjection;
 using FlatMate.Api;
 using FlatMate.Api.Extensions;
 using FlatMate.Api.Filter;
+using FlatMate.Migration;
 using FlatMate.Web.Common;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -32,7 +33,7 @@ namespace FlatMate.Web
         {
             _configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
                                                        .AddJsonFile("appsettings.json", true, true)
-                                                       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
+                                                       .AddJsonFile($"appsettings.{env.EnvironmentName.ToLower()}.json", true, true)
                                                        .AddEnvironmentVariables("flatmate_")
                                                        .AddProductionConnection(env)
                                                        .Build();
@@ -44,8 +45,12 @@ namespace FlatMate.Web
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-                app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
             loggerFactory.AddSerilog();
+
+            // run migrations
+            var migrationSettings = _configuration.GetSection("Migration").Get<MigrationSettings>();
+            migrationSettings.ConnectionString = _configuration.GetConnectionString("DefaultConnection");
+            new Migrator(loggerFactory, migrationSettings).Run();
 
             if (env.IsDevelopment() || env.IsStaging())
             {
@@ -53,6 +58,8 @@ namespace FlatMate.Web
 
                 app.UseSwagger();
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"); });
+
+                app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
             }
             else
             {

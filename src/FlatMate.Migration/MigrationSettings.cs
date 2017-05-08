@@ -16,8 +16,6 @@
 
         public bool IsSchemaSet => !string.IsNullOrWhiteSpace(Schema);
 
-        public bool LogDebug { get; set; } = false;
-
         public string MigrationsFolder { get; set; } = ".";
 
         public string Schema { get; set; }

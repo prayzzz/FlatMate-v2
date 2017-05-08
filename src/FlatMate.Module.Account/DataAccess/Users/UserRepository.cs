@@ -76,20 +76,22 @@ namespace FlatMate.Module.Account.DataAccess.Users
 
         private void CreateFake()
         {
-            if (!Dbos.Any(u => string.Equals(u.UserName, "fake", StringComparison.CurrentCultureIgnoreCase)))
+            if (Dbos.Any(u => u.UserName == "fake"))
             {
-                var userDbo = new UserDbo
-                {
-                    UserName = "Fake",
-                    Created = DateTime.Now,
-                    Email = "fake@fake.de",
-                    PasswordHash = "nmiVz6ju+do07UxMxjkYuiAj4s8CA0OB0AJhQulGBl6PG2xcxbvKbTdE/4C4uvv6upAORT/dJuf6ySEARSVsxg==",
-                    Salt = "E1Uzdr7JKZ96JrOItvWFzg=="
-                };
-
-                Context.Add(userDbo);
-                Context.SaveChanges();
+                return;
             }
+
+            var userDbo = new UserDbo
+            {
+                UserName = "Fake",
+                Created = DateTime.Now,
+                Email = "fake@fake.de",
+                PasswordHash = "nmiVz6ju+do07UxMxjkYuiAj4s8CA0OB0AJhQulGBl6PG2xcxbvKbTdE/4C4uvv6upAORT/dJuf6ySEARSVsxg==",
+                Salt = "E1Uzdr7JKZ96JrOItvWFzg=="
+            };
+
+            Context.Add(userDbo);
+            Context.SaveChanges();
         }
     }
 }
