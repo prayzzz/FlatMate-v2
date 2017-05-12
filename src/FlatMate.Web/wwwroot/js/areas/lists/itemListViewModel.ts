@@ -1,4 +1,4 @@
-import { IItemListJso, IItemGroupJso } from "jso";
+import { IItemListJso, IItemGroupJso } from "./jso";
 import * as ko from "knockout";
 import ApiClient from "../../api/apiClient";
 import ItemGroupViewModel from "./itemGroupViewModel";
@@ -8,19 +8,18 @@ interface IViewModelParams {
 }
 
 export default class ItemListViewModel {
+    private readonly apiClient: ApiClient;
+    private readonly model: IItemListJso;
+
     public newGroupName: KnockoutObservable<String>;
-    public model: IItemListJso;
     public groups: KnockoutObservableArray<ItemGroupViewModel>;
-    private apiClient: ApiClient;
 
     constructor(params: IViewModelParams) {
         this.model = params.model;
 
         this.newGroupName = ko.observable<String>();
         this.apiClient = new ApiClient();
-        this.groups = ko.observableArray<ItemGroupViewModel>();
-
-        this.groups(this.model.itemGroups.map(g => {
+        this.groups = ko.observableArray<ItemGroupViewModel>(this.model.itemGroups.map(g => {
             const items = this.model.items.filter(i => i.itemGroupId === g.id);
             return new ItemGroupViewModel(g, items);
         }));
@@ -30,8 +29,7 @@ export default class ItemListViewModel {
         const self = this;
 
         const groupName = self.newGroupName().trim();
-
-        if (!groupName || groupName === "") {
+        if (!groupName) {
             return;
         }
 

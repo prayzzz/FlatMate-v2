@@ -41,9 +41,8 @@
                 </div>
             </div>
 
-
             <!-- ko foreach: items -->
-            <div class="row">
+            <div class="row draggable" data-bind="css: { dragging: dragging }, dragZone: { name: 'sortable', dragStart: $parent.dragStart, dragEnd: $parent.dragEnd}, dragEvents: {accepts: 'sortable', dragOver: $parent.reorder, data: { items: $parent.items, item: $data }}">
                 <div class="cell">
                     <div style="display:flex; align-items:center">
                         <div class="icon-16 icon-grip" style="margin-right: 1.5rem;"></div>
@@ -65,7 +64,7 @@
 
             <div class="row">
                 <div class="cell" style="padding-left:calc(1rem + 16px)">
-                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem"/>
+                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem" />
                 </div>
                 <div class="cell icon">
                     <a class="icon-24 icon-plus-circle" data-bind="click: addItem"></a>

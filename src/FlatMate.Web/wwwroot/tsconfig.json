@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "allowJs": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "strictNullChecks": true
-  },
-  "include": [
-    "js/**/*.ts",
-    "node_modules/knockout/build/output/knockout_latest.js"
-  ]
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "target": "ES5"
+  }
 }

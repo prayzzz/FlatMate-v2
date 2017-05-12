@@ -10,6 +10,7 @@ namespace FlatMate.Web
         {
             var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
                                                           .AddJsonFile("hosting.json", optional: false)
+                                                          .AddCommandLine(args)
                                                           .Build();
 
             var host = new WebHostBuilder().UseKestrel()
