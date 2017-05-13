@@ -1,5 +1,4 @@
 ﻿import * as ko from "knockout";
-import * as kodd from "knockout-dragdrop";
 
 import ItemListEditor from "./areas/lists/itemListEditor";
 import { IWindow } from "./window";
@@ -7,9 +6,6 @@ import { IWindow } from "./window";
 // add knockout to window
 declare var window: IWindow;
 window.ko = ko;
-
-
-console.log(kodd)
 
 // init ItemListEditor
 document.addEventListener("DOMContentLoaded", () => new ItemListEditor(), false);

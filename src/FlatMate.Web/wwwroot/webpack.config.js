@@ -1,12 +1,16 @@
-﻿const glob = require("glob");
+﻿const webpack = require("webpack");
+const glob = require("glob");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = [
     {
         name: "js",
-        entry: "./js/app.ts",
+        entry: {
+            app: "./js/app.ts",
+            vendor: ["knockout", "knockout-dragdrop"]
+        },
         output: {
-            filename: "./dist/bundle.js"
+            filename: "./dist/[name].js"
         },
         devtool: "source-map",
         resolve: {
@@ -16,13 +20,16 @@ module.exports = [
             loaders: [
                 { test: /\.ts$/, loader: "ts-loader" }
             ]
-        }
+        },
+        plugins: [
+            new webpack.optimize.CommonsChunkPlugin({ name: "vendor" })
+        ]
     },
     {
         name: "css",
         entry: glob.sync("./css/**/*.scss"),
         output: {
-            filename: "./dist/bundle.css"
+            filename: "./dist/app.css"
         },
         module: {
             rules: [
@@ -36,7 +43,7 @@ module.exports = [
             ]
         },
         plugins: [
-            new ExtractTextPlugin("./dist/bundle.css")
+            new ExtractTextPlugin("./dist/app.css")
         ]
     }
-]
+];

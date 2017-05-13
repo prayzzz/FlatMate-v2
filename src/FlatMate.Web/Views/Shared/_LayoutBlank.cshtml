@@ -2,19 +2,22 @@
 <html>
 
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlatMate</title>
 
-    <link asp-href-include="~/dist/bundle.css" rel="stylesheet"/>
-    <script asp-src-include="~/dist/bundle.js" type="text/javascript"></script>
+    <link asp-href-include="~/dist/app.css" rel="stylesheet" />
 
 </head>
 
 <body>
-<main>
-    @RenderBody()
-</main>
+    <main>
+        @RenderBody()
+    </main>
+
+    <script asp-src-include="~/dist/vendor.js" type="text/javascript"></script>
+    <script asp-src-include="~/dist/app.js" type="text/javascript"></script>
+
 </body>
 
 </html>

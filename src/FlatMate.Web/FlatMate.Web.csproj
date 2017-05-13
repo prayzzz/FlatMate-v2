@@ -56,6 +56,10 @@
       <DependentUpon>appsettings.development.json</DependentUpon>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\dist\" />
+    <Folder Include="wwwroot\dist\" />
+  </ItemGroup>
   <Target Name="BundleFrontend" AfterTargets="PrepareForPublish">
     <Exec Command="yarn" WorkingDirectory="wwwroot" />
     <Exec Command="node_modules/.bin/webpack" WorkingDirectory="wwwroot" />
