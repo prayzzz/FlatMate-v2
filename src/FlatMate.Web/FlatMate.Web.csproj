@@ -14,6 +14,10 @@
     <Content Include="_Migrations/**" CopyToPublishDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="wwwroot\js\areas\lists\IDraggable.ts" />
+    <Content Include="wwwroot\js\shared\ko\IDraggable.ts" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />

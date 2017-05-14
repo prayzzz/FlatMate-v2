@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Shared.Dtos;
-using FlatMate.Module.Lists.Shared.Interfaces;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Domain.ApplicationServices
 {
-    public partial class ItemListService : IItemListService
+    public partial class ItemListService
     {
         public async Task<Result<ItemGroupDto>> CreateAsync(int listId, ItemGroupDto dto)
         {

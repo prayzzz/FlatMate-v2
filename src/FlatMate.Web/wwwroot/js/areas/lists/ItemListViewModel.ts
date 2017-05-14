@@ -1,5 +1,5 @@
-import { IItemListJso, IItemGroupJso } from "./jso";
 import * as ko from "knockout";
+import { IItemListJso, IItemGroupJso } from "./jso";
 import ApiClient from "../../api/apiClient";
 import ItemGroupViewModel from "./itemGroupViewModel";
 

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Shared.Dtos;
-using FlatMate.Module.Lists.Shared.Interfaces;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Domain.ApplicationServices
 {
-    public partial class ItemListService : IItemListService
+    public partial class ItemListService
     {
         public async Task<Result<ItemDto>> CreateAsync(int listId, int? groupId, ItemDto dto)
         {
@@ -115,6 +114,35 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             }
 
             return (await _itemRepository.GetAllAsync(listId)).Select(ModelToDto);
+        }
+
+        public async Task<Result<ItemDto>> UpdateAsync(int itemId, ItemDto dto)
+        {
+            // the user must be logged in
+            if (CurrentUser.IsAnonymous)
+            {
+                return new ErrorResult<ItemDto>(ErrorType.Unauthorized, "Unauthorized");
+            }
+
+            // get ItemList
+            var getItem = await _itemRepository.GetAsync(itemId);
+            if (getItem.IsError)
+            {
+                return new ErrorResult<ItemDto>(getItem);
+            }
+
+            // check permission
+            if (!_authorizationService.CanEdit(getItem.Data))
+            {
+                return new ErrorResult<ItemDto>(ErrorType.NotFound, "Entity not found");
+            }
+
+            // update data
+            var item = getItem.Data;
+            item.Rename(dto.Name);
+            item.SortIndex = dto.SortIndex;
+
+            return await SaveAsync(item);
         }
 
         private ItemDto ModelToDto(Item item)

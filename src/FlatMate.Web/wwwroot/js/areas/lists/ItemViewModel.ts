@@ -1,19 +1,16 @@
-﻿import { IItemJso } from "./jso";
-import * as ko from "knockout";
-
-interface IDraggable {
-    dragging: KnockoutObservable<boolean>;
-}
+﻿import * as ko from "knockout";
+import { IItemJso } from "./jso";
+import { IDraggable } from "../../shared/ko/IDraggable";
 
 export default class ItemViewModel implements IDraggable {
     private readonly model: IItemJso;
 
-    public dragging: KnockoutObservable<boolean>;
+    public isDragging: KnockoutObservable<boolean>;
 
     constructor(model: IItemJso) {
         this.model = model;
 
-        this.dragging = ko.observable(false);
+        this.isDragging = ko.observable(false);
     }
 
     public get name(): string {
@@ -22,6 +19,10 @@ export default class ItemViewModel implements IDraggable {
 
     public get sortIndex(): number {
         return this.model.sortIndex;
+    }
+
+    public set sortIndex(n: number) {
+        this.model.sortIndex = n;
     }
 
     public get id(): number {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Domain.Entities;
@@ -11,9 +12,13 @@ namespace FlatMate.Module.Common.DataAccess
 {
     public abstract class Repository<TEntity, TDbo> : IRepository<TEntity> where TEntity : Entity where TDbo : DboBase, new()
     {
+        private readonly Dictionary<int, TEntity> _sessionCache;
+
         protected Repository(IMapper mapper)
         {
             Mapper = mapper;
+
+            _sessionCache = new Dictionary<int, TEntity>();
         }
 
         protected abstract FlatMateDbContext Context { get; }
@@ -49,6 +54,11 @@ namespace FlatMate.Module.Common.DataAccess
 
         public async Task<Result<TEntity>> GetAsync(int id)
         {
+            if (_sessionCache.TryGetValue(id, out var cachedEntity))
+            {
+                return new SuccessResult<TEntity>(cachedEntity);
+            }
+
             var dbo = await DbosIncluded.FirstOrDefaultAsync(g => g.Id == id);
 
             if (dbo == null)
@@ -56,7 +66,10 @@ namespace FlatMate.Module.Common.DataAccess
                 return new ErrorResult<TEntity>(ErrorType.NotFound, "Entity not found");
             }
 
-            return new SuccessResult<TEntity>(Mapper.Map<TEntity>(dbo));
+            var entity = Mapper.Map<TEntity>(dbo);
+            _sessionCache[dbo.Id] = entity;
+
+            return new SuccessResult<TEntity>(entity);
         }
 
         public async Task<Result<TEntity>> SaveAsync(TEntity entity)
@@ -91,6 +104,7 @@ namespace FlatMate.Module.Common.DataAccess
         {
             try
             {
+                _sessionCache.Clear();
                 await Context.SaveChangesAsync();
             }
             catch (Exception e)

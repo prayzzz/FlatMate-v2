@@ -159,5 +159,13 @@ namespace FlatMate.Api.Areas.Lists.ItemList
             return _itemListService.UpdateAsync(listId, Map<ItemListDto>(jso))
                                    .WithResultDataAs(Map<ItemListJso>);
         }
+
+        [HttpPut("{listId}/item/{itemId}")]
+        [HttpPut("{listId}/group/{groupId}/item/{itemId}")]
+        public Task<Result<ItemJso>> Update(int itemId, [FromBody] ItemJso jso)
+        {
+            return _itemListService.UpdateAsync(itemId, Map<ItemDto>(jso))
+                                   .WithResultDataAs(Map<ItemJso>);
+        }
     }
 }

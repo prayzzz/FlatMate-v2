@@ -42,7 +42,7 @@
             </div>
 
             <!-- ko foreach: items -->
-            <div class="row draggable" data-bind="css: { dragging: dragging }, dragZone: { name: 'sortable', dragStart: $parent.dragStart, dragEnd: $parent.dragEnd}, dragEvents: {accepts: 'sortable', dragOver: $parent.reorder, data: { items: $parent.items, item: $data }}">
+            <div class="row draggable" data-bind="css: { dragging: isDragging }, dragZone: $parent.dragZone, dragEvents: $parent.dragEvents($data)">
                 <div class="cell">
                     <div style="display:flex; align-items:center">
                         <div class="icon-16 icon-grip" style="margin-right: 1.5rem;"></div>
