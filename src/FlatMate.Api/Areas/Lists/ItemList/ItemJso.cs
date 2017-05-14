@@ -14,7 +14,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
 
         [ReadOnly(true)]
         public int? ItemGroupId { get; set; }
-
+        
         [ReadOnly(true)]
         public int ItemListId { get; set; }
 

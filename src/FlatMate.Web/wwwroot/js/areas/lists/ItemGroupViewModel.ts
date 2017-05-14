@@ -1,13 +1,9 @@
-import { IItemGroupJso, IItemJso } from "./jso";
 import * as ko from "knockout";
-import ApiClient from "../../api/apiClient";
-import ItemViewModel from "./itemViewModel";
-import DragZone from "../../shared/ko/dragzone";
-import DragEvents from "../../shared/ko/dragEvents";
-import DragZoneData from "../../shared/ko/dragZoneData";
+import { ItemViewModel, IItemGroupJso, IItemJso, ItemListApi } from ".";
+import { DragZone, DragEvents, DragZoneData } from "../../shared/ko/";
 
-export default class ItemGroupViewModel {
-    private readonly apiClient: ApiClient;
+export class ItemGroupViewModel {
+    private readonly apiClient: ItemListApi;
     private readonly model: IItemGroupJso;
 
     public readonly isNewItemFocused: KnockoutObservable<Boolean>;
@@ -19,7 +15,7 @@ export default class ItemGroupViewModel {
         this.model = model;
         this.items = ko.observableArray<ItemViewModel>(items.map(i => new ItemViewModel(i))).sort((a, b) => a.sortIndex - b.sortIndex);
 
-        this.apiClient = new ApiClient();
+        this.apiClient = new ItemListApi();
         this.newItemName = ko.observable("");
         this.isNewItemFocused = ko.observable(false);
         this.dragZone = new DragZone<ItemViewModel>(this.dragZoneName, this.dragStart, this.dragEnd);
@@ -72,13 +68,14 @@ export default class ItemGroupViewModel {
             if (item.sortIndex === i) {
                 continue;
             }
-            
+
             const itemToUpdate = { name: item.name, sortIndex: i };
-            self.apiClient.put(`lists/itemlist/${self.model.itemListId}/group/${self.model.id}/item/${item.id}`, itemToUpdate);
+            self.apiClient
+                .updateItem(self.model.itemListId, item.id, itemToUpdate);
         }
     }
 
-    public addItem = () => {
+    public addItem = async () => {
         const self = this;
 
         const itemName = self.newItemName().trim();
@@ -91,19 +88,19 @@ export default class ItemGroupViewModel {
         self.items().forEach(i => maxSortIndex = i.sortIndex > maxSortIndex ? i.sortIndex : maxSortIndex);
 
         const itemToAdd = { name: itemName, sortIndex: maxSortIndex + 1 };
-        const done = (i: IItemJso) => {
-            self.items.push(new ItemViewModel(i));
-            self.newItemName("");
-        };
-
-        self.apiClient.post(`lists/itemlist/${self.model.itemListId}/group/${self.model.id}/item`, itemToAdd, done);
+        self.apiClient
+            .createItem(self.model.itemListId, self.model.id, itemToAdd)
+            .then((i: IItemJso) => {
+                self.items.push(new ItemViewModel(i));
+                self.newItemName("");
+            });
     }
 
     public removeItem = (item: ItemViewModel) => {
         const self = this;
 
-        const done = () => { self.items.remove(item); };
-
-        self.apiClient.delete(`lists/itemlist/${self.model.itemListId}/item/${item.id}`, done);
+        self.apiClient
+            .deleteItem(self.model.itemListId, item.id)
+            .then(() => { self.items.remove(item); });
     }
 }

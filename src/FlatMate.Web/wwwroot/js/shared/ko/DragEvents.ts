@@ -1,7 +1,6 @@
-﻿import DragZoneData from "./DragZoneData";
-import { IDraggable } from "../../shared/ko/IDraggable";
+﻿import { DragZoneData, IDraggable } from ".";
 
-export default class DragEvents<T extends IDraggable> {
+export class DragEvents<T extends IDraggable> {
     public readonly accepts: string;
     public readonly dragOver: (event: MouseEvent, dragData: T, zoneData: DragZoneData<T>) => void;
     public readonly data: DragZoneData<T>;

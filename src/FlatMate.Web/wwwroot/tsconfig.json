@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "lib": [ "dom", "es5", "scripthost", "es2015" ],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,

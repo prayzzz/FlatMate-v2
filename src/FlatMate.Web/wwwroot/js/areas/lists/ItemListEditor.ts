@@ -1,8 +1,7 @@
 ﻿import * as ko from "knockout";
-import ItemListViewModel from "./itemListViewModel";
-import { IItemListJso } from "./jso";
+import { IItemListJso, ItemListViewModel } from ".";
 
-export default class ItemListEditor {
+export class ItemListEditor {
     public model: IItemListJso;
 
     constructor() {
@@ -22,7 +21,7 @@ export default class ItemListEditor {
             throw "no data available";
         }
 
-        return <IItemListJso> JSON.parse(element.innerText);
+        return <IItemListJso>JSON.parse(element.innerText);
     }
 
     private readTemplate(): string {

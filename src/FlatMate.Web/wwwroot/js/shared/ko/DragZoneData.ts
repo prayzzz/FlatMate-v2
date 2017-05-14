@@ -1,6 +1,6 @@
-﻿import { IDraggable } from "./IDraggable";
+﻿import { IDraggable } from ".";
 
-export default class DragZoneData<T extends IDraggable> {
+export class DragZoneData<T extends IDraggable> {
     public readonly item: T;
     public readonly items: KnockoutObservableArray<T>;
 

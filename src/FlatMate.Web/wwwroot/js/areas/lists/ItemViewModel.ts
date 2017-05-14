@@ -1,8 +1,8 @@
 ﻿import * as ko from "knockout";
-import { IItemJso } from "./jso";
-import { IDraggable } from "../../shared/ko/IDraggable";
+import { IItemJso } from ".";
+import { IDraggable } from "../../shared/ko/";
 
-export default class ItemViewModel implements IDraggable {
+export class ItemViewModel implements IDraggable {
     private readonly model: IItemJso;
 
     public isDragging: KnockoutObservable<boolean>;

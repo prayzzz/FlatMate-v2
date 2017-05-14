@@ -31,39 +31,47 @@ export default class ApiClient implements IApiClient {
         return ApiClient.instance;
     }
 
-    public get<TData>(path: string, doneCallback?: (d: TData) => void, failCallback?: (e: IApiError) => void): void {
+    public async get<TData>(path: string): Promise<TData> {
         const url = this.host + path;
 
-        Ajax.get(url)
-            .success((d: TData) => { if (doneCallback) { doneCallback(d) } })
-            .error((e: IApiError) => { if (failCallback) { failCallback(e) } })
-            .send();
+        return new Promise<TData>((resolve, reject) => {
+            Ajax.get(url)
+                .success((d: TData) => resolve(d))
+                .error((e: IApiError) => reject(e))
+                .send();
+        });
     }
 
-    public delete(path: string, doneCallback?: () => void, failCallback?: (e: IApiError) => void): void {
+    public delete(path: string): Promise<void> {
         const url = this.host + path;
 
-        Ajax.delete(url)
-            .success(() => { if (doneCallback) { doneCallback(); } })
-            .error((e: IApiError) => { if (failCallback) { failCallback(e); } })
-            .send();
+        return new Promise<void>((resolve, reject) => {
+            Ajax.delete(url)
+                .success(() => resolve())
+                .error((e: IApiError) => reject(e))
+                .send();
+        });
     }
 
-    public put<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: IApiError) => void): void {
+    public put<TData, TResult>(path: string, data: TData): Promise<TResult> {
         const url = this.host + path;
 
-        Ajax.put(url, JSON.stringify(data))
-            .success((d: TResult) => { if (doneCallback) { doneCallback(d); } })
-            .error((e: IApiError) => { if (failCallback) { failCallback(e); } })
-            .send();
+        return new Promise<TResult>((resolve, reject) => {
+            Ajax.put(url, JSON.stringify(data))
+                .success((d: TResult) => resolve(d))
+                .error((e: IApiError) => reject(e))
+                .send();
+        });
     }
 
-    public post<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: IApiError) => void): void {
+    public async post<TData, TResult>(path: string, data: TData): Promise<TResult> {
         const url = this.host + path;
 
-        Ajax.post(url, JSON.stringify(data))
-            .success((d: TResult) => { if (doneCallback) { doneCallback(d); } })
-            .error((e: IApiError) => { if (failCallback) { failCallback(e); } })
-            .send();
+        return new Promise<TResult>((resolve, reject) => {
+            Ajax.post(url, JSON.stringify(data))
+                .success((d: TResult) => resolve(d))
+                .error((e: IApiError) => reject(e))
+                .send();
+        });
     }
 }

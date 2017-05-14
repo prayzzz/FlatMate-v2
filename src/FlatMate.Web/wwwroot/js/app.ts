@@ -1,14 +1,14 @@
 ﻿import * as ko from "knockout";
 
-import ItemListEditor from "./areas/lists/itemListEditor";
+import { ItemListEditor } from "./areas/lists/";
 import { IWindow } from "./window";
+
+// init ItemListEditor
+document.addEventListener("DOMContentLoaded", () => new ItemListEditor(), false);
 
 // add knockout to window
 declare var window: IWindow;
 window.ko = ko;
-
-// init ItemListEditor
-document.addEventListener("DOMContentLoaded", () => new ItemListEditor(), false);
 
 // add EnterKey event
 ko.bindingHandlers.enterkey = {

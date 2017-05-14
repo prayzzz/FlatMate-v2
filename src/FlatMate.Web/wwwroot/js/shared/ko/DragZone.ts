@@ -1,6 +1,6 @@
-﻿import { IDraggable } from "./IDraggable";
+﻿import { IDraggable } from ".";
 
-export default class DragZone<T extends IDraggable> {
+export class DragZone<T extends IDraggable> {
     public readonly name: string;
     public readonly dragStart: (data: T) => void;
     public readonly dragEnd: (data: T) => void;
