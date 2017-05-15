@@ -60,18 +60,13 @@ export class ItemGroupViewModel {
     };
 
     public resetSortIndex() {
-        const self = this;
-
         for (let i = 0; i < this.items().length; i++) {
             const item = this.items()[i];
 
-            if (item.sortIndex === i) {
-                continue;
+            if (item.sortIndex !== i) {
+                item.sortIndex = i;
+                item.save();
             }
-
-            const itemToUpdate = { name: item.name, sortIndex: i };
-            self.apiClient
-                .updateItem(self.model.itemListId, item.id, itemToUpdate);
         }
     }
 

@@ -25,8 +25,8 @@ export class ItemListApi {
         return this.apiClient.post<any, IItemGroupJso>(`lists/itemlist/${listId}/group/`, group);
     }
 
-    public async updateItem(listId: number, itemId: number, item: any): Promise<IItemJso> {
-        return this.apiClient.put<any, IItemJso>(`lists/itemlist/${listId}/item/${itemId}`, item);
+    public async updateItem(listId: number, itemId: number, item: IItemJso): Promise<IItemJso> {
+        return this.apiClient.put<IItemJso, IItemJso>(`lists/itemlist/${listId}/item/${itemId}`, item);
     }    
 
     public async deleteItem(listId: number, itemId: number): Promise<void> {

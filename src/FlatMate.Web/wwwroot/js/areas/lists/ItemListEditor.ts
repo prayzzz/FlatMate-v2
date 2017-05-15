@@ -17,7 +17,7 @@ export class ItemListEditor {
 
     private readModel(): IItemListJso {
         const element = document.getElementById("view-data");
-        if (!element) {
+        if (!element || !element.innerText.trim()) {
             throw "no data available";
         }
 

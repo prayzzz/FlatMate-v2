@@ -46,9 +46,9 @@
                 <div class="cell">
                     <div style="display:flex; align-items:center">
                         <div class="icon-16 icon-grip" style="margin-right: 1.5rem;"></div>
-                        <div style="flex:1">
-                            <span data-bind="text: name"></span>
-                            @*<input type="text" v-model="item.value" v-if="isEditMode" v-el:iteminput v-on:blur="leaveEditMode" v-on:keyup.enter="leaveEditMode" />*@
+                        <div style="flex:1;" data-bind="click: enterEditMode">
+                            <span data-bind="text: name, visible: !isInEditMode()"></span>
+                            <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode" />
                         </div>
                         @*<div v-if="showOwner()">
                                 von {{item.user.userName}}
