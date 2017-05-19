@@ -1,5 +1,5 @@
 ﻿import ApiClient from "../../api/apiClient";
-import { IItemJso, IItemGroupJso } from "."
+import { ItemJso, ItemGroupJso } from "."
 
 export class ItemListApi {
     private static instance: ItemListApi;
@@ -17,23 +17,31 @@ export class ItemListApi {
         return ItemListApi.instance;
     }
 
-    public async createItem(listId: number, groupId: number, item: any): Promise<IItemJso> {
-        return this.apiClient.post<any, IItemJso>(`lists/itemlist/${listId}/group/${groupId}/item`, item);
+    public createItem(listId: number, groupId: number | undefined, item: any): Promise<ItemJso> {
+        if (groupId) {
+            return this.apiClient.post<any, ItemJso>(`lists/itemlist/${listId}/group/${groupId}/item`, item);
+        }
+
+        return this.apiClient.post<any, ItemJso>(`lists/itemlist/${listId}/item`, item);
     }
 
-    public async createGroup(listId: number, group: any): Promise<IItemGroupJso> {
-        return this.apiClient.post<any, IItemGroupJso>(`lists/itemlist/${listId}/group/`, group);
+    public createGroup(listId: number, group: any): Promise<ItemGroupJso> {
+        return this.apiClient.post<any, ItemGroupJso>(`lists/itemlist/${listId}/group/`, group);
     }
 
-    public async updateItem(listId: number, itemId: number, item: IItemJso): Promise<IItemJso> {
-        return this.apiClient.put<IItemJso, IItemJso>(`lists/itemlist/${listId}/item/${itemId}`, item);
-    }    
+    public updateItem(listId: number, itemId: number, item: ItemJso): Promise<ItemJso> {
+        return this.apiClient.put<ItemJso, ItemJso>(`lists/itemlist/${listId}/item/${itemId}`, item);
+    }
 
-    public async deleteItem(listId: number, itemId: number): Promise<void> {
+    public updateGroup(listId: number, groupId: number, group: ItemGroupJso): Promise<ItemGroupJso> {
+        return this.apiClient.put<ItemGroupJso, ItemGroupJso>(`lists/itemlist/${listId}/group/${groupId}`, group);
+    }
+
+    public deleteItem(listId: number, itemId: number): Promise<void> {
         return this.apiClient.delete(`lists/itemlist/${listId}/item/${itemId}`);
-    }    
+    }
 
-    public async deleteGroup(listId: number, groupId: number): Promise<void> {
+    public deleteGroup(listId: number, groupId: number): Promise<void> {
         return this.apiClient.delete(`lists/itemlist/${listId}/group/${groupId}`);
-    }    
+    }
 }

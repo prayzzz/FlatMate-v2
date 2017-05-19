@@ -1,4 +1,4 @@
-export interface IUserInfoJso {
+export class UserInfoJso {
     id: number;
     name: string;
 }

@@ -18,7 +18,7 @@
     "style-loader": "^0.17.0",
     "ts-loader": "^2.0.0",
     "tslint": "^5.2.0",
-    "typescript": "^2.2.1",
+    "typescript": "^2.3.2",
     "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
     "webpack": "^2.2.1"
   },

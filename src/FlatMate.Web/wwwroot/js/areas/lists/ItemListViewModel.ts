@@ -1,14 +1,14 @@
 import * as ko from "knockout";
-import { IItemListJso, IItemGroupJso, ItemGroupViewModel, ItemListApi } from ".";
+import { ItemListJso, ItemGroupViewModel, ItemListApi, ItemGroupJso } from ".";
 
 interface IViewModelParams {
-    model: IItemListJso;
+    model: ItemListJso;
 }
 
 export class ItemListViewModel {
     private readonly apiClient: ItemListApi;
-    private readonly model: IItemListJso;
-    
+    private readonly model: ItemListJso;
+
     public newGroupName: KnockoutObservable<String>;
     public groups: KnockoutObservableArray<ItemGroupViewModel>;
 
@@ -17,6 +17,7 @@ export class ItemListViewModel {
 
         this.newGroupName = ko.observable<String>();
         this.apiClient = new ItemListApi();
+
         this.groups = ko.observableArray<ItemGroupViewModel>(this.model.itemGroups.map(g => {
             const items = this.model.items.filter(i => i.itemGroupId === g.id);
             return new ItemGroupViewModel(g, items);
@@ -32,26 +33,20 @@ export class ItemListViewModel {
         }
 
         let maxSortIndex = -1;
-        self.groups().forEach(g => maxSortIndex = g.sortIndex > maxSortIndex ? g.sortIndex : maxSortIndex);
+        self.groups().forEach(group => maxSortIndex = group.sortIndex() > maxSortIndex ? group.sortIndex() : maxSortIndex);
 
-        const groupToAdd = { name: groupName, sortIndex: maxSortIndex + 1 };
+        const groupVm = new ItemGroupViewModel(new ItemGroupJso(self.model.id));
+        groupVm.name(groupName);
+        groupVm.sortIndex(maxSortIndex + 1);
 
-        self.apiClient
-            .createGroup(self.model.id, groupToAdd)
-            .then((g: IItemGroupJso) => {
-                const group = new ItemGroupViewModel(g, []);
-                group.isNewItemFocused(true);
-
-                self.groups.push(group);
-                self.newGroupName("");
-            });
+        groupVm.save().then(() => {
+            self.groups.push(groupVm);
+            self.newGroupName("");
+        }, err => { /* Handle error */ })
     }
 
     public removeGroup = (group: ItemGroupViewModel) => {
         const self = this;
-
-        self.apiClient
-            .deleteGroup(self.model.id, group.id)
-            .then(() => { self.groups.remove(group); });
+        group.delete().then(() => self.groups.remove(group), err => { /* Handle error */ });
     }
 }

@@ -1,8 +1,8 @@
 ﻿import * as ko from "knockout";
-import { IItemListJso, ItemListViewModel } from ".";
+import { ItemListJso, ItemListViewModel } from ".";
 
 export class ItemListEditor {
-    public model: IItemListJso;
+    public model: ItemListJso;
 
     constructor() {
         this.model = this.readModel();
@@ -15,13 +15,13 @@ export class ItemListEditor {
         ko.applyBindings(this);
     }
 
-    private readModel(): IItemListJso {
+    private readModel(): ItemListJso {
         const element = document.getElementById("view-data");
         if (!element || !element.innerText.trim()) {
             throw "no data available";
         }
 
-        return <IItemListJso>JSON.parse(element.innerText);
+        return <ItemListJso>JSON.parse(element.innerText);
     }
 
     private readTemplate(): string {

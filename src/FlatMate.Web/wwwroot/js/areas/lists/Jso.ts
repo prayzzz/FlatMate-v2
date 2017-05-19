@@ -1,32 +1,41 @@
-import { IUserInfoJso } from "../account/jso";
+import { UserInfoJso } from "../account/jso";
 
-export interface IItemJso {
-    id: number;
-    lastEditor: IUserInfoJso;
+export class ItemJso {
+    id: number | undefined;
+    lastEditor: UserInfoJso;
     name: string;
-    owner: IUserInfoJso;
-    itemGroupId: number | null;
+    owner: UserInfoJso;
+    itemGroupId: number | undefined;
     itemListId: number;
     sortIndex: number;
+
+    constructor(itemListId: number, itemGroupId?: number) {
+        this.itemListId = itemListId;
+        this.itemGroupId = itemGroupId;
+    }
 }
 
-export interface IItemGroupJso {
-    id: number;
-    lastEditor: IUserInfoJso;
+export class ItemGroupJso {
+    id: number | undefined;
+    lastEditor: UserInfoJso;
     name: string;
-    owner: IUserInfoJso;
+    owner: UserInfoJso;
     itemListId: number;
     sortIndex: number;
+
+    constructor(itemListId: number) {
+        this.itemListId = itemListId;
+    }
 }
 
-export interface IItemListJso {
+export class ItemListJso {
     description: string;
     id: number;
     isPublic: boolean;
     itemCount: number;
-    items: IItemJso[];
-    itemGroups: IItemGroupJso[];
-    lastEditor: IUserInfoJso;
+    items: ItemJso[];
+    itemGroups: ItemGroupJso[];
+    lastEditor: UserInfoJso;
     name: string;
-    owner: IUserInfoJso;
+    owner: UserInfoJso;
 }

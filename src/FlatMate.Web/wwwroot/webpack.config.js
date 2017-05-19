@@ -1,5 +1,6 @@
-﻿const webpack = require("webpack");
-const glob = require("glob");
+﻿const glob = require("glob");
+const path = require('path')
+const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = [
@@ -10,11 +11,13 @@ module.exports = [
             vendor: ["knockout", "knockout-dragdrop"]
         },
         output: {
-            filename: "./dist/[name].js"
+            path: path.resolve(__dirname, './dist'),
+            publicPath: '/dist/',
+            filename: '[name].js'
         },
-        devtool: "source-map",
+        devtool: 'source-map',
         resolve: {
-            extensions: [".webpack.js", ".web.js", ".ts", ".js", ".scss"]
+            extensions: [".ts", ".js"]
         },
         module: {
             loaders: [

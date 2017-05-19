@@ -30,7 +30,12 @@
 
             <!-- ko foreach: groups -->
             <div class="row">
-                <div class="cell"><strong><span data-bind="text: name"></span></strong></div>
+                <div class="cell" data-bind="click: enterEditMode">
+                    <strong>
+                        <span data-bind="text: name, visible: !isInEditMode()"></span>
+                    </strong>
+                    <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode" />
+                </div>
                 <div class="cell">
                     @*<div v-if="showOwner()">
                             von {{group.user.userName}}

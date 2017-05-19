@@ -1,5 +1,6 @@
 ﻿import * as ko from "knockout";
 
+import './shared/ObjectExtensions';
 import { ItemListEditor } from "./areas/lists/";
 import { IWindow } from "./window";
 
