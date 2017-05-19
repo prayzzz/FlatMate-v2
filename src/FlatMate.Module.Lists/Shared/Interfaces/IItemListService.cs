@@ -38,5 +38,7 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
         Task<Result<ItemListDto>> UpdateAsync(int listId, ItemListDto dto);
 
         Task<Result<ItemDto>> UpdateAsync(int itemId, ItemDto dto);
+
+        Task<Result<ItemGroupDto>> UpdateAsync(int itemGroupId, ItemGroupDto dto);
     }
 }

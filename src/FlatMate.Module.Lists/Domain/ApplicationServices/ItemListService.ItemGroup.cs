@@ -93,6 +93,35 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return (await _itemGroupRepository.GetAllAsync(listId)).Select(ModelToDto);
         }
 
+        public async Task<Result<ItemGroupDto>> UpdateAsync(int itemGroupId, ItemGroupDto dto)
+        {   
+            // the user must be logged in
+            if (CurrentUser.IsAnonymous)
+            {
+                return new ErrorResult<ItemGroupDto>(ErrorType.Unauthorized, "Unauthorized");
+            }
+
+            // get ItemGroup
+            var getGroup = await _itemGroupRepository.GetAsync(itemGroupId);
+            if (getGroup.IsError)
+            {
+                return new ErrorResult<ItemGroupDto>(getGroup);
+            }
+
+            // check permission
+            if (!_authorizationService.CanEdit(getGroup.Data))
+            {
+                return new ErrorResult<ItemGroupDto>(ErrorType.NotFound, "Entity not found");
+            }
+
+            // update data
+            var group = getGroup.Data;
+            group.Rename(dto.Name);
+            group.SortIndex = dto.SortIndex;
+
+            return await SaveAsync(group);
+        }
+
         private ItemGroupDto ModelToDto(ItemGroup itemGroup)
         {
             return new ItemGroupDto

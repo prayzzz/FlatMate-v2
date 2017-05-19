@@ -124,7 +124,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 return new ErrorResult<ItemDto>(ErrorType.Unauthorized, "Unauthorized");
             }
 
-            // get ItemList
+            // get Item
             var getItem = await _itemRepository.GetAsync(itemId);
             if (getItem.IsError)
             {
