@@ -16,6 +16,7 @@ namespace FlatMate.Web
             var host = new WebHostBuilder().UseKestrel()
                                            .UseConfiguration(configuration)
                                            .UseContentRoot(Directory.GetCurrentDirectory())
+                                           .UseIISIntegration()
                                            .UseStartup<Startup>()
                                            .Build();
 

@@ -55,7 +55,7 @@ namespace FlatMate.Migration.Tasks
                 }
             }
 
-            _logger.LogInformation($"Found {missingScripts.Count} missing scripts");
+            _logger.LogInformation($"{missingScripts.Count} missing scripts found");
             return missingScripts;
         }
     }

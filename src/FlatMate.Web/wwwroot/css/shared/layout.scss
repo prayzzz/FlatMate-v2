@@ -23,6 +23,10 @@
         flex-direction: column;
         max-width: 500px;
     }
+
+    h1, h2, h3, h4, h5, h6 {
+        margin-bottom: 0;
+    }
 }
 
 .actions {
@@ -34,6 +38,7 @@
         padding: .5rem;
 
         &:hover {
+            background-color: darken(#FFF, 3%);
             border-bottom: 2px darken($color-border, 15%) solid;
         }
     }

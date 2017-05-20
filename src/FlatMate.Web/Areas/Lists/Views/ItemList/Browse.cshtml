@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Alle Listen";
+    ViewData["PageTitle"] = "Alle Listen";
+}
+
+<section class="container">
+
+    <div class="alert-wrapper">
+        @if (Model.IsError)
+        {
+            <div class="alert alert-danger">@Model.Result.Message</div>
+        }
+        else if (Model.IsSuccess)
+        {
+            <div class="alert alert-success">@Model.Result.Message</div>
+        }
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="50%">Name</th>
+                <th width="25%" class="show-large">Einträge</th>
+                <th class="show-large">Von</th>
+                <th class="icon show-large"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var list in Model.Lists)
+            {
+                <tr>
+                    <td>
+                        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
+                    </td>
+                    <td class="show-large">@list.ItemCount</td>
+                    <td class="show-large">@list.Owner.UserName</td>
+                    <td class="icon show-large">
+                        <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="icon-24 icon-pen" title="Bearbeiten"></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</section>

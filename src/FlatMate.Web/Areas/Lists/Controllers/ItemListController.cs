@@ -79,7 +79,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 TempData.Remove(Constants.TempData.Result);
             }
 
-            model.Lists = await _listApi.GetAllLists(CurrentUserId);
+            model.MyLists = await _listApi.GetAllLists(CurrentUserId);
             return View(model);
         }
 
@@ -130,6 +130,15 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             }
 
             var model = new ItemListViewVm { List = result.Data };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Browse()
+        {
+            var result = await _listApi.GetAllLists(null);
+
+            var model = new ItemListBrowseVm { Lists = result };
             return View(model);
         }
     }
