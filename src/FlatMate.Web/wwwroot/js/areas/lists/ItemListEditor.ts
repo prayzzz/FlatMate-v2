@@ -1,19 +1,15 @@
 import * as ko from "knockout";
 import { ItemListJso, ItemGroupViewModel, ItemListApi, ItemGroupJso } from ".";
 
-interface IViewModelParams {
-    model: ItemListJso;
-}
-
-export class ItemListViewModel {
+export class ItemListEditor {
     private readonly apiClient: ItemListApi;
     private readonly model: ItemListJso;
 
     public newGroupName: KnockoutObservable<String>;
     public groups: KnockoutObservableArray<ItemGroupViewModel>;
 
-    constructor(params: IViewModelParams) {
-        this.model = params.model;
+    constructor(model: ItemListJso) {
+        this.model = model;
 
         this.newGroupName = ko.observable<String>();
         this.apiClient = new ItemListApi();

@@ -1,6 +1,6 @@
 ﻿export * from "./ItemGroupViewModel"
 export * from "./ItemListApi"
-export * from "./ItemListViewModel"
+export * from "./ItemListEditor"
 export * from "./ItemViewModel"
 export * from "./Jso"
 export * from "./ListsRegistry"

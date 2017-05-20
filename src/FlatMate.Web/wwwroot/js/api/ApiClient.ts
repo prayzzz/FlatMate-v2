@@ -34,44 +34,44 @@ export default class ApiClient implements IApiClient {
     public async get<TData>(path: string): Promise<TData> {
         const url = this.host + path;
 
-        return new Promise<TData>((resolve, reject) => {
-            Ajax.get(url)
+        return new Promise<TData>((resolve, reject) =>
+            Ajax.get<TData, IApiError>(url)
                 .success((d: TData) => resolve(d))
                 .error((e: IApiError) => reject(e))
-                .send();
-        });
+                .send()
+        );
     }
 
     public delete(path: string): Promise<void> {
         const url = this.host + path;
 
-        return new Promise<void>((resolve, reject) => {
-            Ajax.delete(url)
+        return new Promise<void>((resolve, reject) =>
+            Ajax.delete<void, IApiError>(url)
                 .success(() => resolve())
                 .error((e: IApiError) => reject(e))
-                .send();
-        });
+                .send()
+        );
     }
 
-    public put<TData, TResult>(path: string, data: TData): Promise<TResult> {
+    public put<TData>(path: string, data: any): Promise<TData> {
         const url = this.host + path;
 
-        return new Promise<TResult>((resolve, reject) => {
-            Ajax.put(url, JSON.stringify(data))
-                .success((d: TResult) => resolve(d))
+        return new Promise<TData>((resolve, reject) =>
+            Ajax.put<TData, IApiError>(url, JSON.stringify(data))
+                .success((d: TData) => resolve(d))
                 .error((e: IApiError) => reject(e))
-                .send();
-        });
+                .send()
+        );
     }
 
-    public async post<TData, TResult>(path: string, data: TData): Promise<TResult> {
+    public async post<TData>(path: string, data: any): Promise<TData> {
         const url = this.host + path;
 
-        return new Promise<TResult>((resolve, reject) => {
-            Ajax.post(url, JSON.stringify(data))
-                .success((d: TResult) => resolve(d))
+        return new Promise<TData>((resolve, reject) =>
+            Ajax.post<TData, IApiError>(url, JSON.stringify(data))
+                .success((d: TData) => resolve(d))
                 .error((e: IApiError) => reject(e))
-                .send();
-        });
+                .send()
+        );
     }
 }

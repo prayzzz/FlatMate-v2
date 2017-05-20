@@ -1,6 +1,9 @@
 ﻿import ApiClient from "../../api/apiClient";
 import { ItemJso, ItemGroupJso } from "."
 
+/**
+ * Singleton
+ */
 export class ItemListApi {
     private static instance: ItemListApi;
     private readonly apiClient: ApiClient;
@@ -19,22 +22,22 @@ export class ItemListApi {
 
     public createItem(listId: number, groupId: number | undefined, item: any): Promise<ItemJso> {
         if (groupId) {
-            return this.apiClient.post<any, ItemJso>(`lists/itemlist/${listId}/group/${groupId}/item`, item);
+            return this.apiClient.post<ItemJso>(`lists/itemlist/${listId}/group/${groupId}/item`, item);
         }
 
-        return this.apiClient.post<any, ItemJso>(`lists/itemlist/${listId}/item`, item);
+        return this.apiClient.post<ItemJso>(`lists/itemlist/${listId}/item`, item);
     }
 
     public createGroup(listId: number, group: any): Promise<ItemGroupJso> {
-        return this.apiClient.post<any, ItemGroupJso>(`lists/itemlist/${listId}/group/`, group);
+        return this.apiClient.post<ItemGroupJso>(`lists/itemlist/${listId}/group/`, group);
     }
 
     public updateItem(listId: number, itemId: number, item: ItemJso): Promise<ItemJso> {
-        return this.apiClient.put<ItemJso, ItemJso>(`lists/itemlist/${listId}/item/${itemId}`, item);
+        return this.apiClient.put<ItemJso>(`lists/itemlist/${listId}/item/${itemId}`, item);
     }
 
     public updateGroup(listId: number, groupId: number, group: ItemGroupJso): Promise<ItemGroupJso> {
-        return this.apiClient.put<ItemGroupJso, ItemGroupJso>(`lists/itemlist/${listId}/group/${groupId}`, group);
+        return this.apiClient.put<ItemGroupJso>(`lists/itemlist/${listId}/group/${groupId}`, group);
     }
 
     public deleteItem(listId: number, itemId: number): Promise<void> {

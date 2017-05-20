@@ -1,5 +1,5 @@
 ﻿import * as ko from "knockout";
-import EnterKey from "./shared/ko/bindingHandlers/EnterKey"
+import EnterKey from "./ko/bindingHandlers/EnterKey"
 import { ListsRegistry } from "./areas/lists/";
 
 export class KoStartup {

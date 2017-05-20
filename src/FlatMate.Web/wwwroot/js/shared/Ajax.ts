@@ -1,34 +1,34 @@
-interface IAjaxRequest<T> {
-    success(cb: (data: T | null) => void): IAjaxRequest<T>;
-    error(cb: (data: T | null) => void): IAjaxRequest<T>;
-    always(cb: (data: T | null) => void): IAjaxRequest<T>;
+interface IAjaxRequest<TData, TError> {
+    success(cb: (data: TData | null) => void): IAjaxRequest<TData, TError>;
+    error(cb: (error: TError | null) => void): IAjaxRequest<TData, TError>;
+    always(cb: (data: any | null) => void): IAjaxRequest<TData, TError>;
     send(): void;
 }
 
 export default class Ajax {
-    public static get<T>(url: string): IAjaxRequest<T> {
-        return new AjaxRequest<T>("GET", url);
+    public static get<TData, TError>(url: string): IAjaxRequest<TData, TError> {
+        return new AjaxRequest<TData, TError>("GET", url);
     }
-    public static put<T>(url: string, data: any): IAjaxRequest<T> {
-        return new AjaxRequest<T>("PUT", url, data);
+    public static put<TData, TError>(url: string, data: any): IAjaxRequest<TData, TError> {
+        return new AjaxRequest<TData, TError>("PUT", url, data);
     }
-    public static post<T>(url: string, data: any): IAjaxRequest<T> {
-        return new AjaxRequest<T>("POST", url, data);
+    public static post<TData, TError>(url: string, data: any): IAjaxRequest<TData, TError> {
+        return new AjaxRequest<TData, TError>("POST", url, data);
     }
-    public static delete<T>(url: string): IAjaxRequest<T> {
-        return new AjaxRequest<T>("DELETE", url);
+    public static delete<TData, TError>(url: string): IAjaxRequest<TData, TError> {
+        return new AjaxRequest<TData, TError>("DELETE", url);
     }
 }
 
 // tslint:disable-next-line:max-classes-per-file
-class AjaxRequest<T> implements IAjaxRequest<T> {
+class AjaxRequest<TData, TError> implements IAjaxRequest<TData, TError> {
     private readonly method: string;
     private readonly url: string;
     private readonly data: any;
 
-    private successCb: (data: T | null) => void;
-    private errorCb: (data: T | null) => void;
-    private alwaysCb: (data: T | null) => void;
+    private successCb: (data: TData | null) => void;
+    private errorCb: (error: TError | null) => void;
+    private alwaysCb: (data: any | null) => void;
 
     constructor(method: string, url: string, data?: any) {
         this.method = method;
@@ -40,17 +40,17 @@ class AjaxRequest<T> implements IAjaxRequest<T> {
         this.alwaysCb = (): void => { };
     }
 
-    public success(cb: (data: T | null) => void): IAjaxRequest<T> {
+    public success(cb: (data: TData | null) => void): IAjaxRequest<TData, TError> {
         this.successCb = cb;
         return this;
     }
 
-    public error(cb: (data: T | null) => void): IAjaxRequest<T> {
+    public error(cb: (error: TError | null) => void): IAjaxRequest<TData, TError> {
         this.errorCb = cb;
         return this;
     }
 
-    public always(cb: (data: T | null) => void): IAjaxRequest<T> {
+    public always(cb: (data: any | null) => void): IAjaxRequest<TData, TError> {
         this.alwaysCb = cb;
         return this;
     }
@@ -64,18 +64,18 @@ class AjaxRequest<T> implements IAjaxRequest<T> {
                 return;
             }
 
-            this.alwaysCb(this.parse(request));
+            this.alwaysCb(this.parse<any>(request));
         };
 
         request.onerror = () => {
-            this.errorCb(this.parse(request));
+            this.errorCb(this.parse<TError>(request));
         };
 
         request.onloadend = () => {
             if (request.status >= 200 && request.status < 300) {
-                this.successCb(this.parse(request));
+                this.successCb(this.parse<TData>(request));
             } else {
-                this.errorCb(this.parse(request));
+                this.errorCb(this.parse<TError>(request));
             }
         };
 
@@ -86,7 +86,7 @@ class AjaxRequest<T> implements IAjaxRequest<T> {
         }
     }
 
-    private parse(request: XMLHttpRequest): T | null {
+    private parse<T>(request: XMLHttpRequest): T | null {
         if (!request.responseText && request.responseText === "") {
             return null;
         }

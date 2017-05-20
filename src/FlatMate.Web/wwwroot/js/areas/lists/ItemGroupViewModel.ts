@@ -1,7 +1,6 @@
 import * as ko from "knockout";
-
 import { ItemViewModel, ItemGroupJso, ItemJso, ItemListApi } from ".";
-import { DragZone, DragEvents, DragZoneData } from "../../shared/ko/";
+import { DragZone, DragEvents, DragZoneData } from "../../ko/dragdrop";
 
 export class ItemGroupViewModel {
     private readonly apiClient: ItemListApi;
@@ -66,8 +65,8 @@ export class ItemGroupViewModel {
     };
 
     public leaveEditMode = (): boolean => {
+        // prevent multiple updates
         if (!this.isInEditMode()) {
-            // prevent multiple updates
             return false;
         }
 

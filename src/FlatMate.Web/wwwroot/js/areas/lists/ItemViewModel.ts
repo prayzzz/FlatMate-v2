@@ -1,6 +1,6 @@
 ﻿import * as ko from "knockout";
 import { ItemJso, ItemListApi } from ".";
-import { IDraggable } from "../../shared/ko/";
+import { IDraggable } from "../../ko/dragdrop";
 
 export class ItemViewModel implements IDraggable {
     private readonly apiClient: ItemListApi;
@@ -32,8 +32,8 @@ export class ItemViewModel implements IDraggable {
     }
 
     public leaveEditMode = (): boolean => {
+        // prevent multiple updates
         if (!this.isInEditMode()) {
-            // prevent multiple updates
             return false;
         }
 
