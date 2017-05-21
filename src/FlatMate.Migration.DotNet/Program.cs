@@ -12,23 +12,27 @@ namespace FlatMate.Migration.DotNet
     {
         private static readonly Dictionary<string, string> SwitchMappings = new Dictionary<string, string>
         {
-            { "--backup", "Settings:BackupDirectory" },
+            { "--backup", "Migration:BackupDirectory" },
 
-            { "--connection", "Settings:ConnectionString" },
+            { "--connection", "Migration:ConnectionString" },
 
-            { "--schema", "Settings:Schema" },
+            { "--schema", "Migration:Schema" },
 
-            { "--migrations", "Settings:MigrationsFolder" },
+            { "--migrations", "Migration:MigrationsFolder" },
 
-            { "--table", "Settings:Table" }
+            { "--table", "Migration:Table" },
+
+            { "--file", "File" }
         };
 
         private static readonly ILoggerFactory LoggerFactory;
+        private static readonly ILogger Logger;
         private static CommandLibrary _commandLibrary;
 
         static Program()
         {
             LoggerFactory = new LoggerFactory().AddConsole();
+            Logger = LoggerFactory.CreateLogger("Migrations");
         }
 
         public static void Main(string[] args)
@@ -83,7 +87,7 @@ namespace FlatMate.Migration.DotNet
         {
             if (result.IsError)
             {
-                Console.WriteLine($"error: {result.ToMessageString()}");
+                Logger.LogError(result.Message);
                 Environment.Exit(1);
             }
 
@@ -99,11 +103,24 @@ namespace FlatMate.Migration.DotNet
                 strippedArgs = strippedArgs.Skip(1).ToArray();
             }
 
-            var configuration = new ConfigurationBuilder().AddCommandLine(strippedArgs, SwitchMappings)
-                                                          .Build();
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                    .AddCommandLine(strippedArgs, SwitchMappings);
 
-            var settings = configuration.GetSection("Settings")
-                                        .Get<MigrationSettings>();
+            var commandConfiguration = builder.Build();
+
+            var settingsFile = commandConfiguration.GetValue<string>("file");
+            if (!string.IsNullOrEmpty(settingsFile))
+            {
+                builder.AddJsonFile(Path.GetFullPath(settingsFile), false);
+            }
+            else
+            {
+                builder.AddJsonFile("appsettings.json", true);
+            }
+
+            var settings = builder.Build()
+                                  .GetSection("Migration")
+                                  .Get<MigrationSettings>();
 
             return new SuccessResult<MigrationSettings>(settings);
         }

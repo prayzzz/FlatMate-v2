@@ -19,22 +19,22 @@
 
     <table>
         <thead>
-            <tr>
-                <th width="75%">Name</th>
-                <th>Von</th>
-            </tr>
+        <tr>
+            <th width="75%">Name</th>
+            <th>Von</th>
+        </tr>
         </thead>
 
         <tbody>
-            @foreach (var list in Model.Lists)
-            {
-                <tr>
-                    <td>
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
-                    </td>
-                    <td class="show-large">@list.Owner.UserName</td>
-                </tr>
-            }
+        @foreach (var list in Model.Lists)
+        {
+            <tr>
+                <td>
+                    <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
+                </td>
+                <td class="show-large">@list.Owner.UserName</td>
+            </tr>
+        }
         </tbody>
     </table>
 

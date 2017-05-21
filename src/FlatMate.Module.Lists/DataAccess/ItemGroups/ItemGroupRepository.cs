@@ -29,9 +29,9 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
         public async Task<IEnumerable<ItemGroup>> GetAllAsync(int listId)
         {
             var lists = await _dbContext.ItemGroups
-                                      .Include(g => g.ItemList)
-                                      .Where(g => g.ItemListId == listId)
-                                      .ToListAsync();
+                                        .Include(g => g.ItemList)
+                                        .Where(g => g.ItemListId == listId)
+                                        .ToListAsync();
 
             return lists.Select(Mapper.Map<ItemGroup>).ToList();
         }

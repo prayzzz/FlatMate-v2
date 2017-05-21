@@ -9,7 +9,7 @@ namespace FlatMate.Web
         public static void Main(string[] args)
         {
             var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                                                          .AddJsonFile("hosting.json", optional: false)
+                                                          .AddJsonFile("hosting.json", false)
                                                           .AddCommandLine(args)
                                                           .Build();
 

@@ -94,7 +94,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
         }
 
         public async Task<Result<ItemGroupDto>> UpdateAsync(int itemGroupId, ItemGroupDto dto)
-        {   
+        {
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {

@@ -29,30 +29,30 @@
 
     <table>
         <thead>
-            <tr>
-                <th width="50%">Name</th>
-                <th width="25%" class="show-large">Einträge</th>
-                <th class="show-large">Öffentlich?</th>
-                <th class="icon show-large"></th>
-            </tr>
+        <tr>
+            <th width="50%">Name</th>
+            <th width="25%" class="show-large">Einträge</th>
+            <th class="show-large">Öffentlich?</th>
+            <th class="icon show-large"></th>
+        </tr>
         </thead>
 
         <tbody>
-            @foreach (var list in Model.MyLists)
-            {
-                <tr>
-                    <td>
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
-                    </td>
-                    <td class="show-large">@list.ItemCount</td>
-                    <td class="show-large">
-                        <input type="checkbox" checked="@list.IsPublic" disabled title="Öffentlich?" />
-                    </td>
-                    <td class="icon show-large">
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="icon-24 icon-pen" title="Bearbeiten"></a>
-                    </td>
-                </tr>
-            }
+        @foreach (var list in Model.MyLists)
+        {
+            <tr>
+                <td>
+                    <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
+                </td>
+                <td class="show-large">@list.ItemCount</td>
+                <td class="show-large">
+                    <input type="checkbox" checked="@list.IsPublic" disabled title="Öffentlich?"/>
+                </td>
+                <td class="icon show-large">
+                    <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="icon-24 icon-pen" title="Bearbeiten"></a>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 
@@ -76,28 +76,28 @@
 
     <table>
         <thead>
-            <tr>
-                <th width="50%">Name</th>
-                <th width="25%" class="show-large">Einträge</th>
-                <th class="show-large">Von</th>
-                <th class="icon show-large"></th>
-            </tr>
+        <tr>
+            <th width="50%">Name</th>
+            <th width="25%" class="show-large">Einträge</th>
+            <th class="show-large">Von</th>
+            <th class="icon show-large"></th>
+        </tr>
         </thead>
 
         <tbody>
-            @foreach (var list in Model.Favorites)
-            {
-                <tr>
-                    <td>
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
-                    </td>
-                    <td class="show-large">@list.ItemCount</td>
-                    <td class="show-large">@list.Owner.UserName</td>
-                    <td class="icon show-large">
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="icon-24 icon-pen" title="Bearbeiten"></a>
-                    </td>
-                </tr>
-            }
+        @foreach (var list in Model.Favorites)
+        {
+            <tr>
+                <td>
+                    <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
+                </td>
+                <td class="show-large">@list.ItemCount</td>
+                <td class="show-large">@list.Owner.UserName</td>
+                <td class="icon show-large">
+                    <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="icon-24 icon-pen" title="Bearbeiten"></a>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 

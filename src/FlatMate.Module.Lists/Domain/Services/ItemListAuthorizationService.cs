@@ -8,13 +8,13 @@ namespace FlatMate.Module.Lists.Domain.Services
     {
         bool CanDelete(IOwnedEntity entity);
 
-        bool CanRead(IOwnedEntity entity);
-
         bool CanEdit(Item entity);
 
         bool CanEdit(ItemList entity);
 
         bool CanEdit(ItemGroup entity);
+
+        bool CanRead(IOwnedEntity entity);
     }
 
     [Inject]

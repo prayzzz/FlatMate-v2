@@ -22,6 +22,15 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Browse()
+        {
+            var result = await _listApi.GetAllLists(null);
+
+            var model = new ItemListBrowseVm { Lists = result };
+            return View(model);
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return View(new ItemListCreateVm());
@@ -130,15 +139,6 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             }
 
             var model = new ItemListViewVm { List = result.Data };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Browse()
-        {
-            var result = await _listApi.GetAllLists(null);
-
-            var model = new ItemListBrowseVm { Lists = result };
             return View(model);
         }
     }

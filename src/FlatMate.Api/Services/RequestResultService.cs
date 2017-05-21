@@ -22,7 +22,7 @@ namespace FlatMate.Api.Services
     }
 
     /// <summary>
-    ///     This service creates <see cref="IActionResult" /> from <see cref="Result" /> 
+    ///     This service creates <see cref="IActionResult" /> from <see cref="Result" />
     ///     by converting the <see cref="ErrorType" /> into a http statuscode
     /// </summary>
     [Inject(DependencyLifetime.Singleton)]
