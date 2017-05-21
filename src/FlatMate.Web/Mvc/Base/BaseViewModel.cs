@@ -9,7 +9,7 @@ namespace FlatMate.Web.Mvc.Base
 
     public abstract class BaseViewModel
     {
-        public UserJso CurrentUser { get; set; }
+        public UserInfoJso CurrentUser { get; set; }
 
         public bool IsError => Result != null && Result.IsError;
 

@@ -45,9 +45,11 @@ namespace FlatMate.Web.Mvc.Base
                 return;
             }
 
-            model.CurrentUser = new UserJso();
-            model.CurrentUser.Id = CurrentUserId;
-            model.CurrentUser.UserName = CurrentUserName;
+            model.CurrentUser = new UserInfoJso
+            {
+                Id = CurrentUserId,
+                UserName = CurrentUserName
+            };
         }
     }
 }

@@ -60,14 +60,20 @@
         @RenderBody()
     </main>
 
+    @if (Model != null)
+    {
+        <script type="application/json" id="userData">
+            @Json.Serialize(Model.CurrentUser)
+        </script>
+    }
+
     <script type="text/json" id="view-data">
         @(await RenderSectionAsync("viewData", false))
     </script>
 
     <script asp-src-include="~/dist/vendor.js" type="text/javascript"></script>
     <script asp-src-include="~/dist/app.js" type="text/javascript"></script>
-
-
+    
     @(await RenderSectionAsync("pageScript", false))
 
 </body>

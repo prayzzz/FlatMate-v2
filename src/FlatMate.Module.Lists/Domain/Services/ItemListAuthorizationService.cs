@@ -1,4 +1,5 @@
 ﻿using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Lists.Domain.Models;
 using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Lists.Domain.Services
@@ -7,9 +8,13 @@ namespace FlatMate.Module.Lists.Domain.Services
     {
         bool CanDelete(IOwnedEntity entity);
 
-        bool CanEdit(IOwnedEntity entity);
-
         bool CanRead(IOwnedEntity entity);
+
+        bool CanEdit(Item entity);
+
+        bool CanEdit(ItemList entity);
+
+        bool CanEdit(ItemGroup entity);
     }
 
     [Inject]
@@ -32,7 +37,32 @@ namespace FlatMate.Module.Lists.Domain.Services
             return false;
         }
 
-        public bool CanEdit(IOwnedEntity entity)
+        public bool CanEdit(ItemList entity)
+        {
+            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanEdit(ItemGroup entity)
+        {
+            if (entity.IsPublic)
+            {
+                return true;
+            }
+
+            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanEdit(Item entity)
         {
             if (entity.IsPublic)
             {

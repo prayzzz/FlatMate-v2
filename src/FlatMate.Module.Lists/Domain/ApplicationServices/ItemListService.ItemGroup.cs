@@ -111,7 +111,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             // check permission
             if (!_authorizationService.CanEdit(getGroup.Data))
             {
-                return new ErrorResult<ItemGroupDto>(ErrorType.NotFound, "Entity not found");
+                return new ErrorResult<ItemGroupDto>(ErrorType.Unauthorized, "Unauthorized");
             }
 
             // update data
