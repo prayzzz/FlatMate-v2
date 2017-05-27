@@ -31,9 +31,7 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
 
         Task<IEnumerable<ItemDto>> GetListItemsAsync(int listId);
 
-        Task<IEnumerable<ItemListDto>> GetListsAsync();
-
-        Task<IEnumerable<ItemListDto>> GetListsAsync(int ownerId);
+        Task<IEnumerable<ItemListDto>> GetListsAsync(int? ownerId, bool favoritesOnly);
 
         Task<Result<ItemListDto>> UpdateAsync(int listId, ItemListDto dto);
 

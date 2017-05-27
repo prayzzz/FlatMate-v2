@@ -34,6 +34,7 @@ namespace FlatMate.Api.Areas.Account.User
                                .WithResultDataAs(dto => _mapper.Map<UserJso>(dto));
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public Result<UserInfoJso> Get(int id)
         {
             var get = _userService.GetAsync(id);

@@ -40,7 +40,7 @@ namespace FlatMate.Module.Lists.DataAccess.Items
             item.Modified = dbo.Modified;
             item.SortIndex = dbo.SortIndex;
 
-            return createResult.Data;
+            return item;
         }
 
         private static ItemDbo EntityToDbo(Item entity, ItemDbo dbo, MappingContext ctx)

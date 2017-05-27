@@ -1,4 +1,5 @@
-﻿using FlatMate.Module.Account.Shared.Interfaces;
+﻿using FlatMate.Module.Account.Shared;
+using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Lists.Domain.Models;
 using prayzzz.Common.Attributes;
 
@@ -6,6 +7,8 @@ namespace FlatMate.Module.Lists.Domain.Services
 {
     public interface IItemListAuthorizationService
     {
+        CurrentUser CurrentUser { get; }
+
         bool CanDelete(IOwnedEntity entity);
 
         bool CanEdit(Item entity);
@@ -27,9 +30,11 @@ namespace FlatMate.Module.Lists.Domain.Services
             _authenticationContext = authenticationContext;
         }
 
+        public CurrentUser CurrentUser => _authenticationContext.CurrentUser;
+
         public bool CanDelete(IOwnedEntity entity)
         {
-            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            if (entity.OwnerId == CurrentUser.Id)
             {
                 return true;
             }
@@ -39,7 +44,7 @@ namespace FlatMate.Module.Lists.Domain.Services
 
         public bool CanEdit(ItemList entity)
         {
-            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            if (entity.OwnerId == CurrentUser.Id)
             {
                 return true;
             }
@@ -54,7 +59,7 @@ namespace FlatMate.Module.Lists.Domain.Services
                 return true;
             }
 
-            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            if (entity.OwnerId == CurrentUser.Id)
             {
                 return true;
             }
@@ -69,7 +74,7 @@ namespace FlatMate.Module.Lists.Domain.Services
                 return true;
             }
 
-            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            if (entity.OwnerId == CurrentUser.Id)
             {
                 return true;
             }
@@ -84,7 +89,7 @@ namespace FlatMate.Module.Lists.Domain.Services
                 return true;
             }
 
-            if (entity.OwnerId == _authenticationContext.CurrentUser.Id)
+            if (entity.OwnerId == CurrentUser.Id)
             {
                 return true;
             }

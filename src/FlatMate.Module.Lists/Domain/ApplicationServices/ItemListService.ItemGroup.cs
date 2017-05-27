@@ -78,7 +78,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 return new ErrorResult<ItemGroupDto>(ErrorType.NotFound, "Entity not found");
             }
 
-            return getGroup.WithDataAs(ModelToDto);
+            return getGroup.WithDataAs(_mapper.Map<ItemGroupDto>);
         }
 
         public async Task<IEnumerable<ItemGroupDto>> GetGroupsAsync(int listId)
@@ -90,7 +90,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 return Enumerable.Empty<ItemGroupDto>();
             }
 
-            return (await _itemGroupRepository.GetAllAsync(listId)).Select(ModelToDto);
+            return (await _itemGroupRepository.GetAllAsync(listId)).Select(_mapper.Map<ItemGroupDto>);
         }
 
         public async Task<Result<ItemGroupDto>> UpdateAsync(int itemGroupId, ItemGroupDto dto)
@@ -122,28 +122,12 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return await SaveAsync(group);
         }
 
-        private ItemGroupDto ModelToDto(ItemGroup itemGroup)
-        {
-            return new ItemGroupDto
-            {
-                Created = itemGroup.Created,
-                Id = itemGroup.Id,
-                ItemListId = itemGroup.ItemList.Id.Value,
-                IsPublic = itemGroup.IsPublic,
-                LastEditorId = itemGroup.LastEditorId,
-                Modified = itemGroup.Modified,
-                Name = itemGroup.Name,
-                OwnerId = itemGroup.OwnerId,
-                SortIndex = itemGroup.SortIndex
-            };
-        }
-
         private Task<Result<ItemGroupDto>> SaveAsync(ItemGroup itemGroup)
         {
             itemGroup.Modified = DateTime.Now;
             itemGroup.LastEditorId = CurrentUser.Id;
 
-            return _itemGroupRepository.SaveAsync(itemGroup).WithResultDataAs(ModelToDto);
+            return _itemGroupRepository.SaveAsync(itemGroup).WithResultDataAs(_mapper.Map<ItemGroupDto>);
         }
     }
 }

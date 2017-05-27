@@ -45,7 +45,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return View(model);
             }
 
-            var result = await _listApi.Create(new ItemListJso { Description = model.Description, IsPublic = model.IsPublic, Name = model.Name });
+            var result = await _listApi.CreateList(new ItemListJso { Description = model.Description, IsPublic = model.IsPublic, Name = model.Name });
             if (!result.IsSuccess)
             {
                 model.Result = result;
@@ -89,6 +89,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             }
 
             model.MyLists = await _listApi.GetAllLists(CurrentUserId);
+            model.Favorites = await _listApi.GetAllLists(null, true);
             return View(model);
         }
 

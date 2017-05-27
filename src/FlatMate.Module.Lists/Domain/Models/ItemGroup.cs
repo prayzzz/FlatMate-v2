@@ -38,7 +38,7 @@ namespace FlatMate.Module.Lists.Domain.Models
         public int SortIndex { get; set; }
 
         /// <summary>
-        ///     Creates a new <see cref="Item" />
+        ///     Creates a new <see cref="ItemGroup" />
         /// </summary>
         public static Result<ItemGroup> Create(string name, int ownerId, ItemList list)
         {
@@ -46,7 +46,7 @@ namespace FlatMate.Module.Lists.Domain.Models
         }
 
         /// <summary>
-        ///     Creates an exisiting <see cref="Item" />
+        ///     Creates an exisiting <see cref="ItemGroup" />
         /// </summary>
         public static Result<ItemGroup> Create(int? id, string name, int ownerId, ItemList list)
         {

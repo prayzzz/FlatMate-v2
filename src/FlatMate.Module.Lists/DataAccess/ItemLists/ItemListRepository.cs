@@ -26,15 +26,21 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
         protected override IQueryable<ItemListDbo> DbosIncluded => Dbos;
 
-        public async Task<IEnumerable<ItemList>> GetAllAsync()
+        public async Task<IEnumerable<ItemList>> GetAllAsync(int? ownerId, bool favoritesOnly)
         {
-            var lists = await _dbContext.ItemLists.ToListAsync();
-            return lists.Select(Mapper.Map<ItemList>).ToList();
-        }
+            IQueryable<ItemListDbo> set = _dbContext.ItemLists;
 
-        public async Task<IEnumerable<ItemList>> GetAllAsync(int ownerId)
-        {
-            var lists = await _dbContext.ItemLists.Where(x => x.OwnerId == ownerId).ToListAsync();
+            if (ownerId.HasValue)
+            {
+                set = set.Where(x => x.OwnerId == ownerId);
+            }
+
+            if (favoritesOnly)
+            {
+                set = set.Join(_dbContext.ItemListFavorites, list => list.Id, fav => fav.ItemListId, (list, fav) => list);
+            }
+
+            var lists = await set.ToListAsync();
             return lists.Select(Mapper.Map<ItemList>).ToList();
         }
     }

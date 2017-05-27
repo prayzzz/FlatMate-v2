@@ -6,7 +6,7 @@ using FlatMate.Module.Lists.DataAccess.ItemLists;
 namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
 {
     [Table("ItemListFavorite")]
-    public class ItemListFavorite : DboBase
+    public class ItemListFavoriteDbo : DboBase
     {
         [ForeignKey("ItemListId")]
         public ItemListDbo ItemList { get; set; }
