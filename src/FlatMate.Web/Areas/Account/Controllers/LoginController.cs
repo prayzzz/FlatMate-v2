@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.Authentication;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
+using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,7 +15,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
     {
         private readonly LoginApiController _loginApi;
 
-        public LoginController(LoginApiController loginApi)
+        public LoginController(LoginApiController loginApi, IJsonService jsonService) : base(jsonService)
         {
             _loginApi = loginApi;
         }

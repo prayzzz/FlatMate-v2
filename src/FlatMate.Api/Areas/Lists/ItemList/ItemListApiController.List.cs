@@ -61,6 +61,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
                 return getList.WithDataAs(Map<ItemListJso>);
             }
 
+            // collect additional data
             var itemList = Map<ItemListJso>(getList.Data);
             itemList.ItemGroups = await GetAllGroups(listId);
             itemList.Items = await GetAllListItems(listId);

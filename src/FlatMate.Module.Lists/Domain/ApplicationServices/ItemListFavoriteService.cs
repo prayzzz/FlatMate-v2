@@ -63,5 +63,16 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             // save
             return await _favoriteRepository.SaveAsync(createFavorite.Data);
         }
+
+        public Task<Result> DeleteFavorite(int listId)
+        {
+            // the user must be logged in
+            if (CurrentUser.IsAnonymous)
+            {
+                return Task.FromResult<Result>(new ErrorResult(ErrorType.Unauthorized, "Unauthorized"));
+            }
+
+            return _favoriteRepository.DeleteAsync(CurrentUser.Id, listId);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
+using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
@@ -14,7 +15,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
     {
         private readonly UserApiController _userApi;
 
-        public CreateController(UserApiController userApi)
+        public CreateController(UserApiController userApi, IJsonService jsonService) : base(jsonService)
         {
             _userApi = userApi;
         }

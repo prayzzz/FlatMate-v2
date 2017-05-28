@@ -4,19 +4,18 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Api.Areas.Lists.ItemList
 {
-    public partial class ItemListApiController : ApiController
+    public partial class ItemListApiController
     {
-        [HttpPost("{listId}/favorite")]
-        public async Task<Result> CreateFavorite(int listId)
+        [HttpPost("favorite")]
+        public async Task<Result> CreateFavorite([FromBody] ItemListFavoriteJso jso)
         {
-            var result = await _favoriteService.SetAsFavorite(listId);
+            return await _favoriteService.SetAsFavorite(jso.ItemListId);
+        }
 
-            if (result.IsError)
-            {
-                return new ErrorResult(result);
-            }
-
-            return new SuccessResult();
+        [HttpDelete("favorite/{listId}")]
+        public async Task<Result> DeleteFavorite([FromBody] ItemListFavoriteJso jso)
+        {
+            return await _favoriteService.DeleteFavorite(jso.ItemListId);
         }
     }
 }

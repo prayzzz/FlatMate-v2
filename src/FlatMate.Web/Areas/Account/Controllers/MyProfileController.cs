@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
+using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
@@ -12,15 +13,13 @@ namespace FlatMate.Web.Areas.Account.Controllers
     [Area("Account")]
     public class MyProfileController : MvcController
     {
-        private static readonly Type ControllerType = typeof(MyProfileController);
         private readonly ILogger _logger;
-
         private readonly UserApiController _userApi;
 
-        public MyProfileController(UserApiController userApi, ILoggerFactory loggerFactory)
+        public MyProfileController(UserApiController userApi, ILogger logger, IJsonService jsonService) : base(jsonService)
         {
             _userApi = userApi;
-            _logger = loggerFactory.CreateLogger(ControllerType);
+            _logger = logger;
         }
 
         [HttpGet]

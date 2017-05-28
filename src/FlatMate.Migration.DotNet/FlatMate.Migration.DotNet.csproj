@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-39" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-40" />
   </ItemGroup>
   
   <ItemGroup>

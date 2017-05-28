@@ -7,7 +7,7 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Api.Areas.Lists.ItemList
 {
-    public partial class ItemListApiController : ApiController
+    public partial class ItemListApiController
     {
         [HttpPost("{listId}/item")]
         public Task<Result<ItemJso>> CreateItem(int listId, [FromBody] ItemJso jso)

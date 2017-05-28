@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using FlatMate.Api.Areas.Account.User;
 
 namespace FlatMate.Api.Areas.Lists.ItemList
@@ -15,6 +16,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         [ReadOnly(true)]
         public int? Id { get; set; }
 
+        [Required]
         public bool IsPublic { get; set; }
 
         [ReadOnly(true)]
@@ -32,6 +34,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         [ReadOnly(true)]
         public DateTime Modified { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         [ReadOnly(true)]

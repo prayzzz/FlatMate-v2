@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using FlatMate.Api.Areas.Account.User;
 
 namespace FlatMate.Api.Areas.Lists.ItemList
@@ -24,11 +25,13 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         [ReadOnly(true)]
         public DateTime Modified { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         [ReadOnly(true)]
         public UserInfoJso Owner { get; set; }
 
+        [Required]
         public int SortIndex { get; set; }
     }
 }

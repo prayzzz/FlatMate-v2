@@ -7,7 +7,7 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Api.Areas.Lists.ItemList
 {
-    public partial class ItemListApiController : ApiController
+    public partial class ItemListApiController
     {
         [HttpPost("{listId}/group")]
         public Task<Result<ItemGroupJso>> CreateGroup(int listId, [FromBody] ItemGroupJso jso)
@@ -42,6 +42,7 @@ namespace FlatMate.Api.Areas.Lists.ItemList
                 return getGroup.WithDataAs(Map<ItemGroupJso>);
             }
 
+            // collect additional data
             var itemGroup = Map<ItemGroupJso>(getGroup.Data);
             itemGroup.Items = await GetAllGroupItems(listId, groupId);
 

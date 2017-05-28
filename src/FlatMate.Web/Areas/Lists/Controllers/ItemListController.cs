@@ -15,7 +15,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         private readonly IJsonService _jsonService;
         private readonly ItemListApiController _listApi;
 
-        public ItemListController(ItemListApiController listApi, IJsonService jsonService)
+        public ItemListController(ItemListApiController listApi, IJsonService jsonService) : base(jsonService)
         {
             _listApi = listApi;
             _jsonService = jsonService;
@@ -24,9 +24,10 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> Browse()
         {
-            var result = await _listApi.GetAllLists(null);
+            var model = new ItemListBrowseVm();
+            ApplyTempResult(model);
 
-            var model = new ItemListBrowseVm { Lists = result };
+            model.Lists = await _listApi.GetAllLists(null);
             return View(model);
         }
 
@@ -56,6 +57,22 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Favorite(int id)
+        {
+            var createFavorite = await _listApi.CreateFavorite(new ItemListFavoriteJso { ItemListId = id });
+            if (createFavorite.IsError)
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(createFavorite);
+            }
+            else
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit hinzugefügt"));
+            }
+
+            return RedirectToAction("Browse");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var getResult = await _listApi.GetList(id);
@@ -81,12 +98,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         {
             var model = new ItemListMyVm();
 
-            // check for passed result from redirect
-            if (TempData.TryGetValue(Constants.TempData.Result, out var data))
-            {
-                model.Result = _jsonService.Deserialize<Result>(data as string);
-                TempData.Remove(Constants.TempData.Result);
-            }
+            ApplyTempResult(model);
 
             model.MyLists = await _listApi.GetAllLists(CurrentUserId);
             model.Favorites = await _listApi.GetAllLists(null, true);

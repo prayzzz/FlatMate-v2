@@ -1,5 +1,6 @@
 ﻿using FlatMate.Api.Areas.Account.Authentication;
 using FlatMate.Web.Mvc.Base;
+using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -10,7 +11,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
     {
         private readonly LogoutApiController _logoutApi;
 
-        public LogoutController(LogoutApiController logoutApi)
+        public LogoutController(LogoutApiController logoutApi, IJsonService jsonService) : base(jsonService)
         {
             _logoutApi = logoutApi;
         }

@@ -12,13 +12,13 @@ namespace FlatMate.Module.Common.DataAccess
 {
     public abstract class Repository<TEntity, TDbo> : IRepository<TEntity> where TEntity : Entity where TDbo : DboBase, new()
     {
-        private readonly Dictionary<int, TEntity> _sessionCache;
+        private readonly Dictionary<int, TEntity> _requestCache;
 
         protected Repository(IMapper mapper)
         {
             Mapper = mapper;
 
-            _sessionCache = new Dictionary<int, TEntity>();
+            _requestCache = new Dictionary<int, TEntity>();
         }
 
         protected abstract FlatMateDbContext Context { get; }
@@ -54,7 +54,7 @@ namespace FlatMate.Module.Common.DataAccess
 
         public async Task<Result<TEntity>> GetAsync(int id)
         {
-            if (_sessionCache.TryGetValue(id, out var cachedEntity))
+            if (_requestCache.TryGetValue(id, out var cachedEntity))
             {
                 return new SuccessResult<TEntity>(cachedEntity);
             }
@@ -67,7 +67,7 @@ namespace FlatMate.Module.Common.DataAccess
             }
 
             var entity = Mapper.Map<TEntity>(dbo);
-            _sessionCache[dbo.Id] = entity;
+            _requestCache[dbo.Id] = entity;
 
             return new SuccessResult<TEntity>(entity);
         }
@@ -104,7 +104,7 @@ namespace FlatMate.Module.Common.DataAccess
         {
             try
             {
-                _sessionCache.Clear();
+                _requestCache.Clear();
                 await Context.SaveChangesAsync();
             }
             catch (Exception e)
