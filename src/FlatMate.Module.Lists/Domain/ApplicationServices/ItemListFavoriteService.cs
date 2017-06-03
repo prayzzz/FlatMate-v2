@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Interfaces;
-using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using prayzzz.Common.Attributes;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Domain.ApplicationServices
@@ -16,24 +14,17 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
         private readonly IAuthenticationContext _authenticationContext;
         private readonly IItemListFavoriteRepository _favoriteRepository;
         private readonly IItemListRepository _itemListRepository;
-        private readonly IMapper _mapper;
 
         /// <summary>
         ///     TODO: Was passiert wenn eine Liste privat wird?
         /// </summary>
-        /// <param name="favoriteRepository"></param>
-        /// <param name="itemListRepository"></param>
-        /// <param name="authenticationContext"></param>
-        /// <param name="mapper"></param>
         public ItemListFavoriteService(IItemListFavoriteRepository favoriteRepository,
                                        IItemListRepository itemListRepository,
-                                       IAuthenticationContext authenticationContext,
-                                       IMapper mapper)
+                                       IAuthenticationContext authenticationContext)
         {
             _favoriteRepository = favoriteRepository;
             _itemListRepository = itemListRepository;
             _authenticationContext = authenticationContext;
-            _mapper = mapper;
         }
 
         private CurrentUser CurrentUser => _authenticationContext.CurrentUser;
@@ -53,15 +44,8 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 return new ErrorResult(getItemList);
             }
 
-            // create favorite
-            var createFavorite = ItemListFavorite.Create(CurrentUser.Id, getItemList.Data);
-            if (createFavorite.IsError)
-            {
-                return new ErrorResult(createFavorite);
-            }
-
             // save
-            return await _favoriteRepository.SaveAsync(createFavorite.Data);
+            return await _favoriteRepository.SaveAsync(CurrentUser.Id, getItemList.Data.Id.Value);
         }
 
         public Task<Result> DeleteFavorite(int listId)

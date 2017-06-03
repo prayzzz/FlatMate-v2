@@ -1,13 +1,15 @@
 ﻿import * as ko from "knockout";
-import { StartupHelper } from "../../KoStartup"
-import { ItemListJso, ItemListEditor } from ".";
+import { ItemListEditor, ItemListJso } from ".";
+import { StartupHelper } from "../../KoStartup";
 
 export class ListsRegistry {
     public static registerComponents() {
         // ItemListEditor
         ko.components.register("item-list-editor", {
-            viewModel: function () { return new ItemListEditor(StartupHelper.readModel<ItemListJso>()) },
-            template: { element: "item-list-editor-template" }
+            template: { element: "item-list-editor-template" },
+            viewModel: function() {
+                return new ItemListEditor(StartupHelper.readModel<ItemListJso>());
+            }
         });
     }
 }

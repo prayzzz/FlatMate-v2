@@ -1,9 +1,23 @@
 ﻿import Ajax from "../shared/ajax";
 
 export interface IApiClient {
-    get<TData>(path: string, doneCallback?: (d: TData) => void, failCallback?: (e: IApiError) => void): void;
-    put<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: IApiError) => void): void;
-    post<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: IApiError) => void): void;
+    get<TData>(
+        path: string,
+        doneCallback?: (d: TData) => void,
+        failCallback?: (e: IApiError) => void
+    ): void;
+    put<TData, TResult>(
+        path: string,
+        data: TData,
+        doneCallback?: (d: TResult) => void,
+        failCallback?: (e: IApiError) => void
+    ): void;
+    post<TData, TResult>(
+        path: string,
+        data: TData,
+        doneCallback?: (d: TResult) => void,
+        failCallback?: (e: IApiError) => void
+    ): void;
 }
 
 export interface IApiError {

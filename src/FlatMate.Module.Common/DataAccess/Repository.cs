@@ -10,7 +10,36 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Common.DataAccess
 {
-    public abstract class Repository<TEntity, TDbo> : IRepository<TEntity> where TEntity : Entity where TDbo : DboBase, new()
+    public abstract class Repository
+    {
+        protected abstract FlatMateDbContext Context { get; }
+
+        protected virtual void BeforeSaveChanges()
+        {
+        }
+
+        protected virtual void AfterSaveChanges()
+        {
+        }
+
+        protected async Task<Result> SaveChanges()
+        {
+            try
+            {
+                BeforeSaveChanges();
+                await Context.SaveChangesAsync();
+                AfterSaveChanges();
+            }
+            catch (Exception e)
+            {
+                return new ErrorResult(ErrorType.InternalError, e.Message);
+            }
+
+            return SuccessResult.Default;
+        }
+    }
+
+    public abstract class Repository<TEntity, TDbo> : Repository, IRepository<TEntity> where TEntity : Entity where TDbo : DboBase, new()
     {
         private readonly Dictionary<int, TEntity> _requestCache;
 
@@ -20,8 +49,6 @@ namespace FlatMate.Module.Common.DataAccess
 
             _requestCache = new Dictionary<int, TEntity>();
         }
-
-        protected abstract FlatMateDbContext Context { get; }
 
         protected abstract IQueryable<TDbo> Dbos { get; }
 
@@ -100,19 +127,10 @@ namespace FlatMate.Module.Common.DataAccess
             return new SuccessResult<TEntity>(Mapper.Map<TEntity>(dbo));
         }
 
-        protected async Task<Result> SaveChanges()
+        protected override void BeforeSaveChanges()
         {
-            try
-            {
-                _requestCache.Clear();
-                await Context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return new ErrorResult(ErrorType.InternalError, e.Message);
-            }
-
-            return SuccessResult.Default;
+            base.BeforeSaveChanges();
+            _requestCache.Clear();
         }
     }
 }

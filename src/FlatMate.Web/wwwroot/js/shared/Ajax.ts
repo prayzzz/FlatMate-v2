@@ -99,5 +99,5 @@ class AjaxRequest<TData, TError> implements IAjaxRequest<TData, TError> {
         }
 
         return result;
-    };
+    }
 }

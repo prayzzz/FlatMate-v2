@@ -1,43 +1,57 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.DataAccess;
-using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
 {
     [Inject]
-    public class ItemListFavoriteRepository : Repository<ItemListFavorite, ItemListFavoriteDbo>, IItemListFavoriteRepository
+    public class ItemListFavoriteRepository : Repository, IItemListFavoriteRepository
     {
         private readonly ListsDbContext _dbContext;
 
-        public ItemListFavoriteRepository(ListsDbContext context, IMapper mapper) : base(mapper)
+        public ItemListFavoriteRepository(ListsDbContext context)
         {
             _dbContext = context;
         }
 
         protected override FlatMateDbContext Context => _dbContext;
 
-        protected override IQueryable<ItemListFavoriteDbo> Dbos => _dbContext.ItemListFavorites;
-
-        protected override IQueryable<ItemListFavoriteDbo> DbosIncluded => _dbContext.ItemListFavorites
-                                                                                     .Include(x => x.ItemList);
+        protected IQueryable<ItemListFavoriteDbo> Dbos => _dbContext.ItemListFavorites;
 
         public async Task<Result> DeleteAsync(int userId, int listId)
         {
-            var fav = await Dbos.Where(x => x.UserId == userId && x.ItemListId == listId).FirstOrDefaultAsync();
+            var favorite = await Get(userId, listId);
 
-            if (fav == null)
+            if (favorite == null)
             {
                 return new ErrorResult(ErrorType.NotFound, "Entity not found");
             }
 
-            _dbContext.ItemListFavorites.Remove(fav);
+            _dbContext.ItemListFavorites.Remove(favorite);
             return await SaveChanges();
+        }
+
+        public async Task<Result> SaveAsync(int userId, int listId)
+        {
+            var favorite = await Get(userId, listId);
+
+            if (favorite != null)
+            {
+                return new SuccessResult();
+            }
+
+            _dbContext.ItemListFavorites.Add(new ItemListFavoriteDbo { ItemListId = listId, UserId = userId });
+            return await SaveChanges();
+        }
+
+        private Task<ItemListFavoriteDbo> Get(int userId, int listId)
+        {
+            return Dbos.Where(x => x.UserId == userId && x.ItemListId == listId)
+                       .FirstOrDefaultAsync();
         }
     }
 }

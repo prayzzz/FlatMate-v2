@@ -1,19 +1,18 @@
-﻿import ApiClient from "../../api/apiClient";
-import { ItemJso, ItemGroupJso } from "."
+﻿import { ItemGroupJso, ItemJso } from ".";
+import ApiClient from "../../api/apiClient";
 
 /**
  * Singleton
  */
 export class ItemListApi {
     private static instance: ItemListApi;
-    private readonly apiClient: ApiClient;
+    private readonly apiClient = new ApiClient();
 
     /**
-    * Returns the singleton instance
-    */
+     * Returns the singleton instance
+     */
     constructor() {
         if (!ItemListApi.instance) {
-            this.apiClient = new ApiClient();
             ItemListApi.instance = this;
         }
 

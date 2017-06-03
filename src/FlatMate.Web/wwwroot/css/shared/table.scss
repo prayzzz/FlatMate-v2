@@ -1,4 +1,5 @@
 ﻿@import '../var/colors.scss';
+@import '../var/sizes.scss';
 
 table {
     border-collapse: collapse;
@@ -6,7 +7,7 @@ table {
 }
 
 th, td {
-    border-bottom: 1px solid lighten($color-border, 10%);
+    border-bottom: $border-thickness solid lighten($color-border, 10%);
     padding: .5rem 1rem;
     text-align: left;
 
@@ -59,7 +60,7 @@ div.table {
 
         .cell {
             display: table-cell;
-            border-bottom: .1rem solid $color-border;
+            border-bottom: $border-thickness solid $color-border;
             padding: .5rem .5rem;
             vertical-align: middle;
 
@@ -86,5 +87,10 @@ div.table {
 
     .dragging {
         box-shadow: inset 0 0 10px #DDD;
+    }
+
+    // hide all icons except the grip
+    .drag-element [class^="icon-"]:not(.icon-grip) {
+        display: none;
     }
 }

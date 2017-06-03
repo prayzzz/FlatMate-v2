@@ -1,27 +1,27 @@
 import * as ko from "knockout";
-import { ItemViewModel, ItemGroupJso, ItemJso, ItemListApi } from ".";
-import { DragZone, DragEvents, DragZoneData } from "../../ko/dragdrop";
+import { ItemGroupJso, ItemJso, ItemListApi, ItemViewModel } from ".";
+import { DragEvents, DragZone, DragZoneData } from "../../ko/dragdrop";
 
 export class ItemGroupViewModel {
-    private readonly apiClient: ItemListApi;
-    private readonly model = ko.observable<ItemGroupJso>();
-
     // from model
-    public readonly name = ko.observable<string>("");
-    public readonly sortIndex = ko.observable<number>(0);
+    public readonly name = ko.observable("");
+    public readonly sortIndex = ko.observable(0);
 
     // ui
-    public readonly isInEditMode = ko.observable<boolean>(false);
-    public readonly isNewItemFocused = ko.observable<Boolean>(false);
+    public readonly isInEditMode = ko.observable(false);
+    public readonly isNewItemFocused = ko.observable(false);
     public readonly items = ko.observableArray<ItemViewModel>();
-    public readonly newItemName = ko.observable<String>("");
+    public readonly newItemName = ko.observable("");
     public readonly dragZone: DragZone<ItemViewModel>;
+
+    private readonly apiClient = new ItemListApi();
+    private readonly model = ko.observable<ItemGroupJso>();
 
     constructor(model: ItemGroupJso, items?: ItemJso[]) {
         this.model.subscribe(val => {
             this.name(val.name);
             this.sortIndex(val.sortIndex);
-        })
+        });
 
         this.model(model);
 
@@ -30,7 +30,6 @@ export class ItemGroupViewModel {
             this.items.sort((a, b) => a.sortIndex() - b.sortIndex());
         }
 
-        this.apiClient = new ItemListApi();
         this.dragZone = new DragZone<ItemViewModel>(this.dragZoneName, this.dragStart, this.dragEnd);
     }
 
@@ -43,8 +42,12 @@ export class ItemGroupViewModel {
     }
 
     public dragEvents = (item: ItemViewModel): DragEvents<ItemViewModel> => {
-        return new DragEvents<ItemViewModel>(this.dragZoneName, this.reorder, new DragZoneData<ItemViewModel>(item, this.items));
-    }
+        return new DragEvents<ItemViewModel>(
+            this.dragZoneName,
+            this.reorder,
+            new DragZoneData<ItemViewModel>(item, this.items)
+        );
+    };
 
     public dragStart = (item: ItemViewModel) => {
         item.isDragging(true);
@@ -77,17 +80,17 @@ export class ItemGroupViewModel {
         }
 
         return false; // dont continue event propagation
-    }
+    };
 
     public enterEditMode = (): boolean => {
         this.isInEditMode(true);
 
         return false; // dont continue event propagation
-    }
+    };
 
     /**
-     * Creates an new item from the itemName textfield and saves it.
-     */
+   * Creates an new item from the itemName textfield and saves it.
+   */
     public addItem = () => {
         const itemName = this.newItemName().trim();
         if (!itemName) {
@@ -95,7 +98,7 @@ export class ItemGroupViewModel {
         }
 
         let maxSortIndex = -1;
-        this.items().forEach(i => maxSortIndex = i.sortIndex() > maxSortIndex ? i.sortIndex() : maxSortIndex);
+        this.items().forEach(i => (maxSortIndex = i.sortIndex() > maxSortIndex ? i.sortIndex() : maxSortIndex));
 
         const itemVm = new ItemViewModel(new ItemJso(this.model().itemListId, this.model().id));
         itemVm.name(itemName);
@@ -104,7 +107,7 @@ export class ItemGroupViewModel {
             this.items.push(itemVm);
             this.newItemName("");
         });
-    }
+    };
 
     /**
      * Removes the given item from the group
@@ -112,7 +115,7 @@ export class ItemGroupViewModel {
     public removeItem = (item: ItemViewModel) => {
         const self = this;
         item.delete().then(() => self.items.remove(item));
-    }
+    };
 
     /**
      * Sets the sortindex for all items and saves them
@@ -133,21 +136,19 @@ export class ItemGroupViewModel {
      */
     public async save(): Promise<void> {
         const model = this.model();
-        const oldModel = Object.clone(model)
+        const oldModel = Object.clone(model);
 
         model.name = this.name();
         model.sortIndex = this.sortIndex();
 
         try {
             if (model.id) {
-                this.model(await this.apiClient.updateGroup(model.itemListId, model.id, model))
-            }
-            else {
+                this.model(await this.apiClient.updateGroup(model.itemListId, model.id, model));
+            } else {
                 this.model(await this.apiClient.createGroup(model.itemListId, model));
             }
-        }
-        catch (err) {
-            this.model(oldModel)
+        } catch (err) {
+            this.model(oldModel);
         }
     }
 

@@ -1,6 +1,8 @@
-﻿import * as ko from "knockout";
-import EnterKey from "./ko/bindingHandlers/EnterKey"
+﻿// tslint:disable:max-classes-per-file
+
+import * as ko from "knockout";
 import { ListsRegistry } from "./areas/lists/";
+import EnterKey from "./ko/bindingHandlers/EnterKey";
 
 export class KoStartup {
     public static start() {
@@ -23,9 +25,9 @@ export class StartupHelper {
     public static readModel<T>(): T {
         const element = document.getElementById("view-data");
         if (!element || !element.innerText.trim()) {
-            throw "no data available";
+            throw new Error("no data available");
         }
 
-        return <T>JSON.parse(element.innerText);
+        return JSON.parse(element.innerText) as T;
     }
 }

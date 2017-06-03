@@ -1,13 +1,15 @@
+// tslint:disable:max-classes-per-file
+
 import { UserInfoJso } from "../account/jso";
 
 export class ItemJso {
-    id: number | undefined;
-    lastEditor: UserInfoJso;
-    name: string;
-    owner: UserInfoJso;
-    itemGroupId: number | undefined;
-    itemListId: number;
-    sortIndex: number;
+    public id: number | undefined;
+    public lastEditor: UserInfoJso;
+    public name: string;
+    public owner: UserInfoJso;
+    public itemGroupId: number | undefined;
+    public itemListId: number;
+    public sortIndex: number;
 
     constructor(itemListId: number, itemGroupId?: number) {
         this.itemListId = itemListId;
@@ -16,12 +18,12 @@ export class ItemJso {
 }
 
 export class ItemGroupJso {
-    id: number | undefined;
-    lastEditor: UserInfoJso;
-    name: string;
-    owner: UserInfoJso;
-    itemListId: number;
-    sortIndex: number;
+    public id: number | undefined;
+    public lastEditor: UserInfoJso;
+    public name: string;
+    public owner: UserInfoJso;
+    public itemListId: number;
+    public sortIndex: number;
 
     constructor(itemListId: number) {
         this.itemListId = itemListId;
@@ -29,13 +31,13 @@ export class ItemGroupJso {
 }
 
 export class ItemListJso {
-    description: string;
-    id: number;
-    isPublic: boolean;
-    itemCount: number;
-    items: ItemJso[];
-    itemGroups: ItemGroupJso[];
-    lastEditor: UserInfoJso;
-    name: string;
-    owner: UserInfoJso;
+    public description: string;
+    public id: number;
+    public isPublic: boolean;
+    public itemCount: number;
+    public items: ItemJso[];
+    public itemGroups: ItemGroupJso[];
+    public lastEditor: UserInfoJso;
+    public name: string;
+    public owner: UserInfoJso;
 }

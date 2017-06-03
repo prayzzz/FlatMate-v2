@@ -2,7 +2,17 @@
     "extends": "tslint:recommended",
     "rules": {
         "arrow-parens": false,
-        "max-line-length": [999],
-        "object-literal-shorthand": false
+        "max-line-length": [
+            999
+        ],
+        "object-literal-shorthand": false,
+        "only-arrow-functions": [
+            false
+        ],
+        "space-before-function-paren": false,
+        "eofline": false,
+        "trailing-comma": [
+            false
+        ]
     }
 }
