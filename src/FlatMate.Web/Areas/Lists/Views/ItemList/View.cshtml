@@ -25,12 +25,12 @@
 
 <script type="text/x-template" id="item-list-editor-template">
 
-    <div class="table">
+    <div class="standard-box table">
 
         <div class="body">
 
             <!-- ko foreach: groups -->
-            <div class="row">
+            <div class="row" style="background-color: #f6f6f9">
                 <div class="cell" data-bind="click: enterEditMode">
                     <strong>
                         <span data-bind="text: name, visible: !isInEditMode()"></span>
@@ -80,6 +80,9 @@
 
             <!-- /ko -->
         </div>
+    </div>
+
+    <div class="standard-box table">
 
         <div class="row">
             <div class="cell">
@@ -90,6 +93,7 @@
             </div>
             <div class="cell icon"></div>
         </div>
+
     </div>
 
 </script>

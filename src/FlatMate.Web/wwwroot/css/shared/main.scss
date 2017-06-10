@@ -13,6 +13,7 @@ html {
 html, body {
     padding: 0;
     margin: 0;
+    background-color: $color-main-background;
 }
 
 @media all and (max-width: 768px) {
@@ -44,12 +45,12 @@ h2 {
 }
 
 h3 {
-    font-size: 1.5rem;
-    letter-spacing: 0.1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
 }
 
 header {
-    background-color:#fff;
+    background-color: #fff;
     border-bottom: 1px solid $color-border;
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
     position: fixed;
@@ -89,7 +90,6 @@ main {
     position: relative;
     display: block;
     overflow: hidden;
-    background-color: white;
 }
 
 a {
@@ -122,4 +122,8 @@ a {
 .align-center {
     display: flex;
     justify-content: center;
+}
+
+.vertical-center {
+    align-items: center;
 }

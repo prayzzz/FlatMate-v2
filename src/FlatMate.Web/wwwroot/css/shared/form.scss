@@ -19,8 +19,16 @@ form {
     border: 0;
     box-sizing: border-box;
     display: block;
+    padding: 1em;
     max-width: 500px;
     width: 100%;
+}
+
+.centered-form {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
 }
 
 fieldset {
@@ -53,9 +61,9 @@ input[type=text],
 input[type=password],
 input[type=email] {
     border: $border-thickness $color-border solid;
-    box-shadow: inset 0 0 2px rgba(0,0,0,.1);
+    //box-shadow: inset 0 0 2px rgba(0,0,0,.1);
     line-height: 1.25;
-    padding: .5rem .5rem;
+    padding: .4rem .4rem;
     transition: border linear 0.15s;
 }
 
@@ -65,8 +73,8 @@ input[type=submit] {
     display: block;
     min-width: 100px;
     padding: .3rem .5rem;
-    text-align:center;
-    transition: background-color linear 0.15s;    
+    text-align: center;
+    transition: background-color linear 0.15s;
     width: auto;
 }
 
@@ -92,7 +100,10 @@ input[type=submit]:focus {
 }
 
 .form-group {
-    margin-bottom: 1rem;
+}
+
+.form-group + .form-group {
+    margin-top: 1rem;
 }
 
 .btn-primary {
