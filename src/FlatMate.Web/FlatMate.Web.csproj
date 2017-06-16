@@ -52,7 +52,7 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
-  <Target Name="BuildFrontend" AfterTargets="AfterBuild">
+  <Target Name="BuildFrontend" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="yarn --force" WorkingDirectory="wwwroot" />
     <Exec Command="node_modules/.bin/webpack" WorkingDirectory="wwwroot" />
   </Target>
