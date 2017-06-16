@@ -22,11 +22,11 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
     [Inject]
     public partial class ItemListService : IItemListService
     {
-        private readonly IMapper _mapper;
         private readonly IItemListAuthorizationService _authorizationService;
         private readonly IItemGroupRepository _itemGroupRepository;
         private readonly IItemListRepository _itemListRepository;
         private readonly IItemRepository _itemRepository;
+        private readonly IMapper _mapper;
 
         public ItemListService(IItemListRepository itemListRepository,
                                IItemGroupRepository itemGroupRepository,
@@ -111,7 +111,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
         public async Task<IEnumerable<ItemListDto>> GetListsAsync(int? ownerId, bool favoritesOnly)
         {
             return (await _itemListRepository.GetAllAsync(ownerId, favoritesOnly)).Where(l => _authorizationService.CanRead(l))
-                                                                   .Select(_mapper.Map<ItemListDto>);
+                                                                                  .Select(_mapper.Map<ItemListDto>);
         }
 
         public async Task<Result<ItemListDto>> UpdateAsync(int listId, ItemListDto dto)

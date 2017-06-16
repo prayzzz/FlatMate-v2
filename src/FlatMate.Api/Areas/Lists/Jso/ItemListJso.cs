@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using FlatMate.Api.Areas.Account.User;
 
-namespace FlatMate.Api.Areas.Lists.ItemList
+namespace FlatMate.Api.Areas.Lists.Jso
 {
     public class ItemListJso
     {

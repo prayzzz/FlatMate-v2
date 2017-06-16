@@ -1,4 +1,5 @@
-﻿@{
+﻿@model FlatMate.Web.Areas.Lists.Data.ItemListBrowseVm
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Liste suchen";
     ViewData["PageTitle"] = "Liste suchen";
@@ -35,7 +36,14 @@
                     </td>
                     <td class="show-large">@list.Owner.UserName</td>
                     <td class="icon">
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="Favorite" asp-route-id="@list.Id" class="icon-24 icon-heart" title="Als Favorit hinzufügen"></a>
+                        @if (Model.Favorites.Any(l => l.Id == list.Id))
+                        {
+                            <a asp-area="Lists" asp-controller="ItemList" asp-action="Unfavorite" asp-route-id="@list.Id" class="icon-24 icon-heart-filled" title="Als Favorit entfernen"></a>
+                        }
+                        else
+                        {
+                            <a asp-area="Lists" asp-controller="ItemList" asp-action="Favorite" asp-route-id="@list.Id" class="icon-24 icon-heart" title="Als Favorit hinzufügen"></a>
+                        }
                     </td>
                 </tr>
             }

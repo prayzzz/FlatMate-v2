@@ -24,4 +24,7 @@
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Lists\Jso\" />
+  </ItemGroup>
 </Project>

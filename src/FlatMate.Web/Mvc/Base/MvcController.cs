@@ -60,8 +60,8 @@ namespace FlatMate.Web.Mvc.Base
                 UserName = CurrentUserName
             };
         }
-        
-        protected void ApplyTempResult(BaseViewModel model)
+
+        protected T ApplyTempResult<T>(T model) where T : BaseViewModel
         {
             // check for passed result from redirect
             if (TempData.TryGetValue(Constants.TempData.Result, out var data))
@@ -69,6 +69,8 @@ namespace FlatMate.Web.Mvc.Base
                 model.Result = _jsonService.Deserialize<Result>(data as string);
                 TempData.Remove(Constants.TempData.Result);
             }
+
+            return model;
         }
     }
 }

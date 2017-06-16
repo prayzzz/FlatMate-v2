@@ -78,7 +78,8 @@
         <thead>
             <tr>
                 <th width="75%">Name</th>
-                <th width="25%" class="show-large">Von</th>
+                <th class="show-large">Von</th>
+                <th class="icon"></th>
             </tr>
         </thead>
 
@@ -90,6 +91,9 @@
                         <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
                     </td>
                     <td class="show-large">@list.Owner.UserName</td>
+                    <td class="icon">
+                        <a asp-area="Lists" asp-controller="ItemList" asp-action="Unfavorite" asp-route-id="@list.Id" class="icon-24 icon-heart-filled" title="Als Favorit entfernen"></a>
+                    </td>
                 </tr>
             }
         </tbody>

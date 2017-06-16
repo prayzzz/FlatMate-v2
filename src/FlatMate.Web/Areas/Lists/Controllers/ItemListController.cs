@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using FlatMate.Api.Areas.Lists.ItemList;
+using FlatMate.Api.Areas.Lists;
+using FlatMate.Api.Areas.Lists.Jso;
 using FlatMate.Web.Areas.Lists.Data;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
@@ -24,10 +25,13 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> Browse()
         {
-            var model = new ItemListBrowseVm();
-            ApplyTempResult(model);
+            var model = ApplyTempResult(new ItemListBrowseVm());
 
-            model.Lists = await _listApi.GetAllLists(null);
+            var allLists = _listApi.GetAllLists(new GetAllListsQuery());
+            var favorites = _listApi.GetAllLists(new GetAllListsQuery { FavoritesOnly = true });
+
+            model.Lists = await allLists;
+            model.Favorites = await favorites;
             return View(model);
         }
 
@@ -73,6 +77,22 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Unfavorite(int id)
+        {
+            var deleteFavorite = await _listApi.DeleteFavorite(new ItemListFavoriteJso { ItemListId = id });
+            if (deleteFavorite.IsError)
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(deleteFavorite);
+            }
+            else
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit entfernt"));
+            }
+
+            return RedirectToAction("Browse");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var getResult = await _listApi.GetList(id);
@@ -96,12 +116,10 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> My()
         {
-            var model = new ItemListMyVm();
+            var model = ApplyTempResult(new ItemListMyVm());
 
-            ApplyTempResult(model);
-
-            model.MyLists = await _listApi.GetAllLists(CurrentUserId);
-            model.Favorites = await _listApi.GetAllLists(null, true);
+            model.MyLists = await _listApi.GetAllLists(new GetAllListsQuery { OwnerId = CurrentUserId });
+            model.Favorites = await _listApi.GetAllLists(new GetAllListsQuery { FavoritesOnly = true });
             return View(model);
         }
 

@@ -3,7 +3,7 @@ using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Api.Areas.Lists.ItemList
+namespace FlatMate.Api.Areas.Lists.Jso
 {
     [Inject]
     public class ItemListMapper : IDboMapper

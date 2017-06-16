@@ -2,14 +2,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
+using FlatMate.Api.Areas.Lists.Jso;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Api.Areas.Lists.ItemList
+namespace FlatMate.Api.Areas.Lists
 {
+    public class GetAllListsQuery
+    {
+        public int? OwnerId { get; set; } = null;
+
+        public bool FavoritesOnly { get; set; } = false;
+    }
+
     [Route("api/v1/lists/itemlist")]
     public partial class ItemListApiController : ApiController
     {
@@ -42,9 +50,9 @@ namespace FlatMate.Api.Areas.Lists.ItemList
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ItemListJso>> GetAllLists([FromQuery] int? ownerId, [FromQuery] bool favoritesOnly = false)
+        public async Task<IEnumerable<ItemListJso>> GetAllLists([FromQuery] GetAllListsQuery getAllListsQuery)
         {
-            return (await _itemListService.GetListsAsync(ownerId, favoritesOnly)).Select(Map<ItemListJso>);
+            return (await _itemListService.GetListsAsync(getAllListsQuery.OwnerId, getAllListsQuery.FavoritesOnly)).Select(Map<ItemListJso>);
         }
 
         [HttpGet("{listId}")]

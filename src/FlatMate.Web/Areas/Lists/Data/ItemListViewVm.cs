@@ -1,4 +1,4 @@
-﻿using FlatMate.Api.Areas.Lists.ItemList;
+﻿using FlatMate.Api.Areas.Lists.Jso;
 using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Lists.Data
