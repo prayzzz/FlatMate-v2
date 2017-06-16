@@ -19,8 +19,6 @@ namespace FlatMate.Module.Account.DataAccess.Users
         public UserRepository(AccountDbContext dbContext, IMapper mapper) : base(mapper)
         {
             _dbContext = dbContext;
-
-            CreateFake(); // TODO remove
         }
 
         protected override FlatMateDbContext Context => _dbContext;
@@ -72,26 +70,6 @@ namespace FlatMate.Module.Account.DataAccess.Users
 
             Mapper.Map(authInfo, user);
             return await SaveChanges();
-        }
-
-        private void CreateFake()
-        {
-            if (Dbos.Any(u => u.UserName == "fake"))
-            {
-                return;
-            }
-
-            var userDbo = new UserDbo
-            {
-                UserName = "Fake",
-                Created = DateTime.Now,
-                Email = "fake@fake.de",
-                PasswordHash = "nmiVz6ju+do07UxMxjkYuiAj4s8CA0OB0AJhQulGBl6PG2xcxbvKbTdE/4C4uvv6upAORT/dJuf6ySEARSVsxg==",
-                Salt = "E1Uzdr7JKZ96JrOItvWFzg=="
-            };
-
-            Context.Add(userDbo);
-            Context.SaveChanges();
         }
     }
 }
