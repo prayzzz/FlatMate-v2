@@ -14,15 +14,8 @@
 .container {
     margin: 0 auto;
     max-width: 1020px;
-    padding: 1rem 1rem 0 1rem;
+    padding: .5rem 1rem 0 1rem;
     position: relative;
-
-    &.centered-form {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        max-width: 500px;
-    }
 
     h1, h2, h3, h4, h5, h6 {
         margin-bottom: 0;
@@ -30,11 +23,11 @@
 }
 
 .actions {
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
 
     a {
+        background-color: #fff;
         border-bottom: 2px $color-border solid;
-        margin: 0 .5rem 0 0;
         padding: .5rem;
 
         &:hover {
@@ -42,4 +35,17 @@
             border-bottom: 2px darken($color-border, 15%) solid;
         }
     }
+
+    a + a {
+        margin: 0 0 0 .5rem;
+    }
+}
+
+.standard-box {
+    box-shadow: 0 1px 1px 0 rgba(50,50,50,.4);
+    background-color: #fff;
+}
+
+.standard-box + .standard-box {
+    margin-top: .5rem;
 }

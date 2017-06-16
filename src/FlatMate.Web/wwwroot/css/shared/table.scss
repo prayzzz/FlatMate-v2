@@ -6,6 +6,12 @@ table {
     width: 100%;
 }
 
+thead {
+    th {
+        background-color: #f6f6f9
+    }
+}
+
 th, td {
     border-bottom: $border-thickness solid lighten($color-border, 10%);
     padding: .5rem 1rem;
