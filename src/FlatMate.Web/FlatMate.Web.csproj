@@ -52,9 +52,11 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
-  <Target Name="BundleFrontend" AfterTargets="PrepareForPublish">
-    <Exec Command="yarn" WorkingDirectory="wwwroot" />
+  <Target Name="BuildFrontend" AfterTargets="AfterBuild">
+    <Exec Command="yarn --force" WorkingDirectory="wwwroot" />
     <Exec Command="node_modules/.bin/webpack" WorkingDirectory="wwwroot" />
+  </Target>
+  <Target Name="PublishFrontend" AfterTargets="PrepareForPublish" DependsOnTargets="BuildFrontend">
     <ItemGroup>
       <DistFolder Include="wwwroot/dist/**/*" />
     </ItemGroup>
