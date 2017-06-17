@@ -25,7 +25,7 @@ namespace FlatMate.Migration.Tasks
             var migrationFolderPath = Path.GetFullPath(settings.MigrationsFolder);
             if (!Directory.Exists(migrationFolderPath))
             {
-                _logger.LogWarning($"Migrations folder {migrationFolderPath} not found");
+                _logger.LogError($"Migrations folder {migrationFolderPath} not found");
                 return Enumerable.Empty<string>();
             }
 
