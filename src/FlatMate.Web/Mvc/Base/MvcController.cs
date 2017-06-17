@@ -5,17 +5,18 @@ using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Mvc.Base
 {
     [Authorize]
     [ServiceFilter(typeof(MvcResultFilter))]
-    public class MvcController : Controller
+    public abstract class MvcController : Controller
     {
         private readonly IJsonService _jsonService;
 
-        public MvcController(IJsonService jsonService)
+        protected MvcController(IJsonService jsonService)
         {
             _jsonService = jsonService;
         }
@@ -37,6 +38,8 @@ namespace FlatMate.Web.Mvc.Base
                 return userId ?? "";
             }
         }
+
+        public abstract ILogger Logger { get; }
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
@@ -66,7 +69,15 @@ namespace FlatMate.Web.Mvc.Base
             // check for passed result from redirect
             if (TempData.TryGetValue(Constants.TempData.Result, out var data))
             {
-                model.Result = _jsonService.Deserialize<Result>(data as string);
+                try
+                {
+                    model.Result = _jsonService.Deserialize<Result>(data as string);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(0, e, data as string);
+                }
+                
                 TempData.Remove(Constants.TempData.Result);
             }
 
