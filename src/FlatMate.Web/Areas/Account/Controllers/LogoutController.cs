@@ -3,6 +3,7 @@ using FlatMate.Web.Mvc.Base;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
@@ -11,7 +12,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
     {
         private readonly LogoutApiController _logoutApi;
 
-        public LogoutController(LogoutApiController logoutApi, IJsonService jsonService) : base(jsonService)
+        public LogoutController(ILogger<LogoutController> logger, IJsonService jsonService, LogoutApiController logoutApi) : base(logger, jsonService)
         {
             _logoutApi = logoutApi;
         }

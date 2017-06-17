@@ -6,6 +6,7 @@ using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Lists.Controllers
@@ -16,7 +17,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         private readonly IJsonService _jsonService;
         private readonly ItemListApiController _listApi;
 
-        public ItemListController(ItemListApiController listApi, IJsonService jsonService) : base(jsonService)
+        public ItemListController(ILogger<ItemListController> logger, IJsonService jsonService, ItemListApiController listApi) : base(logger, jsonService)
         {
             _listApi = listApi;
             _jsonService = jsonService;
@@ -61,38 +62,6 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Favorite(int id)
-        {
-            var createFavorite = await _listApi.CreateFavorite(new ItemListFavoriteJso { ItemListId = id });
-            if (createFavorite.IsError)
-            {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(createFavorite);
-            }
-            else
-            {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit hinzugefügt"));
-            }
-
-            return RedirectToAction("Browse");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Unfavorite(int id)
-        {
-            var deleteFavorite = await _listApi.DeleteFavorite(new ItemListFavoriteJso { ItemListId = id });
-            if (deleteFavorite.IsError)
-            {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(deleteFavorite);
-            }
-            else
-            {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit entfernt"));
-            }
-
-            return RedirectToAction("Browse");
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var getResult = await _listApi.GetList(id);
@@ -114,6 +83,22 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Favorite(int id)
+        {
+            var createFavorite = await _listApi.CreateFavorite(new ItemListFavoriteJso { ItemListId = id });
+            if (createFavorite.IsError)
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(createFavorite);
+            }
+            else
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit hinzugefügt"));
+            }
+
+            return RedirectToAction("Browse");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> My()
         {
             var model = ApplyTempResult(new ItemListMyVm());
@@ -121,6 +106,22 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             model.MyLists = await _listApi.GetAllLists(new GetAllListsQuery { OwnerId = CurrentUserId });
             model.Favorites = await _listApi.GetAllLists(new GetAllListsQuery { FavoritesOnly = true });
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Unfavorite(int id)
+        {
+            var deleteFavorite = await _listApi.DeleteFavorite(new ItemListFavoriteJso { ItemListId = id });
+            if (deleteFavorite.IsError)
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(deleteFavorite);
+            }
+            else
+            {
+                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit entfernt"));
+            }
+
+            return RedirectToAction("Browse");
         }
 
         [HttpGet]

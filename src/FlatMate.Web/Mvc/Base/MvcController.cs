@@ -14,11 +14,13 @@ namespace FlatMate.Web.Mvc.Base
     [ServiceFilter(typeof(MvcResultFilter))]
     public abstract class MvcController : Controller
     {
-        private readonly IJsonService _jsonService;
+        protected readonly IJsonService JsonService;
+        protected readonly ILogger Logger;
 
-        protected MvcController(IJsonService jsonService)
+        protected MvcController(ILogger logger, IJsonService jsonService)
         {
-            _jsonService = jsonService;
+            Logger = logger;
+            JsonService = jsonService;
         }
 
         protected int CurrentUserId
@@ -38,8 +40,6 @@ namespace FlatMate.Web.Mvc.Base
                 return userId ?? "";
             }
         }
-
-        public abstract ILogger Logger { get; }
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
@@ -71,13 +71,13 @@ namespace FlatMate.Web.Mvc.Base
             {
                 try
                 {
-                    model.Result = _jsonService.Deserialize<Result>(data as string);
+                    model.Result = JsonService.Deserialize<Result>(data as string);
                 }
                 catch (Exception e)
                 {
                     Logger.LogError(0, e, data as string);
                 }
-                
+
                 TempData.Remove(Constants.TempData.Result);
             }
 

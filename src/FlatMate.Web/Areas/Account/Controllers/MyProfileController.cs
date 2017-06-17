@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
@@ -13,13 +12,11 @@ namespace FlatMate.Web.Areas.Account.Controllers
     [Area("Account")]
     public class MyProfileController : MvcController
     {
-        private readonly ILogger _logger;
         private readonly UserApiController _userApi;
 
-        public MyProfileController(UserApiController userApi, ILogger<MyProfileController> logger, IJsonService jsonService) : base(jsonService)
+        public MyProfileController(UserApiController userApi, ILogger<MyProfileController> logger, IJsonService jsonService) : base(logger, jsonService)
         {
             _userApi = userApi;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -61,7 +58,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
 
             if (result.IsError)
             {
-                _logger.LogError($"No profile found for user #${CurrentUserId}");
+                Logger.LogError($"No profile found for user #${CurrentUserId}");
                 return View("Error");
             }
 
