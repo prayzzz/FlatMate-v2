@@ -8,17 +8,14 @@
 
 <section class="container">
 
-    <div class="flex-row">
-        <div class="flex-row actions" style="width: 50%">
-            <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Meine Listen</a>
-        </div>
-
-        <div class="flex-row align-right actions" style="width: 50%">
-            <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
-        </div>
+    <div class="flex-row align-right actions">
+        <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
     </div>
+    
+</section>
 
-    @*<item-list-editor params="model: model" style="width: 100%"></item-list-editor>*@
+<section class="container">
+
     <item-list-editor style="width: 100%"></item-list-editor>
 
 </section>

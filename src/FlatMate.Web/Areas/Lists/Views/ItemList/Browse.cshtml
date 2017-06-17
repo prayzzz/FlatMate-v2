@@ -20,7 +20,18 @@
 
     <div class="standard-box">
         <table>
+
             <thead>
+            <tr>
+                <th width="75%">Name</th>
+                <th class="show-large">von</th>
+                <th class="icon"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var list in Model.Lists)
+            {
                 <tr>
                     <td>
                         <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
@@ -37,21 +48,7 @@
                         }
                     </td>
                 </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var list in Model.Lists)
-                {
-                    <tr>
-                        <td>
-                            <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
-                        </td>
-                        <td class="show-large">@list.Owner.UserName</td>
-                        <td class="icon">
-                            <a asp-area="Lists" asp-controller="ItemList" asp-action="Favorite" asp-route-id="@list.Id" class="icon-24 icon-heart" title="Als Favorit hinzufügen"></a>
-                        </td>
-                    </tr>
-                }
+            }
             </tbody>
         </table>
     </div>

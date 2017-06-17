@@ -16,7 +16,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
         private readonly ILogger _logger;
         private readonly UserApiController _userApi;
 
-        public MyProfileController(UserApiController userApi, ILogger logger, IJsonService jsonService) : base(jsonService)
+        public MyProfileController(UserApiController userApi, ILogger<MyProfileController> logger, IJsonService jsonService) : base(jsonService)
         {
             _userApi = userApi;
             _logger = logger;

@@ -8,13 +8,13 @@
 
 <section class="container">
 
-    <div class="flex-row actions">
+    <div class="flex-row align-right actions">
         <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@Model.Id">Zur Liste</a>
     </div>
 
 </section>
 
-<section class="container centered-form">
+<section class="container">
 
     <div class="alert-wrapper">
         @if (Model.IsError)
