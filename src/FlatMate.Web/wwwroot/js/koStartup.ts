@@ -2,7 +2,7 @@
 
 import * as ko from "knockout";
 import { ListsRegistry } from "./areas/lists/";
-import EnterKey from "./ko/bindingHandlers/EnterKey";
+import EnterKey from "./ko/bindingHandlers/enterKey";
 
 export class KoStartup {
     public static start() {

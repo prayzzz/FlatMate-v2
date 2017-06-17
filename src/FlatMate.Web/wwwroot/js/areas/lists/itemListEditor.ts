@@ -27,9 +27,7 @@ export class ItemListEditor {
         }
 
         let maxSortIndex = -1;
-        self
-            .groups()
-            .forEach(group => (maxSortIndex = group.sortIndex() > maxSortIndex ? group.sortIndex() : maxSortIndex));
+        self.groups().forEach(group => (maxSortIndex = group.sortIndex() > maxSortIndex ? group.sortIndex() : maxSortIndex));
 
         const groupVm = new ItemGroupViewModel(new ItemGroupJso(self.model.id));
         groupVm.name(groupName);

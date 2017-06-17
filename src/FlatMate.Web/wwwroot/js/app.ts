@@ -1,7 +1,7 @@
 ﻿import * as ko from "knockout";
-import { KoStartup } from "./KoStartup";
-import "./shared/ObjectExtensions";
-import { IWindow } from "./Window";
+import { KoStartup } from "./koStartup";
+import "./shared/objectExtensions";
+import { IWindow } from "./window";
 
 // add knockout to window
 declare var window: IWindow;

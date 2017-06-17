@@ -1,6 +1,6 @@
 ﻿import * as ko from "knockout";
 import { ItemListEditor, ItemListJso } from ".";
-import { StartupHelper } from "../../KoStartup";
+import { StartupHelper } from "../../koStartup";
 
 export class ListsRegistry {
     public static registerComponents() {

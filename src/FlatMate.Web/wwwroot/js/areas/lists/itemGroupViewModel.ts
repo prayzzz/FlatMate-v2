@@ -42,11 +42,7 @@ export class ItemGroupViewModel {
     }
 
     public dragEvents = (item: ItemViewModel): DragEvents<ItemViewModel> => {
-        return new DragEvents<ItemViewModel>(
-            this.dragZoneName,
-            this.reorder,
-            new DragZoneData<ItemViewModel>(item, this.items)
-        );
+        return new DragEvents<ItemViewModel>(this.dragZoneName, this.reorder, new DragZoneData<ItemViewModel>(item, this.items));
     };
 
     public dragStart = (item: ItemViewModel) => {
