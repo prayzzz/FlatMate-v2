@@ -14,13 +14,13 @@ namespace FlatMate.Web.Areas.Lists.Controllers
     [Area("Lists")]
     public class ItemListController : MvcController
     {
-        private readonly IJsonService _jsonService;
         private readonly ItemListApiController _listApi;
 
-        public ItemListController(ILogger<ItemListController> logger, IJsonService jsonService, ItemListApiController listApi) : base(logger, jsonService)
+        public ItemListController(ItemListApiController listApi, 
+                                  ILogger<ItemListController> logger,
+                                  IMvcControllerService controllerService) : base(logger, controllerService)
         {
             _listApi = listApi;
-            _jsonService = jsonService;
         }
 
         [HttpGet]
@@ -64,21 +64,21 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var getResult = await _listApi.GetList(id);
-            if (getResult.IsError)
+            var getList = await _listApi.GetList(id);
+            if (getList.IsError)
             {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(getResult);
+                TempData[Constants.TempData.Result] = JsonService.Serialize(getList);
                 return RedirectToAction("My");
             }
 
-            var result = await _listApi.DeleteListAsync(id);
-            if (result.IsError)
+            var deleteList = await _listApi.DeleteListAsync(id);
+            if (deleteList.IsError)
             {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(new ErrorResult(result.ErrorType, $"Die Liste '{getResult.Data.Name}' konnte nicht gelöscht werden."));
+                TempData[Constants.TempData.Result] = JsonService.Serialize(new ErrorResult(deleteList.ErrorType, $"Die Liste '{getList.Data.Name}' konnte nicht gelöscht werden."));
                 return RedirectToAction("My");
             }
 
-            TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult($"Die Liste '{getResult.Data.Name}' wurde gelöscht."));
+            TempData[Constants.TempData.Result] = JsonService.Serialize(new SuccessResult($"Die Liste '{getList.Data.Name}' wurde gelöscht."));
             return RedirectToAction("My");
         }
 
@@ -88,11 +88,17 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             var createFavorite = await _listApi.CreateFavorite(new ItemListFavoriteJso { ItemListId = id });
             if (createFavorite.IsError)
             {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(createFavorite);
+                TempData[Constants.TempData.Result] = JsonService.Serialize(createFavorite);
             }
             else
             {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit hinzugefügt"));
+                TempData[Constants.TempData.Result] = JsonService.Serialize(new SuccessResult("Als Favorit hinzugefügt"));
+            }
+
+            var referer = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
             }
 
             return RedirectToAction("Browse");
@@ -114,27 +120,32 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             var deleteFavorite = await _listApi.DeleteFavorite(new ItemListFavoriteJso { ItemListId = id });
             if (deleteFavorite.IsError)
             {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(deleteFavorite);
+                TempData[Constants.TempData.Result] = JsonService.Serialize(deleteFavorite);
             }
             else
             {
-                TempData[Constants.TempData.Result] = _jsonService.Serialize(new SuccessResult("Als Favorit entfernt"));
+                TempData[Constants.TempData.Result] = JsonService.Serialize(new SuccessResult("Als Favorit entfernt"));
             }
-
+            
+            var referer = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+            
             return RedirectToAction("Browse");
         }
 
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var result = await _listApi.GetList(id);
-
-            if (!result.IsSuccess)
+            var getList = await _listApi.GetList(id);
+            if (getList.IsError)
             {
                 return RedirectToAction("My");
             }
 
-            var itemList = result.Data;
+            var itemList = getList.Data;
             var model = new ItemListUpdateVm { Description = itemList.Description, Id = itemList.Id.Value, IsPublic = itemList.IsPublic, Name = itemList.Name };
             return View(model);
         }
@@ -148,10 +159,10 @@ namespace FlatMate.Web.Areas.Lists.Controllers
                 return View(model);
             }
 
-            var result = await _listApi.Update(id, new ItemListJso { Description = model.Description, Id = model.Id, IsPublic = model.IsPublic, Name = model.Name });
-            if (!result.IsSuccess)
+            var updateList = await _listApi.Update(id, new ItemListJso { Description = model.Description, Id = model.Id, IsPublic = model.IsPublic, Name = model.Name });
+            if (updateList.IsError)
             {
-                model.Result = result;
+                model.Result = updateList;
                 return View(model);
             }
 
@@ -163,14 +174,13 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         [HttpGet]
         public async Task<IActionResult> View(int id)
         {
-            var result = await _listApi.GetList(id, true);
-
-            if (!result.IsSuccess)
+            var getList = await _listApi.GetList(id, true);
+            if (getList.IsError)
             {
                 return RedirectToAction("My");
             }
 
-            var model = new ItemListViewVm { List = result.Data };
+            var model = new ItemListViewVm { List = getList.Data };
             return View(model);
         }
     }

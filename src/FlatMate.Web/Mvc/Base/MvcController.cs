@@ -17,10 +17,10 @@ namespace FlatMate.Web.Mvc.Base
         protected readonly IJsonService JsonService;
         protected readonly ILogger Logger;
 
-        protected MvcController(ILogger logger, IJsonService jsonService)
+        protected MvcController(ILogger logger, IMvcControllerService controllerService)
         {
             Logger = logger;
-            JsonService = jsonService;
+            JsonService = controllerService.JsonService;
         }
 
         protected int CurrentUserId

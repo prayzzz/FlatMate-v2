@@ -2,7 +2,6 @@
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
-using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,7 +15,9 @@ namespace FlatMate.Web.Areas.Account.Controllers
     {
         private readonly UserApiController _userApi;
 
-        public CreateController(UserApiController userApi, ILogger<CreateController> logger, IJsonService jsonService) : base(logger, jsonService)
+        public CreateController(UserApiController userApi,
+                                ILogger<CreateController> logger,
+                                IMvcControllerService controllerService) : base(logger, controllerService)
         {
             _userApi = userApi;
         }

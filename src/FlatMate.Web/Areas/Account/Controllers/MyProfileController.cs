@@ -2,7 +2,6 @@
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
-using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
@@ -14,7 +13,9 @@ namespace FlatMate.Web.Areas.Account.Controllers
     {
         private readonly UserApiController _userApi;
 
-        public MyProfileController(UserApiController userApi, ILogger<MyProfileController> logger, IJsonService jsonService) : base(logger, jsonService)
+        public MyProfileController(UserApiController userApi,
+                                   ILogger<MyProfileController> logger,
+                                   IMvcControllerService controllerService) : base(logger, controllerService)
         {
             _userApi = userApi;
         }
