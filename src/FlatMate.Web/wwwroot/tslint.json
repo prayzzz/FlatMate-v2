@@ -13,6 +13,9 @@
         "eofline": false,
         "trailing-comma": [
             false
+        ],
+        "semicolon": [
+            "ignore-bound-class-methods"
         ]
     }
 }

@@ -4,7 +4,6 @@ using FlatMate.Api.Areas.Lists.Jso;
 using FlatMate.Web.Areas.Lists.Data;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
-using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
@@ -16,7 +15,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
     {
         private readonly ItemListApiController _listApi;
 
-        public ItemListController(ItemListApiController listApi, 
+        public ItemListController(ItemListApiController listApi,
                                   ILogger<ItemListController> logger,
                                   IMvcControllerService controllerService) : base(logger, controllerService)
         {
@@ -126,13 +125,13 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             {
                 TempData[Constants.TempData.Result] = JsonService.Serialize(new SuccessResult("Als Favorit entfernt"));
             }
-            
+
             var referer = HttpContext.Request.Headers["Referer"].ToString();
             if (!string.IsNullOrEmpty(referer))
             {
                 return Redirect(referer);
             }
-            
+
             return RedirectToAction("Browse");
         }
 

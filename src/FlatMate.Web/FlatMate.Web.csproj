@@ -14,6 +14,14 @@
     <Content Include="_Migrations/**" CopyToPublishDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="wwwroot/js\shared\alert\nmzthq5z.2ta~" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\js\shared\alert\alertViewModel.ts" />
+    <Content Include="wwwroot\js\shared\alert\jso.ts" />
+    <Content Include="wwwroot\js\shared\index.ts" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />

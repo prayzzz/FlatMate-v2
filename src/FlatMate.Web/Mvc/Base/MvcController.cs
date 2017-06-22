@@ -41,6 +41,10 @@ namespace FlatMate.Web.Mvc.Base
             }
         }
 
+        /// <summary>
+        /// Sets the current user into the viewmodel after an action is executed.
+        /// Viewmodel must be of type <see cref="BaseViewModel"/>.
+        /// </summary>
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             base.OnActionExecuted(context);

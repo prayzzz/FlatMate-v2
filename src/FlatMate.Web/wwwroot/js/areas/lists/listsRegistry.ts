@@ -8,7 +8,7 @@ export class ListsRegistry {
         ko.components.register("item-list-editor", {
             template: { element: "item-list-editor-template" },
             viewModel: function() {
-                return new ItemListEditor(StartupHelper.readModel<ItemListJso>());
+                return new ItemListEditor(StartupHelper.readViewData<ItemListJso>("itemlist"));
             }
         });
     }

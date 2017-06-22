@@ -2,6 +2,7 @@
 
 import * as ko from "knockout";
 import { ListsRegistry } from "./areas/lists/";
+import { SharedRegistry } from "./shared/";
 import EnterKey from "./ko/bindingHandlers/enterKey";
 
 export class KoStartup {
@@ -18,14 +19,16 @@ export class KoStartup {
 
     private static registerComponents() {
         ListsRegistry.registerComponents();
+        SharedRegistry.registerComponents();
     }
 }
 
 export class StartupHelper {
-    public static readModel<T>(): T {
-        const element = document.getElementById("view-data");
+    public static readViewData<T>(idSuffix: string): T {
+        const elementId = "data-" + idSuffix;
+        const element = document.getElementById(elementId);
         if (!element || !element.innerText.trim()) {
-            throw new Error("no data available");
+            throw new Error(`no data available for ${elementId}`);
         }
 
         return JSON.parse(element.innerText) as T;

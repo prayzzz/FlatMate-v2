@@ -8,17 +8,6 @@
 
 <section class="container">
 
-    <div class="alert-wrapper">
-        @if (Model.IsError)
-        {
-            <div class="alert alert-danger">@Model.Result.Message</div>
-        }
-        else if (Model.IsSuccess)
-        {
-            <div class="alert alert-success">@Model.Result.Message</div>
-        }
-    </div>
-
     <div class="centered-form standard-box">
         <form asp-area="Lists" asp-controller="ItemList" asp-action="Create" method="post">
             <fieldset>
