@@ -55,6 +55,11 @@ namespace FlatMate.Web.Mvc.Base
                 return;
             }
 
+            if (viewResult.Model == null)
+            {
+                viewResult.ViewData.Model = new EmptyViewModel();
+            }
+
             var model = viewResult.Model as BaseViewModel;
             if (model == null)
             {

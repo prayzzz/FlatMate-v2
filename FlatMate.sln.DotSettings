@@ -255,7 +255,7 @@
 	<s:String x:Key="/Default/CodeStyle/TypeScriptCodeStyle/ImportReferenceStyle/@EntryValue">ECMAScript6</s:String>
 	<s:Boolean x:Key="/Default/CodeStyle/TypeScriptCodeStyle/NoImplicitAny/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FileMasksThirdParty/=_002A_002A_005Cnode_005Fmodules_005C_002A_002A/@EntryIndexedValue">True</s:Boolean>
-	<s:String x:Key="/Default/Environment/ExternalSources/NavigationMode/@EntryValue">Disabled</s:String>
+	<s:String x:Key="/Default/Environment/ExternalSources/NavigationMode/@EntryValue">Sources</s:String>
 	<s:String x:Key="/Default/Environment/Hierarchy/PsiConfigurationSettingsKey/CustomLocation/@EntryValue">C:\Users\patri\AppData\Local\JetBrains\Transient\ReSharperPlatformVs15\v08_3336929b\SolutionCaches</s:String>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EAddAccessorOwnerDeclarationBracesMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EAlwaysTreatStructAsNotReorderableMigration/@EntryIndexedValue">True</s:Boolean>

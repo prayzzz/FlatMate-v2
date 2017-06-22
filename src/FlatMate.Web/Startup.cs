@@ -63,7 +63,7 @@ namespace FlatMate.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();
@@ -98,8 +98,10 @@ namespace FlatMate.Web
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute("default", "{area=Home}/{controller=Dashboard}/{action=Index}");
+                routes.MapRoute("404", "{*url}", new { area = "", controller = "Error", action = "PageNotFound" });
             });
 
             // load api controllers
