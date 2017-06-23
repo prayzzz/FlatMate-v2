@@ -53,8 +53,12 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
   <Target Name="BuildFrontend" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <FrontendFiles Include="./wwwroot/dist/*" />
+    </ItemGroup>
+    <Delete Files="@(FrontendFiles)" />
     <Exec Command="yarn --force" WorkingDirectory="wwwroot" />
-    <Exec Command="node_modules/.bin/webpack" WorkingDirectory="wwwroot" />
+    <Exec Command="./node_modules/.bin/webpack --env=$(Configuration)" WorkingDirectory="wwwroot" />
   </Target>
   <Target Name="PublishFrontend" AfterTargets="PrepareForPublish" DependsOnTargets="BuildFrontend">
     <ItemGroup>
