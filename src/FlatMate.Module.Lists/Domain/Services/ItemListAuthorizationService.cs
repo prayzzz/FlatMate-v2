@@ -38,97 +38,37 @@ namespace FlatMate.Module.Lists.Domain.Services
 
         public bool CanDelete(ItemList entity)
         {
-            if (entity.OwnerId == CurrentUser.Id)
-            {
-                return true;
-            }
-
-            return false;
+            return entity.OwnerId == CurrentUser.Id;
         }
 
         public bool CanDelete(Item entity)
         {
-            if (entity.IsPublic)
-            {
-                return true;
-            }
-
-            if (entity.OwnerId == CurrentUser.Id)
-            {
-                return true;
-            }
-
-            return false;
+            return entity.IsPublic || entity.OwnerId == CurrentUser.Id;
         }
 
         public bool CanDelete(ItemGroup entity)
         {
-            if (entity.IsPublic)
-            {
-                return true;
-            }
-
-            if (entity.OwnerId == CurrentUser.Id)
-            {
-                return true;
-            }
-
-            return false;
+            return entity.IsPublic || entity.OwnerId == CurrentUser.Id;
         }
 
         public bool CanEdit(ItemList entity)
         {
-            if (entity.OwnerId == CurrentUser.Id)
-            {
-                return true;
-            }
-
-            return false;
+            return entity.OwnerId == CurrentUser.Id;
         }
 
         public bool CanEdit(ItemGroup entity)
         {
-            if (entity.IsPublic)
-            {
-                return true;
-            }
-
-            if (entity.OwnerId == CurrentUser.Id)
-            {
-                return true;
-            }
-
-            return false;
+            return entity.IsPublic || entity.OwnerId == CurrentUser.Id;
         }
 
         public bool CanEdit(Item entity)
         {
-            if (entity.IsPublic)
-            {
-                return true;
-            }
-
-            if (entity.OwnerId == CurrentUser.Id)
-            {
-                return true;
-            }
-
-            return false;
+            return entity.IsPublic || entity.OwnerId == CurrentUser.Id;
         }
 
         public bool CanRead(IOwnedEntity entity)
         {
-            if (entity.IsPublic)
-            {
-                return true;
-            }
-
-            if (entity.OwnerId == CurrentUser.Id)
-            {
-                return true;
-            }
-
-            return false;
+            return entity.IsPublic || entity.OwnerId == CurrentUser.Id;
         }
     }
 }

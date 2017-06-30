@@ -9,7 +9,10 @@
 <section class="container">
 
     <div class="flex-row align-right actions">
-        <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
+        @if (Model.List.Owner.Id == Model.CurrentUser.Id)
+        {
+            <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
+        }
     </div>
 
 </section>

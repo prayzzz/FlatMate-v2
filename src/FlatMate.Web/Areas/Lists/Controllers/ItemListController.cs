@@ -145,6 +145,12 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             }
 
             var itemList = getList.Data;
+            
+            if (itemList.Owner.Id != CurrentUserId)
+            {
+                return TryRedirectToReferer(RedirectToAction("My"));
+            }
+
             var model = new ItemListUpdateVm { Description = itemList.Description, Id = itemList.Id.Value, IsPublic = itemList.IsPublic, Name = itemList.Name };
             return View(model);
         }
@@ -178,6 +184,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             {
                 return RedirectToAction("My");
             }
+
 
             var model = new ItemListViewVm { List = getList.Data };
             return View(model);

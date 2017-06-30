@@ -92,5 +92,19 @@ namespace FlatMate.Web.Mvc.Base
 
             return model;
         }
+
+        protected IActionResult TryRedirectToReferer(IActionResult fallback)
+        {
+            var referer = HttpContext.Request.Headers["Referer"].ToString();
+
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+            else
+            {
+                return fallback;
+            }
+        }
     }
 }
