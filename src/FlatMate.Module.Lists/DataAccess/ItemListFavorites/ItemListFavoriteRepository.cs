@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
+using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
@@ -12,15 +15,17 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
     public class ItemListFavoriteRepository : Repository, IItemListFavoriteRepository
     {
         private readonly ListsDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public ItemListFavoriteRepository(ListsDbContext context)
+        public ItemListFavoriteRepository(ListsDbContext context, IMapper mapper)
         {
             _dbContext = context;
+            _mapper = mapper;
         }
 
         protected override FlatMateDbContext Context => _dbContext;
 
-        protected IQueryable<ItemListFavoriteDbo> Dbos => _dbContext.ItemListFavorites;
+        protected IQueryable<ItemListFavoriteDbo> Dbos => _dbContext.ItemListFavorites.Include(x => x.ItemList);
 
         public async Task<Result> DeleteAsync(int userId, int listId)
         {
@@ -52,6 +57,16 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
         {
             return Dbos.Where(x => x.UserId == userId && x.ItemListId == listId)
                        .FirstOrDefaultAsync();
+        }
+
+
+        public async Task<IEnumerable<ItemList>> GetFavoritesAsync(int userId)
+        {
+            var lists = await _dbContext.ItemListFavorites.Where(x => x.UserId == userId)
+                                                          .Select(x => x.ItemList)
+                                                          .ToListAsync();
+            
+            return lists.Select(_mapper.Map<ItemList>).ToList();
         }
     }
 }

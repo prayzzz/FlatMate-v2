@@ -108,12 +108,12 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return getList.WithDataAs(_mapper.Map<ItemListDto>);
         }
 
-        public async Task<IEnumerable<ItemListDto>> GetListsAsync(int? ownerId, bool favoritesOnly)
+        public async Task<IEnumerable<ItemListDto>> GetListsAsync(int? ownerId)
         {
-            return (await _itemListRepository.GetAllAsync(ownerId, favoritesOnly)).Where(l => _authorizationService.CanRead(l))
-                                                                                  .Select(_mapper.Map<ItemListDto>);
+            return (await _itemListRepository.GetAllAsync(ownerId)).Where(l => _authorizationService.CanRead(l))
+                                                                   .Select(_mapper.Map<ItemListDto>);
         }
-
+        
         public async Task<Result<ItemListDto>> UpdateAsync(int listId, ItemListDto dto)
         {
             // the user must be logged in

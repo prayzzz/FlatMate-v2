@@ -14,8 +14,6 @@ namespace FlatMate.Api.Areas.Lists
     public class GetAllListsQuery
     {
         public int? OwnerId { get; set; } = null;
-
-        public bool FavoritesOnly { get; set; } = false;
     }
 
     [Route("api/v1/lists/itemlist")]
@@ -37,6 +35,7 @@ namespace FlatMate.Api.Areas.Lists
 
 
         [HttpPost]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public Task<Result<ItemListJso>> CreateList([FromBody] ItemListJso jso)
         {
             return _itemListService.CreateAsync(Map<ItemListDto>(jso))
@@ -44,18 +43,21 @@ namespace FlatMate.Api.Areas.Lists
         }
 
         [HttpDelete("{listId}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public Task<Result> DeleteListAsync(int listId)
         {
             return _itemListService.DeleteListAsync(listId);
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IEnumerable<ItemListJso>> GetAllLists([FromQuery] GetAllListsQuery getAllListsQuery)
         {
-            return (await _itemListService.GetListsAsync(getAllListsQuery.OwnerId, getAllListsQuery.FavoritesOnly)).Select(Map<ItemListJso>);
+            return (await _itemListService.GetListsAsync(getAllListsQuery.OwnerId)).Select(Map<ItemListJso>);
         }
 
         [HttpGet("{listId}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<Result<ItemListJso>> GetList(int listId, [FromQuery] bool full = false)
         {
             var getList = await _itemListService.GetListAsync(listId);
@@ -78,6 +80,7 @@ namespace FlatMate.Api.Areas.Lists
         }
 
         [HttpPut("{listId}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public Task<Result<ItemListJso>> Update(int listId, [FromBody] ItemListJso jso)
         {
             return _itemListService.UpdateAsync(listId, Map<ItemListDto>(jso))

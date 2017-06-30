@@ -18,18 +18,20 @@ namespace FlatMate.Api.Areas.Lists
         }
 
         [HttpDelete("{listId}/group/{groupId}")]
-        public Task<Result> DeleteGroupAsync(int groupId)
+        public Task<Result> DeleteGroup(int groupId)
         {
             return _itemListService.DeleteGroupAsync(groupId);
         }
 
         [HttpGet("{listId}/group")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IEnumerable<ItemGroupJso>> GetAllGroups(int listId)
         {
             return (await _itemListService.GetGroupsAsync(listId)).Select(Map<ItemGroupJso>);
         }
 
         [HttpGet("{listId}/group/{groupId}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<Result<ItemGroupJso>> GetGroup(int listId, int groupId, [FromQuery] bool full = false)
         {
             var getGroup = await _itemListService.GetGroupAsync(groupId);

@@ -28,7 +28,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             var model = ApplyTempResult(new ItemListBrowseVm());
 
             var allLists = _listApi.GetAllLists(new GetAllListsQuery());
-            var favorites = _listApi.GetAllLists(new GetAllListsQuery { FavoritesOnly = true });
+            var favorites = _listApi.GetFavorites();
 
             model.Lists = await allLists;
             model.Favorites = await favorites;
@@ -109,7 +109,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             var model = ApplyTempResult(new ItemListMyVm());
 
             model.MyLists = await _listApi.GetAllLists(new GetAllListsQuery { OwnerId = CurrentUserId });
-            model.Favorites = await _listApi.GetAllLists(new GetAllListsQuery { FavoritesOnly = true });
+            model.Favorites = await _listApi.GetFavorites();
             return View(model);
         }
 

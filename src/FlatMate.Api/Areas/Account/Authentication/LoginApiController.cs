@@ -22,6 +22,7 @@ namespace FlatMate.Api.Areas.Account.Authentication
         }
 
         [HttpPost]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<Result<UserInfoJso>> LoginAsync([FromBody] LoginJso loginJso)
         {
             var authorize = await _userService.AuthorizeAsync(loginJso.UserName, loginJso.Password);

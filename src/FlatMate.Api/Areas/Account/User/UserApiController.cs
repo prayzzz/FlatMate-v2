@@ -22,12 +22,14 @@ namespace FlatMate.Api.Areas.Account.User
         }
 
         [HttpPost("password")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public Task<Result> ChangePasswordAsync([FromBody] ChangePasswordJso jso)
         {
             return _userService.ChangePasswordAsync(jso.OldPassword, jso.NewPassword);
         }
 
         [HttpPost]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public Task<Result<UserJso>> CreateAsync([FromBody] CreateUserJso jso)
         {
             return _userService.CreateAsync(Map<UserDto>(jso), jso.Password)
@@ -44,6 +46,7 @@ namespace FlatMate.Api.Areas.Account.User
         }
 
         [HttpGet("{id}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public Task<Result<UserInfoJso>> GetAsync(int id)
         {
             return _userService.GetAsync(id)

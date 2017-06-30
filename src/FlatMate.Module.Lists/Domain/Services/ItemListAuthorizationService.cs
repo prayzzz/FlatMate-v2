@@ -9,7 +9,11 @@ namespace FlatMate.Module.Lists.Domain.Services
     {
         CurrentUser CurrentUser { get; }
 
-        bool CanDelete(IOwnedEntity entity);
+        bool CanDelete(Item entity);
+
+        bool CanDelete(ItemList entity);
+
+        bool CanDelete(ItemGroup entity);
 
         bool CanEdit(Item entity);
 
@@ -32,8 +36,38 @@ namespace FlatMate.Module.Lists.Domain.Services
 
         public CurrentUser CurrentUser => _authenticationContext.CurrentUser;
 
-        public bool CanDelete(IOwnedEntity entity)
+        public bool CanDelete(ItemList entity)
         {
+            if (entity.OwnerId == CurrentUser.Id)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanDelete(Item entity)
+        {
+            if (entity.IsPublic)
+            {
+                return true;
+            }
+
+            if (entity.OwnerId == CurrentUser.Id)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanDelete(ItemGroup entity)
+        {
+            if (entity.IsPublic)
+            {
+                return true;
+            }
+
             if (entity.OwnerId == CurrentUser.Id)
             {
                 return true;

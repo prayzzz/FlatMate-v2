@@ -6,6 +6,7 @@ namespace FlatMate.Api.Areas.Account.Authentication
     public class LogoutApiController : Controller
     {
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async void LogoutAsync()
         {
             await HttpContext.Authentication.SignOutAsync("FlatMate");

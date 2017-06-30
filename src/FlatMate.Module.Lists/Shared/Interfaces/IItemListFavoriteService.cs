@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Shared.Interfaces
@@ -8,5 +10,7 @@ namespace FlatMate.Module.Lists.Shared.Interfaces
         Task<Result> SetAsFavorite(int listId);
 
         Task<Result> DeleteFavorite(int listId);
+
+        Task<IEnumerable<ItemListDto>> GetFavorites();
     }
 }

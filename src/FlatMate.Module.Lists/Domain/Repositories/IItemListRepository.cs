@@ -7,6 +7,6 @@ namespace FlatMate.Module.Lists.Domain.Repositories
 {
     public interface IItemListRepository : IRepository<ItemList>
     {
-        Task<IEnumerable<ItemList>> GetAllAsync(int? ownerId, bool favoritesOnly);
+        Task<IEnumerable<ItemList>> GetAllAsync(int? ownerId);
     }
 }

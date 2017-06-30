@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FlatMate.Module.Lists.Domain.Models;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Domain.Repositories
@@ -8,5 +10,7 @@ namespace FlatMate.Module.Lists.Domain.Repositories
         Task<Result> DeleteAsync(int userId, int listId);
 
         Task<Result> SaveAsync(int userId, int listId);
+
+        Task<IEnumerable<ItemList>> GetFavoritesAsync(int userId);
     }
 }
