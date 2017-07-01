@@ -13,6 +13,8 @@ export class ItemGroupViewModel {
     public readonly items = ko.observableArray<ItemViewModel>();
     public readonly newItemName = ko.observable("");
     public readonly dragZone: DragZone<ItemViewModel>;
+    public readonly isAddLoading = ko.observable(false);
+    public readonly isRemoveLoading = ko.observable(false);
 
     private readonly apiClient = new ItemListApi();
     private readonly model = ko.observable<ItemGroupJso>();
@@ -85,9 +87,11 @@ export class ItemGroupViewModel {
     };
 
     /**
-   * Creates an new item from the itemName textfield and saves it.
-   */
+     * Creates an new item from the itemName textfield and saves it.
+     */
     public addItem = () => {
+        const self = this;
+
         const itemName = this.newItemName().trim();
         if (!itemName) {
             return;
@@ -99,10 +103,18 @@ export class ItemGroupViewModel {
         const itemVm = new ItemViewModel(new ItemJso(this.model().itemListId, this.model().id));
         itemVm.name(itemName);
         itemVm.sortIndex(maxSortIndex + 1);
-        itemVm.save().then(() => {
-            this.items.push(itemVm);
-            this.newItemName("");
-        });
+
+        self.isAddLoading(true);
+        itemVm.save().then(
+            () => {
+                this.items.push(itemVm);
+                this.newItemName("");
+                self.isAddLoading(false);
+            },
+            err => {
+                self.isAddLoading(false);
+            }
+        );
     };
 
     /**
@@ -110,7 +122,15 @@ export class ItemGroupViewModel {
      */
     public removeItem = (item: ItemViewModel) => {
         const self = this;
-        item.delete().then(() => self.items.remove(item));
+
+        item.delete().then(
+            () => {
+                self.items.remove(item);
+            },
+            err => {
+                /* Handle Error */
+            }
+        );
     };
 
     /**
@@ -152,9 +172,20 @@ export class ItemGroupViewModel {
      * Deletes the this group
      */
     public delete(): Promise<void> {
+        const self = this;
         const model = this.model();
+
         if (model.id) {
-            return this.apiClient.deleteGroup(model.itemListId, model.id);
+            this.isRemoveLoading(true);
+
+            return this.apiClient.deleteGroup(model.itemListId, model.id).then(
+                () => {
+                    self.isRemoveLoading(false);
+                },
+                err => {
+                    self.isRemoveLoading(false);
+                }
+            );
         }
 
         return new Promise<void>((resolve, reject) => resolve());

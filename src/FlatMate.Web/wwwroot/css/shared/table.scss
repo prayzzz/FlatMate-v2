@@ -1,5 +1,4 @@
-﻿@import '../var/colors.scss';
-@import '../var/sizes.scss';
+﻿@import '../variables.scss';
 
 table {
     border-collapse: collapse;
@@ -8,11 +7,12 @@ table {
 
 thead {
     th {
-        background-color: #f6f6f9
+        background-color: #f6f6f9;
     }
 }
 
-th, td {
+th,
+td {
     border-bottom: $border-thickness solid lighten($color-border, 10%);
     padding: .5rem 1rem;
     text-align: left;
@@ -22,7 +22,7 @@ th, td {
     }
 
     &.icon {
-        width: 32px;
+        width: $icon-size * 2;
         padding: 0;
         text-align: center;
     }
@@ -45,7 +45,8 @@ td {
 
 /* desktop */
 @media all and (min-width: 769px) {
-    th, td {
+    th,
+    td {
         &.show-large {
             display: table-cell;
         }
@@ -71,7 +72,7 @@ div.table {
             vertical-align: middle;
 
             &.icon {
-                width: 32px;
+                width: $icon-size * 2;
                 padding: .5rem 0;
                 text-align: center;
             }
@@ -82,7 +83,6 @@ div.table {
         }
     }
 
-
     input {
         margin-bottom: 0;
     }
@@ -92,7 +92,7 @@ div.table {
     }
 
     .dragging {
-        box-shadow: inset 0 0 10px #DDD;
+        box-shadow: inset 0 0 10px #ddd;
     }
 
     // hide all icons except the grip

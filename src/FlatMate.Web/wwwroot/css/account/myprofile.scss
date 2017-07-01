@@ -1,5 +1,4 @@
-﻿@import '../var/colors.scss';
-@import '../var/sizes.scss';
+﻿@import '../variables.scss';
 
 .picture-wrapper {
     border: 2px $color-border solid;
@@ -11,7 +10,6 @@
         width: 150px;
     }
 }
-
 
 .informations {
     .key {

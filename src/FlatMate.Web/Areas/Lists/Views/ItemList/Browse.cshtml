@@ -11,33 +11,40 @@
         <table>
 
             <thead>
-            <tr>
-                <th width="75%">Name</th>
-                <th class="show-large">von</th>
-                <th class="icon"></th>
-            </tr>
+                <tr>
+                    <th width="75%">Name</th>
+                    <th class="show-large">von</th>
+                    <th class="icon"></th>
+                </tr>
             </thead>
 
             <tbody>
-            @foreach (var list in Model.Lists)
+                @foreach (var list in Model.Lists)
             {
-                <tr>
-                    <td>
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
-                    </td>
-                    <td class="show-large">@list.Owner.UserName</td>
-                    <td class="icon">
-                        @if (Model.Favorites.Any(l => l.Id == list.Id))
-                        {
-                            <a asp-area="Lists" asp-controller="ItemList" asp-action="Unfavorite" asp-route-id="@list.Id" class="icon-24 icon-heart-filled" title="Als Favorit entfernen"></a>
-                        }
-                        else
-                        {
-                            <a asp-area="Lists" asp-controller="ItemList" asp-action="Favorite" asp-route-id="@list.Id" class="icon-24 icon-heart" title="Als Favorit hinzufügen"></a>
-                        }
-                    </td>
-                </tr>
-            }
+                    <tr>
+                        <td>
+                            <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
+                        </td>
+                        <td class="show-large">@list.Owner.UserName</td>
+                        <td class="icon">
+                            @if (Model.Favorites.Any(l => l.Id == list.Id))
+                            {
+                                <a asp-area="Lists" asp-controller="ItemList" asp-action="Unfavorite" asp-route-id="@list.Id" class="fa-host" title="Als Favorit entfernen">
+                                    <span class="fa-stack">
+                                        <i class="fa fa-heart fa-stack-1x"></i>
+                                        <i class="fa fa-ban fa-stack-2x danger"></i>
+                                    </span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-area="Lists" asp-controller="ItemList" asp-action="Favorite" asp-route-id="@list.Id" class="fa-host" title="Als Favorit hinzufügen">
+                                    <i class="fa fa-heart" aria-hidden="true"></i>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

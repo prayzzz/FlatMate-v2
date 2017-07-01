@@ -4,6 +4,7 @@ import { ItemGroupJso, ItemGroupViewModel, ItemListJso } from ".";
 export class ItemListEditor {
     public readonly newGroupName = ko.observable("");
     public readonly groups = ko.observableArray<ItemGroupViewModel>();
+    public readonly isAddLoading = ko.observable(false);
 
     private readonly model: ItemListJso;
 
@@ -33,21 +34,26 @@ export class ItemListEditor {
         groupVm.name(groupName);
         groupVm.sortIndex(maxSortIndex + 1);
 
+        self.isAddLoading(true);
         groupVm.save().then(
             () => {
                 self.groups.push(groupVm);
                 self.newGroupName("");
+                self.isAddLoading(false);
             },
             err => {
-                /* Handle error */
+                self.isAddLoading(false);
             }
         );
     };
 
     public removeGroup = (group: ItemGroupViewModel) => {
         const self = this;
+
         group.delete().then(
-            () => self.groups.remove(group),
+            () => {
+                self.groups.remove(group);
+            },
             err => {
                 /* Handle error */
             }

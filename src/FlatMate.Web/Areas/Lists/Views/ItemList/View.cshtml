@@ -43,7 +43,12 @@
                         </div>*@
                 </div>
                 <div class="cell icon">
-                    <a class="icon-24 icon-cross-circle" data-bind="click: $parent.removeGroup"></a>
+
+                    <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeGroup, visible: !isRemoveLoading()">
+                        <i class="fa fa-times danger" aria-hidden="true"></i>
+                    </a>
+                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isRemoveLoading"></i>
+
                 </div>
             </div>
 
@@ -51,7 +56,9 @@
             <div class="row draggable" data-bind="css: { dragging: isDragging }, dragZone: $parent.dragZone, dragEvents: $parent.dragEvents($data)">
                 <div class="cell">
                     <div style="display:flex; align-items:center">
-                        <div class="icon-16 icon-grip" style="margin-right: 1.5rem;"></div>
+                        <span class="fa-host" style="margin-right: 1rem;">
+                            <i class="fa fa-bars gray"></i>
+                        </span>
                         <div style="flex:1;" data-bind="click: enterEditMode">
                             <span data-bind="text: name, visible: !isInEditMode()"></span>
                             <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode" />
@@ -63,7 +70,12 @@
                 </div>
                 <div class="cell icon"></div>
                 <div class="cell icon">
-                    <a class="icon-24 icon-cross-circle" data-bind="click: $parent.removeItem"></a>
+
+                    <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeItem, visible: !isRemoveLoading()">
+                        <i class="fa fa-times danger" aria-hidden="true"></i>
+                    </a>
+                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isRemoveLoading"></i>
+
                 </div>
             </div>
             <!-- /ko -->
@@ -73,7 +85,12 @@
                     <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem" />
                 </div>
                 <div class="cell icon">
-                    <a class="icon-24 icon-plus-circle" data-bind="click: addItem"></a>
+
+                    <a class="fa-host" aria-hidden="true" data-bind="click: addItem, visible: !isAddLoading()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </a>
+                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isAddLoading"></i>
+
                 </div>
                 <div class="cell icon"></div>
             </div>
@@ -89,7 +106,12 @@
                 <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: $component.newGroupName, enterkey: addGroup" />
             </div>
             <div class="cell icon">
-                <a class="icon-24 icon-plus-circle" data-bind="click: addGroup"></a>
+
+                <a class="fa-host" aria-hidden="true" data-bind="click: addGroup, visible: !isAddLoading()">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </a>
+                <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isAddLoading"></i>
+
             </div>
             <div class="cell icon"></div>
         </div>

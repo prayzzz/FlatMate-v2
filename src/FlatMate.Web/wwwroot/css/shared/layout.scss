@@ -1,5 +1,4 @@
-﻿@import '../var/colors.scss';
-@import '../var/sizes.scss';
+﻿@import '../variables.scss';
 
 .welcome-wrapper {
     display: none;
@@ -17,7 +16,12 @@
     padding: .5rem 1rem 0 1rem;
     position: relative;
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         margin-bottom: 0;
     }
 }
@@ -31,7 +35,7 @@
         padding: .5rem;
 
         &:hover {
-            background-color: darken(#FFF, 3%);
+            background-color: darken(#fff, 3%);
             border-bottom: 2px darken($color-border, 15%) solid;
         }
     }
@@ -42,7 +46,7 @@
 }
 
 .standard-box {
-    box-shadow: 0 1px 1px 0 rgba(50,50,50,.4);
+    box-shadow: 0 1px 1px 0 rgba(50, 50, 50, .4);
     background-color: #fff;
 }
 

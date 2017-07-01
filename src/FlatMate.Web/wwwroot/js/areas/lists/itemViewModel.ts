@@ -10,6 +10,7 @@ export class ItemViewModel implements IDraggable {
     // ui
     public readonly isDragging = ko.observable(false);
     public readonly isInEditMode = ko.observable(false);
+    public readonly isRemoveLoading = ko.observable(false);
 
     private readonly apiClient = new ItemListApi();
     private readonly model = ko.observable<ItemJso>();
@@ -73,9 +74,20 @@ export class ItemViewModel implements IDraggable {
      * Deletes the this group
      */
     public delete(): Promise<void> {
+        const self = this;
         const model = this.model();
+
         if (model.id) {
-            return this.apiClient.deleteItem(model.itemListId, model.id);
+            self.isRemoveLoading(true);
+
+            return this.apiClient.deleteItem(model.itemListId, model.id).then(
+                () => {
+                    self.isRemoveLoading(false);
+                },
+                err => {
+                    self.isRemoveLoading(false);
+                }
+            );
         }
 
         return new Promise<void>((resolve, reject) => resolve());

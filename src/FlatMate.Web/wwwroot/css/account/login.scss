@@ -1,4 +1,6 @@
-﻿.centered-form {
+﻿@import '../variables.scss';
+
+.centered-form {
     &.login {
         margin-top: 2.5rem;
     }

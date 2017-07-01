@@ -46,7 +46,7 @@ module.exports = (env) => {
      * Setup CSS configuration
      */
 
-    var cssLoaderOptions = { minimize: false };
+    var cssLoaderOptions = { minimize: false, url: false };
     if ("Release" === env) {
         cssLoaderOptions.minimize = true;
     }
