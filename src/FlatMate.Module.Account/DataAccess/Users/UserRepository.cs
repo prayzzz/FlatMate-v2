@@ -5,6 +5,7 @@ using FlatMate.Module.Account.Domain.Models;
 using FlatMate.Module.Account.Domain.Repositories;
 using FlatMate.Module.Common.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -16,7 +17,9 @@ namespace FlatMate.Module.Account.DataAccess.Users
     {
         private readonly AccountDbContext _dbContext;
 
-        public UserRepository(AccountDbContext dbContext, IMapper mapper) : base(mapper)
+        public UserRepository(AccountDbContext dbContext,
+                              IMapper mapper,
+                              ILogger<UserRepository> logger) : base(mapper, logger)
         {
             _dbContext = dbContext;
         }

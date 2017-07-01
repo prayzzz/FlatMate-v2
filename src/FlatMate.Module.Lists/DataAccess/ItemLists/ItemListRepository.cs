@@ -5,6 +5,7 @@ using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
@@ -15,7 +16,9 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
     {
         private readonly ListsDbContext _dbContext;
 
-        public ItemListRepository(ListsDbContext dbContext, IMapper mapper) : base(mapper)
+        public ItemListRepository(ListsDbContext dbContext,
+                                  IMapper mapper,
+                                  ILogger<ItemListRepository> logger) : base(mapper, logger)
         {
             _dbContext = dbContext;
         }

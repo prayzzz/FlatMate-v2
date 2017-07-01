@@ -5,6 +5,7 @@ using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -17,7 +18,9 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
         private readonly ListsDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public ItemListFavoriteRepository(ListsDbContext context, IMapper mapper)
+        public ItemListFavoriteRepository(ListsDbContext context,
+                                          IMapper mapper,
+                                          ILogger<ItemListFavoriteRepository> logger) : base(logger)
         {
             _dbContext = context;
             _mapper = mapper;
@@ -65,7 +68,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
             var lists = await _dbContext.ItemListFavorites.Where(x => x.UserId == userId)
                                                           .Select(x => x.ItemList)
                                                           .ToListAsync();
-            
+
             return lists.Select(_mapper.Map<ItemList>).ToList();
         }
     }

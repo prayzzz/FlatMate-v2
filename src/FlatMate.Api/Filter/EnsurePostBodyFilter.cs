@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Api.Filter
 {
@@ -25,18 +25,18 @@ namespace FlatMate.Api.Filter
 
             foreach (var name in bodyParameterNames)
             {
-                if (context.ActionArguments.TryGetValue(name, out object argument))
+                if (context.ActionArguments.TryGetValue(name, out var argument))
                 {
                     if (argument == null)
                     {
                         // argument null
-                        context.Result = new BadRequestObjectResult(new Dictionary<string, string> { { "error", "Body should not empty." } });
+                        context.Result = new BadRequestObjectResult(new ErrorResult(ErrorType.ValidationError, "Body should not empty"));
                     }
                 }
                 else
                 {
                     // argument not found
-                    context.Result = new BadRequestObjectResult(new Dictionary<string, string> { { "error", "Body should not empty." } });
+                    context.Result = new BadRequestObjectResult(new ErrorResult(ErrorType.ValidationError, "Body should not empty"));
                 }
             }
         }

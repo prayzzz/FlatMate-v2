@@ -1,10 +1,10 @@
-import { ResultJso, AlertViewModel, AlertLevel } from "./";
 import { IStringDictionary } from "../types";
+import { AlertLevel, AlertViewModel, ResultJso } from "./";
 
 export class AlertBar {
-    private readonly timeouts: IStringDictionary<number> = {};
-
     public readonly alerts = ko.observableArray<AlertViewModel>();
+
+    private readonly timeouts: IStringDictionary<number> = {};
 
     constructor() {
         this.timeouts[AlertLevel.Error] = 60000;
@@ -22,6 +22,6 @@ export class AlertBar {
 
     private pushAlert(alert: AlertViewModel) {
         this.alerts.push(alert);
-        setTimeout(() => this.alerts.remove(alert), this.timeouts[alert.level()])
+        setTimeout(() => this.alerts.remove(alert), this.timeouts[alert.level()]);
     }
 }

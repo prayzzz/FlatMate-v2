@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FlatMate.Module.Common.Domain.Entities;
 using FlatMate.Module.Common.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
@@ -12,7 +13,14 @@ namespace FlatMate.Module.Common.DataAccess
 {
     public abstract class Repository
     {
+        protected Repository(ILogger logger)
+        {
+            Logger = logger;
+        }
+
         protected abstract FlatMateDbContext Context { get; }
+
+        protected ILogger Logger { get; }
 
         protected virtual void BeforeSaveChanges()
         {
@@ -32,7 +40,8 @@ namespace FlatMate.Module.Common.DataAccess
             }
             catch (Exception e)
             {
-                return new ErrorResult(ErrorType.InternalError, e.Message);
+                Logger.LogError(0, e, "Error while saving changes");
+                return new ErrorResult(ErrorType.InternalError, "Datenbankfehler");
             }
 
             return SuccessResult.Default;
@@ -43,7 +52,7 @@ namespace FlatMate.Module.Common.DataAccess
     {
         private readonly Dictionary<int, TEntity> _requestCache;
 
-        protected Repository(IMapper mapper)
+        protected Repository(IMapper mapper, ILogger logger) : base(logger)
         {
             Mapper = mapper;
 
@@ -67,13 +76,10 @@ namespace FlatMate.Module.Common.DataAccess
 
             Context.Remove(dbo);
 
-            try
+            var save = await SaveChanges();
+            if (save.IsError)
             {
-                await Context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return new ErrorResult(ErrorType.InternalError, e.Message);
+                return new ErrorResult(save);
             }
 
             return new SuccessResult();
