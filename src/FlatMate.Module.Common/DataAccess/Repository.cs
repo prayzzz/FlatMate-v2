@@ -67,7 +67,7 @@ namespace FlatMate.Module.Common.DataAccess
 
         public async Task<Result> DeleteAsync(int id)
         {
-            var dbo = await Dbos.FirstOrDefaultAsync(x => x.Id == id);
+            var dbo = await DbosIncluded.FirstOrDefaultAsync(x => x.Id == id);
 
             if (dbo == null)
             {
