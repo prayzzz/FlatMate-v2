@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Lists.DataAccess.ItemLists;
+using FlatMate.Module.Lists.DataAccess.Items;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemGroups
 {
@@ -32,5 +34,8 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
 
         [Required]
         public int SortIndex { get; set; }
+
+        [InverseProperty("ItemGroup")]
+        public List<ItemDbo> Items { get; set; }
     }
 }
