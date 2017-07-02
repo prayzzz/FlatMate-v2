@@ -27,7 +27,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
         protected override IQueryable<ItemListDbo> Dbos => _dbContext.ItemLists;
 
-        protected override IQueryable<ItemListDbo> DbosIncluded => Dbos;
+        protected override IQueryable<ItemListDbo> DbosIncluded => Dbos.Include(x => x.Groups).ThenInclude(x => x.Items);
 
         public async Task<IEnumerable<ItemList>> GetAllAsync(int? ownerId)
         {

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Lists.DataAccess.ItemGroups;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemLists
 {
@@ -28,5 +30,8 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
         [Required]
         public int OwnerId { get; set; }
+
+        [InverseProperty("ItemList")]
+        public List<ItemGroupDbo> Groups { get; set; }
     }
 }
