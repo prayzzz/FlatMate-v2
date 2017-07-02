@@ -47,7 +47,9 @@
                     <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeGroup, visible: !isRemoveLoading()">
                         <i class="fa fa-times danger" aria-hidden="true"></i>
                     </a>
-                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isRemoveLoading"></i>
+                    <span class="fa-host" data-bind="visible: isRemoveLoading">
+                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i>
+                    </span>
 
                 </div>
             </div>
@@ -74,7 +76,9 @@
                     <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeItem, visible: !isRemoveLoading()">
                         <i class="fa fa-times danger" aria-hidden="true"></i>
                     </a>
-                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isRemoveLoading"></i>
+                    <span class="fa-host" data-bind="visible: isRemoveLoading">                    
+                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" ></i>
+                    </span>
 
                 </div>
             </div>

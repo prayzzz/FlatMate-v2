@@ -35,9 +35,15 @@ class AjaxRequest<TData, TError> implements IAjaxRequest<TData, TError> {
         this.url = url;
         this.data = data;
 
-        this.successCb = (): void => { };
-        this.errorCb = (): void => { };
-        this.alwaysCb = (): void => { };
+        this.successCb = (): void => {
+            /** Dummy */
+        };
+        this.errorCb = (): void => {
+            /** Dummy */
+        };
+        this.alwaysCb = (): void => {
+            /** Dummy */
+        };
     }
 
     public success(cb: (data: TData | null) => void): IAjaxRequest<TData, TError> {

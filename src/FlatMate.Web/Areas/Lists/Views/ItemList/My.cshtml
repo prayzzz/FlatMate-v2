@@ -36,7 +36,7 @@
                         </td>
                         <td class="show-large">@list.ItemCount</td>
                         <td class="show-large">
-                            <span class="fa-host">
+                            <span class="fa-inline-host">
                                 @if (list.IsPublic)
                                 {
                                     <i class="fa fa-check"></i>
@@ -44,7 +44,6 @@
                                 else
                                 {
                                     <i class="fa fa-times"></i>
-
                                 }
                             </span>
                         </td>
@@ -98,7 +97,7 @@
 
                 <tbody>
                     @foreach (var list in Model.Favorites)
-                {
+                    {
                         <tr>
                             <td>
                                 <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>

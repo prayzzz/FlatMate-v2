@@ -30,9 +30,9 @@
                             @if (Model.Favorites.Any(l => l.Id == list.Id))
                             {
                                 <a asp-area="Lists" asp-controller="ItemList" asp-action="Unfavorite" asp-route-id="@list.Id" class="fa-host" title="Als Favorit entfernen">
-                                    <span class="fa-stack">
+                                    <span class="fa-stack-sm">
                                         <i class="fa fa-heart fa-stack-1x"></i>
-                                        <i class="fa fa-ban fa-stack-2x danger"></i>
+                                        <i class="fa fa-ban fa-stack-1x danger"></i>
                                     </span>
                                 </a>
                             }

@@ -1,7 +1,6 @@
 import * as ko from "knockout";
 import { ItemGroupJso, ItemJso, ItemListApi, ItemViewModel } from ".";
 import { DragEvents, DragZone, DragZoneData } from "../../ko/dragdrop";
-import { AlertService } from "../../shared/alert";
 
 export class ItemGroupViewModel {
     // from model
@@ -18,7 +17,6 @@ export class ItemGroupViewModel {
     public readonly isRemoveLoading = ko.observable(false);
 
     private readonly apiClient = new ItemListApi();
-    private readonly alertService = new AlertService();
     private readonly model = ko.observable<ItemGroupJso>();
 
     constructor(model: ItemGroupJso, items?: ItemJso[]) {
@@ -185,7 +183,6 @@ export class ItemGroupViewModel {
                     self.isRemoveLoading(false);
                 },
                 err => {
-                    self.alertService.addAlertFromResult(err);
                     self.isRemoveLoading(false);
                     throw err;
                 }

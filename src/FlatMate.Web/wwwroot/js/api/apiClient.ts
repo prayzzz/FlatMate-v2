@@ -1,29 +1,10 @@
 ﻿import Ajax from "../shared/ajax";
+import { AlertService, ResultJso } from "../shared/alert";
 
 export interface IApiClient {
-    get<TData>(
-        path: string,
-        doneCallback?: (d: TData) => void,
-        failCallback?: (e: IApiError) => void
-    ): void;
-    put<TData, TResult>(
-        path: string,
-        data: TData,
-        doneCallback?: (d: TResult) => void,
-        failCallback?: (e: IApiError) => void
-    ): void;
-    post<TData, TResult>(
-        path: string,
-        data: TData,
-        doneCallback?: (d: TResult) => void,
-        failCallback?: (e: IApiError) => void
-    ): void;
-}
-
-export interface IApiError {
-    status: number;
-    statusText: string;
-    responseText: string;
+    get<TData>(path: string, doneCallback?: (d: TData) => void, failCallback?: (e: ResultJso) => void): void;
+    put<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: ResultJso) => void): void;
+    post<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: ResultJso) => void): void;
 }
 
 /**
@@ -32,6 +13,7 @@ export interface IApiError {
  */
 export default class ApiClient implements IApiClient {
     private static instance: ApiClient;
+    private alertService: AlertService = new AlertService();
     private host = `//${window.location.host}/api/v1/`;
 
     /**
@@ -48,44 +30,102 @@ export default class ApiClient implements IApiClient {
     public async get<TData>(path: string): Promise<TData> {
         const url = this.host + path;
 
-        return new Promise<TData>((resolve, reject) =>
-            Ajax.get<TData, IApiError>(url)
-                .success((d: TData) => resolve(d))
-                .error((e: IApiError) => reject(e))
-                .send()
-        );
+        return new Promise<TData>((resolve, reject) => {
+            const request = Ajax.get<TData, ResultJso>(url);
+
+            request.success(responseData => {
+                if (responseData) {
+                    resolve(responseData);
+                } else {
+                    resolve();
+                }
+            });
+
+            request.error(error => {
+                if (error) {
+                    this.alertService.addAlertFromResult(error);
+                    reject(error);
+                } else {
+                    reject();
+                }
+            });
+
+            request.send();
+        });
     }
 
     public delete(path: string): Promise<void> {
         const url = this.host + path;
 
-        return new Promise<void>((resolve, reject) =>
-            Ajax.delete<void, IApiError>(url)
-                .success(() => resolve())
-                .error((e: IApiError) => reject(e))
-                .send()
-        );
+        return new Promise<void>((resolve, reject) => {
+            const request = Ajax.delete<void, ResultJso>(url);
+
+            request.success(() => resolve());
+
+            request.error(error => {
+                if (error) {
+                    this.alertService.addAlertFromResult(error);
+                    reject(error);
+                } else {
+                    reject();
+                }
+            });
+
+            request.send();
+        });
     }
 
     public put<TData>(path: string, data: any): Promise<TData> {
         const url = this.host + path;
 
-        return new Promise<TData>((resolve, reject) =>
-            Ajax.put<TData, IApiError>(url, JSON.stringify(data))
-                .success((d: TData) => resolve(d))
-                .error((e: IApiError) => reject(e))
-                .send()
-        );
+        return new Promise<TData>((resolve, reject) => {
+            const request = Ajax.put<TData, ResultJso>(url, JSON.stringify(data));
+
+            request.success(responseData => {
+                if (responseData) {
+                    resolve(responseData);
+                } else {
+                    resolve();
+                }
+            });
+
+            request.error(error => {
+                if (error) {
+                    this.alertService.addAlertFromResult(error);
+                    reject(error);
+                } else {
+                    reject();
+                }
+            });
+
+            request.send();
+        });
     }
 
     public async post<TData>(path: string, data: any): Promise<TData> {
         const url = this.host + path;
 
-        return new Promise<TData>((resolve, reject) =>
-            Ajax.post<TData, IApiError>(url, JSON.stringify(data))
-                .success((d: TData) => resolve(d))
-                .error((e: IApiError) => reject(e))
-                .send()
-        );
+        return new Promise<TData>((resolve, reject) => {
+            const request = Ajax.post<TData, ResultJso>(url, JSON.stringify(data));
+
+            request.success(responseData => {
+                if (responseData) {
+                    resolve(responseData);
+                } else {
+                    resolve();
+                }
+            });
+
+            request.error(error => {
+                if (error) {
+                    this.alertService.addAlertFromResult(error);
+                    reject(error);
+                } else {
+                    reject();
+                }
+            });
+
+            request.send();
+        });
     }
 }

@@ -1,21 +1,38 @@
 ﻿@import '../variables.scss';
 
-span.fa-host {
-    font-size: $icon-size;
+span {
+    &.fa-host,
+    &.fa-inline-host {
+        display: block;
+        font-size: $icon-size;
+        height: $icon-size * 2;
+        line-height: $icon-size * 2;
+        margin: auto;
+        text-align: center;
+        width: $icon-size * 2;
+    }
+
+    &.fa-inline-host {
+        display: inline-block;
+    }
 }
 
 a.fa-host {
     color: $color-font;
     cursor: pointer;
+    border-bottom: 2px #d1d1d1 solid;
     display: block;
     font-size: $icon-size;
-    line-height: $icon-size * 2;
     height: $icon-size * 2;
+    line-height: $icon-size * 2;
+    margin: auto;
+    text-align: center;
     width: $icon-size * 2;
 
     &:hover {
+        background-color: #f7f7f7;
+        border-bottom: 2px #ababab solid;
         color: $color-font;
-        text-shadow: 1px 1px 1px #aaaaaa;
     }
 }
 
@@ -31,4 +48,13 @@ a.fa-host {
     &.gray {
         color: $color-gray;
     }
+}
+
+.fa-stack-sm {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    vertical-align: middle;
 }

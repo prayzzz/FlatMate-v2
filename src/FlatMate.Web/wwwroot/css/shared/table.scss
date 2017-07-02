@@ -22,7 +22,7 @@ td {
     }
 
     &.icon {
-        width: $icon-size * 2;
+        width: $icon-size * 3;
         padding: 0;
         text-align: center;
     }
@@ -72,7 +72,7 @@ div.table {
             vertical-align: middle;
 
             &.icon {
-                width: $icon-size * 2;
+                width: $icon-size * 3;
                 padding: .5rem 0;
                 text-align: center;
             }
