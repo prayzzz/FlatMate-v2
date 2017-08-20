@@ -43,6 +43,15 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
             return await SaveChanges();
         }
 
+        public async Task<IEnumerable<ItemList>> GetFavoritesAsync(int userId)
+        {
+            var lists = await _dbContext.ItemListFavorites.Where(x => x.UserId == userId)
+                                        .Select(x => x.ItemList)
+                                        .ToListAsync();
+
+            return lists.Select(_mapper.Map<ItemList>).ToList();
+        }
+
         public async Task<Result> SaveAsync(int userId, int listId)
         {
             var favorite = await Get(userId, listId);
@@ -60,16 +69,6 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
         {
             return Dbos.Where(x => x.UserId == userId && x.ItemListId == listId)
                        .FirstOrDefaultAsync();
-        }
-
-
-        public async Task<IEnumerable<ItemList>> GetFavoritesAsync(int userId)
-        {
-            var lists = await _dbContext.ItemListFavorites.Where(x => x.UserId == userId)
-                                                          .Select(x => x.ItemList)
-                                                          .ToListAsync();
-
-            return lists.Select(_mapper.Map<ItemList>).ToList();
         }
     }
 }

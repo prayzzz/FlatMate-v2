@@ -113,7 +113,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return (await _itemListRepository.GetAllAsync(ownerId)).Where(l => _authorizationService.CanRead(l))
                                                                    .Select(_mapper.Map<ItemListDto>);
         }
-        
+
         public async Task<Result<ItemListDto>> UpdateAsync(int listId, ItemListDto dto)
         {
             // the user must be logged in

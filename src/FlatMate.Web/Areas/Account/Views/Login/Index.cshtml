@@ -18,22 +18,22 @@
 
     <form asp-area="Account" asp-controller="Login" method="post">
         <fieldset>
-            <input asp-for="ReturnUrl" type="hidden" />
+            <input asp-for="ReturnUrl" type="hidden"/>
 
             <div class="form-group">
                 <label asp-for="UserName"></label>
-                <input asp-for="UserName" autofocus required />
+                <input asp-for="UserName" autofocus required/>
             </div>
 
             <div class="form-group">
                 <label asp-for="Password"></label>
-                <input asp-for="Password" required />
+                <input asp-for="Password" required/>
             </div>
 
             <div class="form-group align-right">
                 <input class="btn-primary" type="submit" value="Login">
             </div>
-            
+
         </fieldset>
     </form>
 

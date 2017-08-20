@@ -1,6 +1,9 @@
 ﻿using System.IO;
+using FlatMate.Web.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace FlatMate.Web
 {
@@ -8,19 +11,38 @@ namespace FlatMate.Web
     {
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                                                          .AddJsonFile("hosting.json", false)
-                                                          .AddCommandLine(args)
-                                                          .Build();
+            var hostConfig = new ConfigurationBuilder().AddCommandLine(args)
+                                                       .Build();
 
-            var host = new WebHostBuilder().UseKestrel()
-                                           .UseConfiguration(configuration)
-                                           .UseContentRoot(Directory.GetCurrentDirectory())
-                                           .UseIISIntegration()
-                                           .UseStartup<Startup>()
-                                           .Build();
+            new WebHostBuilder().UseKestrel()
+                                .UseConfiguration(hostConfig)
+                                .UseContentRoot(Directory.GetCurrentDirectory())
+                                .ConfigureAppConfiguration(ConfigureConfiguration)
+                                .ConfigureLogging(ConfigureLogging)
+                                .UseStartup<Startup>()
+                                .Build()
+                                .Run();
+        }
 
-            host.Run();
+        private static void ConfigureConfiguration(WebHostBuilderContext context, IConfigurationBuilder builder)
+        {
+            var env = context.HostingEnvironment;
+
+            builder.AddJsonFile("appsettings.json", true, true)
+                   .AddJsonFile($"appsettings.{env.EnvironmentName.ToLower()}.json", true, true)
+                   .AddEnvironmentVariables("flatmate_")
+                   .AddProductionConnection(env);
+        }
+
+        private static void ConfigureLogging(WebHostBuilderContext context, ILoggingBuilder builder)
+        {
+            // Enable all logs
+            builder.SetMinimumLevel(LogLevel.Trace);
+
+            var logger = new LoggerConfiguration().ReadFrom.Configuration(context.Configuration)
+                                                  .CreateLogger();
+
+            builder.AddSerilog(logger);
         }
     }
 }

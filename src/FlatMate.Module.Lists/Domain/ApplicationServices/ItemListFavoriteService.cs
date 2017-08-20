@@ -16,9 +16,9 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
     public class ItemListFavoriteService : IItemListFavoriteService
     {
         private readonly IAuthenticationContext _authenticationContext;
-        private readonly IMapper _mapper;
         private readonly IItemListFavoriteRepository _favoriteRepository;
         private readonly IItemListRepository _itemListRepository;
+        private readonly IMapper _mapper;
 
         /// <summary>
         ///     TODO: Was passiert wenn eine Liste privat wird?
@@ -35,25 +35,6 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
         }
 
         private CurrentUser CurrentUser => _authenticationContext.CurrentUser;
-
-        public async Task<Result> SetAsFavorite(int listId)
-        {
-            // the user must be logged in
-            if (CurrentUser.IsAnonymous)
-            {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
-            }
-
-            // get item list
-            var getItemList = await _itemListRepository.GetAsync(listId);
-            if (getItemList.IsError)
-            {
-                return new ErrorResult(getItemList);
-            }
-
-            // save
-            return await _favoriteRepository.SaveAsync(CurrentUser.Id, getItemList.Data.Id.Value);
-        }
 
         public Task<Result> DeleteFavorite(int listId)
         {
@@ -75,6 +56,25 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             }
 
             return (await _favoriteRepository.GetFavoritesAsync(CurrentUser.Id)).Select(_mapper.Map<ItemListDto>);
+        }
+
+        public async Task<Result> SetAsFavorite(int listId)
+        {
+            // the user must be logged in
+            if (CurrentUser.IsAnonymous)
+            {
+                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
+            }
+
+            // get item list
+            var getItemList = await _itemListRepository.GetAsync(listId);
+            if (getItemList.IsError)
+            {
+                return new ErrorResult(getItemList);
+            }
+
+            // save
+            return await _favoriteRepository.SaveAsync(CurrentUser.Id, getItemList.Data.Id.Value);
         }
     }
 }

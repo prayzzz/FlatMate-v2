@@ -1,12 +1,7 @@
 <Project>
-  <Import Project="dependencies.props" />
-  <Import Project="..\version.props" />
-
   <PropertyGroup>
     <Product>FlatMate</Product>
     <RepositoryUrl>https://github.com/prayzzz/FlatMate-v2</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <VersionSuffix Condition="'$(VersionSuffix)'!='' AND '$(BuildNumber)' != ''">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
   </PropertyGroup>
-
 </Project>

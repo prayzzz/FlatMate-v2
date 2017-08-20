@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FlatMate.Api.Areas.Account.Authentication
 {
@@ -9,7 +11,7 @@ namespace FlatMate.Api.Areas.Account.Authentication
         [ApiExplorerSettings(IgnoreApi = true)]
         public async void LogoutAsync()
         {
-            await HttpContext.Authentication.SignOutAsync("FlatMate");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

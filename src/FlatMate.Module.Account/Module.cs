@@ -7,7 +7,7 @@ namespace FlatMate.Module.Account
 {
     public class Module
     {
-        public static void ConfigureServices(IServiceCollection service, IConfigurationRoot configuration)
+        public static void ConfigureServices(IServiceCollection service, IConfiguration configuration)
         {
             service.AddDbContext<AccountDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }

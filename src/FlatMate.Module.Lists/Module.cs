@@ -7,7 +7,7 @@ namespace FlatMate.Module.Lists
 {
     public class Module
     {
-        public static void ConfigureServices(IServiceCollection service, IConfigurationRoot configuration)
+        public static void ConfigureServices(IServiceCollection service, IConfiguration configuration)
         {
             service.AddDbContext<ListsDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }

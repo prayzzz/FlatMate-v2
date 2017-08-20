@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Api;
 using FlatMate.Api.Extensions;
 using FlatMate.Api.Filter;
 using FlatMate.Migration;
-using FlatMate.Web.Common;
+using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Json;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
@@ -19,39 +18,32 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
-using Serilog;
-using SodaPop.ConfigExplorer;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace FlatMate.Web
 {
-    public class Startup
+    public class Startup : StartupBase
     {
-        private readonly IConfigurationRoot _configuration;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<Startup> _logger;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
-            _configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
-                                                       .AddJsonFile("appsettings.json", true, true)
-                                                       .AddJsonFile($"appsettings.{env.EnvironmentName.ToLower()}.json", true, true)
-                                                       .AddEnvironmentVariables("flatmate_")
-                                                       .AddProductionConnection(env)
-                                                       .Build();
-
-            Log.Logger = new LoggerConfiguration().ReadFrom
-                                                  .Configuration(_configuration)
-                                                  .CreateLogger();
+            _configuration = configuration;
+            _logger = logger;
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public override void Configure(IApplicationBuilder app)
         {
-            loggerFactory.AddSerilog();
+            var env = app.ApplicationServices.GetService<IHostingEnvironment>();
+            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
 
             // run migrations
             var migrationSettings = _configuration.GetSection("Migration").Get<MigrationSettings>();
             migrationSettings.ConnectionString = _configuration.GetConnectionString("DefaultConnection");
             new Migrator(loggerFactory, migrationSettings).Run();
 
+            // configure middleware
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
@@ -59,43 +51,16 @@ namespace FlatMate.Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"); });
 
-                app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
+                //app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
             }
             else
             {
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseAuthentication();
             app.UseStaticFiles();
-
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = "FlatMate",
-                LoginPath = new PathString("/Account/Login/"),
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                ClaimsIssuer = "FlatMate",
-                SlidingExpiration = true,
-                Events = new CookieAuthenticationEvents
-                {
-                    OnRedirectToLogin = context =>
-                    {
-                        if (context.Request.Path.StartsWithSegments("/api/v1"))
-                        {
-                            context.Response.StatusCode = 401;
-                        }
-                        else
-                        {
-                            context.Response.Redirect(context.RedirectUri);
-                        }
-
-                        return Task.FromResult(0);
-                    }
-                }
-            });
-
             app.UseSession();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });
@@ -107,14 +72,22 @@ namespace FlatMate.Web
             // load api controllers
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             applicationPartManager.ApplicationParts.Add(new AssemblyPart(typeof(ApiController).GetTypeInfo().Assembly));
+
+            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
+            if (serverAddressesFeature != null)
+            {
+                _logger.LogInformation("Application listening on: {Url}", string.Join(", ", serverAddressesFeature.Addresses));
+            }
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             // Framework
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
                     .AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings))
                     .AddControllersAsServices();
+
+            services.AddFlatMateAuthentication();
 
             services.AddSession();
 
