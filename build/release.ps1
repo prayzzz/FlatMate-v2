@@ -25,19 +25,14 @@ If (!($branch -eq "master"))
 
 ################
 ## Apply Version
-$date = Get-Date -Format yyyy.MM.dd;
-$minutes = [math]::Round([datetime]::Now.TimeOfDay.TotalMinutes)
-$version = "$date.$minutes"
+$version = [System.DateTime]::Now.ToString("yyyy.MM.dd") + "." + [System.Math]::Round([System.DateTime]::Now.TimeOfDay.TotalMinutes)
 
 $versionXmlFileName = "version.props"
 $versionXmlPath =  Join-Path $(Get-Location) $versionXmlFileName
 $versionXml = [xml](Get-Content $versionXmlPath)
 
-Write-Host "Setting version prefix to $version"
-$versionXml.Project.PropertyGroup.VersionPrefix = $version
-
-Write-Host "Resetting version suffix"
-$versionXml.Project.PropertyGroup.VersionSuffix = ""
+Write-Host "Setting version to $version"
+$versionXml.Project.PropertyGroup.Version = $version
 
 $versionXml.Save($versionXmlPath)
 
