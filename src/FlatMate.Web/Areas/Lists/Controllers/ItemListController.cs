@@ -145,7 +145,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             }
 
             var itemList = getList.Data;
-            
+
             if (itemList.Owner.Id != CurrentUserId)
             {
                 return TryRedirectToReferer(RedirectToAction("My"));
@@ -184,7 +184,6 @@ namespace FlatMate.Web.Areas.Lists.Controllers
             {
                 return RedirectToAction("My");
             }
-
 
             var model = new ItemListViewVm { List = getList.Data };
             return View(model);

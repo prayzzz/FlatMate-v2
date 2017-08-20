@@ -22,11 +22,11 @@ namespace FlatMate.Module.Common.DataAccess
 
         protected ILogger Logger { get; }
 
-        protected virtual void BeforeSaveChanges()
+        protected virtual void AfterSaveChanges()
         {
         }
 
-        protected virtual void AfterSaveChanges()
+        protected virtual void BeforeSaveChanges()
         {
         }
 

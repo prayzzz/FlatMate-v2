@@ -3,15 +3,15 @@
   <Import Project="..\..\build\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170427-09" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-40" />
-    <PackageReference Include="prayzzz.Common.Test" Version="1.0.0-ci-40" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-42" />
+    <PackageReference Include="prayzzz.Common.Test" Version="1.0.0-ci-42" />
   </ItemGroup>
   
   <ItemGroup>

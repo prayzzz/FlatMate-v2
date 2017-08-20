@@ -18,7 +18,7 @@ namespace FlatMate.Migration.DotNet
 
         public ICommand Get(string parameter)
         {
-            return _nameToCommand.TryGetValue(parameter, out ICommand command) ? command : null;
+            return _nameToCommand.TryGetValue(parameter, out var command) ? command : null;
         }
 
         private void AddCommand(ICommand command)

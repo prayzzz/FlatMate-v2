@@ -13,6 +13,12 @@ namespace FlatMate.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult ForceException()
+        {
+            throw new ArgumentNullException();
+        }
+
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -23,12 +29,6 @@ namespace FlatMate.Web.Controllers
         {
             Response.StatusCode = 404;
             return View();
-        }
-
-        [HttpGet]
-        public IActionResult ForceException()
-        {
-            throw new ArgumentNullException();
         }
     }
 }

@@ -16,6 +16,9 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
         [Required]
         public string Description { get; set; }
 
+        [InverseProperty("ItemList")]
+        public List<ItemGroupDbo> Groups { get; set; }
+
         [Required]
         public bool IsPublic { get; set; }
 
@@ -30,8 +33,5 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
         [Required]
         public int OwnerId { get; set; }
-
-        [InverseProperty("ItemList")]
-        public List<ItemGroupDbo> Groups { get; set; }
     }
 }

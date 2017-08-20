@@ -19,8 +19,8 @@ namespace FlatMate.Api.Areas.Lists
     [Route("api/v1/lists/itemlist")]
     public partial class ItemListApiController : ApiController
     {
-        private readonly IItemListService _itemListService;
         private readonly IItemListFavoriteService _favoriteService;
+        private readonly IItemListService _itemListService;
 
         public ItemListApiController(UserApiController userApi,
                                      IItemListService itemListService,
@@ -32,7 +32,6 @@ namespace FlatMate.Api.Areas.Lists
 
             MappingContext.PutParam(ItemListMapper.UserApiKey, userApi);
         }
-
 
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]

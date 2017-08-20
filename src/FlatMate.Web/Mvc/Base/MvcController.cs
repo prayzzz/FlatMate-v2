@@ -41,9 +41,10 @@ namespace FlatMate.Web.Mvc.Base
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Sets the current user into the viewmodel after an action is executed.
-        /// Viewmodel must be of type <see cref="BaseViewModel"/>.
+        ///     Sets the current user into the viewmodel after an action is executed.
+        ///     Viewmodel must be of type <see cref="T:FlatMate.Web.Mvc.Base.BaseViewModel" />.
         /// </summary>
         public override void OnActionExecuted(ActionExecutedContext context)
         {
@@ -101,10 +102,8 @@ namespace FlatMate.Web.Mvc.Base
             {
                 return Redirect(referer);
             }
-            else
-            {
-                return fallback;
-            }
+
+            return fallback;
         }
     }
 }

@@ -20,6 +20,9 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
         [Required]
         public int ItemListId { get; set; }
 
+        [InverseProperty("ItemGroup")]
+        public List<ItemDbo> Items { get; set; }
+
         [Required]
         public int LastEditorId { get; set; }
 
@@ -34,8 +37,5 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
 
         [Required]
         public int SortIndex { get; set; }
-
-        [InverseProperty("ItemGroup")]
-        public List<ItemDbo> Items { get; set; }
     }
 }

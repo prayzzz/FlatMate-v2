@@ -1,6 +1,5 @@
 ﻿using FlatMate.Web.Mvc.Json;
 using prayzzz.Common.Attributes;
-using prayzzz.Common.Enums;
 
 namespace FlatMate.Web.Mvc.Base
 {
@@ -16,7 +15,7 @@ namespace FlatMate.Web.Mvc.Base
         {
             JsonService = jsonService;
         }
-        
+
         public IJsonService JsonService { get; }
     }
 }

@@ -9,8 +9,8 @@ namespace FlatMate.Module.Lists.Domain.Repositories
     {
         Task<Result> DeleteAsync(int userId, int listId);
 
-        Task<Result> SaveAsync(int userId, int listId);
-
         Task<IEnumerable<ItemList>> GetFavoritesAsync(int userId);
+
+        Task<Result> SaveAsync(int userId, int listId);
     }
 }

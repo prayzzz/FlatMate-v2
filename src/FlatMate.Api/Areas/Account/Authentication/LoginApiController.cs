@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using FlatMate.Api.Areas.Account.User;
 using FlatMate.Module.Account.Shared.Interfaces;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -33,14 +34,14 @@ namespace FlatMate.Api.Areas.Account.Authentication
 
             var user = authorize.Data;
 
-            var identity = new ClaimsIdentity("Basic");
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
             identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
 
             var principal = new ClaimsPrincipal();
             principal.AddIdentity(identity);
 
-            await HttpContext.Authentication.SignInAsync("FlatMate", principal, new AuthenticationProperties { IsPersistent = true });
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
 
             return authorize.WithDataAs(dto => _mapper.Map<UserInfoJso>(dto));
         }
