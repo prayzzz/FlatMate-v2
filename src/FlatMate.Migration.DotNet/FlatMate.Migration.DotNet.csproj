@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-42" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-dev" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlatMate.Migration\FlatMate.Migration.csproj" />

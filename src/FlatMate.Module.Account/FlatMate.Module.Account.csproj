@@ -7,7 +7,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-ci-42" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-dev" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
