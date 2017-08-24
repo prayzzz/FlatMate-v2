@@ -1,5 +1,5 @@
 <Project>
   <PropertyGroup>
-    <Version>2000.01.01.0000</Version>
+    <Version>$([System.DateTime]::Now.ToString(yyyy.MM.dd)).$([System.Math]::Round($([System.DateTime]::Now.TimeOfDay.TotalMinutes)))</Version>
   </PropertyGroup>
 </Project>
