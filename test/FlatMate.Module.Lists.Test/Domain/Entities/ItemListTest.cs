@@ -59,10 +59,10 @@ namespace FlatMate.Module.Lists.Test.Domain.Entities
         {
             const string name = null;
 
-            var result1 = ItemList.Create(name, 1).Data;
+            var result1 = ItemList.Create(name, 1);
             Assert.IsInstanceOfType(result1, typeof(ErrorResult<ItemList>));
 
-            var result2 = ItemList.Create(1, name, 1).Data;
+            var result2 = ItemList.Create(1, name, 1);
             Assert.IsInstanceOfType(result2, typeof(ErrorResult<ItemList>));
         }
 
