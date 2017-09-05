@@ -12,13 +12,13 @@ using MarketJso = FlatMate.Module.Offers.Api.Jso.MarketJso;
 namespace FlatMate.Module.Offers.Api
 {
     [Route(RouteTemplate)]
-    public class MarketController : ApiController
+    public class MarketApiController : ApiController
     {
         private const string RouteTemplate = "api/v1/offers/market";
 
         private readonly IMarketService _marketService;
 
-        public MarketController(IMarketService marketService, IMapper mapper) : base(mapper)
+        public MarketApiController(IMarketService marketService, IMapper mapper) : base(mapper)
         {
             _marketService = marketService;
         }
@@ -36,6 +36,12 @@ namespace FlatMate.Module.Offers.Api
             return new SuccessResult<MarketJso>(Map<MarketJso>(market));
         }
 
+        [HttpGet]
+        public async Task<IEnumerable<MarketJso>> Get()
+        {
+            return (await _marketService.Get()).Select(Map<MarketJso>);
+        }
+
         [HttpGet("{marketId}/offer/import")]
         public async Task<Result> ImportOffers(int marketId)
         {
@@ -46,7 +52,7 @@ namespace FlatMate.Module.Offers.Api
         [HttpGet("{marketId}/offer/")]
         public async Task<IEnumerable<OfferJso>> GetOffers(int marketId)
         {
-            return (await _marketService.GetOffers(marketId)).Select(Map<OfferJso>);
+            return (await _marketService.GetCurrentOffers(marketId)).Select(Map<OfferJso>);
         }
 
         [HttpGet("import/{externalMarketId}")]

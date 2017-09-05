@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using System;
 
 namespace FlatMate.Module.Offers.Domain.Markets
 {
@@ -15,11 +16,13 @@ namespace FlatMate.Module.Offers.Domain.Markets
     {
         Task<(Result, MarketDto)> Get(int id);
 
-        Task<IEnumerable<OfferDto>> GetOffers(int marketId);
+        Task<IEnumerable<OfferDto>> GetCurrentOffers(int marketId);
 
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
         Task<(Result, IEnumerable<OfferDto>)> ImportOffers(int marketId);
+
+        Task<IEnumerable<MarketDto>> Get();
     }
 
     [Inject]
@@ -55,11 +58,23 @@ namespace FlatMate.Module.Offers.Domain.Markets
             return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
         }
 
-        public async Task<IEnumerable<OfferDto>> GetOffers(int marketId)
+        public async Task<IEnumerable<MarketDto>> Get()
         {
+            var market = await _dbContext.Markets
+                                         .Include(m => m.Company)
+                                         .ToListAsync();
+
+            return market.Select(_mapper.Map<MarketDto>);
+        }
+
+        public async Task<IEnumerable<OfferDto>> GetCurrentOffers(int marketId)
+        {
+            var now = DateTime.Now;
+
             var offers = await _dbContext.Offers
                                          .Include(o => o.Product)
                                          .Where(o => o.MarketId == marketId)
+                                         .Where(o => o.From < now && o.To > now)
                                          .ToListAsync();
 
             return offers.Select(_mapper.Map<OfferDto>);

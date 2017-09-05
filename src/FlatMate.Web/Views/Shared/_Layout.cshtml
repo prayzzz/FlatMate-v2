@@ -5,7 +5,11 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
     <title>@ViewData["Title"] - FlatMate</title>
+
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
 
     <link asp-href-include="~/dist/app.css" rel="stylesheet"/>
 
@@ -51,6 +55,9 @@
         </li>
         <li>
             <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Listen</a>
+        </li>
+        <li>
+            <a asp-area="Offers" asp-controller="Market" asp-action="Index">Angebote</a>
         </li>
         <li>
             <a asp-area="Account" asp-controller="MyProfile" asp-action="Index">Profil</a>

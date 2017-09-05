@@ -45,11 +45,42 @@
     }
 }
 
+@media (min-width: 576px) {
+    .card-columns {
+        column-count: 3;
+        column-gap: 1.25rem;
+        
+        &.col-4 {
+            column-count: 4;
+        }
+    }
+}
+
+@media (min-width: 576px) {
+    .card-columns .card {
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+.card-columns .card {
+    margin-bottom: .75rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+    background-color: #fff;
+    box-shadow: 0 1px 1px 0 rgba(50, 50, 50, .4);
+}
+
 .standard-box {
+    width: 100%;
     box-shadow: 0 1px 1px 0 rgba(50, 50, 50, .4);
     background-color: #fff;
 }
 
-.standard-box + .standard-box {
+/*.standard-box + .standard-box {
     margin-top: .5rem;
-}
+}*/

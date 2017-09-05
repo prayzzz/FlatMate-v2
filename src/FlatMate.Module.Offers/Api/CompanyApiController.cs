@@ -14,13 +14,13 @@ using prayzzz.Common.Results;
 namespace FlatMate.Module.Offers.Api
 {
     [Route(RouteTemplate)]
-    public class CompanyController : ApiController
+    public class CompanyApiController : ApiController
     {
         private const string RouteTemplate = "/api/v1/offers/company";
         private readonly ICompanyService _companyService;
         private readonly IImageService _imageService;
 
-        public CompanyController(ICompanyService companyService, IImageService imageService, IMapper mapper) : base(mapper)
+        public CompanyApiController(ICompanyService companyService, IImageService imageService, IMapper mapper) : base(mapper)
         {
             _companyService = companyService;
             _imageService = imageService;

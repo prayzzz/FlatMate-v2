@@ -1,0 +1,20 @@
+﻿.standard-box.offer-box {
+    padding: 0.75rem;
+    display: flex;
+    flex-flow: column;
+
+    .image {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .name {
+        flex: 2;
+    }
+
+    .price {
+        min-height: 1.5rem;
+        font-size: 1.5rem;
+        text-align: right;
+    }
+}

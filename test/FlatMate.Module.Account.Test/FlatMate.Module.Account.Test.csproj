@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
-    <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-dev-21" />
+    <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-dev-23" />
   </ItemGroup>
   
   <ItemGroup>

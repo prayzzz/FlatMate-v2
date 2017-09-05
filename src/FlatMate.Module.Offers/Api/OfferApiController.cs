@@ -3,9 +3,9 @@ using prayzzz.Common.Mapping;
 
 namespace FlatMate.Module.Offers.Api
 {
-    public class OfferController : ApiController
+    public class OfferApiController : ApiController
     {
-        public OfferController(IMapper mapper) : base(mapper)
+        public OfferApiController(IMapper mapper) : base(mapper)
         {
         }
     }

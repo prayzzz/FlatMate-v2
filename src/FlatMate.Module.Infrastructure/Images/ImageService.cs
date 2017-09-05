@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FlatMate.Module.Infrastructure.Images
 {
@@ -27,13 +28,16 @@ namespace FlatMate.Module.Infrastructure.Images
         private const long MaxImageSize = 5 * 1024 * 1024;
 
         private static readonly string[] SupportedContentTypes = { "image/jpg", "image/jpeg", "image/png" };
+        private static readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(24));
 
+        private readonly IMemoryCache _cache;
         private readonly InfrastructureDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<ImageService> _logger;
 
-        public ImageService(InfrastructureDbContext dbContext, IMapper mapper, ILogger<ImageService> logger)
+        public ImageService(IMemoryCache cache, InfrastructureDbContext dbContext, IMapper mapper, ILogger<ImageService> logger)
         {
+            _cache = cache;
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
@@ -53,11 +57,15 @@ namespace FlatMate.Module.Infrastructure.Images
 
         public async Task<(Result, ImageDto)> Get(Guid hash)
         {
-            var image = await _dbContext.Images.FirstOrDefaultAsync(x => x.Guid == hash);
-
-            if (image == null)
+            if (!_cache.TryGetValue(hash, out var image))
             {
-                return (new ErrorResult(ErrorType.NotFound, "Image not found"), null);
+                image = await _dbContext.Images.FirstOrDefaultAsync(x => x.Guid == hash);
+                if (image == null)
+                {
+                    return (new ErrorResult(ErrorType.NotFound, "Image not found"), null);
+                }
+
+                _cache.Set(hash, image, _cacheEntryOptions);
             }
 
             return (SuccessResult.Default, _mapper.Map<ImageDto>(image));

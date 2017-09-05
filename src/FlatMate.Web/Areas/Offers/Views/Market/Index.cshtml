@@ -1,0 +1,29 @@
+﻿@model FlatMate.Web.Areas.Offers.Data.MarketIndexVm
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Märkte";
+    ViewData["PageTitle"] = "Märkte";
+}
+
+<section class="container flex-row" style="justify-content:space-between">
+
+
+    @foreach (var market in Model.Markets)
+    {
+        <a asp-action="View" asp-route-id="@market.Id" class="standard-box" style="  padding: 1rem; width:49%">
+
+            <div style="padding-bottom: 1rem">
+                <img src="@market.Company.ImageLink" style="width:100%" />
+            </div>
+
+            <div>
+                <strong>@market.Name</strong> <br />
+                <span>@market.Street</span>
+            </div>
+        </a>
+
+    }
+
+
+</section>

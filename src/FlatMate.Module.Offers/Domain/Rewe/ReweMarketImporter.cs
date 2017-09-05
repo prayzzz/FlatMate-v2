@@ -57,12 +57,12 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 _dbContext.Add(market);
             }
 
-            market.City = marketJso.Address.City;
+            market.City = marketJso.Company.City;
             market.CompanyId = 1; // TODO find way to set company corrently
             market.ExternalId = marketJso.Id;
             market.Name = marketJso.Name;
-            market.PostalCode = marketJso.Address.PostalCode;
-            market.Street = marketJso.Address.Street;
+            market.PostalCode = marketJso.Company.ZipCode;
+            market.Street = marketJso.Company.Street;
 
             var result = await _dbContext.SaveChangesAsync();
             var savedMarket = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == market.Id);

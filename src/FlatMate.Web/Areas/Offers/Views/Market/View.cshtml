@@ -1,0 +1,35 @@
+﻿@model FlatMate.Web.Areas.Offers.Data.MarketViewVm
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Market.Name;
+    ViewData["PageTitle"] = Model.Market.Name;
+}
+
+<section class="container">
+
+    <div class="grid col-5">
+
+        @foreach (var offers in Model.Offers)
+        {
+            <div class="standard-box offer-box">
+
+                <div class="image">
+                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offers.ImageUrl?resize=150px:150px" width="150" height="150" />
+                </div>
+
+                <div class="name">
+                    <strong>@offers.Product.Name</strong>
+                </div>
+
+                <div class="price">
+                    <span style="font-size:1.5rem">@offers.Price €</span>
+                </div>
+
+            </div>
+
+        }
+
+    </div>
+
+</section>
