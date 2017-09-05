@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Api.Filter
+namespace FlatMate.Module.Common.Api.Filter
 {
     public class EnsurePostBodyFilter : ActionFilterAttribute
     {

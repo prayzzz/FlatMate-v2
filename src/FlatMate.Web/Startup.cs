@@ -2,10 +2,10 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FlatMate.Api;
 using FlatMate.Api.Extensions;
 using FlatMate.Api.Filter;
 using FlatMate.Migration;
+using FlatMate.Module.Common;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +24,15 @@ namespace FlatMate.Web
 {
     public class Startup : StartupBase
     {
+        private static readonly FlatMateModule[] Modules =
+        {
+            new Api.Module(),
+            new Module.Account.Module(),
+            new Module.Infrastructure.Module(),
+            new Module.Lists.Module(),
+            new Module.Offers.Module()
+        };
+
         private readonly IConfiguration _configuration;
         private readonly ILogger<Startup> _logger;
 
@@ -69,9 +78,12 @@ namespace FlatMate.Web
                 routes.MapRoute("404", "{*url}", new { area = "", controller = "Error", action = "PageNotFound" });
             });
 
-            // load api controllers
-            var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            applicationPartManager.ApplicationParts.Add(new AssemblyPart(typeof(ApiController).GetTypeInfo().Assembly));
+            // Load Modules
+            var parManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
+            foreach (var module in Modules)
+            {
+                parManager.ApplicationParts.Add(module);
+            }
 
             var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
             if (serverAddressesFeature != null)
@@ -83,31 +95,32 @@ namespace FlatMate.Web
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             // Framework
+            services.AddFlatMateAuthentication();
+
             services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
                     .AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings))
                     .AddControllersAsServices();
 
-            services.AddFlatMateAuthentication();
-
+            services.AddOptions();
             services.AddSession();
-
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }); });
-
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Modules
-            Module.Account.Module.ConfigureServices(services, _configuration);
-            Module.Lists.Module.ConfigureServices(services, _configuration);
+            foreach (var module in Modules)
+            {
+                module.ConfigureServices(services, _configuration);
+            }
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
-
             builder.RegisterType<Mapper>().As<IMapper>().As<IMapperConfiguration>().SingleInstance();
 
             builder.InjectDependencies(GetType());
-            builder.InjectDependencies(typeof(ApiController));
-            builder.InjectDependencies(typeof(Module.Account.Module));
-            builder.InjectDependencies(typeof(Module.Lists.Module));
+            foreach (var module in Modules)
+            {
+                builder.InjectDependencies(module.GetType());
+            }
 
             return new AutofacServiceProvider(builder.Build());
         }

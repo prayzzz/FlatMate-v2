@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;

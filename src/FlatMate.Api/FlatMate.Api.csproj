@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <Import Project="..\..\build\common.props" />
+  
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.0" />
@@ -12,9 +15,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
+    <ProjectReference Include="..\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj" />
   </ItemGroup>
+  
 </Project>

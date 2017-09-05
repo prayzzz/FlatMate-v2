@@ -1,9 +1,9 @@
-﻿using FlatMate.Api.Filter;
+﻿using FlatMate.Module.Common.Api.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Api
+namespace FlatMate.Module.Common.Api
 {
     [Authorize]
     [EnsurePostBodyFilter]
