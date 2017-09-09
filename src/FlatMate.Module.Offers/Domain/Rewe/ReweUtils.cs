@@ -40,6 +40,12 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 return ParsePriceOrDefault(price);
             }
 
+            // add leading zero to prices below 1€
+            if (price.Length == 2)
+            {
+                price = "0" + price;
+            }
+
             price = price.Insert(price.Length - 2, ",");
             return ParsePriceOrDefault(price);
 

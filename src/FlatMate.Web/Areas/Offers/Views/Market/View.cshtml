@@ -10,7 +10,7 @@
 
     @{
         var offersByProductCategory = Model.Offers.OrderByDescending(o => o.Product.ProductCategory.SortWeight)
-                                                  .GroupBy(o => o.Product.ProductCategory.Id);
+                                                  .GroupBy(o => o.Product.ProductCategory.Id.Value);
     }
 
 

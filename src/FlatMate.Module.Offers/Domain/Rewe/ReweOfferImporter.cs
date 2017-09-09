@@ -98,7 +98,6 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             Check(product.Brand, offer.Brand);
             Check(product.Description, _reweUtils.TrimDescription(offer.AdditionalInformation));
             Check(product.ExternalId, offer.ProductId);
-            Check(product.ExternalProductCategoryId, string.Join(", ", offer.CategoryIDs));
             Check(product.Name, _reweUtils.TrimName(offer.Name));
             Check(product.SizeInfo, offer.QuantityAndUnit);
 
@@ -200,6 +199,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 CheckForChangedProductProperties(product, offerJso);
                 product.UpdatePrice(GetCrossedOutPrice(offerJso));
                 product.ProductCategoryId = productCategoryId;
+                product.ExternalProductCategoryId = string.Join(", ", offerJso.CategoryIDs);
             }
 
             return product;
