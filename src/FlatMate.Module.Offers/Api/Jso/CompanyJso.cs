@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using FlatMate.Module.Infrastructure.Api;
+﻿using FlatMate.Module.Infrastructure.Api;
 using FlatMate.Module.Offers.Domain.Companies;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System;
+using System.ComponentModel;
 
 namespace FlatMate.Module.Offers.Api.Jso
 {
@@ -34,7 +34,7 @@ namespace FlatMate.Module.Offers.Api.Jso
         {
             return new CompanyDto
             {
-                Id = jso.Id ?? 0,
+                Id = jso.Id,
                 ImageGuid = jso.ImageGuid,
                 Name = jso.Name
             };

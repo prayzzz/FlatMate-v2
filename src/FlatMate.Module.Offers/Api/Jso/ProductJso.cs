@@ -1,6 +1,7 @@
-﻿using FlatMate.Module.Offers.Domain.Offers;
+﻿using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System.ComponentModel;
 
 namespace FlatMate.Module.Offers.Api.Jso
 {
@@ -12,13 +13,16 @@ namespace FlatMate.Module.Offers.Api.Jso
 
         public string ExternalId { get; set; }
 
-        public int Id { get; set; }
+        [ReadOnly(true)]
+        public int? Id { get; set; }
 
         public string ImageUrl { get; set; }
 
         public string Name { get; set; }
 
         public decimal Price { get; set; }
+
+        public ProductCategoryJso ProductCategory { get; set; }
 
         public string SizeInfo { get; set; }
     }
@@ -42,6 +46,7 @@ namespace FlatMate.Module.Offers.Api.Jso
                 ImageUrl = dto.ImageUrl,
                 Name = dto.Name,
                 Price = dto.Price,
+                ProductCategory = ctx.Mapper.Map<ProductCategoryJso>(dto.ProductCategory),
                 SizeInfo = dto.SizeInfo
             };
         }

@@ -1,14 +1,16 @@
-﻿using System;
+﻿using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Offers;
+using FlatMate.Module.Offers.Domain.Products;
+using FlatMate.Module.Offers.Domain.Rewe.Jso;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using prayzzz.Common.Attributes;
+using prayzzz.Common.Results;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Markets;
-using FlatMate.Module.Offers.Domain.Offers;
-using FlatMate.Module.Offers.Domain.Rewe.Jso;
-using Microsoft.Extensions.Logging;
-using prayzzz.Common.Attributes;
-using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Rewe
 {
@@ -30,9 +32,28 @@ namespace FlatMate.Module.Offers.Domain.Rewe
     [Inject]
     public class ReweOfferImporter : IReweOfferImporter
     {
+        private readonly Dictionary<string, ProductCategoryEnum> _categoryMapping = new Dictionary<string, ProductCategoryEnum>
+        {
+            { "Obst & Gemüse", ProductCategoryEnum.Fruits },
+            { "Frische & Convenience", ProductCategoryEnum.Convenience },
+            { "Kühlung", ProductCategoryEnum.Cooling },
+            { "Tiefkühl", ProductCategoryEnum.Frozen },
+            { "Frühstück", ProductCategoryEnum.Breakfast },
+            { "Kochen & Backen", ProductCategoryEnum.CookingAndBaking },
+            { "Süßigkeiten", ProductCategoryEnum.Candy },
+            { "Getränke", ProductCategoryEnum.Beverages },
+            { "Baby & Kind", ProductCategoryEnum.Baby },
+            { "Haushalt", ProductCategoryEnum.Household },
+            { "Drogerie", ProductCategoryEnum.PersonalCare },
+            { "Weitere Bereiche", ProductCategoryEnum.Other },
+        };
+
         private readonly ILogger<ReweOfferImporter> _logger;
+
         private readonly IReweMobileApi _mobileApi;
+
         private readonly OffersDbContext _repository;
+
         private readonly IReweUtils _reweUtils;
 
         public ReweOfferImporter(IReweMobileApi mobileApi,
@@ -47,11 +68,11 @@ namespace FlatMate.Module.Offers.Domain.Rewe
         }
 
         /// <inheritdoc />
-        public async Task<(Result, IEnumerable<Offer>)> ImportOffers(Market market, Envelope<OfferJso> offerEnvelope)
+        public Task<(Result, IEnumerable<Offer>)> ImportOffers(Market market, Envelope<OfferJso> offerEnvelope)
         {
             _logger.LogInformation($"Importing {offerEnvelope.Items.Count} orders");
 
-            return await ProcessOffers(offerEnvelope.Items, market);
+            return ProcessOffers(offerEnvelope, market);
         }
 
         /// <inheritdoc />
@@ -69,14 +90,16 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 return (new ErrorResult(ErrorType.InternalError, "Rewe Mobile API nicht verfügbar."), null);
             }
 
-            return await ProcessOffers(offerEnvelope.Items, market);
+            return await ProcessOffers(offerEnvelope, market);
         }
 
         private void CheckForChangedProductProperties(Product product, OfferJso offer)
         {
             Check(product.Brand, offer.Brand);
+            Check(product.Description, _reweUtils.TrimDescription(offer.AdditionalInformation));
             Check(product.ExternalId, offer.ProductId);
-            Check(product.Name, offer.Name);
+            Check(product.ExternalProductCategoryId, string.Join(", ", offer.CategoryIDs));
+            Check(product.Name, _reweUtils.TrimName(offer.Name));
             Check(product.SizeInfo, offer.QuantityAndUnit);
 
             void Check(string current, string updated)
@@ -86,6 +109,40 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                     _logger.LogWarning($"Property of product #{{productId}} changed. \"{current}\" -> \"{updated}\"", product.Id);
                 }
             }
+        }
+
+        private Dictionary<string, ProductCategoryEnum> CreateCategoryMap(JToken categories)
+        {
+            var map = new Dictionary<string, ProductCategoryEnum>();
+
+            if (categories.Type != JTokenType.Array)
+            {
+                return map;
+            }
+
+            try
+            {
+                foreach (var item in categories.Value<JArray>())
+                {
+                    var reweCategory = item.ToObject<Category>();
+
+                    if (_categoryMapping.TryGetValue(reweCategory.Name, out var categoryEnum))
+                    {
+                        map.Add(reweCategory.Id, categoryEnum);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Unknown category {category}", reweCategory.Name);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error mapping categories");
+                return new Dictionary<string, ProductCategoryEnum>();
+            }
+
+            return map;
         }
 
         private Offer CreateOrUpdateOffer(OfferJso offerJso, Product product, Market market)
@@ -101,7 +158,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             offer.ExternalId = offerJso.Id;
             offer.From = offerJso.OfferDuration.From;
             offer.ImageUrl = offerJso.Links?.ImageDigital.Href;
-            offer.Price = (decimal) offerJso.Price;
+            offer.Price = (decimal)offerJso.Price;
             offer.To = offerJso.OfferDuration.Until;
             offer.Market = market;
             offer.Product = product;
@@ -109,8 +166,14 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             return offer;
         }
 
-        private Product CreateOrUpdateProduct(Market market, OfferJso offerJso)
+        private Product CreateOrUpdateProduct(Market market, Dictionary<string, ProductCategoryEnum> categoryToEnum, OfferJso offerJso)
         {
+            var productCategoryId = (int)ProductCategoryEnum.Other;
+            if (offerJso.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offerJso.CategoryIDs.FirstOrDefault(), out var category))
+            {
+                productCategoryId = (int)category;
+            }
+
             var product = _repository.Product.FirstOrDefault(p => p.ExternalId == offerJso.ProductId);
 
             if (product == null)
@@ -120,9 +183,11 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                     Brand = offerJso.Brand ?? string.Empty,
                     Description = _reweUtils.TrimDescription(offerJso.AdditionalInformation),
                     ExternalId = offerJso.ProductId,
+                    ExternalProductCategoryId = string.Join(", ", offerJso.CategoryIDs),
                     ImageUrl = offerJso.Links?.ImageDigital.Href,
                     Market = market,
                     Name = _reweUtils.TrimName(offerJso.Name),
+                    ProductCategoryId = productCategoryId,
                     SizeInfo = offerJso.QuantityAndUnit
                 };
 
@@ -134,6 +199,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             {
                 CheckForChangedProductProperties(product, offerJso);
                 product.UpdatePrice(GetCrossedOutPrice(offerJso));
+                product.ProductCategoryId = productCategoryId;
             }
 
             return product;
@@ -154,22 +220,28 @@ namespace FlatMate.Module.Offers.Domain.Rewe
         /// <summary>
         ///     Creates or updates products based on the given offers
         /// </summary>
-        private async Task<(Result, IEnumerable<Offer>)> ProcessOffers(List<OfferJso> offerJsos, Market market)
+        private async Task<(Result, IEnumerable<Offer>)> ProcessOffers(Envelope<OfferJso> envelope, Market market)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var offers = new List<Offer>();
-            foreach (var offerJso in offerJsos)
+            var categoryIdToEnum = new Dictionary<string, ProductCategoryEnum>();
+            if (envelope.Meta.TryGetValue("categories", out var categories))
             {
-                var productDbo = CreateOrUpdateProduct(market, offerJso);
+                categoryIdToEnum = CreateCategoryMap(categories);
+            }
+
+            var offers = new List<Offer>();
+            foreach (var offerJso in envelope.Items)
+            {
+                var productDbo = CreateOrUpdateProduct(market, categoryIdToEnum, offerJso);
                 var offerDbo = CreateOrUpdateOffer(offerJso, productDbo, market);
 
                 offers.Add(offerDbo);
             }
 
             stopwatch.Stop();
-            _logger.LogInformation($"Processed {offerJsos.Count} orders in {stopwatch.ElapsedMilliseconds}ms");
+            _logger.LogInformation($"Processed {envelope.Items.Count} orders in {stopwatch.ElapsedMilliseconds}ms");
 
             var result = await _repository.SaveChangesAsync();
             return (result, offers);

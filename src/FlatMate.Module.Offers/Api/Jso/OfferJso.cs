@@ -1,17 +1,19 @@
-﻿using System;
-using FlatMate.Module.Offers.Domain.Offers;
+﻿using FlatMate.Module.Offers.Domain.Offers;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System;
+using System.ComponentModel;
 
 namespace FlatMate.Module.Offers.Api.Jso
 {
     public class OfferJso
     {
-        public int Id { get; set; }
-
         public string ExternalId { get; set; }
 
         public DateTime From { get; set; }
+
+        [ReadOnly(true)]
+        public int? Id { get; set; }
 
         public string ImageUrl { get; set; }
 

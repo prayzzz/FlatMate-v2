@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Offers;
+﻿using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -9,11 +6,16 @@ using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain.Markets
 {
     public interface IMarketService
     {
+        Task<IEnumerable<MarketDto>> Get();
+
         Task<(Result, MarketDto)> Get(int id);
 
         Task<IEnumerable<OfferDto>> GetCurrentOffers(int marketId);
@@ -21,17 +23,19 @@ namespace FlatMate.Module.Offers.Domain.Markets
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
         Task<(Result, IEnumerable<OfferDto>)> ImportOffers(int marketId);
-
-        Task<IEnumerable<MarketDto>> Get();
     }
 
     [Inject]
     public class MarketService : IMarketService
     {
         private readonly OffersDbContext _dbContext;
+
         private readonly ILogger<MarketService> _logger;
+
         private readonly IMapper _mapper;
+
         private readonly IReweMarketImporter _marketImporter;
+
         private readonly IReweOfferImporter _offerImporter;
 
         public MarketService(IReweMarketImporter marketImporter,
@@ -47,17 +51,6 @@ namespace FlatMate.Module.Offers.Domain.Markets
             _logger = logger;
         }
 
-        public async Task<(Result, MarketDto)> Get(int marketId)
-        {
-            var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == marketId);
-            if (market == null)
-            {
-                return (new ErrorResult(ErrorType.NotFound, "Market not found"), null);
-            }
-
-            return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
-        }
-
         public async Task<IEnumerable<MarketDto>> Get()
         {
             var market = await _dbContext.Markets
@@ -67,14 +60,25 @@ namespace FlatMate.Module.Offers.Domain.Markets
             return market.Select(_mapper.Map<MarketDto>);
         }
 
+        public async Task<(Result, MarketDto)> Get(int id)
+        {
+            var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == id);
+            if (market == null)
+            {
+                return (new ErrorResult(ErrorType.NotFound, "Market not found"), null);
+            }
+
+            return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
+        }
+
         public async Task<IEnumerable<OfferDto>> GetCurrentOffers(int marketId)
         {
-            var now = DateTime.Now;
+            var now = DateTime.Now.Date;
 
             var offers = await _dbContext.Offers
-                                         .Include(o => o.Product)
+                                         .Include(o => o.Product).ThenInclude(p => p.ProductCategory)
                                          .Where(o => o.MarketId == marketId)
-                                         .Where(o => o.From < now && o.To > now)
+                                         .Where(o => o.From <= now && o.To >= now)
                                          .ToListAsync();
 
             return offers.Select(_mapper.Map<OfferDto>);

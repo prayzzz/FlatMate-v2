@@ -10,5 +10,7 @@ namespace FlatMate.Web.Areas.Offers.Data
         public IEnumerable<OfferJso> Offers { get; set; } = Enumerable.Empty<OfferJso>();
 
         public MarketJso Market { get; set; }
+
+        public Dictionary<int, ProductCategoryJso> ProductCategories { get; set; } = new Dictionary<int, ProductCategoryJso>();
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
+using System.Linq;
 
 namespace FlatMate.Module.Offers.Domain.Rewe
 {
@@ -8,9 +8,9 @@ namespace FlatMate.Module.Offers.Domain.Rewe
     {
         decimal ParsePrice(string price);
 
-        string TrimName(string name);
-
         string TrimDescription(string description);
+
+        string TrimName(string name);
     }
 
     [Inject]
@@ -56,17 +56,6 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
         }
 
-        public string TrimName(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                return name;
-            }
-
-            name = name.Trim('*');
-            return name;
-        }
-
         public string TrimDescription(string description)
         {
             if (string.IsNullOrEmpty(description))
@@ -76,6 +65,17 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
             description = description.Trim(',');
             return description;
+        }
+
+        public string TrimName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return name;
+            }
+
+            name = name.Trim('*');
+            return name;
         }
     }
 }

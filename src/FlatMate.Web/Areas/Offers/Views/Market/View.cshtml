@@ -8,28 +8,39 @@
 
 <section class="container">
 
-    <div class="grid col-5">
+    @{
+        var offersByProductCategory = Model.Offers.OrderByDescending(o => o.Product.ProductCategory.SortWeight)
+                                                  .GroupBy(o => o.Product.ProductCategory.Id);
+    }
 
-        @foreach (var offers in Model.Offers)
-        {
-            <div class="standard-box offer-box">
 
-                <div class="image">
-                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offers.ImageUrl?resize=150px:150px" width="150" height="150" />
+    @foreach (var offersGroup in offersByProductCategory)
+    {
+        <h3 style="margin: 1rem 0;">@Model.ProductCategories[offersGroup.Key].Name</h3>
+
+        <div class="grid col-5">
+
+            @foreach (var offer in offersGroup.OrderBy(x => x.Product.ExternalId))
+                {
+                <div class="standard-box offer-box">
+
+                    <div class="image">
+                        <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offer.ImageUrl?resize=150px:150px" width="150" height="150" />
+                    </div>
+
+                    <div class="name">
+                        <strong>@offer.Product.Name</strong>
+                    </div>
+
+                    <div class="price">
+                        <span style="font-size:1.5rem">@offer.Price €</span>
+                    </div>
+
                 </div>
+            }
 
-                <div class="name">
-                    <strong>@offers.Product.Name</strong>
-                </div>
+        </div>
+    }
 
-                <div class="price">
-                    <span style="font-size:1.5rem">@offers.Price €</span>
-                </div>
-
-            </div>
-
-        }
-
-    </div>
 
 </section>

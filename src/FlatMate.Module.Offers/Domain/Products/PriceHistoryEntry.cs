@@ -1,9 +1,9 @@
-﻿using System;
+﻿using FlatMate.Module.Common.DataAccess;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using FlatMate.Module.Common.DataAccess;
 
-namespace FlatMate.Module.Offers.Domain.Offers
+namespace FlatMate.Module.Offers.Domain.Products
 {
     [Table("PriceHistory")]
     public class PriceHistoryEntry : DboBase
@@ -22,11 +22,7 @@ namespace FlatMate.Module.Offers.Domain.Offers
         }
 
         [Required]
-        public DateTime Date
-        {
-            get => _date;
-            set => _date = value.Date;
-        }
+        public DateTime Date { get => _date; set => _date = value.Date; }
 
         [Required]
         public decimal Price { get; set; }

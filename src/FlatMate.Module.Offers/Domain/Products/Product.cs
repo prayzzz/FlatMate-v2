@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using FlatMate.Module.Common.DataAccess;
+﻿using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Common.Dtos;
 using FlatMate.Module.Offers.Domain.Markets;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
-namespace FlatMate.Module.Offers.Domain.Offers
+namespace FlatMate.Module.Offers.Domain.Products
 {
     [Table("Product")]
     public class Product : DboBase
@@ -21,6 +22,10 @@ namespace FlatMate.Module.Offers.Domain.Offers
 
         [Required]
         public string ExternalId { get; set; }
+
+        public string ExternalProductCategory { get; set; }
+
+        public string ExternalProductCategoryId { get; set; }
 
         public string ImageUrl { get; set; }
 
@@ -39,6 +44,12 @@ namespace FlatMate.Module.Offers.Domain.Offers
         [InverseProperty(nameof(PriceHistoryEntry.Product))]
         public IEnumerable<PriceHistoryEntry> PriceHistory => _priceHistory;
 
+        [ForeignKey(nameof(ProductCategoryId))]
+        public ProductCategory ProductCategory { get; set; }
+
+        [Required]
+        public int ProductCategoryId { get; set; }
+
         public string SizeInfo { get; set; }
 
         public void UpdatePrice(decimal price)
@@ -53,7 +64,7 @@ namespace FlatMate.Module.Offers.Domain.Offers
         }
     }
 
-    public class ProductDto
+    public class ProductDto : DtoBase
     {
         public string Brand { get; set; }
 
@@ -61,16 +72,15 @@ namespace FlatMate.Module.Offers.Domain.Offers
 
         public string ExternalId { get; set; }
 
-        public int Id { get; set; }
-
         public string ImageUrl { get; set; }
 
         public string Name { get; set; }
 
         public decimal Price { get; set; }
 
-        // public IEnumerable<PriceHistoryEntryDbo> PriceHistory => _priceHistory; TODO
+        public ProductCategoryDto ProductCategory { get; set; }
 
+        // TODO public IEnumerable<PriceHistoryEntryDbo> PriceHistory => _priceHistory;
         public string SizeInfo { get; set; }
     }
 
@@ -82,7 +92,7 @@ namespace FlatMate.Module.Offers.Domain.Offers
             mapper.Configure<Product, ProductDto>(MapToDto);
         }
 
-        private ProductDto MapToDto(Product product, MappingContext mappingContext)
+        private ProductDto MapToDto(Product product, MappingContext ctx)
         {
             return new ProductDto
             {
@@ -92,6 +102,7 @@ namespace FlatMate.Module.Offers.Domain.Offers
                 ImageUrl = product.ImageUrl,
                 Name = product.Name,
                 Price = product.Price,
+                ProductCategory = ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory),
                 SizeInfo = product.SizeInfo
             };
         }

@@ -4,11 +4,17 @@ using System.Reflection;
 using Autofac;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
+using FlatMate.Module.Common;
 
 namespace FlatMate.Api.Extensions
 {
     public static class ContainerBuilderExtension
     {
+        public static void InjectDependencies(this ContainerBuilder builder, FlatMateModule module)
+        {
+            builder.InjectDependencies(module.GetType());
+        }
+
         public static void InjectDependencies(this ContainerBuilder builder, Type assemblyType)
         {
             var injectableTypes = assemblyType.GetTypeInfo()
@@ -21,12 +27,14 @@ namespace FlatMate.Api.Extensions
                 var attribute = type.GetTypeInfo().GetCustomAttribute<InjectAttribute>();
                 var serviceTypes = attribute.ServiceTypes;
 
-                if (!serviceTypes.Any())
+                if (serviceTypes.Length == 0)
                 {
                     serviceTypes = type.GetInterfaces();
                 }
 
-                var registrationBuilder = builder.RegisterType(type).As(serviceTypes);
+                var registrationBuilder = builder.RegisterType(type)
+                                                 .AsSelf()
+                                                 .As(serviceTypes);
 
                 switch (attribute.Lifetime)
                 {

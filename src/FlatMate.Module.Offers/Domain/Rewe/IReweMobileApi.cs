@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Rewe.Jso;
+﻿using FlatMate.Module.Offers.Domain.Rewe.Jso;
 using Refit;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain.Rewe
 {

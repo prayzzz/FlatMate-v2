@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Markets;
+﻿using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Rewe.Jso;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
+using System;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain.Rewe
 {
@@ -21,7 +21,9 @@ namespace FlatMate.Module.Offers.Domain.Rewe
     public class ReweMarketImporter : IReweMarketImporter
     {
         private readonly OffersDbContext _dbContext;
+
         private readonly ILogger<ReweMarketImporter> _logger;
+
         private readonly IReweMobileApi _mobileApi;
 
         public ReweMarketImporter(IReweMobileApi mobileApi, OffersDbContext dbContext, ILogger<ReweMarketImporter> logger)

@@ -1,7 +1,7 @@
 ﻿using FlatMate.Module.Common;
 using FlatMate.Module.Offers.Configuration;
 using FlatMate.Module.Offers.Domain.Rewe;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,9 +11,15 @@ namespace FlatMate.Module.Offers
 {
     public class Module : FlatMateModule
     {
+        public override void Configure(IApplicationBuilder app, IConfiguration configuration)
+        {
+            base.Configure(app, configuration);
+        }
+
         public override void ConfigureServices(IServiceCollection service, IConfiguration configuration)
         {
             base.ConfigureServices(service, configuration);
+
             var offersConfiguration = configuration.GetSection("Offers").Get<OffersConfiguration>();
 
             service.Configure<OffersConfiguration>(configuration.GetSection("Offers"));
