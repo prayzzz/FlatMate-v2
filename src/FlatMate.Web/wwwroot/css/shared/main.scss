@@ -62,7 +62,7 @@ header {
     z-index: 20;
 
     .header-wrapper {
-        height: 64px;
+        height: $header-height;
         position: relative;
     }
 
@@ -80,7 +80,7 @@ header {
     .page-title {
         align-items: center;
         display: flex;
-        height: 64px;
+        height: $header-height;
         justify-content: center;
         position: absolute;
         top: 0;

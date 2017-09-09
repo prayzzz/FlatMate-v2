@@ -112,7 +112,9 @@ namespace FlatMate.Module.Common.Tasks.Cron
         public int Next(int start)
         {
             if (start < _minValueSet)
+            {
                 return _minValueSet;
+            }
 
             var startIndex = ValueToIndex(start);
             var lastIndex = ValueToIndex(_maxValueSet);
@@ -120,7 +122,9 @@ namespace FlatMate.Module.Common.Tasks.Cron
             for (var i = startIndex; i <= lastIndex; i++)
             {
                 if (_bits[i])
+                {
                     return IndexToValue(i);
+                }
             }
 
             return -1;
@@ -243,7 +247,9 @@ namespace FlatMate.Module.Common.Tasks.Cron
             }
 
             if (interval < 1)
+            {
                 interval = 1;
+            }
 
             int i;
 
@@ -253,7 +259,9 @@ namespace FlatMate.Module.Common.Tasks.Cron
             //
 
             for (i = start - minValue; i <= (end - minValue); i += interval)
+            {
                 _bits[i] = true;
+            }
 
             //
             // Make sure we remember the minimum value set so far Keep track of
@@ -262,12 +270,16 @@ namespace FlatMate.Module.Common.Tasks.Cron
             //
 
             if (_minValueSet > start)
+            {
                 _minValueSet = start;
+            }
 
             i += (minValue - interval);
 
             if (_maxValueSet < i)
+            {
                 _maxValueSet = i;
+            }
         }
 
         private int IndexToValue(int index)

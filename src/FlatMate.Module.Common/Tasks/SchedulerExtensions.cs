@@ -16,7 +16,7 @@ namespace FlatMate.Module.Common.Tasks
         {
             return services.AddSingleton<IHostedService, SchedulerHostedService>(serviceProvider =>
             {
-                var instance = new SchedulerHostedService(serviceProvider.GetServices<IScheduledTask>());
+                var instance = new SchedulerHostedService(serviceProvider.GetServices<ScheduledTask>());
                 instance.UnobservedTaskException += unobservedTaskExceptionHandler;
                 return instance;
             });

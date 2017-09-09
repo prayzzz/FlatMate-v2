@@ -30,9 +30,9 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("{marketId}")]
-        public async Task<Result<MarketJso>> Get(int marketId)
+        public async Task<Result<MarketJso>> GetMarket(int marketId)
         {
-            var (result, market) = await _marketService.Get(marketId);
+            var (result, market) = await _marketService.GetMarket(marketId);
 
             if (result.IsError)
             {

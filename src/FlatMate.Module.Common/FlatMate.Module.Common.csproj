@@ -7,10 +7,6 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <None Include="Tasks\IScheduledTask.cs" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-24" />

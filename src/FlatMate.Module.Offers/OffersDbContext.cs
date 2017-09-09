@@ -28,7 +28,7 @@ namespace FlatMate.Module.Offers
 
         public virtual DbSet<Offer> Offers { get; set; }
 
-        public virtual DbSet<PriceHistoryEntry> PriceHistoryEntry { get; set; }
+        public virtual DbSet<PriceHistory> PriceHistory { get; set; }
 
         public virtual DbSet<Product> Product { get; set; }
 

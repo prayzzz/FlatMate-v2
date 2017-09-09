@@ -10,7 +10,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 {
     public partial class ItemListService
     {
-        public async Task<Result<ItemDto>> CreateAsync(int listId, int? groupId, ItemDto dto)
+        public async Task<Result<ItemDto>> CreateAsync(int listId, int? groupId, ItemDto itemDto)
         {
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
@@ -29,7 +29,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 }
 
                 // create Item withut group
-                createItem = Item.Create(dto.Name, CurrentUser.Id, getList.Data);
+                createItem = Item.Create(itemDto.Name, CurrentUser.Id, getList.Data);
             }
             else
             {
@@ -41,7 +41,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 }
 
                 // create Item with group
-                createItem = Item.Create(dto.Name, CurrentUser.Id, getGroup.Data);
+                createItem = Item.Create(itemDto.Name, CurrentUser.Id, getGroup.Data);
             }
 
             if (createItem.IsError)
@@ -51,7 +51,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 
             // set additional data
             var item = createItem.Data;
-            item.SortIndex = dto.SortIndex;
+            item.SortIndex = itemDto.SortIndex;
 
             return await SaveAsync(item);
         }

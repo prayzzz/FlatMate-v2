@@ -1,8 +1,6 @@
 ﻿using FlatMate.Module.Common.Tasks.Cron;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,24 +8,31 @@ namespace FlatMate.Module.Common.Tasks
 {
     public class SchedulerHostedService : HostedService
     {
-        public event EventHandler<UnobservedTaskExceptionEventArgs> UnobservedTaskException;
-
         private readonly List<SchedulerTaskWrapper> _scheduledTasks = new List<SchedulerTaskWrapper>();
 
-        public SchedulerHostedService(IEnumerable<IScheduledTask> scheduledTasks)
+        public SchedulerHostedService(IEnumerable<ScheduledTask> scheduledTasks)
         {
             var referenceTime = DateTime.UtcNow;
 
             foreach (var scheduledTask in scheduledTasks)
             {
-                _scheduledTasks.Add(new SchedulerTaskWrapper
+                var wrapper = new SchedulerTaskWrapper
                 {
                     Schedule = CrontabSchedule.Parse(scheduledTask.Schedule),
                     Task = scheduledTask,
                     NextRunTime = referenceTime + scheduledTask.InitialDelay
-                });
+                };
+
+                if (!scheduledTask.RunOnStartup)
+                {
+                    wrapper.Increment();
+                }
+
+                _scheduledTasks.Add(wrapper);
             }
         }
+
+        public event EventHandler<UnobservedTaskExceptionEventArgs> UnobservedTaskException;
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
@@ -44,23 +49,25 @@ namespace FlatMate.Module.Common.Tasks
             var taskFactory = new TaskFactory(TaskScheduler.Current);
             var referenceTime = DateTime.UtcNow;
 
-            var tasksThatShouldRun = _scheduledTasks.Where(t => t.ShouldRun(referenceTime)).ToList();
-
-            foreach (var taskThatShouldRun in tasksThatShouldRun)
+            foreach (var task in _scheduledTasks)
             {
-                taskThatShouldRun.Increment();
+                if (!task.ShouldRun(referenceTime))
+                {
+                    continue;
+                }
+
+                task.Increment();
 
                 await taskFactory.StartNew(
                     async () =>
                     {
                         try
                         {
-                            await taskThatShouldRun.Task.ExecuteAsync(cancellationToken);
+                            await task.Task.ExecuteAsync(cancellationToken);
                         }
                         catch (Exception ex)
                         {
-                            var args = new UnobservedTaskExceptionEventArgs(
-                                ex as AggregateException ?? new AggregateException(ex));
+                            var args = new UnobservedTaskExceptionEventArgs(ex as AggregateException ?? new AggregateException(ex));
 
                             UnobservedTaskException?.Invoke(this, args);
 
@@ -76,11 +83,13 @@ namespace FlatMate.Module.Common.Tasks
 
         private class SchedulerTaskWrapper
         {
-            public CrontabSchedule Schedule { get; set; }
-            public IScheduledTask Task { get; set; }
-
             public DateTime LastRunTime { get; set; }
+
             public DateTime NextRunTime { get; set; }
+
+            public CrontabSchedule Schedule { get; set; }
+
+            public ScheduledTask Task { get; set; }
 
             public void Increment()
             {

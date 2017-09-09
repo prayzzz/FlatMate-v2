@@ -29,7 +29,7 @@ namespace FlatMate.Module.Offers.Api.Jso
             {
                 Name = category.Name,
                 Id = category.Id,
-                SortWeight = category.SortWeight,
+                SortWeight = category.SortWeight
             };
         }
     }

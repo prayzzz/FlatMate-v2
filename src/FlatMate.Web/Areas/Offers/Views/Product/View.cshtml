@@ -1,0 +1,86 @@
+﻿@model FlatMate.Web.Areas.Offers.Data.ProductViewVm
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Product.Name;
+    ViewData["PageTitle"] = "Produktdetails";
+    ViewData["MainClass"] = "productview";
+}
+
+<section class="container">
+
+    <div class="standard-box flex-row" style="padding: 1em;">
+
+        <div class="picture-wrapper">
+            <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@Model.Product.ImageUrl?resize=150px:150px" width="150" height="150" />
+        </div>
+
+        <div class="informations">
+            <div style="font-size:1.5rem;">@Model.Product.Name</div>
+
+            <div>@Model.Product.Description</div>
+
+            <div>@Model.Product.SizeInfo</div>
+
+            @if (Model.Product.Price > 0)
+            {
+                <div>
+                    <text>@Model.Product.Price €</text>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <h3>Im Angebot</h3>
+    <div class="standard-box">
+        <table>
+            <thead>
+                <tr>
+                    <th width="33%">Von</th>
+                    <th width="33%">Bis</th>
+                    <th width="33%">Preis</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var offer in Model.Offers)
+                {
+                    <tr>
+                        <td>@offer.From.ToShortDateString()</td>
+                        <td>@offer.To.ToShortDateString()</td>
+                        <td>@offer.Price €</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.PriceHistory.Count > 1)
+    {
+        <h3>Preishistorie</h3>
+        <div class="standard-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="50%">Von</th>
+                        <th width="50%">Preis</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var history in Model.PriceHistory)
+                {
+                        <tr>
+                            <td>@history.Date.ToShortDateString()</td>
+                            <td>@history.Price €</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+
+</section>

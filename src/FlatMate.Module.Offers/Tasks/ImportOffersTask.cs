@@ -4,12 +4,11 @@ using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using System.Threading;
 using System.Threading.Tasks;
-using System;
 
 namespace FlatMate.Module.Offers.Tasks
 {
-    [Inject]
-    public class ImportOffersTask : IScheduledTask
+    [Inject(typeof(ScheduledTask))]
+    public class ImportOffersTask : ScheduledTask
     {
         private readonly OffersDbContext _dbContext;
 
@@ -29,11 +28,9 @@ namespace FlatMate.Module.Offers.Tasks
         /// <summary>
         /// Every day 01:00
         /// </summary>
-        public string Schedule => "0 1 * * *";
+        public override string Schedule => "0 1 * * *";
 
-        public TimeSpan InitialDelay => TimeSpan.FromMinutes(1);
-
-        public async Task ExecuteAsync(CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Starting {taskName}", nameof(ImportOffersTask));
 

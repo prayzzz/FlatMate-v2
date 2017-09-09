@@ -178,7 +178,9 @@ namespace FlatMate.Module.Common.Tasks.Cron
             if (day > 28 && dateChanged && day > Calendar.GetDaysInMonth(year, month))
             {
                 if (year >= endYear && month >= endMonth && day >= endDay)
+                {
                     return endTime;
+                }
 
                 day = nil;
                 goto RetryDayMonth;
@@ -187,14 +189,18 @@ namespace FlatMate.Module.Common.Tasks.Cron
             var nextTime = new DateTime(year, month, day, hour, minute, 0, 0, baseTime.Kind);
 
             if (nextTime >= endTime)
+            {
                 return endTime;
+            }
 
             //
             // Day of week
             //
 
             if (_daysOfWeek.Contains((int)nextTime.DayOfWeek))
+            {
                 return nextTime;
+            }
 
             return GetNextOccurrence(new DateTime(year, month, day, 23, 59, 0, 0, baseTime.Kind), endTime);
         }

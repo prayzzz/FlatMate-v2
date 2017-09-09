@@ -52,6 +52,8 @@ namespace FlatMate.Module.Offers.Domain.Offers
 
         public ProductDto Product { get; set; }
 
+        public int ProductId { get; set; }
+
         public DateTime To { get; set; }
     }
 
@@ -73,6 +75,7 @@ namespace FlatMate.Module.Offers.Domain.Offers
                 ImageUrl = offer.ImageUrl,
                 Price = offer.Price,
                 Product = ctx.Mapper.Map<ProductDto>(offer.Product),
+                ProductId = offer.ProductId,
                 To = offer.To
             };
         }

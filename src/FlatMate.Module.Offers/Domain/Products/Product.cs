@@ -13,7 +13,7 @@ namespace FlatMate.Module.Offers.Domain.Products
     [Table("Product")]
     public class Product : DboBase
     {
-        private readonly List<PriceHistoryEntry> _priceHistory = new List<PriceHistoryEntry>();
+        private readonly List<PriceHistory> _priceHistory = new List<PriceHistory>();
 
         [Required]
         public string Brand { get; set; }
@@ -41,8 +41,8 @@ namespace FlatMate.Module.Offers.Domain.Products
         [Required]
         public decimal Price { get; private set; }
 
-        [InverseProperty(nameof(PriceHistoryEntry.Product))]
-        public IEnumerable<PriceHistoryEntry> PriceHistory => _priceHistory;
+        [InverseProperty(nameof(Products.PriceHistory.Product))]
+        public IEnumerable<PriceHistory> PriceHistory => _priceHistory;
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory ProductCategory { get; set; }
@@ -59,7 +59,7 @@ namespace FlatMate.Module.Offers.Domain.Products
             var lastHistoryEntry = PriceHistory.OrderByDescending(x => x.Date).FirstOrDefault();
             if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
             {
-                _priceHistory.Add(new PriceHistoryEntry(price, this));
+                _priceHistory.Add(new PriceHistory(price, this));
             }
         }
     }
@@ -80,7 +80,6 @@ namespace FlatMate.Module.Offers.Domain.Products
 
         public ProductCategoryDto ProductCategory { get; set; }
 
-        // TODO public IEnumerable<PriceHistoryEntryDbo> PriceHistory => _priceHistory;
         public string SizeInfo { get; set; }
     }
 
@@ -99,6 +98,7 @@ namespace FlatMate.Module.Offers.Domain.Products
                 Brand = product.Brand,
                 Description = product.Description,
                 ExternalId = product.ExternalId,
+                Id = product.Id,
                 ImageUrl = product.ImageUrl,
                 Name = product.Name,
                 Price = product.Price,

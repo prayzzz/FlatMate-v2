@@ -21,6 +21,8 @@ namespace FlatMate.Module.Offers.Api.Jso
 
         public ProductJso Product { get; set; }
 
+        public int ProductId { get; set; }
+
         public DateTime To { get; set; }
     }
 
@@ -42,6 +44,7 @@ namespace FlatMate.Module.Offers.Api.Jso
                 ImageUrl = dto.ImageUrl,
                 Price = dto.Price,
                 Product = ctx.Mapper.Map<ProductJso>(dto.Product),
+                ProductId = dto.ProductId,
                 To = dto.To
             };
         }

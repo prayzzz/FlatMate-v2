@@ -53,7 +53,7 @@ namespace FlatMate.Module.Offers.Api.Jso
                 Company = ctx.Mapper.Map<CompanyJso>(dto.Company),
                 Id = dto.Id,
                 Name = dto.Name,
-                PostalCode = dto.PostalCode,
+                PostalCode = dto.PostalCode.PadLeft(5, '0'),
                 Street = dto.Street
             };
         }

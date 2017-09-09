@@ -16,7 +16,7 @@ namespace FlatMate.Module.Offers.Domain.Markets
     {
         Task<IEnumerable<MarketDto>> Get();
 
-        Task<(Result, MarketDto)> Get(int id);
+        Task<(Result, MarketDto)> GetMarket(int id);
 
         Task<IEnumerable<OfferDto>> GetCurrentOffers(int marketId);
 
@@ -60,7 +60,7 @@ namespace FlatMate.Module.Offers.Domain.Markets
             return market.Select(_mapper.Map<MarketDto>);
         }
 
-        public async Task<(Result, MarketDto)> Get(int id)
+        public async Task<(Result, MarketDto)> GetMarket(int id)
         {
             var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == id);
             if (market == null)

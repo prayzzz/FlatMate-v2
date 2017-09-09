@@ -30,9 +30,9 @@ namespace FlatMate.Web.Mvc.Json
             return JsonConvert.DeserializeObject<T>(obj, SerializerSettings);
         }
 
-        public string Serialize(object obj)
+        public string Serialize(object result)
         {
-            return JsonConvert.SerializeObject(obj, SerializerSettings);
+            return JsonConvert.SerializeObject(result, SerializerSettings);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new MarketIndexVm
             {
-                Markets = await _apiController.Get()
+                Markets = (await _apiController.Get()).ToList()
             };
 
             return View(model);
@@ -40,7 +40,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new MarketViewVm();
 
-            var result = await _apiController.Get(id);
+            var result = await _apiController.GetMarket(id);
             if (result.IsError)
             {
                 TempData[Constants.TempData.Result] = JsonService.Serialize(result);
@@ -48,8 +48,8 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             }
 
             model.Market = result.Data;
-            model.Offers = await _apiController.GetOffers(id);
-            model.ProductCategories = (await _productApiController.GetCategories()).ToDictionary(pc => pc.Id.Value, pc => pc);
+            model.Offers = (await _apiController.GetOffers(id)).ToList();
+            model.ProductCategories = (await _productApiController.GetProductCategories()).ToDictionary(pc => pc.Id.Value, pc => pc);
 
             return View(model);
         }

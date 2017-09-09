@@ -1,4 +1,7 @@
 ﻿using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Common.Dtos;
+using prayzzz.Common.Attributes;
+using prayzzz.Common.Mapping;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,19 +9,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FlatMate.Module.Offers.Domain.Products
 {
     [Table("PriceHistory")]
-    public class PriceHistoryEntry : DboBase
+    public class PriceHistory : DboBase
     {
         private DateTime _date;
 
-        public PriceHistoryEntry()
+        public PriceHistory()
         {
         }
 
-        public PriceHistoryEntry(decimal price, Product product) : this(price, DateTime.Now, product)
+        public PriceHistory(decimal price, Product product) : this(price, DateTime.Now, product)
         {
         }
 
-        private PriceHistoryEntry(decimal price, DateTime date, Product product)
+        private PriceHistory(decimal price, DateTime date, Product product)
         {
             Price = price;
             Date = date;
@@ -36,5 +39,33 @@ namespace FlatMate.Module.Offers.Domain.Products
 
         [Required]
         public int ProductId { get; set; }
+    }
+
+    public class PriceHistoryDto : DtoBase
+    {
+        public DateTime Date { get; set; }
+
+        public decimal Price { get; set; }
+
+        public ProductDto Product { get; set; }
+    }
+
+    [Inject]
+    public class PriceHistoryMapper : IDboMapper
+    {
+        public void Configure(IMapperConfiguration mapper)
+        {
+            mapper.Configure<PriceHistory, PriceHistoryDto>(MapToDto);
+        }
+
+        private PriceHistoryDto MapToDto(PriceHistory history, MappingContext ctx)
+        {
+            return new PriceHistoryDto
+            {
+                Date = history.Date,
+                Price = history.Price,
+                Product = ctx.Mapper.Map<ProductDto>(history.Product)
+            };
+        }
     }
 }

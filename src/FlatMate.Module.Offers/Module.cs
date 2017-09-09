@@ -11,11 +11,6 @@ namespace FlatMate.Module.Offers
 {
     public class Module : FlatMateModule
     {
-        public override void Configure(IApplicationBuilder app, IConfiguration configuration)
-        {
-            base.Configure(app, configuration);
-        }
-
         public override void ConfigureServices(IServiceCollection service, IConfiguration configuration)
         {
             base.ConfigureServices(service, configuration);
