@@ -10,6 +10,10 @@ namespace FlatMate.Module.Offers.Domain.Products
     {
         private DateTime _date;
 
+        public PriceHistoryEntry()
+        {
+        }
+
         public PriceHistoryEntry(decimal price, Product product) : this(price, DateTime.Now, product)
         {
         }

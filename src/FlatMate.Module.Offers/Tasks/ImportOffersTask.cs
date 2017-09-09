@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 namespace FlatMate.Module.Offers.Tasks
 {
@@ -25,11 +26,12 @@ namespace FlatMate.Module.Offers.Tasks
             _logger = logger;
         }
 
-        /// <inheritdoc />
         /// <summary>
-        /// Every day 20:00
+        /// Every day 01:00
         /// </summary>
-        public string Schedule => "0 20 * * *";
+        public string Schedule => "0 1 * * *";
+
+        public TimeSpan InitialDelay => TimeSpan.FromMinutes(1);
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {

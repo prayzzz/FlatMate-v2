@@ -8,14 +8,14 @@ namespace FlatMate.Module.Offers.Domain.Rewe
     {
         decimal ParsePrice(string price);
 
-        string TrimDescription(string description);
-
-        string TrimName(string name);
+        string Trim(string str);
     }
 
     [Inject]
     public class ReweUtils : IReweUtils
     {
+        private static readonly char[] TrimChars = new[] { ' ', '*', ',' };
+
         private readonly ILogger<ReweUtils> _logger;
 
         public ReweUtils(ILogger<ReweUtils> logger)
@@ -69,19 +69,19 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 return description;
             }
 
-            description = description.Trim(',');
             return description;
         }
 
-        public string TrimName(string name)
+        public string Trim(string str)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(str))
             {
-                return name;
+                return string.Empty;
             }
 
-            name = name.Trim('*');
-            return name;
+            str = str.Trim(TrimChars);
+
+            return str;
         }
     }
 }

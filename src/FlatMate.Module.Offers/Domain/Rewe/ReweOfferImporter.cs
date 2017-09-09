@@ -2,6 +2,7 @@
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
 using FlatMate.Module.Offers.Domain.Rewe.Jso;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using prayzzz.Common.Attributes;
@@ -32,7 +33,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
     [Inject]
     public class ReweOfferImporter : IReweOfferImporter
     {
-        private readonly Dictionary<string, ProductCategoryEnum> _categoryMapping = new Dictionary<string, ProductCategoryEnum>
+        private readonly Dictionary<string, ProductCategoryEnum> _categoryNameToEnum = new Dictionary<string, ProductCategoryEnum>
         {
             { "Obst & Gemüse", ProductCategoryEnum.Fruits },
             { "Frische & Convenience", ProductCategoryEnum.Convenience },
@@ -93,128 +94,168 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             return await ProcessOffers(offerEnvelope, market);
         }
 
-        private void CheckForChangedProductProperties(Product product, OfferJso offer)
+        /// <summary>
+        /// Some product properties should not change. This method logs them if they change.
+        /// </summary>
+        private void CheckForChangedProductProperties(Product product, OfferDto offer)
         {
-            Check(product.Brand, offer.Brand);
-            Check(product.Description, _reweUtils.TrimDescription(offer.AdditionalInformation));
-            Check(product.ExternalId, offer.ProductId);
-            Check(product.Name, _reweUtils.TrimName(offer.Name));
-            Check(product.SizeInfo, offer.QuantityAndUnit);
+            Check(product.Brand, offer.Brand, nameof(product.Brand));
+            Check(product.Description, offer.Description, nameof(product.Description));
+            Check(product.ExternalId, offer.ProductId, nameof(product.ExternalId));
+            Check(product.ExternalProductCategory, offer.ExternalProductCategory, nameof(product.ExternalProductCategory));
+            Check(product.ExternalProductCategoryId, offer.ExternalProductCategoryId, nameof(product.ExternalProductCategoryId));
+            Check(product.Name, offer.Name, nameof(product.Name));
+            Check(product.SizeInfo, offer.SizeInfo, nameof(product.SizeInfo));
 
-            void Check(string current, string updated)
+            void Check(string current, string updated, string property)
             {
                 if (current != updated)
                 {
-                    _logger.LogWarning($"Property of product #{{productId}} changed. \"{current}\" -> \"{updated}\"", product.Id);
+                    _logger.LogWarning($"{property} of product #{product.Id} changed: '{current}' -> '{updated}'");
                 }
             }
         }
 
-        private Dictionary<string, ProductCategoryEnum> CreateCategoryMap(JToken categories)
+        private Offer CreateOrUpdateOffer(OfferDto offerDto)
         {
-            var map = new Dictionary<string, ProductCategoryEnum>();
-
-            if (categories.Type != JTokenType.Array)
-            {
-                return map;
-            }
-
-            try
-            {
-                foreach (var item in categories.Value<JArray>())
-                {
-                    var reweCategory = item.ToObject<Category>();
-
-                    if (_categoryMapping.TryGetValue(reweCategory.Name, out var categoryEnum))
-                    {
-                        map.Add(reweCategory.Id, categoryEnum);
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Unknown category {category}", reweCategory.Name);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error mapping categories");
-                return new Dictionary<string, ProductCategoryEnum>();
-            }
-
-            return map;
-        }
-
-        private Offer CreateOrUpdateOffer(OfferJso offerJso, Product product, Market market)
-        {
-            var offer = _repository.Offers.FirstOrDefault(o => o.ExternalId == offerJso.Id);
-
+            var offer = _repository.Offers.FirstOrDefault(o => o.ExternalId == offerDto.OfferId);
             if (offer == null)
             {
                 offer = new Offer();
                 _repository.Add(offer);
             }
 
-            offer.ExternalId = offerJso.Id;
-            offer.From = offerJso.OfferDuration.From;
-            offer.ImageUrl = offerJso.Links?.ImageDigital.Href;
-            offer.Price = (decimal)offerJso.Price;
-            offer.To = offerJso.OfferDuration.Until;
-            offer.Market = market;
-            offer.Product = product;
+            offer.ExternalId = offerDto.OfferId;
+            offer.From = offerDto.OfferedFrom;
+            offer.ImageUrl = offerDto.ImageUrl;
+            offer.Price = offerDto.OfferPrice;
+            offer.To = offerDto.OfferedTo;
+            offer.Market = offerDto.Market;
+            offer.Product = offerDto.Product;
 
             return offer;
         }
 
-        private Product CreateOrUpdateProduct(Market market, Dictionary<string, ProductCategoryEnum> categoryToEnum, OfferJso offerJso)
+        private Product CreateOrUpdateProduct(OfferDto offer)
         {
-            var productCategoryId = (int)ProductCategoryEnum.Other;
-            if (offerJso.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offerJso.CategoryIDs.FirstOrDefault(), out var category))
-            {
-                productCategoryId = (int)category;
-            }
-
-            var product = _repository.Product.FirstOrDefault(p => p.ExternalId == offerJso.ProductId);
-
+            var product = _repository.Product.Include(p => p.PriceHistory)
+                                             .FirstOrDefault(p => p.ExternalId == offer.ProductId);
             if (product == null)
             {
-                product = new Product
-                {
-                    Brand = offerJso.Brand ?? string.Empty,
-                    Description = _reweUtils.TrimDescription(offerJso.AdditionalInformation),
-                    ExternalId = offerJso.ProductId,
-                    ExternalProductCategoryId = string.Join(", ", offerJso.CategoryIDs),
-                    ImageUrl = offerJso.Links?.ImageDigital.Href,
-                    Market = market,
-                    Name = _reweUtils.TrimName(offerJso.Name),
-                    ProductCategoryId = productCategoryId,
-                    SizeInfo = offerJso.QuantityAndUnit
-                };
-
-                product.UpdatePrice(GetCrossedOutPrice(offerJso));
-
+                product = new Product();
                 _repository.Add(product);
+
+                product.Brand = offer.Brand;
+                product.Description = offer.Description;
+                product.ExternalId = offer.ProductId;
+                product.ExternalProductCategory = offer.ExternalProductCategory;
+                product.ExternalProductCategoryId = offer.ExternalProductCategoryId;
+                product.ImageUrl = offer.ImageUrl;
+                product.Market = offer.Market;
+                product.Name = offer.Name;
+                product.ProductCategoryId = (int)offer.ProductCategory;
+                product.SizeInfo = offer.SizeInfo;
+
+                product.UpdatePrice(offer.RegularPrice);
             }
             else
             {
-                CheckForChangedProductProperties(product, offerJso);
-                product.UpdatePrice(GetCrossedOutPrice(offerJso));
-                product.ProductCategoryId = productCategoryId;
-                product.ExternalProductCategoryId = string.Join(", ", offerJso.CategoryIDs);
+                CheckForChangedProductProperties(product, offer);
+
+                product.UpdatePrice(offer.RegularPrice);
+                product.ProductCategoryId = (int)offer.ProductCategory;
             }
 
             return product;
         }
 
-        private decimal GetCrossedOutPrice(OfferJso offer)
+        private Dictionary<string, ProductCategoryDto> ExtractCategoryMap(Envelope<OfferJso> envelope)
         {
-            var price = ReweConstants.DefaultPrice;
-
-            if (offer.AdditionalFields.TryGetValue(ReweConstants.CrossOutPriceFieldName, out var crossedOutPrice))
+            if (!envelope.Meta.TryGetValue("categories", out var categories))
             {
-                price = _reweUtils.ParsePrice(crossedOutPrice);
+                _logger.LogWarning("Categories not available");
+                return new Dictionary<string, ProductCategoryDto>();
             }
 
-            return price;
+            if (categories.Type != JTokenType.Array)
+            {
+                _logger.LogWarning("Category format changed");
+                return new Dictionary<string, ProductCategoryDto>();
+            }
+
+            try
+            {
+                var map = new Dictionary<string, ProductCategoryDto>();
+
+                foreach (var item in categories.Value<JArray>())
+                {
+                    var reweCategory = item.ToObject<Category>();
+
+                    if (_categoryNameToEnum.TryGetValue(reweCategory.Name, out var categoryEnum))
+                    {
+                        var dto = new ProductCategoryDto
+                        {
+                            ExternalId = reweCategory.Id,
+                            ExternalName = reweCategory.Name,
+                            ProductCategory = categoryEnum
+                        };
+
+                        map.Add(dto.ExternalId, dto);
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"Unknown category {reweCategory.Name}");
+                    }
+                }
+
+                return map;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error mapping categories");
+                return new Dictionary<string, ProductCategoryDto>();
+            }
+        }
+
+        private OfferDto PreprocessOffer(OfferJso offer, Dictionary<string, ProductCategoryDto> categoryToEnum, Market market)
+        {
+            var productCategory = ProductCategoryDto.Default;
+            if (offer.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offer.CategoryIDs.FirstOrDefault(), out var category))
+            {
+                productCategory = category;
+            }
+
+            var regularPrice = ReweConstants.DefaultPrice;
+            if (offer.AdditionalFields.TryGetValue(ReweConstants.CrossOutPriceFieldName, out var crossedOutPrice))
+            {
+                regularPrice = _reweUtils.ParsePrice(crossedOutPrice);
+            }
+
+            // move startdate of offers to sunday
+            var offeredFrom = offer.OfferDuration.From;
+            if (offeredFrom.DayOfWeek == DayOfWeek.Saturday)
+            {
+                offeredFrom = offeredFrom.AddDays(1);
+            }
+
+            return new OfferDto
+            {
+                Brand = _reweUtils.Trim(offer.Brand) ?? ReweConstants.DefaultBrand,
+                Description = _reweUtils.Trim(offer.AdditionalInformation),
+                ExternalProductCategory = productCategory.ExternalName,
+                ExternalProductCategoryId = productCategory.ExternalId,
+                ImageUrl = offer.Links?.ImageDigital.Href,
+                Market = market,
+                Name = _reweUtils.Trim(offer.Name),
+                OfferedFrom = offeredFrom,
+                OfferedTo = offer.OfferDuration.Until,
+                OfferId = offer.Id,
+                OfferPrice = (decimal)offer.Price,
+                ProductCategory = productCategory.ProductCategory,
+                ProductId = offer.ProductId,
+                RegularPrice = regularPrice,
+                SizeInfo = _reweUtils.Trim(offer.QuantityAndUnit)
+            };
         }
 
         /// <summary>
@@ -225,26 +266,75 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var categoryIdToEnum = new Dictionary<string, ProductCategoryEnum>();
-            if (envelope.Meta.TryGetValue("categories", out var categories))
-            {
-                categoryIdToEnum = CreateCategoryMap(categories);
-            }
+            var categoryMap = ExtractCategoryMap(envelope);
 
             var offers = new List<Offer>();
             foreach (var offerJso in envelope.Items)
             {
-                var productDbo = CreateOrUpdateProduct(market, categoryIdToEnum, offerJso);
-                var offerDbo = CreateOrUpdateOffer(offerJso, productDbo, market);
+                var preprocessedOffer = PreprocessOffer(offerJso, categoryMap, market);
+                preprocessedOffer.Product = CreateOrUpdateProduct(preprocessedOffer);
 
+                var offerDbo = CreateOrUpdateOffer(preprocessedOffer);
                 offers.Add(offerDbo);
             }
+
+            var result = await _repository.SaveChangesAsync();
 
             stopwatch.Stop();
             _logger.LogInformation($"Processed {envelope.Items.Count} orders in {stopwatch.ElapsedMilliseconds}ms");
 
-            var result = await _repository.SaveChangesAsync();
             return (result, offers);
+        }
+
+        private class OfferDto
+        {
+            public string Brand { get; set; }
+
+            public string Description { get; set; }
+
+            public string ExternalProductCategory { get; set; }
+
+            public string ExternalProductCategoryId { get; set; }
+
+            public string ImageUrl { get; set; }
+
+            public Market Market { get; set; }
+
+            public string Name { get; set; }
+
+            public DateTime OfferedFrom { get; set; }
+
+            public DateTime OfferedTo { get; set; }
+
+            public string OfferId { get; set; }
+
+            public decimal OfferPrice { get; set; }
+
+            public Product Product { get; set; }
+
+            public ProductCategoryEnum ProductCategory { get; set; }
+
+            public string ProductId { get; set; }
+
+            public decimal RegularPrice { get; set; }
+
+            public string SizeInfo { get; set; }
+        }
+
+        private class ProductCategoryDto
+        {
+            public static ProductCategoryDto Default => new ProductCategoryDto
+            {
+                ExternalId = string.Empty,
+                ExternalName = string.Empty,
+                ProductCategory = ProductCategoryEnum.Other
+            };
+
+            public string ExternalId { get; set; }
+
+            public string ExternalName { get; set; }
+
+            public ProductCategoryEnum ProductCategory { get; set; }
         }
     }
 }

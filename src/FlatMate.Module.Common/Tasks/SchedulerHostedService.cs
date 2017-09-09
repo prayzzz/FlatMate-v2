@@ -24,7 +24,7 @@ namespace FlatMate.Module.Common.Tasks
                 {
                     Schedule = CrontabSchedule.Parse(scheduledTask.Schedule),
                     Task = scheduledTask,
-                    NextRunTime = referenceTime
+                    NextRunTime = referenceTime + scheduledTask.InitialDelay
                 });
             }
         }
