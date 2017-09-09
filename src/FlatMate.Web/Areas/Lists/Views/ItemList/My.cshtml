@@ -20,8 +20,7 @@
         <table>
             <thead>
             <tr>
-                <th width="50%">Name</th>
-                <th width="25%" class="show-large">Einträge</th>
+                <th width="75%">Name</th>
                 <th class="show-large">öffentlich?</th>
                 <th class="icon show-large"></th>
             </tr>
@@ -34,7 +33,6 @@
                     <td>
                         <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
                     </td>
-                    <td class="show-large">@list.ItemCount</td>
                     <td class="show-large">
                         <span class="fa-inline-host">
                             @if (list.IsPublic)
