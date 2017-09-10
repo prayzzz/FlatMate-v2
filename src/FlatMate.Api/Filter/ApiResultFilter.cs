@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
 using prayzzz.Common.Results;
+using System;
 
 namespace FlatMate.Api.Filter
 {
     [Inject(DependencyLifetime.Singleton, typeof(ApiResultFilter))]
+    [AttributeUsage(AttributeTargets.Class)]
     public class ApiResultFilter : ActionFilterAttribute
     {
         private readonly IRequestResultService _resultService;

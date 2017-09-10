@@ -1,20 +1,45 @@
-﻿.standard-box.offer-box {
-    padding: 0.75rem;
-    display: flex;
-    flex-flow: column;
-
-    .image {
-        text-align: center;
+﻿.marketview {
+    .col-offer {
         margin-bottom: 1rem;
     }
 
-    .name {
-        flex: 2;
+    .col-market-image {
+        text-align: center;
     }
 
-    .price {
-        min-height: 1.5rem;
-        font-size: 1.5rem;
+    .col-market-info {
+        align-self: center;
+    }
+
+    .col-offer-count {
+        align-self: center;
         text-align: right;
+    }
+
+    .market-info-box {
+        padding: 1rem;
+    }
+
+    .offer-box {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+        padding: 0.75rem;
+        margin-right: .5rem;
+
+        .image {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .name {
+            flex: 2;
+        }
+
+        .price {
+            min-height: 1.5rem;
+            font-size: 1.5rem;
+            text-align: right;
+        }
     }
 }

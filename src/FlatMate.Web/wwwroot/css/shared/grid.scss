@@ -2,10 +2,9 @@
     width: 100%;
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-between;
 
     .standard-box {
-        margin-bottom: 1rem;
+        margin: 0 1% 1rem 0;
     }
 
     &.col-4 .standard-box {
@@ -14,5 +13,10 @@
 
     &.col-5 .standard-box {
         width: 19%;
+    }
+
+    &:after {
+        content: "";
+        flex: auto;
     }
 }

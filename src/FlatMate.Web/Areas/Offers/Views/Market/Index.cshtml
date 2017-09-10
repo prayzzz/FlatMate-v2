@@ -4,26 +4,34 @@
     Layout = "_Layout";
     ViewData["Title"] = "Märkte";
     ViewData["PageTitle"] = "Märkte";
+    ViewData["MainClass"] = "marketindex";
 }
 
-<section class="container flex-row" style="justify-content:space-between">
+<section class="container">
 
+    <div class="row">
 
-    @foreach (var market in Model.Markets)
-    {
-        <a asp-action="View" asp-route-id="@market.Id" class="standard-box" style="  padding: 1rem; width:49%">
-
-            <div style="padding-bottom: 1rem">
-                <img src="@market.Company.ImageLink" style="width:100%" />
+        @foreach (var market in Model.Markets)
+        {
+            <div class="col-lg-6">
+                <a asp-action="View" asp-route-id="@market.Id" class="standard-box market-box">
+                    @if (!string.IsNullOrEmpty(market.Company.ImageLink))
+                    {
+                        <div class="image">
+                            <img src="@market.Company.ImageLink" style="width:100%" />
+                        </div>
+                    }
+                    <div class="address">
+                        <strong>@market.Name</strong> <br />
+                        <span>@market.Street, @market.PostalCode @market.City</span>
+                    </div>
+                </a>
             </div>
 
-            <div>
-                <strong>@market.Name</strong> <br />
-                <span>@market.Street</span>
-            </div>
-        </a>
+        }
 
-    }
+    </div>
+
 
 
 </section>

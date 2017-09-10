@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using FlatMate.Module.Common.DataAccess;
+﻿using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Common.Dtos;
 using FlatMate.Module.Offers.Domain.Markets;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
-namespace FlatMate.Module.Offers.Domain.Offers
+namespace FlatMate.Module.Offers.Domain.Products
 {
     [Table("Product")]
     public class Product : DboBase
     {
-        private readonly List<PriceHistoryEntry> _priceHistory = new List<PriceHistoryEntry>();
+        private readonly List<PriceHistory> _priceHistory = new List<PriceHistory>();
 
         [Required]
         public string Brand { get; set; }
@@ -21,6 +22,10 @@ namespace FlatMate.Module.Offers.Domain.Offers
 
         [Required]
         public string ExternalId { get; set; }
+
+        public string ExternalProductCategory { get; set; }
+
+        public string ExternalProductCategoryId { get; set; }
 
         public string ImageUrl { get; set; }
 
@@ -36,8 +41,14 @@ namespace FlatMate.Module.Offers.Domain.Offers
         [Required]
         public decimal Price { get; private set; }
 
-        [InverseProperty(nameof(PriceHistoryEntry.Product))]
-        public IEnumerable<PriceHistoryEntry> PriceHistory => _priceHistory;
+        [InverseProperty(nameof(Products.PriceHistory.Product))]
+        public IReadOnlyList<PriceHistory> PriceHistory => _priceHistory;
+
+        [ForeignKey(nameof(ProductCategoryId))]
+        public ProductCategory ProductCategory { get; set; }
+
+        [Required]
+        public int ProductCategoryId { get; set; }
 
         public string SizeInfo { get; set; }
 
@@ -45,15 +56,18 @@ namespace FlatMate.Module.Offers.Domain.Offers
         {
             Price = price;
 
-            var lastHistoryEntry = PriceHistory.OrderByDescending(x => x.Date).FirstOrDefault();
-            if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
+            if (price > 0)
             {
-                _priceHistory.Add(new PriceHistoryEntry(price, this));
+                var lastHistoryEntry = PriceHistory.OrderByDescending(x => x.Date).FirstOrDefault();
+                if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
+                {
+                    _priceHistory.Add(new PriceHistory(price, this));
+                }
             }
         }
     }
 
-    public class ProductDto
+    public class ProductDto : DtoBase
     {
         public string Brand { get; set; }
 
@@ -61,15 +75,13 @@ namespace FlatMate.Module.Offers.Domain.Offers
 
         public string ExternalId { get; set; }
 
-        public int Id { get; set; }
-
         public string ImageUrl { get; set; }
 
         public string Name { get; set; }
 
         public decimal Price { get; set; }
 
-        // public IEnumerable<PriceHistoryEntryDbo> PriceHistory => _priceHistory; TODO
+        public ProductCategoryDto ProductCategory { get; set; }
 
         public string SizeInfo { get; set; }
     }
@@ -82,16 +94,18 @@ namespace FlatMate.Module.Offers.Domain.Offers
             mapper.Configure<Product, ProductDto>(MapToDto);
         }
 
-        private ProductDto MapToDto(Product product, MappingContext mappingContext)
+        private ProductDto MapToDto(Product product, MappingContext ctx)
         {
             return new ProductDto
             {
                 Brand = product.Brand,
                 Description = product.Description,
                 ExternalId = product.ExternalId,
+                Id = product.Id,
                 ImageUrl = product.ImageUrl,
                 Name = product.Name,
                 Price = product.Price,
+                ProductCategory = ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory),
                 SizeInfo = product.SizeInfo
             };
         }

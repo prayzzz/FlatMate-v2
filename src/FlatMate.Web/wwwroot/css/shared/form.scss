@@ -21,6 +21,11 @@ form {
     padding: 1em;
     max-width: 500px;
     width: 100%;
+
+    label {
+        display: inline-block;
+        margin-bottom: .3rem;
+    }
 }
 
 .centered-form {
@@ -39,10 +44,7 @@ fieldset {
     width: 100%;
 }
 
-label {
-    display: inline-block;
-    margin-bottom: .3rem;
-}
+
 
 input {
     border: 0;

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FlatMate.Module.Common.Api;
+﻿using FlatMate.Module.Common.Api;
 using FlatMate.Module.Offers.Api.Jso;
 using FlatMate.Module.Offers.Domain.Markets;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using MarketJso = FlatMate.Module.Offers.Api.Jso.MarketJso;
 
 namespace FlatMate.Module.Offers.Api
@@ -23,10 +23,16 @@ namespace FlatMate.Module.Offers.Api
             _marketService = marketService;
         }
 
-        [HttpGet("{marketId}")]
-        public async Task<Result<MarketJso>> Get(int marketId)
+        [HttpGet]
+        public async Task<IEnumerable<MarketJso>> Get()
         {
-            var (result, market) = await _marketService.Get(marketId);
+            return (await _marketService.Get()).Select(Map<MarketJso>);
+        }
+
+        [HttpGet("{marketId}")]
+        public async Task<Result<MarketJso>> GetMarket(int marketId)
+        {
+            var (result, market) = await _marketService.GetMarket(marketId);
 
             if (result.IsError)
             {
@@ -34,25 +40,6 @@ namespace FlatMate.Module.Offers.Api
             }
 
             return new SuccessResult<MarketJso>(Map<MarketJso>(market));
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<MarketJso>> Get()
-        {
-            return (await _marketService.Get()).Select(Map<MarketJso>);
-        }
-
-        [HttpGet("{marketId}/offer/import")]
-        public async Task<Result> ImportOffers(int marketId)
-        {
-            var (result, _) = await _marketService.ImportOffers(marketId);
-            return result;
-        }
-
-        [HttpGet("{marketId}/offer/")]
-        public async Task<IEnumerable<OfferJso>> GetOffers(int marketId)
-        {
-            return (await _marketService.GetCurrentOffers(marketId)).Select(Map<OfferJso>);
         }
 
         [HttpGet("import/{externalMarketId}")]
@@ -66,6 +53,19 @@ namespace FlatMate.Module.Offers.Api
             }
 
             return new SuccessResult<MarketJso>(Map<MarketJso>(market));
+        }
+
+        [HttpGet("{marketId}/offer/")]
+        public async Task<IEnumerable<OfferJso>> GetOffers(int marketId)
+        {
+            return (await _marketService.GetCurrentOffers(marketId)).Select(Map<OfferJso>);
+        }
+
+        [HttpGet("{marketId}/offer/import")]
+        public async Task<Result> ImportOffers(int marketId)
+        {
+            var (result, _) = await _marketService.ImportOffers(marketId);
+            return result;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FlatMate.Module.Common;
+﻿using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Infrastructure.Images;
 using FlatMate.Module.Offers.Api.Jso;
@@ -10,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Api
 {
@@ -17,7 +17,9 @@ namespace FlatMate.Module.Offers.Api
     public class CompanyApiController : ApiController
     {
         private const string RouteTemplate = "/api/v1/offers/company";
+
         private readonly ICompanyService _companyService;
+
         private readonly IImageService _imageService;
 
         public CompanyApiController(ICompanyService companyService, IImageService imageService, IMapper mapper) : base(mapper)
@@ -51,19 +53,6 @@ namespace FlatMate.Module.Offers.Api
             }
 
             return new SuccessResult<CompanyJso>(Map<CompanyJso>(updatedCompany));
-        }
-
-        [HttpPost]
-        public async Task<Result<CompanyJso>> CreateCompany([FromBody] CompanyJso companyJso)
-        {
-            var (result, company) = await _companyService.CreateCompany(Map<CompanyDto>(companyJso));
-
-            if (result.IsError)
-            {
-                return new ErrorResult<CompanyJso>(result);
-            }
-
-            return new SuccessResult<CompanyJso>(Map<CompanyJso>(company));
         }
 
         [HttpGet("{id}")]

@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using FlatMate.Module.Common.DataAccess;
+﻿using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Common.Dtos;
 using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Offers;
+using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Offers.Domain.Markets
 {
@@ -36,13 +38,11 @@ namespace FlatMate.Module.Offers.Domain.Markets
         public string Street { get; set; }
     }
 
-    public class MarketDto
+    public class MarketDto : DtoBase
     {
         public string City { get; set; }
 
         public CompanyDto Company { get; set; }
-
-        public int Id { get; set; }
 
         public string Name { get; set; }
 

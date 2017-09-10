@@ -1,0 +1,41 @@
+﻿@import '../variables.scss';
+
+.productview {
+    .product-info-box {
+        padding: 1rem;
+    }
+
+    .col-picture {
+        flex: 1 0 200px;
+        justify-content: center;
+        display: flex;
+    }
+
+    @media (min-width: 768px) {
+        .col-picture {
+            flex-grow: 0;
+            margin-right: 1rem;
+        }
+    }
+
+    .picture-wrapper {
+        border: 2px $color-border solid;
+        margin-right: 1rem;
+        padding: 1rem;
+        width: 200px;
+        height: 200px;
+    }
+
+    .informations {
+        .key {
+            border-bottom: 1px $color-border solid;
+            padding: .5rem;
+            width: 10rem;
+        }
+
+        .value {
+            margin-left: 2rem;
+            padding: .5rem;
+        }
+    }
+}

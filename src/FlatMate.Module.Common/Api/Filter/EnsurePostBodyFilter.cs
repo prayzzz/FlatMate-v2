@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using prayzzz.Common.Results;
+using System;
 
 namespace FlatMate.Module.Common.Api.Filter
 {
+    [AttributeUsage(AttributeTargets.Class)]
     public class EnsurePostBodyFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)

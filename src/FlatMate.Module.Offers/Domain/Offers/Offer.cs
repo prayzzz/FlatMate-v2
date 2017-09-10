@@ -1,10 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using FlatMate.Module.Common.DataAccess;
+﻿using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Common.Dtos;
 using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Offers.Domain.Offers
 {
@@ -38,10 +40,8 @@ namespace FlatMate.Module.Offers.Domain.Offers
         public DateTime To { get; set; }
     }
 
-    public class OfferDto
+    public class OfferDto : DtoBase
     {
-        public int Id { get; set; }
-
         public string ExternalId { get; set; }
 
         public DateTime From { get; set; }
@@ -52,9 +52,10 @@ namespace FlatMate.Module.Offers.Domain.Offers
 
         public ProductDto Product { get; set; }
 
+        public int ProductId { get; set; }
+
         public DateTime To { get; set; }
     }
-
 
     [Inject]
     public class OfferMapper : IDboMapper
@@ -74,6 +75,7 @@ namespace FlatMate.Module.Offers.Domain.Offers
                 ImageUrl = offer.ImageUrl,
                 Price = offer.Price,
                 Product = ctx.Mapper.Map<ProductDto>(offer.Product),
+                ProductId = offer.ProductId,
                 To = offer.To
             };
         }

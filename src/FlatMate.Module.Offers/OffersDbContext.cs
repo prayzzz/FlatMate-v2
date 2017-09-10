@@ -1,14 +1,15 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
+using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers
 {
@@ -27,24 +28,11 @@ namespace FlatMate.Module.Offers
 
         public virtual DbSet<Offer> Offers { get; set; }
 
-        public virtual DbSet<PriceHistoryEntry> PriceHistoryEntry { get; set; }
+        public virtual DbSet<PriceHistory> PriceHistory { get; set; }
 
         public virtual DbSet<Product> Product { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema("Offers");
-
-            modelBuilder.Entity<Product>(ConfigureProductDbo);
-        }
-
-        private void ConfigureProductDbo(EntityTypeBuilder<Product> entityTypeBuilder)
-        {
-            // https://github.com/aspnet/EntityFrameworkCore/issues/6674
-            entityTypeBuilder.Metadata
-                             .FindNavigation(nameof(Domain.Offers.Product.PriceHistory))
-                             .SetPropertyAccessMode(PropertyAccessMode.Field);
-        }
+        public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
         public new Result SaveChanges()
         {
@@ -74,6 +62,21 @@ namespace FlatMate.Module.Offers
             }
 
             return SuccessResult.Default;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("Offers");
+
+            modelBuilder.Entity<Product>(ConfigureProductDbo);
+        }
+
+        private void ConfigureProductDbo(EntityTypeBuilder<Product> entityTypeBuilder)
+        {
+            // https://github.com/aspnet/EntityFrameworkCore/issues/6674
+            entityTypeBuilder.Metadata
+                             .FindNavigation(nameof(Domain.Products.Product.PriceHistory))
+                             .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FlatMate.Module.Common
 {
-    public class ByteHelper
+    public static class ByteHelper
     {
         /// <summary>
         ///     https://stackoverflow.com/a/221941

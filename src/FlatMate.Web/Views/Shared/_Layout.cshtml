@@ -3,80 +3,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"] - FlatMate</title>
 
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
 
-    <link asp-href-include="~/dist/app.css" rel="stylesheet"/>
+    <link asp-href-include="~/dist/app.css" rel="stylesheet" />
 
 </head>
 <body>
-<header>
-    <div class="header-wrapper">
-        <div class="page-title">
-            <h1>@ViewData["PageTitle"]</h1>
-        </div>
-        <div class="flex-row nav-toggle">
-            <div class="menu-toggle">
-                <label for="menu-checkbox">
-                    <span class="fa-host">
-                        <i class="fa fa-bars fa-2x"></i>
-                    </span>
-                </label>
+    <header>
+        <div class="header-wrapper">
+            <div class="page-title">
+                <h1>@ViewData["PageTitle"]</h1>
+            </div>
+            <div class="flex-row nav-toggle">
+                <div class="menu-toggle">
+                    <label for="menu-checkbox">
+                        <span class="fa-host">
+                            <i class="fa fa-bars fa-2x"></i>
+                        </span>
+                    </label>
+
+                </div>
+
+                <div class="welcome-wrapper">
+                    @if (Model.CurrentUser != null)
+                    {
+                        <span class="welcome">Hallo @Model.CurrentUser.UserName!</span>
+                    }
+                    else
+                    {
+                        <span class="welcome">Hallo!</span>
+                    }
+                </div>
 
             </div>
 
-            <div class="welcome-wrapper">
-                @if (Model.CurrentUser != null)
-                {
-                    <span class="welcome">Hallo @Model.CurrentUser.UserName!</span>
-                }
-                else
-                {
-                    <span class="welcome">Hallo!</span>
-                }
-            </div>
-
         </div>
+    </header>
 
-    </div>
-</header>
+    <input id="menu-checkbox" type="checkbox" style="display: none" />
 
-<input id="menu-checkbox" type="checkbox" style="display: none"/>
+    <nav>
+        <ul>
+            <li>
+                <a asp-area="Home" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            </li>
+            <li>
+                <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Listen</a>
+            </li>
+            <li>
+                <a asp-area="Offers" asp-controller="Market" asp-action="Index">Angebote</a>
+            </li>
+            <li>
+                <a asp-area="Account" asp-controller="MyProfile" asp-action="Index">Profil</a>
+            </li>
+            <li>
+                <a asp-area="Account" asp-controller="Logout" asp-action="Index">Logout</a>
+            </li>
+        </ul>
+    </nav>
 
-<nav>
-    <ul>
-        <li>
-            <a asp-area="Home" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-        </li>
-        <li>
-            <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Listen</a>
-        </li>
-        <li>
-            <a asp-area="Offers" asp-controller="Market" asp-action="Index">Angebote</a>
-        </li>
-        <li>
-            <a asp-area="Account" asp-controller="MyProfile" asp-action="Index">Profil</a>
-        </li>
-        <li>
-            <a asp-area="Account" asp-controller="Logout" asp-action="Index">Logout</a>
-        </li>
-    </ul>
-</nav>
+    <main class="@ViewData["MainClass"]">
+        <section>
+            <alert-bar></alert-bar>
+        </section>
 
-<main>
-    <section class="container">
-        <alert-bar></alert-bar>
-    </section>
+        @RenderBody()
+    </main>
 
-    @RenderBody()
-</main>
-
-<script type="text/x-template" id="alert-bar-template">
+    <script type="text/x-template" id="alert-bar-template">
 
         <div class="alert-wrapper" data-bind="foreach: alerts">
             <div class="alert" data-bind="css: { 'alert-success': 'Success' === levelString(), 'alert-error': 'Error' === levelString() }"><span data-bind="text: message"></span></div>
@@ -84,24 +84,23 @@
 
     </script>
 
-@if (Model != null)
-{
-    <script type="application/json" id="data-current-user">
+    @if (Model != null)
+    {
+        <script type="application/json" id="data-current-user">
             @Json.Serialize(Model.CurrentUser)
-
         </script>
-}
+    }
 
-@RenderSection("viewData", false)
+    @RenderSection("viewData", false)
 
-<script type="text/json" id="data-alert">
+    <script type="text/json" id="data-alert">
         @Json.Serialize(Model.Result)
     </script>
 
-<script asp-src-include="~/dist/vendor.js" type="text/javascript"></script>
-<script asp-src-include="~/dist/app.js" type="text/javascript"></script>
+    <script asp-src-include="~/dist/vendor.js" type="text/javascript"></script>
+    <script asp-src-include="~/dist/app.js" type="text/javascript"></script>
 
-@RenderSection("pageScript", false)
+    @RenderSection("pageScript", false)
 
 </body>
 </html>

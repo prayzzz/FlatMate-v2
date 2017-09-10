@@ -1,8 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using FlatMate.Module.Common.DataAccess;
+﻿using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Offers.Domain.Companies
 {
@@ -14,10 +15,8 @@ namespace FlatMate.Module.Offers.Domain.Companies
         public string Name { get; set; }
     }
 
-    public class CompanyDto
+    public class CompanyDto : DtoBase
     {
-        public int Id { get; set; }
-
         public Guid? ImageGuid { get; set; }
 
         public string Name { get; set; }

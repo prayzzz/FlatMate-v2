@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Api.Extensions;
@@ -12,13 +11,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
+using prayzzz.Common;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace FlatMate.Web
 {
@@ -28,6 +29,7 @@ namespace FlatMate.Web
         {
             new Api.Module(),
             new Module.Account.Module(),
+            new Module.Common.Module(),
             new Module.Infrastructure.Module(),
             new Module.Lists.Module(),
             new Module.Offers.Module()
@@ -58,7 +60,7 @@ namespace FlatMate.Web
                 app.UseDeveloperExceptionPage();
 
                 app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"); });
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"));
 
                 //app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
             }
@@ -67,9 +69,20 @@ namespace FlatMate.Web
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseAuthentication();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseSession();
+
+            var supportedCultures = new[] { new CultureInfo("de-DE") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("de-DE"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });
@@ -78,13 +91,12 @@ namespace FlatMate.Web
                 routes.MapRoute("404", "{*url}", new { area = "", controller = "Error", action = "PageNotFound" });
             });
 
-            // Load Modules
-            var parManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             foreach (var module in Modules)
             {
-                parManager.ApplicationParts.Add(module);
+                module.Configure(app, _configuration);
             }
 
+            // finish startup by logging server addresses
             var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
             if (serverAddressesFeature != null)
             {
@@ -95,31 +107,47 @@ namespace FlatMate.Web
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             // Framework
-            services.AddFlatMateAuthentication();
-
-            services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)))
-                    .AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings))
-                    .AddControllersAsServices();
+            var mvc = services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)));
+            mvc.AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));
+            mvc.ConfigureApplicationPartManager(c => Array.ForEach(Modules, m => c.ApplicationParts.Add(m)));
+            mvc.AddControllersAsServices();
 
             services.AddOptions();
             services.AddSession();
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }); });
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // Modules
-            foreach (var module in Modules)
-            {
-                module.ConfigureServices(services, _configuration);
-            }
+            //services.Configure<RequestLocalizationOptions>(options =>
+            //{
+            //    var supportedCultures = new[] { new CultureInfo("en-US") };
 
+            //    options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+            //    options.SupportedCultures = supportedCultures;
+            //    options.SupportedUICultures = supportedCultures;
+
+            //    //options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
+            //    //{
+            //    //    // My custom request culture logic
+            //    //    return new ProviderCultureResult("en");
+            //    //}));
+            //});
+
+
+            // FlatMate
+            services.AddFlatMateAuthentication();
+            services.AddFlatMateModules(Modules, _configuration);
+
+            // AutoFac
             var builder = new ContainerBuilder();
             builder.Populate(services);
+            builder.RegisterType<ResourceLoader>().AsSelf();
             builder.RegisterType<Mapper>().As<IMapper>().As<IMapperConfiguration>().SingleInstance();
 
             builder.InjectDependencies(GetType());
+
             foreach (var module in Modules)
             {
-                builder.InjectDependencies(module.GetType());
+                builder.InjectDependencies(module);
             }
 
             return new AutofacServiceProvider(builder.Build());

@@ -1,25 +1,27 @@
 ﻿@import '../variables.scss';
 
-.picture-wrapper {
-    border: 2px $color-border solid;
-    margin-right: 1rem;
-    padding: 1rem;
+.myprofileindex {
+    .picture-wrapper {
+        border: 2px $color-border solid;
+        margin-right: 1rem;
+        padding: 1rem;
 
-    .picture {
-        height: 150px;
-        width: 150px;
-    }
-}
-
-.informations {
-    .key {
-        border-bottom: 1px $color-border solid;
-        padding: .5rem;
-        width: 10rem;
+        .picture {
+            height: 150px;
+            width: 150px;
+        }
     }
 
-    .value {
-        margin-left: 2rem;
-        padding: .5rem;
+    .informations {
+        .key {
+            border-bottom: 1px $color-border solid;
+            padding: .5rem;
+            width: 10rem;
+        }
+
+        .value {
+            margin-left: 2rem;
+            padding: .5rem;
+        }
     }
 }

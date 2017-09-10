@@ -8,7 +8,7 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Migration.DotNet
 {
-    public class Program
+    public static class Program
     {
         private static readonly Dictionary<string, string> SwitchMappings = new Dictionary<string, string>
         {
