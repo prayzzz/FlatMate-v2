@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
+using System.Globalization;
 using System.Linq;
 
 namespace FlatMate.Module.Offers.Domain.Rewe
@@ -14,7 +15,12 @@ namespace FlatMate.Module.Offers.Domain.Rewe
     [Inject]
     public class ReweUtils : IReweUtils
     {
+        private const char Comma = ',';
+        private const char DecimalPoint = '.';
+        private const string DecimalPointStr = ".";
+
         private static readonly char[] TrimChars = new[] { ' ', '*', ',' };
+        private static readonly CultureInfo DecimalCulture = new CultureInfo("en-US");
 
         private readonly ILogger<ReweUtils> _logger;
 
@@ -25,9 +31,9 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
         /// <summary>
         ///     Converts the string to a double value.
-        ///     If no comma is present, it will be inserted.
+        ///     If no decimalpoint is present, it will be inserted.
         /// </summary>
-        /// <returns>Price as dobule or <see cref="ReweConstants.DefaultPrice" /> if parsing fails.</returns>
+        /// <returns>Price as dobule or <see cref="ReweConstants.DefaultPrice" />, if parsing fails.</returns>
         public decimal ParsePrice(string price)
         {
             if (string.IsNullOrEmpty(price))
@@ -35,7 +41,10 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 return ReweConstants.DefaultPrice;
             }
 
-            if (price.Contains(','))
+            price = price.Replace(Comma, DecimalPoint);
+
+            // if decimal point exists, parse now
+            if (price.Contains(DecimalPoint))
             {
                 return ParsePriceOrDefault(price);
             }
@@ -46,13 +55,14 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 price = "0" + price;
             }
 
-            price = price.Insert(price.Length - 2, ",");
+            // add decimal point
+            price = price.Insert(price.Length - 2, DecimalPointStr);
             return ParsePriceOrDefault(price);
 
             // returns DefaultPrice, if price couldn't be parsed
             decimal ParsePriceOrDefault(string p)
             {
-                if (decimal.TryParse(p, out var parsedPrice))
+                if (decimal.TryParse(p, NumberStyles.Currency, DecimalCulture, out var parsedPrice))
                 {
                     return parsedPrice;
                 }
@@ -61,17 +71,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 return ReweConstants.DefaultPrice;
             }
         }
-
-        public string TrimDescription(string description)
-        {
-            if (string.IsNullOrEmpty(description))
-            {
-                return description;
-            }
-
-            return description;
-        }
-
+        
         public string Trim(string str)
         {
             if (string.IsNullOrEmpty(str))

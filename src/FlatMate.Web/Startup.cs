@@ -18,6 +18,8 @@ using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
 using prayzzz.Common;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace FlatMate.Web
 {
@@ -70,6 +72,17 @@ namespace FlatMate.Web
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSession();
+
+            var supportedCultures = new[] { new CultureInfo("de-DE") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("de-DE"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });
@@ -103,6 +116,22 @@ namespace FlatMate.Web
             services.AddSession();
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //services.Configure<RequestLocalizationOptions>(options =>
+            //{
+            //    var supportedCultures = new[] { new CultureInfo("en-US") };
+
+            //    options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+            //    options.SupportedCultures = supportedCultures;
+            //    options.SupportedUICultures = supportedCultures;
+
+            //    //options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
+            //    //{
+            //    //    // My custom request culture logic
+            //    //    return new ProviderCultureResult("en");
+            //    //}));
+            //});
+
 
             // FlatMate
             services.AddFlatMateAuthentication();

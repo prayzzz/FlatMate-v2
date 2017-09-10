@@ -5,6 +5,8 @@
         border: 2px $color-border solid;
         margin-right: 1rem;
         padding: 1rem;
+        flex-shrink: 0;
+        width: calc(150px + 2rem + 4px);
 
         .picture {
             height: 150px;

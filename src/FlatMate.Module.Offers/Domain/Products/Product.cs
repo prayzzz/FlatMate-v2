@@ -42,7 +42,7 @@ namespace FlatMate.Module.Offers.Domain.Products
         public decimal Price { get; private set; }
 
         [InverseProperty(nameof(Products.PriceHistory.Product))]
-        public IEnumerable<PriceHistory> PriceHistory => _priceHistory;
+        public IReadOnlyList<PriceHistory> PriceHistory => _priceHistory;
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory ProductCategory { get; set; }
@@ -56,10 +56,13 @@ namespace FlatMate.Module.Offers.Domain.Products
         {
             Price = price;
 
-            var lastHistoryEntry = PriceHistory.OrderByDescending(x => x.Date).FirstOrDefault();
-            if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
+            if (price > 0)
             {
-                _priceHistory.Add(new PriceHistory(price, this));
+                var lastHistoryEntry = PriceHistory.OrderByDescending(x => x.Date).FirstOrDefault();
+                if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
+                {
+                    _priceHistory.Add(new PriceHistory(price, this));
+                }
             }
         }
     }

@@ -9,24 +9,27 @@
 
 <section class="container">
 
-    <div class="standard-box flex-row" style="padding: 1em;">
+    <div class="standard-box flex-row no-wrap" style="padding: 1em;">
 
         <div class="picture-wrapper">
             <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@Model.Product.ImageUrl?resize=150px:150px" width="150" height="150" />
         </div>
 
-        <div class="informations">
+        <div class="informations" style="display:flex; flex-direction:column">
             <div style="font-size:1.5rem;">@Model.Product.Name</div>
 
             <div>@Model.Product.Description</div>
 
-            <div>@Model.Product.SizeInfo</div>
 
             @if (Model.Product.Price > 0)
             {
-                <div>
-                    <text>@Model.Product.Price €</text>
+                <div style="margin-top:1rem; font-size:1.2rem; flex-grow:1; display: flex;  justify-content: flex-end;  flex-direction: column;">
+                    <text>@Model.Product.Price € (@Model.Product.SizeInfo)</text>
                 </div>
+            }
+            else
+            {
+                <div>@Model.Product.SizeInfo</div>
             }
 
         </div>

@@ -1,7 +1,6 @@
 ﻿using FlatMate.Module.Common;
 using FlatMate.Module.Offers.Configuration;
 using FlatMate.Module.Offers.Domain.Rewe;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

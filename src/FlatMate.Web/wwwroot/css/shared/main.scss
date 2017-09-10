@@ -129,6 +129,10 @@ a {
     flex-wrap: wrap;
     justify-content: flex-start;
     width: 100%;
+
+    &.no-wrap {
+        flex-wrap: nowrap;
+    }
 }
 
 .align-right {
