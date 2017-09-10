@@ -1,0 +1,14 @@
+﻿.marketindex {
+    .market-box {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+        padding: 0.75rem;
+        margin-right: .5rem;
+
+        .image {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+    }
+}

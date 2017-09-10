@@ -69,7 +69,7 @@
     </nav>
 
     <main class="@ViewData["MainClass"]">
-        <section class="container">
+        <section>
             <alert-bar></alert-bar>
         </section>
 
@@ -88,7 +88,6 @@
     {
         <script type="application/json" id="data-current-user">
             @Json.Serialize(Model.CurrentUser)
-
         </script>
     }
 

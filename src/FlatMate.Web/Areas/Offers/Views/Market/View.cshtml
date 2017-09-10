@@ -4,54 +4,70 @@
     Layout = "_Layout";
     ViewData["Title"] = Model.Market.Name;
     ViewData["PageTitle"] = "Im Angebot";
+    ViewData["MainClass"] = "marketview";
 }
 
 <section class="container">
 
-    <div class="standard-box flex-row vertical-center" style="padding:1rem;">
-        <div style="min-width:150px; margin-right:1rem;">
-            <img src="@Model.Market.Company.ImageLink" height="66" />
-        </div>
-        <div style="display:flex; flex-direction: column; justify-content:center">
-            <div>
-                <span style="font-size: 1.5rem;">@Model.Market.Name</span>
+
+    <div class="row">
+        <div class="col">
+            <div class="standard-box market-info-box">
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-4 col-market-image">
+                        <img src="@Model.Market.Company.ImageLink" height="66" />
+                    </div>
+                    <div class="col-sm-12 col-md-5 col-market-info">
+                        <div class="row no-gutters">
+                            <div>
+                                <span style="font-size: 1.5rem;">@Model.Market.Name</span>
+                            </div>
+                            <div>
+                                <small>@Model.Market.Street, @Model.Market.PostalCode @Model.Market.City</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-offer-count">
+                        @Model.Offers.Count Produkte im Angebot
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <small>@Model.Market.Street, @Model.Market.PostalCode @Model.Market.City</small>
-            </div>
+
         </div>
-        <div style="text-align:right; flex-grow:1">
-            @Model.Offers.Count Produkte im Angebot
-        </div>
+
     </div>
-    
+
     @{
         var offersByProductCategory = Model.Offers.OrderByDescending(o => o.Product.ProductCategory.SortWeight)
                                                   .GroupBy(o => o.Product.ProductCategory.Id.Value);
     }
-    
+
     @foreach (var offersGroup in offersByProductCategory)
     {
         <h3>@Model.ProductCategories[offersGroup.Key].Name</h3>
 
-        <div class="grid col-5">
+        <div class="row">
 
             @foreach (var offer in offersGroup.OrderBy(x => x.Product.ExternalId))
             {
-                <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@offer.ProductId" class="standard-box offer-box">
+                <div class="col-sm-6 col-lg-4 col-xl-3 col-offer">
+                    <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@offer.ProductId" class="standard-box offer-box">
 
-                    <div class="image">
-                        <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offer.ImageUrl?resize=150px:150px" width="150" height="150" />
-                    </div>
+                        <div class="image">
+                            <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offer.ImageUrl?resize=150px:150px" width="150" height="150" />
+                        </div>
 
-                    <div class="name">
-                        <strong>@offer.Product.Name</strong>
-                    </div>
+                        <div class="name">
+                            <strong>@offer.Product.Name</strong>
+                        </div>
 
-                    <div class="price">
-                        <span style="font-size:1.5rem">@offer.Price €</span>
-                    </div>
-                </a>
+                        <div class="price">
+                            <span style="font-size:1.5rem">@offer.Price €</span>
+                        </div>
+                    </a>
+                </div>
             }
 
         </div>

@@ -12,7 +12,7 @@ namespace FlatMate.Web
     {
         public static void Main(string[] args)
         {
-            var hostConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string> { { "urls", "http://localhost:5000" } })
+            var hostConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string> { { "urls", "http://localhost:5000;http://192.168.178.32:5000" } })
                                                        .AddCommandLine(args)
                                                        .Build();
 
