@@ -28,7 +28,7 @@ namespace FlatMate.Module.Offers.Tasks
         /// <summary>
         /// Every day 01:00
         /// </summary>
-        public override string Schedule => "0 1 * * *";
+        public override string Schedule => "0 6 * * *";
 
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
