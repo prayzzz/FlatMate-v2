@@ -53,7 +53,7 @@ namespace FlatMate.Module.Offers.Domain.Products
 
         public async Task<IEnumerable<OfferDto>> GetProductOffers(int id)
         {
-            return (await _dbContext.Offers.Where(o => o.ProductId == id).ToListAsync()).Select(_mapper.Map<OfferDto>);
+            return (await _dbContext.Offers.Include(o => o.Market).Where(o => o.ProductId == id).ToListAsync()).Select(_mapper.Map<OfferDto>);
         }
 
         public async Task<IEnumerable<PriceHistoryDto>> GetProductPriceHistory(int productId)

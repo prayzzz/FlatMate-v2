@@ -10,34 +10,26 @@
 <section class="container">
 
 
-    <div class="row">
-        <div class="col">
-            <div class="standard-box market-info-box">
+        <div class="standard-box market-info-box">
 
-                <div class="row">
-                    <div class="col-sm-12 col-md-4 col-market-image">
-                        <img src="@Model.Market.Company.ImageLink" height="66" />
-                    </div>
-                    <div class="col-sm-12 col-md-5 col-market-info">
-                        <div class="row no-gutters">
-                            <div>
-                                <span style="font-size: 1.5rem;">@Model.Market.Name</span>
-                            </div>
-                            <div>
-                                <small>@Model.Market.Street, @Model.Market.PostalCode @Model.Market.City</small>
-                            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-4 col-market-image">
+                    <img src="@Model.Market.Company.ImageLink" height="66" />
+                </div>
+                <div class="col-sm-12 col-md-5 col-market-info">
+                        <div>
+                            <span style="font-size: 1.5rem;">@Model.Market.Name</span>
                         </div>
-                    </div>
-                    <div class="col-sm-12 col-md-3 col-offer-count">
-                        @Model.Offers.Count Produkte im Angebot
-                    </div>
-
+                        <div>
+                            <small>@Model.Market.Street, @Model.Market.PostalCode @Model.Market.City</small>
+                        </div>
+                </div>
+                <div class="col-sm-12 col-md-3 col-offer-count">
+                    @Model.Offers.Count Produkte im Angebot
                 </div>
             </div>
 
         </div>
-
-    </div>
 
     @{
         var offersByProductCategory = Model.Offers.OrderByDescending(o => o.Product.ProductCategory.SortWeight)

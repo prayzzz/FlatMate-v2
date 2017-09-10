@@ -16,6 +16,5 @@ namespace FlatMate.Web.Mvc
 
             return services;
         }
-
     }
 }

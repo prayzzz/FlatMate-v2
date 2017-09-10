@@ -19,6 +19,8 @@ namespace FlatMate.Module.Offers.Api.Jso
 
         public decimal Price { get; set; }
 
+        public MarketJso Market { get; set; }
+
         public ProductJso Product { get; set; }
 
         public int ProductId { get; set; }
@@ -42,6 +44,7 @@ namespace FlatMate.Module.Offers.Api.Jso
                 From = dto.From,
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
+                Market = ctx.Mapper.Map<MarketJso>(dto.Market),
                 Price = dto.Price,
                 Product = ctx.Mapper.Map<ProductJso>(dto.Product),
                 ProductId = dto.ProductId,

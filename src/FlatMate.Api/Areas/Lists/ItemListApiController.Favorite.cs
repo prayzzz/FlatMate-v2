@@ -11,16 +11,16 @@ namespace FlatMate.Api.Areas.Lists
     {
         [HttpPost("favorite")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Result> CreateFavorite([FromBody] ItemListFavoriteJso jso)
+        public Task<Result> CreateFavorite([FromBody] ItemListFavoriteJso jso)
         {
-            return await _favoriteService.SetAsFavorite(jso.ItemListId);
+            return _favoriteService.SetAsFavorite(jso.ItemListId);
         }
 
         [HttpDelete("favorite/{listId}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Result> DeleteFavorite([FromBody] ItemListFavoriteJso jso)
+        public Task<Result> DeleteFavorite([FromBody] ItemListFavoriteJso jso)
         {
-            return await _favoriteService.DeleteFavorite(jso.ItemListId);
+            return _favoriteService.DeleteFavorite(jso.ItemListId);
         }
 
         [HttpGet("favorite")]

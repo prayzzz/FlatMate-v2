@@ -11,9 +11,9 @@ namespace FlatMate.Web.Mvc.Base
     {
         public UserInfoJso CurrentUser { get; set; }
 
-        public bool IsError => Result != null && Result.IsError;
+        public bool IsError => Result?.IsError == true;
 
-        public bool IsSuccess => Result != null && Result.IsSuccess;
+        public bool IsSuccess => Result?.IsSuccess == true;
 
         /// <summary>
         ///     Set by <see cref="Result" /> if <see cref="MvcResultFilter" /> is filled

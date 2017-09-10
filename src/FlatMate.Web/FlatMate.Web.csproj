@@ -7,8 +7,9 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>win-x64,linux-x64</RuntimeIdentifiers>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never" />
     <Content Include="_Migrations/**" CopyToPublishDirectory="Always" />
@@ -22,6 +23,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
     <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-dev-24" />
+    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0-rc" />
     <PackageReference Include="Serilog" Version="2.5.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="2.4.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />

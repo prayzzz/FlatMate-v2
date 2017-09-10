@@ -30,7 +30,7 @@
     }
 }*/
 
-.container{
+.container {
     padding-top: 15px;
 }
 
@@ -59,12 +59,12 @@
 }
 
 .standard-box {
-    //width: 100%;
     box-shadow: 0 1px 1px 0 rgba(50, 50, 50, .4);
     background-color: #fff;
 }
 
-.row + h3 {
+.row + h3,
+.standard-box + h3 {
     margin-top: 1rem;
 }
 

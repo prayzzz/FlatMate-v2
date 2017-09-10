@@ -13,8 +13,8 @@ namespace FlatMate.Module.Common.Api.Filter
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!HttpMethods.IsPost(context.HttpContext.Request.Method) &&
-                !HttpMethods.IsPut(context.HttpContext.Request.Method))
+            if (!HttpMethods.IsPost(context.HttpContext.Request.Method)
+                && !HttpMethods.IsPut(context.HttpContext.Request.Method))
             {
                 return;
             }

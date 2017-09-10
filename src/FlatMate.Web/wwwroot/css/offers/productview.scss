@@ -1,41 +1,48 @@
 ﻿@import '../variables.scss';
 
+$picture-wrapper-padding: 15px;
+$picture-wrapper-width: 150px + (2 * $picture-wrapper-padding) + 4px;
+
 .productview {
     .product-info-box {
         padding: 1rem;
     }
 
     .col-picture {
-        flex: 1 0 200px;
+        flex: 1 0 $picture-wrapper-width;
         justify-content: center;
         display: flex;
+    }
+
+    .picture-wrapper {
+        border: 2px $color-border solid;
+        padding: $picture-wrapper-padding;
+        width: $picture-wrapper-width;
+        height: $picture-wrapper-width;
+    }
+
+    .col-product-info {
+        display: flex;
+        flex-direction: column
+    }
+
+    .product-price {
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        flex-grow: 1;
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: column;
+        text-align: right;
     }
 
     @media (min-width: 768px) {
         .col-picture {
             flex-grow: 0;
-            margin-right: 1rem;
-        }
-    }
-
-    .picture-wrapper {
-        border: 2px $color-border solid;
-        margin-right: 1rem;
-        padding: 1rem;
-        width: 200px;
-        height: 200px;
-    }
-
-    .informations {
-        .key {
-            border-bottom: 1px $color-border solid;
-            padding: .5rem;
-            width: 10rem;
         }
 
-        .value {
-            margin-left: 2rem;
-            padding: .5rem;
+        .product-price {
+            text-align: left;
         }
     }
 }
