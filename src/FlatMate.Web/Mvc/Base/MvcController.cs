@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Security.Claims;
-using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
+using FlatMate.Module.Account.Api.Jso;
 
 namespace FlatMate.Web.Mvc.Base
 {

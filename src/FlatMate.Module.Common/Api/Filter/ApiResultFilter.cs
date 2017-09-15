@@ -1,12 +1,11 @@
-﻿using FlatMate.Api.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
 using prayzzz.Common.Results;
 using System;
 
-namespace FlatMate.Api.Filter
+namespace FlatMate.Module.Common.Api.Filter
 {
     [Inject(DependencyLifetime.Singleton, typeof(ApiResultFilter))]
     [AttributeUsage(AttributeTargets.Class)]

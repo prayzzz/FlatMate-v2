@@ -1,9 +1,9 @@
-﻿using FlatMate.Api.Areas.Account.User;
+﻿using FlatMate.Module.Account.Api;
 using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Api.Areas.Lists.Jso
+namespace FlatMate.Module.Lists.Api.Jso
 {
     [Inject]
     public class ItemListMapper : IDboMapper

@@ -1,4 +1,4 @@
-namespace FlatMate.Api.Areas.Account.User
+namespace FlatMate.Module.Account.Api.Jso
 {
     public class ChangePasswordJso
     {

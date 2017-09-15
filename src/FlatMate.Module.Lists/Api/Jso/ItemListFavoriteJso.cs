@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FlatMate.Api.Areas.Lists.Jso
+namespace FlatMate.Module.Lists.Api.Jso
 {
     public class ItemListFavoriteJso
     {

@@ -17,7 +17,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
         public MarketController(MarketApiController apiController,
                                 ProductApiController productApiController,
-                                ILogger<MarketController> logger, 
+                                ILogger<MarketController> logger,
                                 IMvcControllerService controllerService) : base(logger, controllerService)
         {
             _apiController = apiController;

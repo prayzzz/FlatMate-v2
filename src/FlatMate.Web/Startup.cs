@@ -1,25 +1,25 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FlatMate.Api.Extensions;
-using FlatMate.Api.Filter;
 using FlatMate.Migration;
 using FlatMate.Module.Common;
-using FlatMate.Web.Mvc;
+using FlatMate.Module.Common.Api.Filter;
+using FlatMate.Web.Common;
 using FlatMate.Web.Mvc.Json;
+using FlatMate.Web.Mvc.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using prayzzz.Common;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
-using prayzzz.Common;
+using System;
 using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 
 namespace FlatMate.Web
 {
@@ -27,7 +27,6 @@ namespace FlatMate.Web
     {
         private static readonly FlatMateModule[] Modules =
         {
-            new Api.Module(),
             new Module.Account.Module(),
             new Module.Common.Module(),
             new Module.Infrastructure.Module(),
@@ -36,6 +35,7 @@ namespace FlatMate.Web
         };
 
         private readonly IConfiguration _configuration;
+
         private readonly ILogger<Startup> _logger;
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
@@ -88,7 +88,7 @@ namespace FlatMate.Web
                 routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute("default", "{area=Home}/{controller=Dashboard}/{action=Index}");
-                routes.MapRoute("404", "{*url}", new { area = "", controller = "Error", action = "PageNotFound" });
+                routes.MapRoute("404", "{*url}", new { controller = "Error", action = "PageNotFound" });
             });
 
             foreach (var module in Modules)
@@ -116,22 +116,6 @@ namespace FlatMate.Web
             services.AddSession();
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            //services.Configure<RequestLocalizationOptions>(options =>
-            //{
-            //    var supportedCultures = new[] { new CultureInfo("en-US") };
-
-            //    options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
-            //    options.SupportedCultures = supportedCultures;
-            //    options.SupportedUICultures = supportedCultures;
-
-            //    //options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
-            //    //{
-            //    //    // My custom request culture logic
-            //    //    return new ProviderCultureResult("en");
-            //    //}));
-            //});
-
 
             // FlatMate
             services.AddFlatMateAuthentication();

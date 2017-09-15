@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Api.Areas.Account.User;
-using FlatMate.Api.Areas.Lists.Jso;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using FlatMate.Module.Account.Api;
+using FlatMate.Module.Lists.Api.Jso;
 
-namespace FlatMate.Api.Areas.Lists
+namespace FlatMate.Module.Lists.Api
 {
     public class GetAllListsQuery
     {

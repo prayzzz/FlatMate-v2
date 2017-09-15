@@ -1,4 +1,5 @@
-﻿using FlatMate.Web.Mvc.Base;
+﻿using FlatMate.Web.Mvc;
+using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

@@ -1,4 +1,4 @@
-﻿using FlatMate.Api.Areas.Account.User;
+﻿using FlatMate.Module.Account.Api.Jso;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Mvc.Base
@@ -14,11 +14,6 @@ namespace FlatMate.Web.Mvc.Base
         public bool IsError => Result?.IsError == true;
 
         public bool IsSuccess => Result?.IsSuccess == true;
-
-        /// <summary>
-        ///     Set by <see cref="Result" /> if <see cref="MvcResultFilter" /> is filled
-        /// </summary>
-        //public string ErrorMessage { get; set; }
 
         public Result Result { get; set; }
     }

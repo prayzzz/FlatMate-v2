@@ -71,7 +71,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 return ReweConstants.DefaultPrice;
             }
         }
-        
+
         public string Trim(string str)
         {
             if (string.IsNullOrEmpty(str))

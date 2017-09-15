@@ -1,9 +1,40 @@
 ﻿using FlatMate.Module.Account.Shared.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using System.ComponentModel;
 
-namespace FlatMate.Api.Areas.Account.User
+namespace FlatMate.Module.Account.Api.Jso
 {
+    public class UserJso
+    {
+        [ReadOnly(true)]
+        public string Email { get; set; }
+
+        [ReadOnly(true)]
+        public int? Id { get; set; }
+
+        [ReadOnly(true)]
+        public string UserName { get; set; }
+    }
+
+    public class UserInfoJso
+    {
+        [ReadOnly(true)]
+        public int? Id { get; set; }
+
+        [ReadOnly(true)]
+        public string UserName { get; set; }
+    }
+
+    public class CreateUserJso
+    {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public string UserName { get; set; }
+    }
+
     [Inject]
     public class UserMapper : IDboMapper
     {

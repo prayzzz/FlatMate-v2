@@ -28,7 +28,6 @@ nav {
     background-color: #fff;
     padding-top: $header-height;
     border-right: 1px solid $color-border;
-    box-shadow: 0 0 2px $color-border;
     z-index: 10;
     transition: width ease-out .25s;
 
@@ -49,11 +48,13 @@ nav {
             display: block;
             padding: 10px;
             color: $color-font;
+            border-left: 0px solid #fff;
 
             &:hover {
-                color: #fff;
-                background-color: lighten($color-primary, 10%);
-                transition: all linear .2s;
+                color: $color-font;
+                transition: border-color ease-out .2s;
+                padding-left: 5px;
+                border-left: 5px solid $color-primary;
             }
         }
     }

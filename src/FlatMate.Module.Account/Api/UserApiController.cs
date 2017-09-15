@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using FlatMate.Module.Account.Api.Jso;
 
-namespace FlatMate.Api.Areas.Account.User
+namespace FlatMate.Module.Account.Api
 {
     [Authorize]
     [Route("api/v1/account/user")]
@@ -31,7 +32,7 @@ namespace FlatMate.Api.Areas.Account.User
 
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Task<Result<UserJso>> CreateAsync([FromBody] CreateUserJso jso)
+        public Task<Result<UserJso>> CreateUserAsync([FromBody] CreateUserJso jso)
         {
             return _userService.CreateAsync(Map<UserDto>(jso), jso.Password)
                                .WithResultDataAs(dto => _mapper.Map<UserJso>(dto));

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
-namespace FlatMate.Web.Mvc
+namespace FlatMate.Web.Mvc.Startup
 {
     public static class ModuleSetup
     {

@@ -1,4 +1,5 @@
-﻿using FlatMate.Api.Areas.Account.Authentication;
+﻿using FlatMate.Module.Account.Api;
+using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

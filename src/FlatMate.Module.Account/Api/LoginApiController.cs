@@ -1,14 +1,14 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using FlatMate.Api.Areas.Account.User;
 using FlatMate.Module.Account.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using FlatMate.Module.Account.Api.Jso;
 
-namespace FlatMate.Api.Areas.Account.Authentication
+namespace FlatMate.Module.Account.Api
 {
     [Route("api/v1/account/login")]
     public class LoginApiController : Controller

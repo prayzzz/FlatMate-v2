@@ -1,7 +1,7 @@
 ﻿using FlatMate.Web.Mvc.Json;
 using prayzzz.Common.Attributes;
 
-namespace FlatMate.Web.Mvc.Base
+namespace FlatMate.Web.Mvc
 {
     public interface IMvcControllerService
     {

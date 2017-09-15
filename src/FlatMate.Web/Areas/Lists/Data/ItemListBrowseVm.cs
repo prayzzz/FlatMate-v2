@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FlatMate.Api.Areas.Lists.Jso;
 using FlatMate.Web.Mvc.Base;
+using FlatMate.Module.Lists.Api.Jso;
 
 namespace FlatMate.Web.Areas.Lists.Data
 {

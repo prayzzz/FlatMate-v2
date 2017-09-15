@@ -6,7 +6,7 @@
 
         public class TempDataConstants
         {
-            public readonly string Result = "result";
+            public readonly string Result = "tmp_result";
         }
     }
 }

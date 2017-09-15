@@ -6,7 +6,7 @@ using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
 using FlatMate.Module.Common;
 
-namespace FlatMate.Api.Extensions
+namespace FlatMate.Web.Common
 {
     public static class ContainerBuilderExtension
     {

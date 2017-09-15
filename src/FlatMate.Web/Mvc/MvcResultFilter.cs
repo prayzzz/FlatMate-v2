@@ -25,9 +25,6 @@ namespace FlatMate.Web.Mvc
             if (model == null || !model.IsError || model.Result == null)
             {
             }
-
-            // TODO
-            //model.ErrorMessage = string.Format(model.Result.Message, model.Result.MessageArgs);
         }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FlatMate.Web.Mvc
+namespace FlatMate.Web.Mvc.Startup
 {
     public static class AuthenticationSetup
     {

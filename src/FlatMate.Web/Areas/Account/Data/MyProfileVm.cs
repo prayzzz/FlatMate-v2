@@ -1,4 +1,4 @@
-using FlatMate.Api.Areas.Account.User;
+using FlatMate.Module.Account.Api.Jso;
 using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Account.Data

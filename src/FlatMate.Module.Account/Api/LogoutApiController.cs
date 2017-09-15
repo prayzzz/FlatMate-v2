@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FlatMate.Api.Areas.Account.Authentication
+namespace FlatMate.Module.Account.Api
 {
     [Route("api/v1/account/logout")]
     public class LogoutApiController : Controller

@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
-using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
+using FlatMate.Web.Mvc;
+using FlatMate.Module.Account.Api;
+using FlatMate.Module.Account.Api.Jso;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
@@ -44,7 +46,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                 return View(model);
             }
 
-            var create = await _userApi.CreateAsync(new CreateUserJso { Email = model.Email, Password = model.Password, UserName = model.UserName });
+            var create = await _userApi.CreateUserAsync(new CreateUserJso { Email = model.Email, Password = model.Password, UserName = model.UserName });
             if (create.IsError)
             {
                 model.Result = create;

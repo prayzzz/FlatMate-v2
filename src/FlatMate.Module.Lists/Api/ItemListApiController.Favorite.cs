@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Api.Areas.Lists.Jso;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
+using FlatMate.Module.Lists.Api.Jso;
 
-namespace FlatMate.Api.Areas.Lists
+namespace FlatMate.Module.Lists.Api
 {
     public partial class ItemListApiController
     {

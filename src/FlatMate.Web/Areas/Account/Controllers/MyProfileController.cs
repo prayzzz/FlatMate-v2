@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
-using FlatMate.Api.Areas.Account.User;
 using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
+using FlatMate.Web.Mvc;
+using FlatMate.Module.Account.Api;
+using FlatMate.Module.Account.Api.Jso;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
