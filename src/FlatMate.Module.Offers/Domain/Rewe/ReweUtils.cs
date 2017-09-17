@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
+using System;
 using System.Globalization;
 using System.Linq;
 
@@ -80,6 +81,8 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
 
             str = str.Trim(TrimChars);
+            str = str.Replace("\r\n", string.Empty);
+            str = str.Replace("\n", string.Empty);
 
             return str;
         }

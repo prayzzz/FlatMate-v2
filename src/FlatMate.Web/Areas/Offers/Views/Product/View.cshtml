@@ -50,7 +50,7 @@
             </thead>
 
             <tbody>
-                @foreach (var offer in Model.Offers)
+                @foreach (var offer in Model.Offers.OrderByDescending(o => o.From))
                 {
                     <tr>
                         <td>@offer.From.ToShortDateString()</td>
@@ -76,7 +76,7 @@
                 </thead>
 
                 <tbody>
-                    @foreach (var history in Model.PriceHistory)
+                    @foreach (var history in Model.PriceHistory.OrderByDescending(p => p.Date))
                 {
                         <tr>
                             <td>@history.Date.ToShortDateString()</td>
