@@ -26,7 +26,7 @@ namespace FlatMate.Module.Offers.Tasks
         }
 
         /// <summary>
-        /// Every day 01:00
+        /// Every day 10:00
         /// </summary>
         public override string Schedule => "0 10 * * *";
 
