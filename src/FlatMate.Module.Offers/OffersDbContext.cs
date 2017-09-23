@@ -3,6 +3,7 @@ using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
+using FlatMate.Module.Offers.Domain.Raw;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,8 @@ namespace FlatMate.Module.Offers
         public virtual DbSet<Product> Product { get; set; }
 
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
+        public virtual DbSet<RawApiData> RawApiData { get; set; }
 
         public new Result SaveChanges()
         {
