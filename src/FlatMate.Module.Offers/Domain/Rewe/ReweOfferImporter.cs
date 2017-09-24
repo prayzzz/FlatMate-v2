@@ -1,4 +1,5 @@
-﻿using FlatMate.Module.Offers.Domain.Markets;
+﻿using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
 using FlatMate.Module.Offers.Domain.Raw;
@@ -17,23 +18,8 @@ using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain.Rewe
 {
-    public interface IReweOfferImporter
-    {
-        /// <summary>
-        ///     Imports the given offer envelope
-        /// </summary>
-        /// <param name="market"></param>
-        /// <param name="offerEnvelope">JSON Representation of Envelope&lt;OfferJso&gt;</param>
-        Task<(Result, IEnumerable<Offer>)> ImportOffers(Market market, Envelope<OfferJso> offerEnvelope);
-
-        /// <summary>
-        ///     Imports offers from the <see cref="IReweMobileApi" /> for the given market
-        /// </summary>
-        Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market);
-    }
-
     [Inject]
-    public class ReweOfferImporter : IReweOfferImporter
+    public class ReweOfferImporter : IOfferImporter
     {
         private readonly Dictionary<string, ProductCategoryEnum> _categoryNameToEnum = new Dictionary<string, ProductCategoryEnum>
         {
@@ -55,10 +41,11 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
         private readonly IReweMobileApi _mobileApi;
 
+        private readonly IRawOfferDataService _rawOfferService;
+
         private readonly OffersDbContext _repository;
 
         private readonly IReweUtils _reweUtils;
-        private readonly IRawOfferDataService _rawOfferService;
 
         public ReweOfferImporter(IReweMobileApi mobileApi,
                                  IReweUtils reweUtils,
@@ -73,13 +60,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             _rawOfferService = rawOfferService;
         }
 
-        /// <inheritdoc />
-        public Task<(Result, IEnumerable<Offer>)> ImportOffers(Market market, Envelope<OfferJso> offerEnvelope)
-        {
-            _logger.LogInformation($"Importing {offerEnvelope.Items.Count} orders");
-
-            return ProcessOffers(offerEnvelope, market);
-        }
+        public Company Company => Company.Rewe;
 
         /// <inheritdoc />
         public async Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market)
@@ -103,6 +84,16 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
 
             return await ProcessOffers(offerEnvelope, market);
+        }
+
+        /// <inheritdoc />
+        public Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
+        {
+            var offerEnvelope = JsonConvert.DeserializeObject<Envelope<OfferJso>>(data);
+
+            _logger.LogInformation($"Importing {offerEnvelope.Items.Count} orders");
+
+            return ProcessOffers(offerEnvelope, market);
         }
 
         /// <summary>

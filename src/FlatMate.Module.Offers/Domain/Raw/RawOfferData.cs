@@ -22,7 +22,7 @@ namespace FlatMate.Module.Offers.Domain.Raw
         public string Hash { get; set; }
 
         [ForeignKey(nameof(CompanyId))]
-        public Company Company { get; set; }
+        public CompanyData Company { get; set; }
 
         [Required]
         public int CompanyId { get; set; }

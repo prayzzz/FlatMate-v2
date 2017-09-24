@@ -23,7 +23,7 @@ namespace FlatMate.Module.Offers
             _logger = logger;
         }
 
-        public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<CompanyData> Companies { get; set; }
 
         public virtual DbSet<Market> Markets { get; set; }
 

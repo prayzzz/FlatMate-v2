@@ -1,5 +1,6 @@
 ﻿using FlatMate.Module.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -12,8 +13,6 @@ namespace FlatMate.Module.Offers.Domain.Raw
 {
     public interface IRawOfferDataService
     {
-        Task<(Result, RawOfferDataDto)> Save(RawOfferDataDto dto);
-
         Task<(Result, RawOfferDataDto)> Save(string data, int companyId);
     }
 
@@ -23,46 +22,37 @@ namespace FlatMate.Module.Offers.Domain.Raw
         private readonly OffersDbContext _dbContext;
 
         private readonly IMapper _mapper;
+        private readonly ILogger<RawOfferDataService> _logger;
 
-        public RawOfferDataService(OffersDbContext dbContext, IMapper mapper)
+        public RawOfferDataService(OffersDbContext dbContext, IMapper mapper, ILogger<RawOfferDataService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<(Result, RawOfferDataDto)> Save(RawOfferDataDto dto)
+        public async Task<(Result, RawOfferDataDto)> Save(string data, int companyId)
         {
-            var hash = ComputeHash(dto.Data);
+            var offerData = new RawOfferData
+            {
+                CompanyId = companyId,
+                Created = DateTime.Now,
+                Data = data,
+                Hash = ComputeHash(data)
+            };
 
-            var response = await _dbContext.RawOfferData.FirstOrDefaultAsync(d => d.Hash == hash);
+            var response = await _dbContext.RawOfferData.FirstOrDefaultAsync(d => d.Hash == offerData.Hash);
             if (response != null)
             {
+                _logger.LogInformation("OfferData with same hash already saved");
                 return (SuccessResult.Default, _mapper.Map<RawOfferDataDto>(response));
             }
 
-            var data = new RawOfferData
-            {
-                CompanyId = dto.CompanyId,
-                Created = dto.Created,
-                Data = dto.Data,
-                Hash = hash
-            };
-
             _dbContext.Add(data);
             var result = await _dbContext.SaveChangesAsync();
-            var offerData = await _dbContext.RawOfferData.Include(d => d.Company).FirstOrDefaultAsync(d => d.Id == data.Id);
+            var savedOfferData = await _dbContext.RawOfferData.Include(d => d.Company).FirstOrDefaultAsync(d => d.Id == offerData.Id);
 
             return (result, _mapper.Map<RawOfferDataDto>(offerData));
-        }
-
-        public Task<(Result, RawOfferDataDto)> Save(string data, int companyId)
-        {
-            return Save(new RawOfferDataDto
-            {
-                CompanyId = companyId,
-                Data = data,
-                Created = DateTime.Now,
-            });
         }
 
         private string ComputeHash(string data)

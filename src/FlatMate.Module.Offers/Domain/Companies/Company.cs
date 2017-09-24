@@ -7,9 +7,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Offers.Domain.Companies
 {
-    [Table("Company")]
-    public class Company : DboBase
+    public enum Company
     {
+        Rewe = 1,
+        Netto = 2,
+        Penny = 3,
+        Aldi = 4
+    }
+
+    [Table("CompanyData")]
+    public class CompanyData : DboBase
+    {
+        public Company Company => (Company)Id;
+
         public Guid? ImageGuid { get; set; }
 
         public string Name { get; set; }
@@ -20,6 +30,8 @@ namespace FlatMate.Module.Offers.Domain.Companies
         public Guid? ImageGuid { get; set; }
 
         public string Name { get; set; }
+
+        public Company Company { get; set; }
     }
 
     [Inject]
@@ -27,13 +39,14 @@ namespace FlatMate.Module.Offers.Domain.Companies
     {
         public void Configure(IMapperConfiguration mapper)
         {
-            mapper.Configure<Company, CompanyDto>(MapToDto);
+            mapper.Configure<CompanyData, CompanyDto>(MapToDto);
         }
 
-        private static CompanyDto MapToDto(Company company, MappingContext mappingContext)
+        private static CompanyDto MapToDto(CompanyData company, MappingContext mappingContext)
         {
             return new CompanyDto
             {
+                Company = company.Company,
                 Id = company.Id,
                 ImageGuid = company.ImageGuid,
                 Name = company.Name

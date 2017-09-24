@@ -17,7 +17,7 @@ namespace FlatMate.Module.Offers.Domain.Markets
         public string City { get; set; }
 
         [ForeignKey(nameof(CompanyId))]
-        public Company Company { get; set; }
+        public CompanyData Company { get; set; }
 
         public int CompanyId { get; set; }
 

@@ -64,7 +64,7 @@ namespace FlatMate.Module.Offers.Domain.Companies
             return await Save(company);
         }
 
-        private async Task<(Result, CompanyDto)> Save(Company company)
+        private async Task<(Result, CompanyDto)> Save(CompanyData company)
         {
             var result = await _dbContext.SaveChangesAsync();
             if (result.IsError)
