@@ -9,8 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-24" />
-    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0-rc" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-26" />
+    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
   </ItemGroup>
   
 </Project>

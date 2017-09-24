@@ -1,9 +1,11 @@
 ﻿using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
+using FlatMate.Module.Offers.Domain.Raw;
 using FlatMate.Module.Offers.Domain.Rewe.Jso;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
@@ -56,9 +58,11 @@ namespace FlatMate.Module.Offers.Domain.Rewe
         private readonly OffersDbContext _repository;
 
         private readonly IReweUtils _reweUtils;
+        private readonly IRawOfferDataService _rawOfferService;
 
         public ReweOfferImporter(IReweMobileApi mobileApi,
                                  IReweUtils reweUtils,
+                                 IRawOfferDataService rawOfferService,
                                  OffersDbContext dbContext,
                                  ILogger<ReweOfferImporter> logger)
         {
@@ -66,6 +70,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             _reweUtils = reweUtils;
             _repository = dbContext;
             _logger = logger;
+            _rawOfferService = rawOfferService;
         }
 
         /// <inheritdoc />
@@ -89,6 +94,12 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             {
                 _logger.LogWarning(0, e, "Error while requesting Rewe Mobile API");
                 return (new ErrorResult(ErrorType.InternalError, "Rewe Mobile API nicht verfügbar."), null);
+            }
+
+            var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(offerEnvelope), market.CompanyId);
+            if (result.IsError)
+            {
+                _logger.LogWarning(0, "Failed saving raw offer data");
             }
 
             return await ProcessOffers(offerEnvelope, market);
