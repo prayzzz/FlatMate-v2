@@ -1,5 +1,5 @@
 ﻿using FlatMate.Module.Common.Tasks;
-using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using System.Threading;

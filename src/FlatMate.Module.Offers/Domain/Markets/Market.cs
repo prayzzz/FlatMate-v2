@@ -1,15 +1,12 @@
 ﻿using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
-using FlatMate.Module.Offers.Domain.Companies;
-using FlatMate.Module.Offers.Domain.Offers;
-using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FlatMate.Module.Offers.Domain.Markets
+namespace FlatMate.Module.Offers.Domain
 {
     [Table("Market")]
     public class Market : DboBase

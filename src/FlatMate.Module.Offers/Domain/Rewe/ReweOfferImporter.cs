@@ -1,10 +1,4 @@
-﻿using FlatMate.Module.Offers.Domain.Companies;
-using FlatMate.Module.Offers.Domain.Markets;
-using FlatMate.Module.Offers.Domain.Offers;
-using FlatMate.Module.Offers.Domain.Products;
-using FlatMate.Module.Offers.Domain.Raw;
-using FlatMate.Module.Offers.Domain.Rewe.Jso;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -99,7 +93,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
         /// <summary>
         /// Some product properties should not change. This method logs them if they change.
         /// </summary>
-        private void CheckForChangedProductProperties(Product product, OfferDto offer)
+        private void CheckForChangedProductProperties(Product product, ReweOfferDto offer)
         {
             Check(product.Brand, offer.Brand, nameof(product.Brand));
             Check(product.Description, offer.Description, nameof(product.Description));
@@ -118,7 +112,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
         }
 
-        private Offer CreateOrUpdateOffer(OfferDto offerDto)
+        private Offer CreateOrUpdateOffer(ReweOfferDto offerDto)
         {
             var offer = _repository.Offers.FirstOrDefault(o => o.ExternalId == offerDto.OfferId);
             if (offer == null)
@@ -138,9 +132,9 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             return offer;
         }
 
-        private Product CreateOrUpdateProduct(OfferDto offer)
+        private Product CreateOrUpdateProduct(ReweOfferDto offer)
         {
-            var product = _repository.Product.Include(p => p.PriceHistory)
+            var product = _repository.Products.Include(p => p.PriceHistoryEntries)
                                              .FirstOrDefault(p => p.ExternalId == offer.ProductId);
             if (product == null)
             {
@@ -171,23 +165,23 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             return product;
         }
 
-        private Dictionary<string, ProductCategoryDto> ExtractCategoryMap(Envelope<OfferJso> envelope)
+        private Dictionary<string, ReweProductCategoryDto> ExtractCategoryMap(Envelope<OfferJso> envelope)
         {
             if (!envelope.Meta.TryGetValue("categories", out var categories))
             {
                 _logger.LogWarning("Categories not available");
-                return new Dictionary<string, ProductCategoryDto>();
+                return new Dictionary<string, ReweProductCategoryDto>();
             }
 
             if (categories.Type != JTokenType.Array)
             {
                 _logger.LogWarning("Category format changed");
-                return new Dictionary<string, ProductCategoryDto>();
+                return new Dictionary<string, ReweProductCategoryDto>();
             }
 
             try
             {
-                var map = new Dictionary<string, ProductCategoryDto>();
+                var map = new Dictionary<string, ReweProductCategoryDto>();
 
                 foreach (var item in categories.Value<JArray>())
                 {
@@ -195,7 +189,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
                     if (_categoryNameToEnum.TryGetValue(reweCategory.Name, out var categoryEnum))
                     {
-                        var dto = new ProductCategoryDto
+                        var dto = new ReweProductCategoryDto
                         {
                             ExternalId = reweCategory.Id,
                             ExternalName = reweCategory.Name,
@@ -215,13 +209,13 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             catch (Exception e)
             {
                 _logger.LogError(e, "Error mapping categories");
-                return new Dictionary<string, ProductCategoryDto>();
+                return new Dictionary<string, ReweProductCategoryDto>();
             }
         }
 
-        private OfferDto PreprocessOffer(OfferJso offer, Dictionary<string, ProductCategoryDto> categoryToEnum, Market market)
+        private ReweOfferDto PreprocessOffer(OfferJso offer, Dictionary<string, ReweProductCategoryDto> categoryToEnum, Market market)
         {
-            var productCategory = ProductCategoryDto.Default;
+            var productCategory = ReweProductCategoryDto.Default;
             if (offer.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offer.CategoryIDs.FirstOrDefault(), out var category))
             {
                 productCategory = category;
@@ -240,7 +234,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 offeredFrom = offeredFrom.AddDays(1);
             }
 
-            return new OfferDto
+            return new ReweOfferDto
             {
                 Brand = _reweUtils.Trim(offer.Brand) ?? ReweConstants.DefaultBrand,
                 Description = _reweUtils.Trim(offer.AdditionalInformation),
@@ -288,7 +282,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             return (result, offers);
         }
 
-        private class OfferDto
+        private class ReweOfferDto
         {
             public string Brand { get; set; }
 
@@ -323,9 +317,9 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             public string SizeInfo { get; set; }
         }
 
-        private class ProductCategoryDto
+        private class ReweProductCategoryDto
         {
-            public static ProductCategoryDto Default => new ProductCategoryDto
+            public static ReweProductCategoryDto Default => new ReweProductCategoryDto
             {
                 ExternalId = string.Empty,
                 ExternalName = string.Empty,

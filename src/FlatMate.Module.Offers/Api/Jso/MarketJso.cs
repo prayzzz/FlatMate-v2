@@ -1,5 +1,4 @@
-﻿using FlatMate.Module.Offers.Domain.Companies;
-using FlatMate.Module.Offers.Domain.Markets;
+﻿using FlatMate.Module.Offers.Domain;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System.ComponentModel;

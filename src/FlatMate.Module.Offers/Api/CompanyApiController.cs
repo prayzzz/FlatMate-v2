@@ -2,7 +2,7 @@
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Infrastructure.Images;
 using FlatMate.Module.Offers.Api.Jso;
-using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;

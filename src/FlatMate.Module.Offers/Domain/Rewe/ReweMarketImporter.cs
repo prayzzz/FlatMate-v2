@@ -1,6 +1,4 @@
-﻿using FlatMate.Module.Offers.Domain.Markets;
-using FlatMate.Module.Offers.Domain.Rewe.Jso;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
@@ -60,7 +58,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
 
             market.City = marketJso.Company.City;
-            market.CompanyId = 1; // TODO find way to set company corrently
+            market.CompanyId = (int)Company.Rewe;
             market.ExternalId = marketJso.Id;
             market.Name = marketJso.Name;
             market.PostalCode = marketJso.Company.ZipCode;

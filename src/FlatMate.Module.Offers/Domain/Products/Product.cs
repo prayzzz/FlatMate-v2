@@ -1,6 +1,5 @@
 ﻿using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
-using FlatMate.Module.Offers.Domain.Markets;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace FlatMate.Module.Offers.Domain.Products
+namespace FlatMate.Module.Offers.Domain
 {
     [Table("Product")]
     public class Product : DboBase
@@ -41,8 +40,8 @@ namespace FlatMate.Module.Offers.Domain.Products
         [Required]
         public decimal Price { get; private set; }
 
-        [InverseProperty(nameof(Products.PriceHistory.Product))]
-        public IReadOnlyList<PriceHistory> PriceHistory => _priceHistory;
+        [InverseProperty(nameof(PriceHistory.Product))]
+        public IReadOnlyList<PriceHistory> PriceHistoryEntries => _priceHistory;
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory ProductCategory { get; set; }
@@ -58,7 +57,7 @@ namespace FlatMate.Module.Offers.Domain.Products
 
             if (price > 0)
             {
-                var lastHistoryEntry = PriceHistory.OrderByDescending(x => x.Date).FirstOrDefault();
+                var lastHistoryEntry = PriceHistoryEntries.OrderByDescending(x => x.Date).FirstOrDefault();
                 if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
                 {
                     _priceHistory.Add(new PriceHistory(price, this));

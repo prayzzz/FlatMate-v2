@@ -1,4 +1,4 @@
-﻿using FlatMate.Module.Offers.Domain.Products;
+﻿using FlatMate.Module.Offers.Domain;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System.ComponentModel;

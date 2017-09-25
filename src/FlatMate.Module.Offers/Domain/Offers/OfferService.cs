@@ -1,6 +1,6 @@
 ﻿using prayzzz.Common.Attributes;
 
-namespace FlatMate.Module.Offers.Domain.Offers
+namespace FlatMate.Module.Offers.Domain
 {
     [Inject]
     public class OfferService

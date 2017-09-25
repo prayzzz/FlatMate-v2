@@ -1,6 +1,6 @@
 ﻿using FlatMate.Module.Common.Api;
 using FlatMate.Module.Offers.Api.Jso;
-using FlatMate.Module.Offers.Domain.Products;
+using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;

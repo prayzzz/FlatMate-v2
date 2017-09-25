@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Offers.Domain.Companies
+namespace FlatMate.Module.Offers.Domain
 {
     public interface ICompanyService
     {

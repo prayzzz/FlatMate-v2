@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Offers.Domain.Raw
+namespace FlatMate.Module.Offers.Domain
 {
     public interface IRawOfferDataService
     {

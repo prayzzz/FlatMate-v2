@@ -1,5 +1,4 @@
-﻿using FlatMate.Module.Offers.Domain.Offers;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -7,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Offers.Domain.Products
+namespace FlatMate.Module.Offers.Domain
 {
     public interface IProductService
     {
@@ -37,7 +36,7 @@ namespace FlatMate.Module.Offers.Domain.Products
 
         public async Task<(Result, ProductDto)> GetProduct(int id)
         {
-            var product = await _dbContext.Product.FindAsync(id);
+            var product = await _dbContext.Products.FindAsync(id);
             if (product == null)
             {
                 return (new ErrorResult(ErrorType.NotFound, "Product not found"), null);
@@ -58,12 +57,12 @@ namespace FlatMate.Module.Offers.Domain.Products
 
         public async Task<IEnumerable<PriceHistoryDto>> GetProductPriceHistory(int productId)
         {
-            return (await _dbContext.PriceHistory.Where(ph => ph.ProductId == productId).ToListAsync()).Select(_mapper.Map<PriceHistoryDto>);
+            return (await _dbContext.PriceHistoryEntries.Where(ph => ph.ProductId == productId).ToListAsync()).Select(_mapper.Map<PriceHistoryDto>);
         }
 
         public async Task<IEnumerable<ProductDto>> GetProducts()
         {
-            return (await _dbContext.Product.ToListAsync()).Select(_mapper.Map<ProductDto>);
+            return (await _dbContext.Products.ToListAsync()).Select(_mapper.Map<ProductDto>);
         }
     }
 }

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain;
 using FlatMate.Module.Offers.Domain.Rewe;
-using FlatMate.Module.Offers.Domain.Rewe.Jso;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -28,6 +27,8 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var dbContext = new OffersDbContext(new DbContextOptionsBuilder<OffersDbContext>().UseInMemoryDatabase("LoadOffers_Large").Options,
                                                 new ConsoleLogger<OffersDbContext>());
 
+            var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
+
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.Setup(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(LoadJsonData<Envelope<OfferJso>>("2017-08-26_OfferSearch_193146.json")));
 
@@ -36,12 +37,12 @@ namespace FlatMate.Module.Offers.Test.Rewe
             utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x);
 
             // Act
-            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
+            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
             var (result, offers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(SuccessResult));
-            Assert.IsNotNull(dbContext.Product.FirstOrDefault());
+            Assert.IsNotNull(dbContext.Products.FirstOrDefault());
             Assert.IsNotNull(dbContext.Offers.FirstOrDefault());
 
             mobileApiMock.VerifyAll();
@@ -72,6 +73,8 @@ namespace FlatMate.Module.Offers.Test.Rewe
 
             var offers = new Envelope<OfferJso> { Items = new List<OfferJso> { offer }, Meta = new Dictionary<string, Newtonsoft.Json.Linq.JToken>() };
 
+            var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
+
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.Setup(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(offers));
 
@@ -80,10 +83,10 @@ namespace FlatMate.Module.Offers.Test.Rewe
             utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x);
 
             // Act
-            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
+            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
             var (result, importedOffers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
             var savedOffer = dbContext.Offers.FirstOrDefault(o => o.ExternalId == offer.Id);
-            var savedProduct = dbContext.Product.FirstOrDefault(p => p.ExternalId == offer.ProductId);
+            var savedProduct = dbContext.Products.FirstOrDefault(p => p.ExternalId == offer.ProductId);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(SuccessResult));
@@ -99,7 +102,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.AreEqual(offer.ProductId, savedProduct.ExternalId);
             Assert.AreEqual(offer.Name, savedProduct.Name);
             Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
-            Assert.AreEqual(1, savedProduct.PriceHistory.Count());
+            Assert.AreEqual(1, savedProduct.PriceHistoryEntries.Count());
         }
 
         /// <summary>
@@ -130,6 +133,8 @@ namespace FlatMate.Module.Offers.Test.Rewe
             offer2.AdditionalFields["crossOutPrice"] = "339";
             var offers2 = new Envelope<OfferJso> { Items = new List<OfferJso> { offer2 }, Meta = new Dictionary<string, Newtonsoft.Json.Linq.JToken>() };
 
+            var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
+
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.SetupSequence(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(offers)).Returns(Task.FromResult(offers2));
 
@@ -139,11 +144,11 @@ namespace FlatMate.Module.Offers.Test.Rewe
             utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x);
 
             // Act
-            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
+            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
             var (result, importedOffers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
             var (result2, importedOffers2) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
-            var savedProduct = dbContext.Product.FirstOrDefault(p => p.ExternalId == offer.ProductId);
+            var savedProduct = dbContext.Products.FirstOrDefault(p => p.ExternalId == offer.ProductId);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(SuccessResult));
@@ -155,7 +160,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.AreEqual(offer.ProductId, savedProduct.ExternalId);
             Assert.AreEqual(offer.Name, savedProduct.Name);
             Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
-            Assert.AreEqual(2, savedProduct.PriceHistory.Count());
+            Assert.AreEqual(2, savedProduct.PriceHistoryEntries.Count());
         }
 
         private T JsonClone<T>(T instance)

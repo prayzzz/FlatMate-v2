@@ -1,5 +1,5 @@
 ﻿using FlatMate.Module.Infrastructure.Api;
-using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System;

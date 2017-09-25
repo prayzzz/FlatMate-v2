@@ -1,9 +1,5 @@
 using FlatMate.Module.Common.DataAccess;
-using FlatMate.Module.Offers.Domain.Companies;
-using FlatMate.Module.Offers.Domain.Markets;
-using FlatMate.Module.Offers.Domain.Offers;
-using FlatMate.Module.Offers.Domain.Products;
-using FlatMate.Module.Offers.Domain.Raw;
+using FlatMate.Module.Offers.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
@@ -29,9 +25,9 @@ namespace FlatMate.Module.Offers
 
         public virtual DbSet<Offer> Offers { get; set; }
 
-        public virtual DbSet<PriceHistory> PriceHistory { get; set; }
+        public virtual DbSet<PriceHistory> PriceHistoryEntries { get; set; }
 
-        public virtual DbSet<Product> Product { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
 
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
@@ -78,7 +74,7 @@ namespace FlatMate.Module.Offers
         {
             // https://github.com/aspnet/EntityFrameworkCore/issues/6674
             entityTypeBuilder.Metadata
-                             .FindNavigation(nameof(Domain.Products.Product.PriceHistory))
+                             .FindNavigation(nameof(Product.PriceHistoryEntries))
                              .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }

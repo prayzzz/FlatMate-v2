@@ -5,7 +5,7 @@ using prayzzz.Common.Mapping;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FlatMate.Module.Offers.Domain.Companies
+namespace FlatMate.Module.Offers.Domain
 {
     public enum Company
     {

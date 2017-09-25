@@ -1,5 +1,4 @@
-﻿using FlatMate.Module.Offers.Domain.Offers;
-using FlatMate.Module.Offers.Domain.Rewe;
+﻿using FlatMate.Module.Offers.Domain.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Offers.Domain.Markets
+namespace FlatMate.Module.Offers.Domain
 {
     public interface IMarketService
     {
@@ -29,13 +28,9 @@ namespace FlatMate.Module.Offers.Domain.Markets
     public class MarketService : IMarketService
     {
         private readonly OffersDbContext _dbContext;
-
         private readonly ILogger<MarketService> _logger;
-
         private readonly IMapper _mapper;
-
         private readonly IReweMarketImporter _marketImporter;
-
         private readonly IEnumerable<IOfferImporter> _offerImporters;
 
         public MarketService(IReweMarketImporter marketImporter,

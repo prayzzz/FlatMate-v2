@@ -1,13 +1,12 @@
 ﻿using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
-using FlatMate.Module.Offers.Domain.Companies;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FlatMate.Module.Offers.Domain.Raw
+namespace FlatMate.Module.Offers.Domain
 {
     [Table("RawOfferData")]
     public class RawOfferData : DboBase

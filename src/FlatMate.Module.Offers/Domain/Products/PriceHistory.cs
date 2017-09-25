@@ -6,7 +6,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FlatMate.Module.Offers.Domain.Products
+namespace FlatMate.Module.Offers.Domain
 {
     [Table("PriceHistory")]
     public class PriceHistory : DboBase
