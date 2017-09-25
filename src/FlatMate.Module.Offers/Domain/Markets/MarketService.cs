@@ -32,8 +32,10 @@ namespace FlatMate.Module.Offers.Domain
         private readonly IMapper _mapper;
         private readonly IReweMarketImporter _marketImporter;
         private readonly IEnumerable<IOfferImporter> _offerImporters;
+        private readonly IEnumerable<IOfferPeriodService> _offerPeriodServices;
 
         public MarketService(IReweMarketImporter marketImporter,
+                             IEnumerable<IOfferPeriodService> offerPeriodServices,
                              IEnumerable<IOfferImporter> offerImporters,
                              OffersDbContext dbContext,
                              IMapper mapper,
@@ -44,6 +46,7 @@ namespace FlatMate.Module.Offers.Domain
             _mapper = mapper;
             _logger = logger;
             _offerImporters = offerImporters;
+            _offerPeriodServices = offerPeriodServices;
         }
 
         public async Task<IEnumerable<MarketDto>> Get()
@@ -57,12 +60,21 @@ namespace FlatMate.Module.Offers.Domain
 
         public async Task<IEnumerable<OfferDto>> GetCurrentOffers(int marketId)
         {
-            var now = DateTime.Now.Date;
+            var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == marketId);
+
+            var periodService = _offerPeriodServices.FirstOrDefault(s => s.Company == market.Company.Company);
+            if (periodService == null)
+            {
+                _logger.LogError($"No OfferPeriod found for Company {market.Company.Company}");
+                return Enumerable.Empty<OfferDto>();
+            }
+
+            var offerPeriod = periodService.ComputeOfferPeriod(DateTime.Now);
 
             var offers = await _dbContext.Offers
                                          .Include(o => o.Product).ThenInclude(p => p.ProductCategory)
                                          .Where(o => o.MarketId == marketId)
-                                         .Where(o => o.From <= now && o.To >= now)
+                                         .Where(o => o.From >= offerPeriod.From && o.To <= offerPeriod.To)
                                          .ToListAsync();
 
             return offers.Select(_mapper.Map<OfferDto>);

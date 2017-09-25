@@ -12,7 +12,7 @@ namespace FlatMate.Module.Offers.Domain
     [Table("Product")]
     public class Product : DboBase
     {
-        private readonly List<PriceHistory> _priceHistory = new List<PriceHistory>();
+        private readonly List<PriceHistory> _priceHistoryEntries = new List<PriceHistory>();
 
         [Required]
         public string Brand { get; set; }
@@ -41,7 +41,7 @@ namespace FlatMate.Module.Offers.Domain
         public decimal Price { get; private set; }
 
         [InverseProperty(nameof(PriceHistory.Product))]
-        public IReadOnlyList<PriceHistory> PriceHistoryEntries => _priceHistory;
+        public IReadOnlyList<PriceHistory> PriceHistoryEntries => _priceHistoryEntries;
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory ProductCategory { get; set; }
@@ -60,7 +60,7 @@ namespace FlatMate.Module.Offers.Domain
                 var lastHistoryEntry = PriceHistoryEntries.OrderByDescending(x => x.Date).FirstOrDefault();
                 if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
                 {
-                    _priceHistory.Add(new PriceHistory(price, this));
+                    _priceHistoryEntries.Add(new PriceHistory(price, this));
                 }
             }
         }
