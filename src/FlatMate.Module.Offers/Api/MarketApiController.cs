@@ -56,9 +56,16 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("{marketId}/offer/")]
-        public async Task<IEnumerable<OfferJso>> GetOffers(int marketId)
+        public async Task<Result<OfferPeriodJso>> GetCurrentOffers(int marketId)
         {
-            return (await _marketService.GetCurrentOffers(marketId)).Select(Map<OfferJso>);
+            var (result, offerPeriod) = await _marketService.GetCurrentOffers(marketId);
+            
+            if (result.IsError)
+            {
+                return new ErrorResult<OfferPeriodJso>(result);
+            }
+
+            return new SuccessResult<OfferPeriodJso>(Map<OfferPeriodJso>(offerPeriod));
         }
 
         [HttpGet("{marketId}/offer/import")]

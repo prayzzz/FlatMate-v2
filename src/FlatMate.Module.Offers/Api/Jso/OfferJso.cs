@@ -1,4 +1,6 @@
-﻿using FlatMate.Module.Offers.Domain;
+﻿using System.Linq;
+using System.Collections.Generic;
+using FlatMate.Module.Offers.Domain;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System;
@@ -28,12 +30,32 @@ namespace FlatMate.Module.Offers.Api.Jso
         public DateTime To { get; set; }
     }
 
+    public class OfferPeriodJso
+    {
+        public DateTime From { get; set; }
+
+        public DateTime To { get; set; }
+
+        public IEnumerable<OfferJso> Offers { get; set; }
+    }
+
     [Inject]
     public class OfferMapper : IDboMapper
     {
         public void Configure(IMapperConfiguration mapper)
         {
             mapper.Configure<OfferDto, OfferJso>(MapToDto);
+            mapper.Configure<OfferPeriodDto, OfferPeriodJso>(MapToDto);
+        }
+
+        private OfferPeriodJso MapToDto(OfferPeriodDto period, MappingContext ctx)
+        {
+            return new OfferPeriodJso
+            {
+                From = period.From,
+                To = period.To,
+                Offers = period.Offers.Select(ctx.Mapper.Map<OfferJso>)
+            };
         }
 
         private OfferJso MapToDto(OfferDto dto, MappingContext ctx)

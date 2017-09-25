@@ -40,15 +40,24 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new MarketViewVm();
 
-            var result = await _apiController.GetMarket(id);
-            if (result.IsError)
+            var getMarket = await _apiController.GetMarket(id);
+            if (getMarket.IsError)
             {
-                TempData[Constants.TempData.Result] = JsonService.Serialize(result);
+                TempData[Constants.TempData.Result] = JsonService.Serialize(getMarket);
                 return RedirectToAction("Index");
             }
 
-            model.Market = result.Data;
-            model.Offers = (await _apiController.GetOffers(id)).ToList();
+            var getOfferPeriod = await _apiController.GetCurrentOffers(id);
+            if (getOfferPeriod.IsError)
+            {
+                TempData[Constants.TempData.Result] = JsonService.Serialize(getOfferPeriod);
+                return RedirectToAction("Index");
+            }
+
+            model.Market = getMarket.Data;
+            model.OffersFrom = getOfferPeriod.Data.From;
+            model.OffersTo = getOfferPeriod.Data.To;
+            model.Offers = getOfferPeriod.Data.Offers.ToList();
             model.ProductCategories = (await _productApiController.GetProductCategories()).ToDictionary(pc => pc.Id.Value, pc => pc);
 
             return View(model);

@@ -1,14 +1,19 @@
 ﻿using FlatMate.Module.Offers.Api.Jso;
 using FlatMate.Web.Mvc.Base;
+using System;
 using System.Collections.Generic;
 
 namespace FlatMate.Web.Areas.Offers.Data
 {
     public class MarketViewVm : BaseViewModel
     {
+        public MarketJso Market { get; set; }
+
         public List<OfferJso> Offers { get; set; } = new List<OfferJso>();
 
-        public MarketJso Market { get; set; }
+        public DateTime OffersFrom { get; set; }
+
+        public DateTime OffersTo { get; set; }
 
         public Dictionary<int, ProductCategoryJso> ProductCategories { get; set; } = new Dictionary<int, ProductCategoryJso>();
     }

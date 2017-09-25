@@ -71,7 +71,7 @@ namespace FlatMate.Module.Offers
         }
 
         private void ConfigureProductDbo(EntityTypeBuilder<Product> entityTypeBuilder)
-        {
+        {    
             // https://github.com/aspnet/EntityFrameworkCore/issues/6674
             entityTypeBuilder.Metadata
                              .FindNavigation(nameof(Product.PriceHistoryEntries))

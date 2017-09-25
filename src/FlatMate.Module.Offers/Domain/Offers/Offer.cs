@@ -1,4 +1,5 @@
-﻿using FlatMate.Module.Common.DataAccess;
+﻿using System.Collections.Generic;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
@@ -55,6 +56,15 @@ namespace FlatMate.Module.Offers.Domain
         public int ProductId { get; set; }
 
         public DateTime To { get; set; }
+    }
+
+    public class OfferPeriodDto : DtoBase
+    {
+        public DateTime From { get; set; }
+
+        public DateTime To { get; set; }
+
+        public IEnumerable<OfferDto> Offers { get; set; }
     }
 
     [Inject]

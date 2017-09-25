@@ -25,7 +25,8 @@
                         </div>
                 </div>
                 <div class="col-sm-12 col-md-3 col-offer-count">
-                    @Model.Offers.Count Produkte im Angebot
+                    @Model.Offers.Count Produkte im Angebot<br />
+                    von @Model.OffersFrom.ToShortDateString() bis @Model.OffersTo.ToShortDateString()
                 </div>
             </div>
 
