@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FlatMate.Module.Common.Extensions;
 using FlatMate.Module.Offers.Domain;
 using FlatMate.Module.Offers.Domain.Rewe;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +7,10 @@ using Moq;
 using Newtonsoft.Json;
 using prayzzz.Common.Results;
 using prayzzz.Common.Unit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Test.Rewe
 {
@@ -28,6 +29,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
                                                 new ConsoleLogger<OffersDbContext>());
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
+            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult(((Result)SuccessResult.Default, new RawOfferDataDto())));
 
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.Setup(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(LoadJsonData<Envelope<OfferJso>>("2017-08-26_OfferSearch_193146.json")));
@@ -65,7 +67,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
                 CategoryIDs = Array.Empty<string>(),
                 Id = "0038431_35_1931046",
                 Name = "Orig. Thüringer Rostbratwurst",
-                OfferDuration = new OfferDurationJso { From = DateTime.Now.AddDays(-4), Until = DateTime.Now.AddDays(3) },
+                OfferDuration = new OfferDurationJso { From = DateTime.Now.GetPreviousWeekday(DayOfWeek.Saturday), Until = DateTime.Now.GetNextWeekday(DayOfWeek.Saturday) },
                 Price = 2.79,
                 ProductId = "0038431",
                 QuantityAndUnit = "450-g-Packung"
@@ -74,6 +76,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var offers = new Envelope<OfferJso> { Items = new List<OfferJso> { offer }, Meta = new Dictionary<string, Newtonsoft.Json.Linq.JToken>() };
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
+            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult(((Result)SuccessResult.Default, new RawOfferDataDto())));
 
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.Setup(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(offers));
@@ -93,8 +96,8 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.IsNotNull(savedOffer);
             Assert.AreEqual((decimal)offer.Price, savedOffer.Price);
             Assert.AreEqual(offer.Id, savedOffer.ExternalId);
-            Assert.AreEqual(offer.OfferDuration.From, savedOffer.From);
-            Assert.AreEqual(offer.OfferDuration.Until, savedOffer.To);
+            Assert.AreEqual(DayOfWeek.Monday, savedOffer.From.DayOfWeek);
+            Assert.AreEqual(DayOfWeek.Sunday, savedOffer.To.DayOfWeek);
 
             Assert.IsNotNull(savedProduct);
             Assert.AreEqual(3.29M, savedProduct.Price);
@@ -134,6 +137,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var offers2 = new Envelope<OfferJso> { Items = new List<OfferJso> { offer2 }, Meta = new Dictionary<string, Newtonsoft.Json.Linq.JToken>() };
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
+            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult(((Result)SuccessResult.Default, new RawOfferDataDto())));
 
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.SetupSequence(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(offers)).Returns(Task.FromResult(offers2));

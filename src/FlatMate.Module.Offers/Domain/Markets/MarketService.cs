@@ -15,7 +15,7 @@ namespace FlatMate.Module.Offers.Domain
     {
         Task<IEnumerable<MarketDto>> Get();
 
-        Task<(Result, OfferPeriodDto)> GetCurrentOffers(int marketId);
+        Task<(Result, OfferPeriodDto)> GetOffers(int marketId, DateTime date);
 
         Task<(Result, MarketDto)> GetMarket(int id);
 
@@ -58,7 +58,7 @@ namespace FlatMate.Module.Offers.Domain
             return market.Select(_mapper.Map<MarketDto>);
         }
 
-        public async Task<(Result, OfferPeriodDto)> GetCurrentOffers(int marketId)
+        public async Task<(Result, OfferPeriodDto)> GetOffers(int marketId, DateTime date)
         {
             var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == marketId);
 
@@ -69,7 +69,7 @@ namespace FlatMate.Module.Offers.Domain
                 return (new ErrorResult(ErrorType.InternalError, $"No OfferPeriod found for Company {market.Company.Company}"), null);
             }
 
-            var offerPeriod = periodService.ComputeOfferPeriod(DateTime.Now);
+            var offerPeriod = periodService.ComputeOfferPeriod(date);
 
             var offers = await _dbContext.Offers
                                          .Include(o => o.Product).ThenInclude(p => p.ProductCategory)

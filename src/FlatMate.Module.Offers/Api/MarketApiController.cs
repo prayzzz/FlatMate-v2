@@ -4,6 +4,7 @@ using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,10 +57,10 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("{marketId}/offer/")]
-        public async Task<Result<OfferPeriodJso>> GetCurrentOffers(int marketId)
+        public async Task<Result<OfferPeriodJso>> GetOffers(int marketId, [FromQuery] DateTime? date = null)
         {
-            var (result, offerPeriod) = await _marketService.GetCurrentOffers(marketId);
-            
+            var (result, offerPeriod) = await _marketService.GetOffers(marketId, date ?? DateTime.Now);
+
             if (result.IsError)
             {
                 return new ErrorResult<OfferPeriodJso>(result);

@@ -23,7 +23,7 @@ namespace FlatMate.Module.Offers.Api.Jso
             mapper.Configure<ProductCategoryDto, ProductCategoryJso>(MapToDto);
         }
 
-        private ProductCategoryJso MapToDto(ProductCategoryDto category, MappingContext mappingContext)
+        private ProductCategoryJso MapToDto(ProductCategoryDto category, MappingContext ctx)
         {
             return new ProductCategoryJso
             {

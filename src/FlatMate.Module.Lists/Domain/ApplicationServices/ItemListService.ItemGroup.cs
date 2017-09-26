@@ -36,7 +36,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             var itemGroup = createGroup.Data;
             itemGroup.SortIndex = dto.SortIndex;
 
-            return await SaveAsync(itemGroup);
+            return await Save(itemGroup);
         }
 
         public async Task<Result> DeleteGroupAsync(int groupId)
@@ -119,10 +119,10 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             group.Rename(dto.Name);
             group.SortIndex = dto.SortIndex;
 
-            return await SaveAsync(group);
+            return await Save(group);
         }
 
-        private Task<Result<ItemGroupDto>> SaveAsync(ItemGroup itemGroup)
+        private Task<Result<ItemGroupDto>> Save(ItemGroup itemGroup)
         {
             itemGroup.Modified = DateTime.Now;
             itemGroup.LastEditorId = CurrentUser.Id;

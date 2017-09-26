@@ -7,17 +7,17 @@ namespace FlatMate.Module.Offers.Domain
     [Inject]
     public class ReweOfferPeriodService : IOfferPeriodService
     {
-        private readonly DayOfWeek _startDay = DayOfWeek.Sunday;
-        private readonly DayOfWeek _endDay = DayOfWeek.Saturday;
+        private readonly DayOfWeek _startDay = DayOfWeek.Monday;
+        private readonly DayOfWeek _endDay = DayOfWeek.Sunday;
 
         public Company Company => Company.Rewe;
 
-        public OfferPeriod ComputeOfferPeriod(DateTime date)
+        public OfferDuration ComputeOfferPeriod(DateTime date)
         {
             var from = date.GetPreviousWeekday(_startDay);
             var to = date.GetNextWeekday(_endDay);
 
-            return new OfferPeriod { From = from, To = to };
+            return new OfferDuration { From = from, To = to };
         }
     }
 }

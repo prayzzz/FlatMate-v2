@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FlatMate.Module.Common.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -228,11 +229,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
 
             // move startdate of offers to sunday
-            var offeredFrom = offer.OfferDuration.From;
-            if (offeredFrom.DayOfWeek == DayOfWeek.Saturday)
-            {
-                offeredFrom = offeredFrom.AddDays(1);
-            }
+            var offerDuration = GetOfferDuration(offer);
 
             return new ReweOfferDto
             {
@@ -243,8 +240,8 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 ImageUrl = offer.Links?.ImageDigital.Href,
                 Market = market,
                 Name = _reweUtils.Trim(offer.Name),
-                OfferedFrom = offeredFrom,
-                OfferedTo = offer.OfferDuration.Until,
+                OfferedFrom = offerDuration.From,
+                OfferedTo = offerDuration.To,
                 OfferId = offer.Id,
                 OfferPrice = (decimal)offer.Price,
                 ProductCategory = productCategory.ProductCategory,
@@ -252,6 +249,43 @@ namespace FlatMate.Module.Offers.Domain.Rewe
                 RegularPrice = regularPrice,
                 SizeInfo = _reweUtils.Trim(offer.QuantityAndUnit)
             };
+        }
+
+        private OfferDuration GetOfferDuration(OfferJso offer)
+        {
+            var duration = new OfferDuration();
+
+            // duration.From
+            if (offer.OfferDuration.From.DayOfWeek == DayOfWeek.Monday)
+            {
+                duration.From = offer.OfferDuration.From;
+            }
+            if (offer.OfferDuration.From.DayOfWeek == DayOfWeek.Saturday || offer.OfferDuration.From.DayOfWeek == DayOfWeek.Sunday)
+            {
+                duration.From = offer.OfferDuration.From.GetNextWeekday(DayOfWeek.Monday);
+            }
+            else
+            {
+                duration.From = offer.OfferDuration.From;
+                _logger.LogWarning($"Unhandled offer startdate {offer.OfferDuration.From.DayOfWeek} {offer.OfferDuration.From}");
+            }
+
+            // duration.To
+            if (offer.OfferDuration.Until.DayOfWeek == DayOfWeek.Sunday)
+            {
+                duration.To = offer.OfferDuration.Until;
+            }
+            else if (offer.OfferDuration.Until.DayOfWeek == DayOfWeek.Saturday)
+            {
+                duration.To = offer.OfferDuration.Until.GetNextWeekday(DayOfWeek.Sunday);
+            }
+            else
+            {
+                duration.To = offer.OfferDuration.Until.GetNextWeekday(DayOfWeek.Sunday);
+                _logger.LogWarning($"Unhandled offer enddate {offer.OfferDuration.Until.DayOfWeek} {offer.OfferDuration.Until}");
+            }
+
+            return duration;
         }
 
         /// <summary>

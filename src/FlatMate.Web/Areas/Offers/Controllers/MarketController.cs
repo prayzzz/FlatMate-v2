@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using FlatMate.Web.Areas.Offers.Data;
 using FlatMate.Web.Mvc;
 using System.Linq;
+using System;
 
 namespace FlatMate.Web.Areas.Offers.Controllers
 {
@@ -47,7 +48,13 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 return RedirectToAction("Index");
             }
 
-            var getOfferPeriod = await _apiController.GetCurrentOffers(id);
+            var date = DateTime.Now;
+            if (date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                date = date.AddDays(1);
+            }
+
+            var getOfferPeriod = await _apiController.GetOffers(id, date);
             if (getOfferPeriod.IsError)
             {
                 TempData[Constants.TempData.Result] = JsonService.Serialize(getOfferPeriod);

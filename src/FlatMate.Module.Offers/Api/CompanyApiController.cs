@@ -37,7 +37,7 @@ namespace FlatMate.Module.Offers.Api
                 return new ErrorResult<CompanyJso>(getResult);
             }
 
-            var (saveResult, image) = await _imageService.Save(ByteHelper.ReadFully(file.OpenReadStream()), file.ContentType);
+            var (saveResult, image) = await _imageService.Save(ByteHelper.ReadToEnd(file.OpenReadStream()), file.ContentType);
             if (saveResult.IsError)
             {
                 return new ErrorResult<CompanyJso>(saveResult);

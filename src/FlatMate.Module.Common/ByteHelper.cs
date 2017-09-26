@@ -9,7 +9,7 @@ namespace FlatMate.Module.Common
         /// <summary>
         ///     https://stackoverflow.com/a/221941
         /// </summary>
-        public static byte[] ReadFully(Stream input)
+        public static byte[] ReadToEnd(Stream input)
         {
             var buffer = new byte[16 * 1024];
             using (var ms = new MemoryStream())
@@ -32,7 +32,7 @@ namespace FlatMate.Module.Common
             {
                 var val = lookup32[bytes[i]];
                 result[2 * i] = (char)val;
-                result[2 * i + 1] = (char)(val >> 16);
+                result[(2 * i) + 1] = (char)(val >> 16);
             }
             return new string(result);
         }
@@ -40,10 +40,10 @@ namespace FlatMate.Module.Common
         private static uint[] CreateLookup32()
         {
             var result = new uint[256];
-            for (int i = 0; i < 256; i++)
+            for (var i = 0; i < 256; i++)
             {
-                string s = i.ToString("X2");
-                result[i] = ((uint)s[0]) + ((uint)s[1] << 16);
+                var s = i.ToString("X2");
+                result[i] = s[0] + ((uint)s[1] << 16);
             }
             return result;
         }

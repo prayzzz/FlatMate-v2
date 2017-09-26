@@ -6,6 +6,6 @@ namespace FlatMate.Module.Offers.Domain
     {
         Company Company { get; }
 
-        OfferPeriod ComputeOfferPeriod(DateTime date);
+        OfferDuration ComputeOfferPeriod(DateTime date);
     }
 }

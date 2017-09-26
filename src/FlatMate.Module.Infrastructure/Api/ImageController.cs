@@ -62,7 +62,7 @@ namespace FlatMate.Module.Infrastructure.Api
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<Result> SaveFromForm(IFormFile file)
         {
-            var (result, dto) = await _imageService.Save(ByteHelper.ReadFully(file.OpenReadStream()), file.ContentType);
+            var (result, dto) = await _imageService.Save(ByteHelper.ReadToEnd(file.OpenReadStream()), file.ContentType);
 
             if (result.IsError)
             {

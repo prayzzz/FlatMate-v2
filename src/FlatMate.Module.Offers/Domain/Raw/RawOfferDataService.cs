@@ -48,7 +48,7 @@ namespace FlatMate.Module.Offers.Domain
                 return (SuccessResult.Default, _mapper.Map<RawOfferDataDto>(response));
             }
 
-            _dbContext.Add(data);
+            _dbContext.RawOfferData.Add(offerData);
             var result = await _dbContext.SaveChangesAsync();
             var savedOfferData = await _dbContext.RawOfferData.Include(d => d.Company).FirstOrDefaultAsync(d => d.Id == offerData.Id);
 
