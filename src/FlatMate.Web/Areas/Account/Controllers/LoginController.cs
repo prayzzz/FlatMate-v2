@@ -19,7 +19,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
 
         public LoginController(LoginApiController loginApi,
                                ILogger<LoginController> logger,
-                               IMvcControllerService controllerService) : base(logger, controllerService)
+                               IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _loginApi = loginApi;
         }

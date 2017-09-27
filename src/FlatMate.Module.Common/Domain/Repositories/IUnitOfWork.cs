@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Common.Domain.Repositories
+namespace FlatMate.Module.Common.Domain
 {
     public interface IUnitOfWork : IDisposable
     {

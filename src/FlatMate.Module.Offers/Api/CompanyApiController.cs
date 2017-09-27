@@ -1,7 +1,6 @@
 ﻿using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Infrastructure.Images;
-using FlatMate.Module.Offers.Api.Jso;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,27 +44,13 @@ namespace FlatMate.Module.Offers.Api
 
             company.ImageGuid = image.Guid;
 
-            var (updateResult, updatedCompany) = await _companyService.UpdateCompany(id, company);
-
-            if (updateResult.IsError)
-            {
-                return new ErrorResult<CompanyJso>(updateResult);
-            }
-
-            return new SuccessResult<CompanyJso>(Map<CompanyJso>(updatedCompany));
+            return FromTuple(await _companyService.UpdateCompany(id, company), Map<CompanyJso>);
         }
 
         [HttpGet("{id}")]
         public async Task<Result<CompanyJso>> Get(int id)
         {
-            var (result, company) = await _companyService.Get(id);
-
-            if (result.IsError)
-            {
-                return new ErrorResult<CompanyJso>(result);
-            }
-
-            return new SuccessResult<CompanyJso>(Map<CompanyJso>(company));
+            return FromTuple(await _companyService.Get(id), Map<CompanyJso>);
         }
 
         [HttpGet]

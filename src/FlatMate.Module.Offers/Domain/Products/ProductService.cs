@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FlatMate.Module.Offers.Domain.Products;
+using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -10,15 +11,19 @@ namespace FlatMate.Module.Offers.Domain
 {
     public interface IProductService
     {
+        Task<Result> AddProductFavorite(int userId, int productId);
+
+        Task<List<ProductDto>> GetFavoriteProducts(int userId, int marketId);
+
         Task<(Result, ProductDto)> GetProduct(int id);
 
-        Task<IEnumerable<ProductCategoryDto>> GetProductCategories();
+        Task<List<ProductCategoryDto>> GetProductCategories();
 
-        Task<IEnumerable<PriceHistoryDto>> GetProductPriceHistory(int productId);
+        Task<List<OfferDto>> GetProductOffers(int id);
 
-        Task<IEnumerable<ProductDto>> GetProducts();
+        Task<List<PriceHistoryDto>> GetProductPriceHistory(int productId);
 
-        Task<IEnumerable<OfferDto>> GetProductOffers(int id);
+        Task<List<ProductDto>> GetProducts(int marketId);
     }
 
     [Inject]
@@ -34,6 +39,32 @@ namespace FlatMate.Module.Offers.Domain
             _mapper = mapper;
         }
 
+        public async Task<Result> AddProductFavorite(int userId, int productId)
+        {
+            if (await _dbContext.ProductFavorites.AnyAsync(f => f.ProductId == productId && f.UserId == userId))
+            {
+                return SuccessResult.Default;
+            }
+
+            if (!await _dbContext.Products.AnyAsync(p => p.Id == productId))
+            {
+                return new ErrorResult(ErrorType.ValidationError, "Product not found");
+            }
+
+            var favorite = new ProductFavorite { ProductId = productId, UserId = userId };
+
+            _dbContext.ProductFavorites.Add(favorite);
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public Task<List<ProductDto>> GetFavoriteProducts(int userId, int marketId)
+        {
+            return (from p in _dbContext.Products.Include(p => p.Market)
+                    join f in _dbContext.ProductFavorites on p.Id equals f.Id
+                    where f.UserId == userId && p.MarketId == marketId
+                    select _mapper.Map<ProductDto>(p)).ToListAsync();
+        }
+
         public async Task<(Result, ProductDto)> GetProduct(int id)
         {
             var product = await _dbContext.Products.FindAsync(id);
@@ -45,24 +76,31 @@ namespace FlatMate.Module.Offers.Domain
             return (SuccessResult.Default, _mapper.Map<ProductDto>(product));
         }
 
-        public async Task<IEnumerable<ProductCategoryDto>> GetProductCategories()
+        public Task<List<ProductCategoryDto>> GetProductCategories()
         {
-            return (await _dbContext.ProductCategories.ToListAsync()).Select(_mapper.Map<ProductCategoryDto>);
+            return (from p in _dbContext.ProductCategories
+                    select _mapper.Map<ProductCategoryDto>(p)).ToListAsync();
         }
 
-        public async Task<IEnumerable<OfferDto>> GetProductOffers(int id)
+        public Task<List<OfferDto>> GetProductOffers(int id)
         {
-            return (await _dbContext.Offers.Include(o => o.Market).Where(o => o.ProductId == id).ToListAsync()).Select(_mapper.Map<OfferDto>);
+            return (from o in _dbContext.Offers.Include(o => o.Market)
+                    where o.ProductId == id
+                    select _mapper.Map<OfferDto>(o)).ToListAsync();
         }
 
-        public async Task<IEnumerable<PriceHistoryDto>> GetProductPriceHistory(int productId)
+        public Task<List<PriceHistoryDto>> GetProductPriceHistory(int productId)
         {
-            return (await _dbContext.PriceHistoryEntries.Where(ph => ph.ProductId == productId).ToListAsync()).Select(_mapper.Map<PriceHistoryDto>);
+            return (from ph in _dbContext.PriceHistoryEntries
+                    where ph.ProductId == productId
+                    select _mapper.Map<PriceHistoryDto>(ph)).ToListAsync();
         }
 
-        public async Task<IEnumerable<ProductDto>> GetProducts()
+        public Task<List<ProductDto>> GetProducts(int marketId)
         {
-            return (await _dbContext.Products.ToListAsync()).Select(_mapper.Map<ProductDto>);
+            return (from p in _dbContext.Products
+                    where p.MarketId == marketId
+                    select _mapper.Map<ProductDto>(p)).ToListAsync();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using FlatMate.Module.Common.Domain.Entities;
+using FlatMate.Module.Common.Domain;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Models

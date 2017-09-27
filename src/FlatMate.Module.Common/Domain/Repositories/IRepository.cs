@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using FlatMate.Module.Common.Domain.Entities;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Common.Domain.Repositories
+namespace FlatMate.Module.Common.Domain
 {
     public interface IRepository<TEntity> where TEntity : Entity
     {

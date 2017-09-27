@@ -3,15 +3,15 @@ using prayzzz.Common.Attributes;
 
 namespace FlatMate.Web.Mvc
 {
-    public interface IMvcControllerService
+    public interface IMvcControllerServices
     {
         IJsonService JsonService { get; }
     }
 
     [Inject]
-    public class MvcControllerService : IMvcControllerService
+    public class MvcControllerServices : IMvcControllerServices
     {
-        public MvcControllerService(IJsonService jsonService)
+        public MvcControllerServices(IJsonService jsonService)
         {
             JsonService = jsonService;
         }

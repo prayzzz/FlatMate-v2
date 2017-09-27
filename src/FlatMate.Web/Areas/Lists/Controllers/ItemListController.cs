@@ -17,7 +17,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
 
         public ItemListController(ItemListApiController listApi,
                                   ILogger<ItemListController> logger,
-                                  IMvcControllerService controllerService) : base(logger, controllerService)
+                                  IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _listApi = listApi;
         }

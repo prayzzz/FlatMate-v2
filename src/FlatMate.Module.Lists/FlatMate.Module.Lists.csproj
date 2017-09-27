@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0" />
-    <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-26" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-28" />
     <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
   </ItemGroup>
   <ItemGroup>

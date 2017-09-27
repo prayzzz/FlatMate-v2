@@ -8,7 +8,7 @@ namespace FlatMate.Web.Controllers
 {
     public class ErrorController : MvcController
     {
-        public ErrorController(ILogger<ErrorController> logger, IMvcControllerService controllerService)
+        public ErrorController(ILogger<ErrorController> logger, IMvcControllerServices controllerService)
             : base(logger, controllerService)
         {
         }

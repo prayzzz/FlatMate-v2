@@ -14,7 +14,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
 
         public LogoutController(LogoutApiController logoutApi,
                                 ILogger<LogoutController> logger,
-                                IMvcControllerService controllerService) : base(logger, controllerService)
+                                IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _logoutApi = logoutApi;
         }

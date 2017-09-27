@@ -13,4 +13,8 @@ window.ko = ko;
 
 KoStartup.start();
 
-new Blazy({});
+export class FlatMate {
+    public static blazy = new Blazy({});
+}
+
+FlatMate.blazy;

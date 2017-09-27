@@ -2,7 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Migration;
 using FlatMate.Module.Common;
-using FlatMate.Module.Common.Api.Filter;
+using FlatMate.Module.Common.Api;
 using FlatMate.Web.Common;
 using FlatMate.Web.Mvc.Json;
 using FlatMate.Web.Mvc.Startup;

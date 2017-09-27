@@ -1,5 +1,5 @@
-﻿using FlatMate.Module.Common.Api;
-using FlatMate.Module.Offers.Api.Jso;
+﻿using System;
+using FlatMate.Module.Common.Api;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
@@ -25,13 +25,7 @@ namespace FlatMate.Module.Offers.Api
         [HttpGet("{id}")]
         public async Task<Result<ProductJso>> GetProduct(int id)
         {
-            var (result, product) = await _productService.GetProduct(id);
-            if (result.IsError)
-            {
-                return new ErrorResult<ProductJso>(result);
-            }
-
-            return new SuccessResult<ProductJso>(Map<ProductJso>(product));
+            return FromTuple(await _productService.GetProduct(id), Map<ProductJso>);
         }
 
         [HttpGet("category")]
@@ -53,9 +47,31 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProductJso>> GetProducts()
+        public async Task<IEnumerable<ProductJso>> GetProducts([FromQuery] int? marketId)
         {
-            return (await _productService.GetProducts()).Select(Map<ProductJso>);
+            if (!marketId.HasValue)
+            {
+                return Enumerable.Empty<ProductJso>();
+            }
+
+            return (await _productService.GetProducts(marketId.Value)).Select(Map<ProductJso>);
+        }
+
+        [HttpPost("favorite")]
+        public Task<Result> AddProductFavorite([FromBody] ProductFavoriteJso jso)
+        {
+            return _productService.AddProductFavorite(CurrentUserId, jso.ProductId);
+        }
+
+        [HttpGet("favorite")]
+        public async Task<IEnumerable<ProductJso>> GetProductFavorites([FromQuery]int? marketId = null)
+        {
+            if (!marketId.HasValue)
+            {
+                return Enumerable.Empty<ProductJso>();
+            }
+
+            return (await _productService.GetFavoriteProducts(CurrentUserId, marketId.Value)).Select(Map<ProductJso>);
         }
     }
 }

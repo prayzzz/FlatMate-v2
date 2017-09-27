@@ -6,7 +6,7 @@ using prayzzz.Common.Mapping;
 using System;
 using System.ComponentModel;
 
-namespace FlatMate.Module.Offers.Api.Jso
+namespace FlatMate.Module.Offers.Api
 {
     public class OfferJso
     {

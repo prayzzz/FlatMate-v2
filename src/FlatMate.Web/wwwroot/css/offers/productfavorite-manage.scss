@@ -1,26 +1,13 @@
-﻿.marketview {
-    .col-offer {
+﻿.productfavorite-manage {
+    .select-market {
+        margin-bottom: .5rem;
+    }
+
+    .col-product {
         margin-bottom: 1rem;
     }
 
-    .col-market-image {
-        text-align: center;
-    }
-
-    .col-market-info {
-        align-self: center;
-    }
-
-    .col-offer-count {
-        align-self: center;
-        text-align: right;
-    }
-
-    .market-info-box {
-        padding: 1rem;
-    }
-
-    .offer-box {
+    .product-box {
         display: flex;
         flex-flow: column;
         height: 100%;

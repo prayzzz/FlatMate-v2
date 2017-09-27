@@ -19,7 +19,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         public MarketController(MarketApiController apiController,
                                 ProductApiController productApiController,
                                 ILogger<MarketController> logger,
-                                IMvcControllerService controllerService) : base(logger, controllerService)
+                                IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _apiController = apiController;
             _productApiController = productApiController;
@@ -30,7 +30,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new MarketIndexVm
             {
-                Markets = (await _apiController.Get()).ToList()
+                Markets = (await _apiController.GetMarkets()).ToList()
             };
 
             return View(model);

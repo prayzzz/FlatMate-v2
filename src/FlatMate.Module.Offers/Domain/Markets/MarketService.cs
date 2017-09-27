@@ -13,11 +13,11 @@ namespace FlatMate.Module.Offers.Domain
 {
     public interface IMarketService
     {
-        Task<IEnumerable<MarketDto>> Get();
-
-        Task<(Result, OfferPeriodDto)> GetOffers(int marketId, DateTime date);
+        Task<IEnumerable<MarketDto>> GetMarkets();
 
         Task<(Result, MarketDto)> GetMarket(int id);
+
+        Task<(Result, OfferPeriodDto)> GetOffers(int marketId, DateTime date);
 
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
@@ -49,13 +49,24 @@ namespace FlatMate.Module.Offers.Domain
             _offerPeriodServices = offerPeriodServices;
         }
 
-        public async Task<IEnumerable<MarketDto>> Get()
+        public async Task<IEnumerable<MarketDto>> GetMarkets()
         {
             var market = await _dbContext.Markets
                                          .Include(m => m.Company)
                                          .ToListAsync();
 
             return market.Select(_mapper.Map<MarketDto>);
+        }
+
+        public async Task<(Result, MarketDto)> GetMarket(int id)
+        {
+            var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == id);
+            if (market == null)
+            {
+                return (new ErrorResult(ErrorType.NotFound, "Market not found"), null);
+            }
+
+            return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
         }
 
         public async Task<(Result, OfferPeriodDto)> GetOffers(int marketId, DateTime date)
@@ -85,17 +96,6 @@ namespace FlatMate.Module.Offers.Domain
             };
 
             return (SuccessResult.Default, dto);
-        }
-
-        public async Task<(Result, MarketDto)> GetMarket(int id)
-        {
-            var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == id);
-            if (market == null)
-            {
-                return (new ErrorResult(ErrorType.NotFound, "Market not found"), null);
-            }
-
-            return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
         }
 
         /// <summary>

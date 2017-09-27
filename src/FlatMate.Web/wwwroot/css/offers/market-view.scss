@@ -1,0 +1,44 @@
+﻿.market-view {
+    .col-offer {
+        margin-bottom: 1rem;
+    }
+
+    .col-market-image {
+        text-align: center;
+    }
+
+    .col-market-info {
+        align-self: center;
+    }
+
+    .col-offer-count {
+        align-self: center;
+        text-align: right;
+    }
+
+    .market-info-box {
+        padding: 1rem;
+    }
+
+    .offer-box {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+        padding: 0.75rem;
+
+        .image {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .name {
+            flex: 2;
+        }
+
+        .price {
+            min-height: 1.5rem;
+            font-size: 1.5rem;
+            text-align: right;
+        }
+    }
+}

@@ -5,7 +5,7 @@ using prayzzz.Common.Mapping;
 using System;
 using System.ComponentModel;
 
-namespace FlatMate.Module.Offers.Api.Jso
+namespace FlatMate.Module.Offers.Api
 {
     public class CompanyJso
     {
@@ -51,7 +51,7 @@ namespace FlatMate.Module.Offers.Api.Jso
 
             if (dto.ImageGuid.HasValue)
             {
-                jso.ImageLink = ImageController.GetImageUrl(dto.ImageGuid.Value);
+                jso.ImageLink = ImageApiController.GetImageUrl(dto.ImageGuid.Value);
             }
 
             return jso;

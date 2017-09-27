@@ -1,0 +1,61 @@
+﻿@model FlatMate.Web.Areas.Offers.Data.ProductFavoriteManageVm
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Produkt Favoriten";
+    ViewData["PageTitle"] = "Produkt Favoriten";
+    ViewData["MainClass"] = "productfavorite-manage";
+}
+
+<section class="container" style="min-height: 100vh">
+
+    <product-favorite-editor style="height: 100%"></product-favorite-editor>
+
+</section>
+
+<script type="text/x-template" id="product-favorite-editor-template">
+
+    <div class="row select-market">
+        <div class="col">
+            Markt:
+            <select data-bind="options: model.markets, optionsText: 'name', value: selectedMarket,"></select>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- ko foreach: availableProductsView -->
+
+        <div class="col-sm-6 col-lg-4 col-xl-3 col-product">
+            <div class="standard-box product-box">
+
+                <div class="image">
+                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-bind="attr: {  'data-src': imageUrl }" width="150" height="150" />
+                </div>
+
+                <div class="name">
+                    <span data-bind="text: name"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- /ko -->
+
+    </div>
+
+    <div class="row align-right actions" data-bind="if: availableProductsView().length > 0">
+        <div class="col-auto" data-bind="if: currentPage() > 1">
+            <a href="#" data-bind="click: prevPage">&lt; Zurück</a>
+        </div>
+        <div class="col-auto" data-bind="if: currentPage() < availableProducts().length / itemsPerPage()">
+            <a href="#" data-bind="click: nextPage">Weiter &gt;</a>
+        </div>
+    </div>
+
+</script>
+
+@section viewData {
+    <script type="text/json" id="data-product-favorite-manage">
+        @Json.Serialize(Model)
+    </script>
+}

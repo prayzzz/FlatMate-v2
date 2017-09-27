@@ -96,7 +96,7 @@ main {
 }
 
 a {
-    box-sizing: border-box;
+    box-sizing: padding-box;
     color: $color-primary;
     text-decoration: none;
     transition: color linear .1s, border-color linear .1s;

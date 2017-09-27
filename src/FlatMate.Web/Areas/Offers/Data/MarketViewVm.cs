@@ -1,4 +1,4 @@
-﻿using FlatMate.Module.Offers.Api.Jso;
+﻿using FlatMate.Module.Offers.Api;
 using FlatMate.Web.Mvc.Base;
 using System;
 using System.Collections.Generic;

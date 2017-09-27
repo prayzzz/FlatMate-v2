@@ -3,7 +3,7 @@ using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System;
 
-namespace FlatMate.Module.Offers.Api.Jso
+namespace FlatMate.Module.Offers.Api
 {
     public class PriceHistoryJso
     {

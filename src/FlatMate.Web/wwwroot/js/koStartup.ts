@@ -2,6 +2,7 @@
 
 import * as ko from "knockout";
 import { ListsRegistry } from "./areas/lists/";
+import { OffersRegistry } from "./areas/offers/";
 import { SharedRegistry } from "./shared/";
 import EnterKey from "./ko/bindingHandlers/enterKey";
 
@@ -19,6 +20,7 @@ export class KoStartup {
 
     private static registerComponents() {
         ListsRegistry.registerComponents();
+        OffersRegistry.registerComponents();
         SharedRegistry.registerComponents();
     }
 }

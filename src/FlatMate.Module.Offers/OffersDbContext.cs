@@ -1,5 +1,6 @@
 using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
@@ -27,9 +28,11 @@ namespace FlatMate.Module.Offers
 
         public virtual DbSet<PriceHistory> PriceHistoryEntries { get; set; }
 
-        public virtual DbSet<Product> Products { get; set; }
-
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
+        public virtual DbSet<ProductFavorite> ProductFavorites { get; set; }
+
+        public virtual DbSet<Product> Products { get; set; }
 
         public virtual DbSet<RawOfferData> RawOfferData { get; set; }
 

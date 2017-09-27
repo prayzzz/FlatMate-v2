@@ -8,7 +8,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
     [Area("Offers")]
     public class HomeController : MvcController
     {
-        public HomeController(ILogger<HomeController> logger, IMvcControllerService controllerService) : base(logger, controllerService)
+        public HomeController(ILogger<HomeController> logger, IMvcControllerServices controllerService) : base(logger, controllerService)
         {
         }
 

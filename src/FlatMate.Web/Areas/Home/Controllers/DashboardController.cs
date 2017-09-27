@@ -9,7 +9,7 @@ namespace FlatMate.Web.Areas.Home.Controllers
     public class DashboardController : MvcController
     {
         public DashboardController(ILogger<DashboardController> logger,
-                                   IMvcControllerService controllerService) : base(logger, controllerService)
+                                   IMvcControllerServices controllerService) : base(logger, controllerService)
         {
         }
 

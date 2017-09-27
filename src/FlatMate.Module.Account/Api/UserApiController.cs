@@ -1,19 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using FlatMate.Module.Account.Api.Jso;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Common.Api;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using FlatMate.Module.Account.Api.Jso;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Account.Api
 {
-    [Authorize]
-    [Route("api/v1/account/user")]
+    [Route(RouteTemplate)]
     public class UserApiController : ApiController
     {
+        private const string RouteTemplate = "api/v1/account/user";
+
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 

@@ -94,6 +94,12 @@ select:focus {
     outline: none;
 }
 
+select {
+    border: $border-thickness $color-border solid;
+    padding: .4rem .4rem .4rem .4rem;
+    transition: border linear 0.15s;
+}
+
 button:focus,
 input[type=submit]:focus {
     outline: none;

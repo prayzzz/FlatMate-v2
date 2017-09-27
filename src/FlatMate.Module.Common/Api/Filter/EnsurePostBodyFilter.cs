@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using prayzzz.Common.Results;
 using System;
 
-namespace FlatMate.Module.Common.Api.Filter
+namespace FlatMate.Module.Common.Api
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class EnsurePostBodyFilter : ActionFilterAttribute

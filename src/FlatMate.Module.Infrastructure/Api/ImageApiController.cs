@@ -11,13 +11,13 @@ using prayzzz.Common.Results;
 namespace FlatMate.Module.Infrastructure.Api
 {
     [Route(RouteTemplate)]
-    public class ImageController : ApiController
+    public class ImageApiController : ApiController
     {
         private const string RouteTemplate = "/image/";
 
         private readonly IImageService _imageService;
 
-        public ImageController(IImageService imageService, IMapper mapper) : base(mapper)
+        public ImageApiController(IImageService imageService, IMapper mapper) : base(mapper)
         {
             _imageService = imageService;
         }

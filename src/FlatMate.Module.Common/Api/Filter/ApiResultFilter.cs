@@ -5,7 +5,7 @@ using prayzzz.Common.Enums;
 using prayzzz.Common.Results;
 using System;
 
-namespace FlatMate.Module.Common.Api.Filter
+namespace FlatMate.Module.Common.Api
 {
     [Inject(DependencyLifetime.Singleton, typeof(ApiResultFilter))]
     [AttributeUsage(AttributeTargets.Class)]

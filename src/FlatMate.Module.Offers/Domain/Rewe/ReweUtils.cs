@@ -2,6 +2,7 @@
 using prayzzz.Common.Attributes;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace FlatMate.Module.Offers.Domain.Rewe
 {
@@ -21,6 +22,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
         private static readonly char[] TrimChars = new[] { ' ', '*', ',' };
         private static readonly CultureInfo DecimalCulture = new CultureInfo("en-US");
+        private static readonly Regex TwoOrMoreWhitespaces = new Regex("[ ]{2,}");
 
         private readonly ILogger<ReweUtils> _logger;
 
@@ -80,8 +82,9 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
 
             str = str.Trim(TrimChars);
-            str = str.Replace("\r\n", string.Empty);
-            str = str.Replace("\n", string.Empty);
+            str = str.Replace("\r\n", " ");
+            str = str.Replace("\n", " ");
+            str = TwoOrMoreWhitespaces.Replace(str, " ");
 
             return str;
         }

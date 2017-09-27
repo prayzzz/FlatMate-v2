@@ -9,7 +9,7 @@ namespace FlatMate.Web.Areas.Lists.Controllers
     public class HomeController : MvcController
     {
         public HomeController(ILogger<HomeController> logger,
-                              IMvcControllerService controllerService) : base(logger, controllerService)
+                              IMvcControllerServices controllerService) : base(logger, controllerService)
         {
         }
 

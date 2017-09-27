@@ -16,7 +16,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
         public ProductController(ProductApiController apiController,
                                  ILogger<ProductController> logger,
-                                 IMvcControllerService controllerService) : base(logger, controllerService)
+                                 IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _apiController = apiController;
         }
