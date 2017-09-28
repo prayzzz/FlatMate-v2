@@ -10,11 +10,6 @@
     "sourceMap": false,
     "strict": true,
     "strictNullChecks": true,
-    "target": "ES5",
-    "paths": {
-      "@app/*": [
-        "*"
-      ]
-    }
+    "target": "ES5"
   }
 }
