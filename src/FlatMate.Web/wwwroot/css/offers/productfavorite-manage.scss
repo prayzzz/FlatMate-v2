@@ -3,6 +3,10 @@
         margin-bottom: .5rem;
     }
 
+    .filter {
+        margin-bottom: .5rem;
+    }
+
     .col-product {
         margin-bottom: 1rem;
     }
@@ -11,7 +15,7 @@
         display: flex;
         flex-flow: column;
         height: 100%;
-        padding: 0.75rem;
+        padding: .75rem;
 
         .image {
             text-align: center;
@@ -20,12 +24,22 @@
 
         .name {
             flex: 2;
+            font-size: .9rem;
+            margin-bottom: .5rem;
         }
+    }
 
-        .price {
-            min-height: 1.5rem;
-            font-size: 1.5rem;
-            text-align: right;
+    @media (min-width: 1200px) {
+        .col-product {
+            -ms-flex: 0 0 20%;
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+
+    .product-actions {
+        .col {
+            margin-bottom: .5rem;
         }
     }
 }

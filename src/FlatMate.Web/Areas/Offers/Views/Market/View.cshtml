@@ -36,6 +36,36 @@
         </div>
     </div>
 
+    @if (Model.Favorites.Count > 0)
+    {
+        <h3>Favoriten</h3>
+
+        <div class="row">
+
+            @foreach (var offer in Model.Favorites)
+                {
+                <div class="col-sm-6 col-lg-4 col-xl-3 col-offer">
+                    <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@offer.ProductId" class="standard-box offer-box">
+
+                        <div class="image">
+                            <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offer.ImageUrl?resize=150px:150px" width="150" height="150" />
+                        </div>
+
+                        <div class="name">
+                            <strong>@offer.Product.Name</strong>
+                        </div>
+
+                        <div class="price">
+                            <span style="font-size:1.5rem">@offer.Price €</span>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+
+
     @{
         var offersByProductCategory = Model.Offers.OrderByDescending(o => o.Product.ProductCategory.SortWeight)
                                                   .GroupBy(o => o.Product.ProductCategory.Id.Value);

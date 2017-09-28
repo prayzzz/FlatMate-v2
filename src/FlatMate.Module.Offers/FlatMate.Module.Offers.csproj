@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Infrastructure\FlatMate.Module.Infrastructure.csproj" />
   </ItemGroup>

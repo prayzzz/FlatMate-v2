@@ -1,4 +1,5 @@
-﻿using FlatMate.Web.Mvc.Base;
+﻿using Microsoft.CodeAnalysis.CSharp;
+using FlatMate.Web.Mvc.Base;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using FlatMate.Module.Offers.Api;
@@ -41,12 +42,13 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new MarketViewVm();
 
-            var getMarket = await _apiController.GetMarket(id);
-            if (getMarket.IsError)
+            var marketResult = await _apiController.GetMarket(id);
+            if (marketResult.IsError)
             {
-                TempData[Constants.TempData.Result] = JsonService.Serialize(getMarket);
+                TempData[Constants.TempData.Result] = JsonService.Serialize(marketResult);
                 return RedirectToAction("Index");
             }
+            var market = marketResult.Data;
 
             var date = DateTime.Now;
             if (date.DayOfWeek == DayOfWeek.Sunday)
@@ -54,18 +56,26 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 date = date.AddDays(1);
             }
 
-            var getOfferPeriod = await _apiController.GetOffers(id, date);
-            if (getOfferPeriod.IsError)
+            var offerPeriodTask = _apiController.GetOffers(id, date);
+            var productCategoriesTask = _productApiController.GetProductCategories();
+            var productFavoritesTask = _productApiController.GetProductFavorites(market.Id);
+
+            var offerPeriodResult = await offerPeriodTask;
+            if (offerPeriodResult.IsError)
             {
-                TempData[Constants.TempData.Result] = JsonService.Serialize(getOfferPeriod);
+                TempData[Constants.TempData.Result] = JsonService.Serialize(offerPeriodResult);
                 return RedirectToAction("Index");
             }
+            var offerPeriod = offerPeriodResult.Data;
 
-            model.Market = getMarket.Data;
-            model.OffersFrom = getOfferPeriod.Data.From;
-            model.OffersTo = getOfferPeriod.Data.To;
-            model.Offers = getOfferPeriod.Data.Offers.ToList();
-            model.ProductCategories = (await _productApiController.GetProductCategories()).ToDictionary(pc => pc.Id.Value, pc => pc);
+            var productFavorites = (await productFavoritesTask).ToList();
+
+            model.Market = market;
+            model.OffersFrom = offerPeriod.From;
+            model.OffersTo = offerPeriod.To;
+            model.Offers = offerPeriod.Offers.ToList();
+            model.ProductCategories = (await productCategoriesTask).ToDictionary(pc => pc.Id.Value, pc => pc);
+            model.Favorites = offerPeriod.Offers.Where(o => productFavorites.Any(p => p.Id == o.ProductId)).ToList();
 
             return View(model);
         }

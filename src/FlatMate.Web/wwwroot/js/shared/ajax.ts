@@ -15,8 +15,8 @@ export default class Ajax {
     public static post<TData, TError>(url: string, data: any): IAjaxRequest<TData, TError> {
         return new AjaxRequest<TData, TError>("POST", url, data);
     }
-    public static delete<TData, TError>(url: string): IAjaxRequest<TData, TError> {
-        return new AjaxRequest<TData, TError>("DELETE", url);
+    public static delete<TData, TError>(url: string, data?: any): IAjaxRequest<TData, TError> {
+        return new AjaxRequest<TData, TError>("DELETE", url, data);
     }
 }
 

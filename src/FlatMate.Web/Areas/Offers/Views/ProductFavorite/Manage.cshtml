@@ -16,17 +16,28 @@
 <script type="text/x-template" id="product-favorite-editor-template">
 
     <div class="row select-market">
-        <div class="col">
+        <div class="col-4">
             Markt:
+        </div>
+        <div class="col-4">
             <select data-bind="options: model.markets, optionsText: 'name', value: selectedMarket,"></select>
+        </div>
+    </div>
+
+    <div class="row filter">
+        <div class="col-4">
+            Suche:
+        </div>
+        <div class="col-8">
+            <input type="text" data-bind="value: searchTerm" placeholder="Name, Marke oder Beschreibung..." />
         </div>
     </div>
 
     <div class="row">
 
-        <!-- ko foreach: availableProductsView -->
+        <!-- ko foreach: productPage -->
 
-        <div class="col-sm-6 col-lg-4 col-xl-3 col-product">
+        <div class="col-sm-6 col-lg-3 col-xl-2 col-product">
             <div class="standard-box product-box">
 
                 <div class="image">
@@ -34,8 +45,33 @@
                 </div>
 
                 <div class="name">
-                    <span data-bind="text: name"></span>
+                    <span data-bind="text: name"></span><br />
                 </div>
+
+                <div class="row no-gutters product-actions">
+                    <div class="col" data-bind="visible: showFavoriteBtn">
+                        <div class="btn btn-secondary" data-bind="click: favorite">
+                            <i class="fa fa-heart" aria-hidden="true"></i> Als Favorit
+                        </div>
+                    </div>
+                    <div class="col" data-bind="visible: showUnfavoriteBtn">
+                        <div class="btn btn-primary" title="Als Favorit löschen" data-bind="click: unfavorite">
+                            <i class="fa fa-heart" aria-hidden="true"></i> Favorisiert
+                        </div>
+                    </div>
+                    <div class="col" data-bind="visible: showLoadingButton">
+                        <div class="btn btn-secondary">
+                            <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i> Lade
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row no-gutters product-actions">
+                    <div class="col">
+                        <a href="/Offers/Product/View/3132" target="_blank" class="btn btn-secondary" title="Details">Details</a>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -43,14 +79,27 @@
 
     </div>
 
-    <div class="row align-right actions" data-bind="if: availableProductsView().length > 0">
-        <div class="col-auto" data-bind="if: currentPage() > 1">
-            <a href="#" data-bind="click: prevPage">&lt; Zurück</a>
+    <div class="row" data-bind="if: filteredProducts().length > 0">
+        <div class="col">
+
+            <div class="row actions">
+                <div class="col-auto" data-bind="if: currentPage() > 1">
+                    <a href="#" data-bind="click: prevPage">&lt; Zurück</a>
+                </div>
+
+            </div>
         </div>
-        <div class="col-auto" data-bind="if: currentPage() < availableProducts().length / itemsPerPage()">
-            <a href="#" data-bind="click: nextPage">Weiter &gt;</a>
+        <div class="col">
+
+            <div class="row align-right actions">
+                <div class="col-auto" data-bind="if: currentPage() < filteredProducts().length / itemsPerPage()">
+                    <a href="#" data-bind="click: nextPage">Weiter &gt;</a>
+                </div>
+
+            </div>
         </div>
     </div>
+
 
 </script>
 

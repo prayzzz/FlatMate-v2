@@ -54,11 +54,17 @@ export default class ApiClient implements IApiClient {
         });
     }
 
-    public delete(path: string): Promise<void> {
+    public delete(path: string, data?: any): Promise<void> {
         const url = this.host + path;
 
         return new Promise<void>((resolve, reject) => {
-            const request = Ajax.delete<void, ResultJso>(url);
+            let request;
+            if (data) {
+                request = Ajax.delete<void, ResultJso>(url, JSON.stringify(data));
+            }
+            else {
+                request = Ajax.delete<void, ResultJso>(url);
+            }
 
             request.success(() => resolve());
 

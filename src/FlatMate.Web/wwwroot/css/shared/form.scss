@@ -1,12 +1,12 @@
 ﻿@import '../variables.scss';
 
-@mixin btn-variant($color) {
+@mixin btn-variant($color, $font-color: #fff) {
     background-color: $color;
-    color: white;
+    color: $font-color;
 
     &:hover {
         background-color: darken($color, 5%);
-        color: white;
+        color: $font-color;
     }
 
     &:focus {
@@ -44,7 +44,7 @@ fieldset {
     width: 100%;
 }
 
-input {
+input, select {
     border: 0;
     border-radius: $border-radius;
     box-sizing: border-box;
@@ -96,7 +96,7 @@ select:focus {
 
 select {
     border: $border-thickness $color-border solid;
-    padding: .4rem .4rem .4rem .4rem;
+    padding: .3rem .4rem ;
     transition: border linear 0.15s;
 }
 
@@ -116,6 +116,23 @@ input[type=submit]:focus {
     @include btn-variant($color-primary);
 }
 
+.btn-secondary {
+    @include btn-variant($color-secondary, #000);
+}
+
 .btn-danger {
     @include btn-variant($color-danger);
+}
+
+::-webkit-input-placeholder { /* Chrome */
+    color: $color-input-placeholder;
+}
+
+:-ms-input-placeholder { /* IE 10+ */
+    color: $color-input-placeholder;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+    color: $color-input-placeholder;
+    opacity: 1;
 }

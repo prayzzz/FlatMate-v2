@@ -1,4 +1,6 @@
-﻿using FlatMate.Module.Offers.Domain.Products;
+﻿using FlatMate.Module.Account.Shared;
+using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
@@ -11,9 +13,11 @@ namespace FlatMate.Module.Offers.Domain
 {
     public interface IProductService
     {
-        Task<Result> AddProductFavorite(int userId, int productId);
+        Task<Result> AddProductFavorite(int productId);
 
-        Task<List<ProductDto>> GetFavoriteProducts(int userId, int marketId);
+        Task<Result> DeleteProductFavorite(int productId);
+
+        Task<List<ProductDto>> GetFavoriteProducts(int marketId);
 
         Task<(Result, ProductDto)> GetProduct(int id);
 
@@ -29,19 +33,22 @@ namespace FlatMate.Module.Offers.Domain
     [Inject]
     public class ProductService : IProductService
     {
+        private readonly IAuthenticationContext _authenticationContext;
         private readonly OffersDbContext _dbContext;
-
         private readonly IMapper _mapper;
 
-        public ProductService(OffersDbContext dbContext, IMapper mapper)
+        public ProductService(OffersDbContext dbContext, IAuthenticationContext authenticationContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _authenticationContext = authenticationContext;
         }
 
-        public async Task<Result> AddProductFavorite(int userId, int productId)
+        private CurrentUser CurrentUser => _authenticationContext.CurrentUser;
+
+        public async Task<Result> AddProductFavorite(int productId)
         {
-            if (await _dbContext.ProductFavorites.AnyAsync(f => f.ProductId == productId && f.UserId == userId))
+            if (await _dbContext.ProductFavorites.AnyAsync(f => f.ProductId == productId && f.UserId == CurrentUser.Id))
             {
                 return SuccessResult.Default;
             }
@@ -51,17 +58,29 @@ namespace FlatMate.Module.Offers.Domain
                 return new ErrorResult(ErrorType.ValidationError, "Product not found");
             }
 
-            var favorite = new ProductFavorite { ProductId = productId, UserId = userId };
+            var favorite = new ProductFavorite { ProductId = productId, UserId = CurrentUser.Id };
 
             _dbContext.ProductFavorites.Add(favorite);
             return await _dbContext.SaveChangesAsync();
         }
 
-        public Task<List<ProductDto>> GetFavoriteProducts(int userId, int marketId)
+        public async Task<Result> DeleteProductFavorite(int productId)
+        {
+            var favorite = await _dbContext.ProductFavorites.FirstOrDefaultAsync(pf => pf.ProductId == productId && pf.UserId == CurrentUser.Id);
+            if (favorite != null)
+            {
+                _dbContext.Remove(favorite);
+                return await _dbContext.SaveChangesAsync();
+            }
+
+            return SuccessResult.Default;
+        }
+
+        public Task<List<ProductDto>> GetFavoriteProducts(int marketId)
         {
             return (from p in _dbContext.Products.Include(p => p.Market)
-                    join f in _dbContext.ProductFavorites on p.Id equals f.Id
-                    where f.UserId == userId && p.MarketId == marketId
+                    join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
+                    where f.UserId == CurrentUser.Id && p.MarketId == marketId
                     select _mapper.Map<ProductDto>(p)).ToListAsync();
         }
 

@@ -16,5 +16,7 @@ namespace FlatMate.Web.Areas.Offers.Data
         public DateTime OffersTo { get; set; }
 
         public Dictionary<int, ProductCategoryJso> ProductCategories { get; set; } = new Dictionary<int, ProductCategoryJso>();
+
+        public List<OfferJso> Favorites { get; set; } = new List<OfferJso>();
     }
 }

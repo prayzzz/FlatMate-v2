@@ -60,7 +60,13 @@ namespace FlatMate.Module.Offers.Api
         [HttpPost("favorite")]
         public Task<Result> AddProductFavorite([FromBody] ProductFavoriteJso jso)
         {
-            return _productService.AddProductFavorite(CurrentUserId, jso.ProductId);
+            return _productService.AddProductFavorite(jso.ProductId);
+        }
+
+        [HttpDelete("favorite")]
+        public Task<Result> DeleteProductFavorite([FromBody] ProductFavoriteJso jso)
+        {
+            return _productService.DeleteProductFavorite(jso.ProductId);
         }
 
         [HttpGet("favorite")]
@@ -71,7 +77,7 @@ namespace FlatMate.Module.Offers.Api
                 return Enumerable.Empty<ProductJso>();
             }
 
-            return (await _productService.GetFavoriteProducts(CurrentUserId, marketId.Value)).Select(Map<ProductJso>);
+            return (await _productService.GetFavoriteProducts(marketId.Value)).Select(Map<ProductJso>);
         }
     }
 }
