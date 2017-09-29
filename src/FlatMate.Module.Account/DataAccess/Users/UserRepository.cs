@@ -41,9 +41,9 @@ namespace FlatMate.Module.Account.DataAccess.Users
             return new SuccessResult<AuthenticationInformation>(Mapper.Map<AuthenticationInformation>(user));
         }
 
-        public async Task<Result<User>> GetByEmailAsync(string email, StringComparison stringComparison)
+        public async Task<Result<User>> GetByEmailAsync(string email)
         {
-            var user = await Dbos.FirstOrDefaultAsync(x => string.Equals(x.Email, email, stringComparison));
+            var user = await Dbos.FirstOrDefaultAsync(x => x.Email == email);
             if (user == null)
             {
                 return new ErrorResult<User>(ErrorType.NotFound, "Not Found");
@@ -52,9 +52,9 @@ namespace FlatMate.Module.Account.DataAccess.Users
             return new SuccessResult<User>(Mapper.Map<User>(user));
         }
 
-        public async Task<Result<User>> GetByUserNameAsync(string userName, StringComparison stringComparison)
+        public async Task<Result<User>> GetByUserNameAsync(string userName)
         {
-            var user = await Dbos.FirstOrDefaultAsync(x => string.Equals(x.UserName, userName, stringComparison));
+            var user = await Dbos.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
                 return new ErrorResult<User>(ErrorType.NotFound, "Not Found");

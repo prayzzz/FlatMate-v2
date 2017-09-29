@@ -35,7 +35,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         public async Task<Result<UserDto>> AuthorizeAsync(string username, string password)
         {
             // get user
-            var getUser = await _userRepository.GetByUserNameAsync(username, StringComparison.CurrentCultureIgnoreCase);
+            var getUser = await _userRepository.GetByUserNameAsync(username);
             if (getUser.IsError)
             {
                 return new ErrorResult<UserDto>(ErrorType.Unauthorized, "User not found");
@@ -100,14 +100,14 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         public async Task<Result<UserDto>> CreateAsync(UserDto userDto, string password)
         {
             // get user by name
-            var getByUsername = await _userRepository.GetByUserNameAsync(userDto.UserName, StringComparison.CurrentCultureIgnoreCase);
+            var getByUsername = await _userRepository.GetByUserNameAsync(userDto.UserName);
             if (getByUsername.IsSuccess)
             {
                 return new ErrorResult<UserDto>(ErrorType.ValidationError, "Username already in use");
             }
 
             // get user by mail
-            var getByMail = await _userRepository.GetByEmailAsync(userDto.Email, StringComparison.CurrentCultureIgnoreCase);
+            var getByMail = await _userRepository.GetByEmailAsync(userDto.Email);
             if (getByMail.IsSuccess)
             {
                 return new ErrorResult<UserDto>(ErrorType.ValidationError, "Email already in use");
