@@ -51,8 +51,8 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                     return NotFound();
                 }
 
-                TempData[Constants.TempData.Result] = JsonService.Serialize(marketResult);
-                return RedirectToAction("Index");
+                SetTempResult(marketResult);
+                return RedirectToActionPreserveMethod("Index");
             }
             var market = marketResult.Data;
 
@@ -64,21 +64,24 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
             var offerPeriodTask = _apiController.GetOffers(id, date);
             var productCategoriesTask = _productApiController.GetProductCategories();
+            var productFavoriteIdsTask = _productApiController.GetFavoriteProductIds(market.Id);
 
             var offerPeriodResult = await offerPeriodTask;
             if (offerPeriodResult.IsError)
             {
-                TempData[Constants.TempData.Result] = JsonService.Serialize(offerPeriodResult);
-                return RedirectToAction("Index");
+                SetTempResult(offerPeriodResult);
+                return RedirectToActionPreserveMethod("Index");
             }
+
             var offerPeriod = offerPeriodResult.Data;
+            var productFavoriteIds = await productFavoriteIdsTask;
 
             model.Market = market;
             model.OffersFrom = offerPeriod.From;
             model.OffersTo = offerPeriod.To;
             model.Offers = offerPeriod.Offers.ToList();
             model.ProductCategories = (await productCategoriesTask).ToDictionary(pc => pc.Id.Value, pc => pc);
-            model.Favorites = offerPeriod.Offers.Where(o => o.IsFavorite).ToList();
+            model.Favorites = offerPeriod.Offers.Where(o => productFavoriteIds.Contains(o.ProductId)).ToList();
 
             return View(model);
         }

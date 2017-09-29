@@ -1,5 +1,7 @@
 # FlatMate
 
+Multipurpose home application
+
 ## Developement Requirements
 
 * .NET Core 2.0 SDK

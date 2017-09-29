@@ -82,18 +82,18 @@ export class ProductFavoriteEditor {
         }
 
         // start api calls
-        const productsOfMarketTask = this.apiClient.getProducts(market.id);
-        const favProductsOfMarketTask = this.apiClient.getProductFavorites(market.id);
+        const productsTask = this.apiClient.getProducts(market.id);
+        const favProductIdsTask = this.apiClient.getProductFavoriteIds(market.id);
 
         // wait for api calls
-        const productsOfMarket = await productsOfMarketTask;
-        const favProductsOfMarket = await favProductsOfMarketTask;
+        const products = await productsTask;
+        const favProductIds = await favProductIdsTask;
 
         // apply loaded products
         this.allProducts.removeAll();
-        for (const productJso of productsOfMarket.sort((a, b) => a.name.localeCompare(b.name))) {
+        for (const productJso of products.sort((a, b) => a.name.localeCompare(b.name))) {
             const product = new ProductVm(productJso);
-            product.isFavorite(favProductsOfMarket.some(fp => fp.id === product.id));
+            product.isFavorite(favProductIds.some(fp => fp === product.id));
             this.allProducts.push(product);
         }
 

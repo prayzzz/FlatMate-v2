@@ -47,8 +47,6 @@ namespace FlatMate.Module.Offers.Domain
 
         public string ImageUrl { get; set; }
 
-        public bool IsFavorite { get; set; }
-
         public MarketDto Market { get; set; }
 
         public decimal Price { get; set; }

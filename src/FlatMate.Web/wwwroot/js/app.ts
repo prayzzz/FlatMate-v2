@@ -16,5 +16,3 @@ KoStartup.start();
 export class FlatMate {
     public static blazy = new Blazy({});
 }
-
-FlatMate.blazy;

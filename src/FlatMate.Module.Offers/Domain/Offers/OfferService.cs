@@ -21,7 +21,7 @@ namespace FlatMate.Module.Offers.Domain
     [Inject]
     public class OfferService : IOfferService
     {
-        private const string CachePrefix = "Offers";
+        private const string CachePrefix = "Offers.Offers";
         private static readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(2));
 
         private readonly IAuthenticationContext _authenticationContext;
@@ -61,8 +61,8 @@ namespace FlatMate.Module.Offers.Domain
 
             var offerPeriod = periodService.ComputeOfferPeriod(date);
 
-            var offerQueryKey = $"{CachePrefix}_{marketId}_{offerPeriod.From}_{offerPeriod.To}";
-            if (!_cache.TryGetValue(offerQueryKey, out List<Offer> offers))
+            var cacheKey = $"{CachePrefix}_market-{marketId}_from-{offerPeriod.From}_to-{offerPeriod.To}";
+            if (!_cache.TryGetValue(cacheKey, out List<Offer> offers))
             {
                 offers = await (from o in _dbContext.Offers.Include(of => of.Product).ThenInclude(p => p.ProductCategory)
                                 where o.MarketId == marketId
@@ -71,29 +71,15 @@ namespace FlatMate.Module.Offers.Domain
 
                 if (offers.Count > 0)
                 {
-                    _cache.Set(offerQueryKey, offers, _cacheEntryOptions);
+                    _cache.Set(cacheKey, offers, _cacheEntryOptions);
                 }
-            }
-
-            var favoriteProductIds = await (from pf in _dbContext.ProductFavorites
-                                            where pf.UserId == CurrentUser.Id
-                                            select pf.ProductId).ToListAsync();
-
-            // map and set isFavorite
-            var offerDtos = new List<OfferDto>();
-            foreach (var offer in offers)
-            {
-                var offerDto = _mapper.Map<OfferDto>(offer);
-                offerDto.IsFavorite = favoriteProductIds.Any(f => f == offer.ProductId);
-
-                offerDtos.Add(offerDto);
             }
 
             var offerPeriodDto = new OfferPeriodDto
             {
                 From = offerPeriod.From,
                 To = offerPeriod.To,
-                Offers = offerDtos
+                Offers = offers.Select(_mapper.Map<OfferDto>)
             };
 
             return (SuccessResult.Default, offerPeriodDto);

@@ -27,6 +27,10 @@ export class ProductApi {
         return this.apiClient.get<ProductJso[]>(`offers/product/favorite?marketId=${marketId}`);
     }
 
+    public getProductFavoriteIds(marketId: number): Promise<number[]> {
+        return this.apiClient.get<number[]>(`offers/product/favorite/id?marketId=${marketId}`);
+    }
+
     public favorite(productId: number): Promise<void> {
         return this.apiClient.post<void>(`offers/product/favorite`, { productId });
     }

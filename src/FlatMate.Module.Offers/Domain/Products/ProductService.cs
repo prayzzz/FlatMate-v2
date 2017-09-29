@@ -2,9 +2,11 @@
 using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,9 +19,9 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<Result> DeleteProductFavorite(int productId);
 
-        Task<List<ProductDto>> GetFavoriteProducts(int marketId);
-
         Task<List<int>> GetFavoriteProductIds(int marketId);
+
+        Task<List<ProductDto>> GetFavoriteProducts(int marketId);
 
         Task<(Result, ProductDto)> GetProduct(int id);
 
@@ -35,15 +37,23 @@ namespace FlatMate.Module.Offers.Domain
     [Inject]
     public class ProductService : IProductService
     {
+        private const string CachePrefix = "Offers.Products";
+        private static readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(2));
+
         private readonly IAuthenticationContext _authenticationContext;
+        private readonly IMemoryCache _cache;
         private readonly OffersDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public ProductService(OffersDbContext dbContext, IAuthenticationContext authenticationContext, IMapper mapper)
+        public ProductService(OffersDbContext dbContext,
+                              IMemoryCache cache,
+                              IAuthenticationContext authenticationContext,
+                              IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _authenticationContext = authenticationContext;
+            _cache = cache;
         }
 
         private CurrentUser CurrentUser => _authenticationContext.CurrentUser;
@@ -78,20 +88,20 @@ namespace FlatMate.Module.Offers.Domain
             return SuccessResult.Default;
         }
 
-        public Task<List<ProductDto>> GetFavoriteProducts(int marketId)
-        {
-            return (from p in _dbContext.Products
-                    join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
-                    where f.UserId == CurrentUser.Id && p.MarketId == marketId
-                    select _mapper.Map<ProductDto>(p)).ToListAsync();
-        }
-
         public Task<List<int>> GetFavoriteProductIds(int marketId)
         {
             return (from p in _dbContext.Products
                     join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
                     where f.UserId == CurrentUser.Id && p.MarketId == marketId
                     select p.Id).ToListAsync();
+        }
+
+        public Task<List<ProductDto>> GetFavoriteProducts(int marketId)
+        {
+            return (from p in _dbContext.Products
+                    join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
+                    where f.UserId == CurrentUser.Id && p.MarketId == marketId
+                    select _mapper.Map<ProductDto>(p)).ToListAsync();
         }
 
         public async Task<(Result, ProductDto)> GetProduct(int id)
@@ -125,11 +135,22 @@ namespace FlatMate.Module.Offers.Domain
                     select _mapper.Map<PriceHistoryDto>(ph)).ToListAsync();
         }
 
-        public Task<List<ProductDto>> GetProducts(int marketId)
+        public async Task<List<ProductDto>> GetProducts(int marketId)
         {
-            return (from p in _dbContext.Products
-                    where p.MarketId == marketId
-                    select _mapper.Map<ProductDto>(p)).ToListAsync();
+            var cacheKey = $"{CachePrefix}_market-{marketId}";
+            if (!_cache.TryGetValue(cacheKey, out List<Product> products))
+            {
+                products = await (from p in _dbContext.Products
+                                  where p.MarketId == marketId
+                                  select p).ToListAsync();
+
+                if (products.Count > 0)
+                {
+                    _cache.Set(cacheKey, products, _cacheEntryOptions);
+                }
+            }
+
+            return products.Select(_mapper.Map<ProductDto>).ToList();
         }
     }
 }

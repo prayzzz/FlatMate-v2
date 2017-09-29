@@ -28,7 +28,7 @@ module.exports = env => {
     };
     jsConfig.resolve = {
         extensions: [".ts", ".js"],
-        alias: { 'tslib$': 'tslib/tslib.es6.js', }
+        alias: { 'tslib$': 'tslib/tslib.es6.js' }
     };
     jsConfig.module = {
         loaders: [{ test: /\.ts$/, loader: "ts-loader" }]
@@ -43,7 +43,7 @@ module.exports = env => {
         })];
 
     if ("Debug" === env) {
-        jsConfig.devtool = "source-map";
+        jsConfig.devtool = "inline-source-map";
     }
 
     if ("Release" === env) {

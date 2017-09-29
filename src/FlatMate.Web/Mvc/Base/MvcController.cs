@@ -74,6 +74,11 @@ namespace FlatMate.Web.Mvc.Base
             };
         }
 
+        protected void SetTempResult(Result result)
+        {
+            TempData[Constants.TempData.Result] = JsonService.Serialize(result);
+        }
+
         protected T ApplyTempResult<T>(T model) where T : BaseViewModel
         {
             // check for passed result from redirect

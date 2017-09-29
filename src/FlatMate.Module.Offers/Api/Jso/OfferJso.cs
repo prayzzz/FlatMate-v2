@@ -19,8 +19,6 @@ namespace FlatMate.Module.Offers.Api
 
         public string ImageUrl { get; set; }
 
-        public bool IsFavorite { get; set; }
-
         public MarketJso Market { get; set; }
 
         public decimal Price { get; set; }
@@ -59,7 +57,6 @@ namespace FlatMate.Module.Offers.Api
                 From = dto.From,
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
-                IsFavorite = dto.IsFavorite,
                 Market = ctx.Mapper.Map<MarketJso>(dto.Market),
                 Price = dto.Price,
                 Product = ctx.Mapper.Map<ProductJso>(dto.Product),
