@@ -17,8 +17,6 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<(Result, MarketDto)> GetMarket(int id);
 
-        Task<(Result, OfferPeriodDto)> GetOffers(int marketId, DateTime date);
-
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
         Task<(Result, IEnumerable<OfferDto>)> ImportOffers(int marketId);
@@ -67,35 +65,6 @@ namespace FlatMate.Module.Offers.Domain
             }
 
             return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
-        }
-
-        public async Task<(Result, OfferPeriodDto)> GetOffers(int marketId, DateTime date)
-        {
-            var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == marketId);
-
-            var periodService = _offerPeriodServices.FirstOrDefault(s => s.Company == market.Company.Company);
-            if (periodService == null)
-            {
-                _logger.LogError($"No OfferPeriod found for Company {market.Company.Company}");
-                return (new ErrorResult(ErrorType.InternalError, $"No OfferPeriod found for Company {market.Company.Company}"), null);
-            }
-
-            var offerPeriod = periodService.ComputeOfferPeriod(date);
-
-            var offers = await _dbContext.Offers
-                                         .Include(o => o.Product).ThenInclude(p => p.ProductCategory)
-                                         .Where(o => o.MarketId == marketId)
-                                         .Where(o => o.From >= offerPeriod.From && o.To <= offerPeriod.To)
-                                         .ToListAsync();
-
-            var dto = new OfferPeriodDto
-            {
-                From = offerPeriod.From,
-                To = offerPeriod.To,
-                Offers = offers.Select(_mapper.Map<OfferDto>)
-            };
-
-            return (SuccessResult.Default, dto);
         }
 
         /// <summary>

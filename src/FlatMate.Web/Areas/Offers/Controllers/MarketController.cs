@@ -8,6 +8,7 @@ using FlatMate.Web.Areas.Offers.Data;
 using FlatMate.Web.Mvc;
 using System.Linq;
 using System;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Offers.Controllers
 {
@@ -45,6 +46,11 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             var marketResult = await _apiController.GetMarket(id);
             if (marketResult.IsError)
             {
+                if (marketResult.ErrorType == ErrorType.NotFound)
+                {
+                    return NotFound();
+                }
+
                 TempData[Constants.TempData.Result] = JsonService.Serialize(marketResult);
                 return RedirectToAction("Index");
             }
@@ -58,7 +64,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
             var offerPeriodTask = _apiController.GetOffers(id, date);
             var productCategoriesTask = _productApiController.GetProductCategories();
-            var productFavoritesTask = _productApiController.GetProductFavorites(market.Id);
 
             var offerPeriodResult = await offerPeriodTask;
             if (offerPeriodResult.IsError)
@@ -68,14 +73,12 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             }
             var offerPeriod = offerPeriodResult.Data;
 
-            var productFavorites = (await productFavoritesTask).ToList();
-
             model.Market = market;
             model.OffersFrom = offerPeriod.From;
             model.OffersTo = offerPeriod.To;
             model.Offers = offerPeriod.Offers.ToList();
             model.ProductCategories = (await productCategoriesTask).ToDictionary(pc => pc.Id.Value, pc => pc);
-            model.Favorites = offerPeriod.Offers.Where(o => productFavorites.Any(p => p.Id == o.ProductId)).ToList();
+            model.Favorites = offerPeriod.Offers.Where(o => o.IsFavorite).ToList();
 
             return View(model);
         }

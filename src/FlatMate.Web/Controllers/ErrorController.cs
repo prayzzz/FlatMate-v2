@@ -20,8 +20,14 @@ namespace FlatMate.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? statusCode)
         {
+            switch (statusCode)
+            {
+                case 404:
+                    return PageNotFound();
+            }
+
             return View();
         }
 
@@ -29,7 +35,7 @@ namespace FlatMate.Web.Controllers
         public IActionResult PageNotFound()
         {
             Response.StatusCode = 404;
-            return View();
+            return View("PageNotFound");
         }
     }
 }

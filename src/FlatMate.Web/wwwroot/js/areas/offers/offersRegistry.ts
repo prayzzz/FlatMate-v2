@@ -4,7 +4,6 @@ import { StartupHelper } from "../../koStartup";
 
 export class OffersRegistry {
     public static registerComponents() {
-        // ItemListEditor
         ko.components.register("product-favorite-editor", {
             template: { element: "product-favorite-editor-template" },
             viewModel: function() {

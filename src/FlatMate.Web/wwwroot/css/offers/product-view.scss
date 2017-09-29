@@ -36,6 +36,10 @@ $picture-wrapper-width: 150px + (2 * $picture-wrapper-padding) + 4px;
         text-align: right;
     }
 
+    .product-actions {
+        margin-top: .5rem;
+    }
+
     @media (min-width: 768px) {
         .col-picture {
             flex-grow: 0;

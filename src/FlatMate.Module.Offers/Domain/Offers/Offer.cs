@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using FlatMate.Module.Common.DataAccess;
+﻿using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -47,6 +47,8 @@ namespace FlatMate.Module.Offers.Domain
 
         public string ImageUrl { get; set; }
 
+        public bool IsFavorite { get; set; }
+
         public MarketDto Market { get; set; }
 
         public decimal Price { get; set; }
@@ -56,15 +58,6 @@ namespace FlatMate.Module.Offers.Domain
         public int ProductId { get; set; }
 
         public DateTime To { get; set; }
-    }
-
-    public class OfferPeriodDto : DtoBase
-    {
-        public DateTime From { get; set; }
-
-        public DateTime To { get; set; }
-
-        public IEnumerable<OfferDto> Offers { get; set; }
     }
 
     [Inject]
@@ -90,5 +83,14 @@ namespace FlatMate.Module.Offers.Domain
                 To = offer.To
             };
         }
+    }
+
+    public class OfferPeriodDto : DtoBase
+    {
+        public DateTime From { get; set; }
+
+        public IEnumerable<OfferDto> Offers { get; set; }
+
+        public DateTime To { get; set; }
     }
 }

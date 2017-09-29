@@ -1,6 +1,9 @@
 ﻿@import '../variables.scss';
 
 html {
+    padding: 0;
+    margin: 0;
+    background-color: $color-main-background;
     color: $color-font;
     font-family: $font-family-sans-serif;
     font-size: $font-size;
@@ -8,11 +11,11 @@ html {
     line-height: 1.5;
 }
 
-html,
 body {
     padding: 0;
     margin: 0;
     background-color: $color-main-background;
+    overflow-y: scroll;
 }
 
 @media all and (max-width: 768px) {
@@ -138,6 +141,10 @@ a {
 .align-right {
     display: flex;
     justify-content: flex-end;
+}
+
+.align-self-center {
+    align-self:center
 }
 
 .align-center {

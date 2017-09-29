@@ -56,6 +56,10 @@ input, select {
     width: 100%;
 }
 
+input[type=checkbox] {
+    display: inline-block;
+}
+
 input[type=text],
 input[type=password],
 input[type=email] {
@@ -69,6 +73,7 @@ input[type=email] {
 .btn,
 button,
 input[type=submit] {
+    cursor:pointer;
     display: block;
     min-width: 100px;
     padding: .3rem .5rem;
@@ -96,7 +101,7 @@ select:focus {
 
 select {
     border: $border-thickness $color-border solid;
-    padding: .3rem .4rem ;
+    padding: .3rem .4rem;
     transition: border linear 0.15s;
 }
 
@@ -122,6 +127,14 @@ input[type=submit]:focus {
 
 .btn-danger {
     @include btn-variant($color-danger);
+}
+
+.btn-success {
+    @include btn-variant($color-success);
+}
+
+.btn-info {
+    @include btn-variant($color-info);
 }
 
 ::-webkit-input-placeholder { /* Chrome */

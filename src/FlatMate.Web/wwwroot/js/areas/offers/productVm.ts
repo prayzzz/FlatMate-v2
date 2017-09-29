@@ -1,25 +1,27 @@
-﻿import { ProductJso, ProductApi } from ".";
+﻿import { ProductApi, ProductJso } from ".";
 
 export class ProductVm {
-    private productApi = new ProductApi();
-
-    private model: KnockoutObservable<ProductJso>;
     public isFavorite: KnockoutObservable<boolean>;
     public isLoading: KnockoutObservable<boolean>;
     public showLoadingButton: KnockoutComputed<boolean>;
     public showFavoriteBtn: KnockoutComputed<boolean>;
     public showUnfavoriteBtn: KnockoutComputed<boolean>;
+    public detailUrl: string;
+
+    private productApi = new ProductApi();
+    private model: KnockoutObservable<ProductJso>;
 
     constructor(model: ProductJso) {
         const self = this;
 
         this.model = ko.observable(model);
+        this.detailUrl = "/Offers/Product/View/" + this.model().id;
         this.isFavorite = ko.observable(false);
         this.isLoading = ko.observable(false);
 
-        this.showLoadingButton = ko.computed(() => self.isLoading())
-        this.showFavoriteBtn = ko.computed(() => !self.isLoading() && !self.isFavorite())
-        this.showUnfavoriteBtn = ko.computed(() => !self.isLoading() && self.isFavorite())
+        this.showLoadingButton = ko.computed(() => self.isLoading());
+        this.showFavoriteBtn = ko.computed(() => !self.isLoading() && !self.isFavorite());
+        this.showUnfavoriteBtn = ko.computed(() => !self.isLoading() && self.isFavorite());
     }
 
     public get id(): number {
@@ -39,21 +41,36 @@ export class ProductVm {
     }
 
     public match(term: string): boolean {
-        if (!term || term == "") {
+        if (!term || term === "") {
             return true;
         }
 
         term = term.toLowerCase();
 
-        if (this.model().name && this.model().name.toLowerCase().includes(term)) {
+        if (
+            this.model().name &&
+            this.model()
+                .name.toLowerCase()
+                .includes(term)
+        ) {
             return true;
         }
 
-        if (this.model().brand && this.model().brand.toLowerCase().includes(term)) {
+        if (
+            this.model().brand &&
+            this.model()
+                .brand.toLowerCase()
+                .includes(term)
+        ) {
             return true;
         }
 
-        if (this.model().description && this.model().description.toLowerCase().includes(term)) {
+        if (
+            this.model().description &&
+            this.model()
+                .description.toLowerCase()
+                .includes(term)
+        ) {
             return true;
         }
 
@@ -67,7 +84,7 @@ export class ProductVm {
         this.productApi.favorite(this.id).then(() => {
             self.isFavorite(true);
             self.isLoading(false);
-        })
+        });
     }
 
     public unfavorite(): void {
@@ -77,6 +94,6 @@ export class ProductVm {
         this.productApi.unfavorite(this.id).then(() => {
             self.isFavorite(false);
             self.isLoading(false);
-        })
+        });
     }
 }

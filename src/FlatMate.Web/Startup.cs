@@ -83,6 +83,7 @@ namespace FlatMate.Web
                 SupportedUICultures = supportedCultures
             });
 
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
             app.UseMvc(routes =>
             {
                 routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });

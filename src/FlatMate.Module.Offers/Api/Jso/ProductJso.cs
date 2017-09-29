@@ -18,6 +18,8 @@ namespace FlatMate.Module.Offers.Api
 
         public string ImageUrl { get; set; }
 
+        public int MarketId { get; set; }
+
         public string Name { get; set; }
 
         public decimal Price { get; set; }
@@ -45,6 +47,7 @@ namespace FlatMate.Module.Offers.Api
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
                 Name = dto.Name,
+                MarketId = dto.MarketId,
                 Price = dto.Price,
                 ProductCategory = ctx.Mapper.Map<ProductCategoryJso>(dto.ProductCategory),
                 SizeInfo = dto.SizeInfo

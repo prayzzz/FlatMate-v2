@@ -1,4 +1,6 @@
-﻿.productfavorite-manage {
+﻿@import '../variables.scss';
+
+.productfavorite-manage {
     .select-market {
         margin-bottom: .5rem;
     }
@@ -38,8 +40,15 @@
     }
 
     .product-actions {
-        .col {
+        .col-12 {
             margin-bottom: .5rem;
+        }
+
+        .loading {
+            background-color: $color-secondary;
+            display: block;
+            padding: .3rem .5rem;
+            text-align: center;
         }
     }
 }

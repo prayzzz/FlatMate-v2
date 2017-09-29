@@ -21,17 +21,39 @@
                 <div style="font-size:1.5rem;">@Model.Product.Name</div>
 
                 <div>@Model.Product.Description</div>
+                <div>@Model.Product.SizeInfo</div>
 
-                @if (Model.Product.Price > 0)
-                {
-                    <div class="product-price">
-                        <text>@Model.Product.Price € (@Model.Product.SizeInfo)</text>
-                    </div>
-                }
-                else
-                {
-                    <div>@Model.Product.SizeInfo</div>
-                }
+                <div class="product-price">
+                    
+                    @if (Model.Offers.Count > 0)
+                    {
+                        <div><text>Letztes Angebot: @Model.Offers.Last().Price €</text></div>
+                    }
+
+                    @if (Model.Product.Price > 0)
+                    {
+                        <div><text>Letzter Preis: @Model.Product.Price €</text></div>
+                    }
+                </div>
+
+                <div class="row no-gutters product-actions">
+                    @if (Model.IsFavorite)
+                    {
+                        <div class="col-auto">
+                            <a asp-area="Offers" asp-controller="Product" asp-action="Unfavorite" asp-route-id="@Model.Product.Id" class="btn btn-success" title="Als Favorit löschen">
+                                <i class="fa fa-heart" aria-hidden="true"></i> Favorisiert
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-auto">
+                            <a asp-area="Offers" asp-controller="Product" asp-action="Favorite" asp-route-id="@Model.Product.Id" class="btn btn-secondary">
+                                <i class="fa fa-heart" aria-hidden="true"></i> Als Favorit
+                            </a>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
 
@@ -56,7 +78,7 @@
                         <td>@offer.From.ToShortDateString()</td>
                         <td>@offer.To.ToShortDateString()</td>
                         <td>@offer.Price €</td>
-                        <td>@offer.Market.Name</td>
+                        <td><a asp-area="Offers" asp-controller="Market" asp-action="View" asp-route-id="@offer.Market.Id">@offer.Market.Name</a></td>
                     </tr>
                 }
             </tbody>

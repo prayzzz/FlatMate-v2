@@ -4,6 +4,7 @@ using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using prayzzz.Common.Results;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return Redirect("http://google.de");
+            return NotFound();
         }
 
         [HttpGet]
@@ -32,18 +33,65 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new ProductViewVm();
 
-            var result = await _apiController.GetProduct(id);
-            if (result.IsError)
+            var productResult = await _apiController.GetProduct(id);
+            if (productResult.IsError)
             {
-                TempData[Constants.TempData.Result] = JsonService.Serialize(result);
+                if (productResult.ErrorType == ErrorType.NotFound)
+                {
+                    return NotFound();
+                }
+
+                TempData[Constants.TempData.Result] = JsonService.Serialize(productResult);
                 return RedirectToAction("Index");
             }
+            var product = productResult.Data;
 
-            model.Product = result.Data;
-            model.Offers = (await _apiController.GetProductOffers(id)).ToList();
-            model.PriceHistory = (await _apiController.GetProductPriceHistory(id)).ToList();
+            var offersTask = _apiController.GetProductOffers(id);
+            var priceHistoryTask = _apiController.GetProductPriceHistory(id);
+            var productFavoritesTask = _apiController.GetFavoriteProductIds(product.MarketId);
+
+            model.Product = product;
+            model.IsFavorite = (await productFavoritesTask).Any(pf => pf == product.Id);
+            model.Offers = (await offersTask).ToList();
+            model.PriceHistory = (await priceHistoryTask).ToList();
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Favorite(int id)
+        {
+            var favoriteResult = await _apiController.AddProductFavorite(new ProductFavoriteJso { ProductId = id });
+            if (favoriteResult.IsError)
+            {
+                TempData[Constants.TempData.Result] = JsonService.Serialize(favoriteResult);
+            }
+
+            var referer = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return RedirectToAction("View", id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Unfavorite(int id)
+        {
+            var unfavoriteResult = await _apiController.DeleteProductFavorite(new ProductFavoriteJso { ProductId = id });
+            if (unfavoriteResult.IsError)
+            {
+                TempData[Constants.TempData.Result] = JsonService.Serialize(unfavoriteResult);
+            }
+
+            var referer = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return RedirectToAction("View", id);
         }
     }
 }

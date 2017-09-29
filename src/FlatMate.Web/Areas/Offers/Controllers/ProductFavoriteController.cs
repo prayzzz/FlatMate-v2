@@ -32,8 +32,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 CurrentMarket = marketId
             };
 
-            model.Markets.Add(new MarketJso { Id = 2, Name = "Dummy Market" });
-
             return View(model);
         }
     }

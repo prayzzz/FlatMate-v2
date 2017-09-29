@@ -1,4 +1,4 @@
-﻿import { ProductFavoriteManageVm, MarketJso, ProductApi, ProductVm } from ".";
+﻿import { MarketJso, ProductApi, ProductFavoriteManageVm, ProductVm } from ".";
 import { FlatMate } from "../../app";
 
 export class ProductFavoriteEditor {
@@ -8,10 +8,10 @@ export class ProductFavoriteEditor {
     private filteredProducts: KnockoutObservableArray<ProductVm>;
     private productPage: KnockoutObservableArray<ProductVm>;
 
-
     private itemsPerPage: KnockoutObservable<number>;
     private currentPage: KnockoutObservable<number>;
     private searchTerm: KnockoutObservable<string>;
+    private onlyFavorites: KnockoutObservable<boolean>;
 
     private readonly apiClient = new ProductApi();
     private readonly model: ProductFavoriteManageVm;
@@ -23,11 +23,14 @@ export class ProductFavoriteEditor {
         this.selectedMarket.subscribe(m => this.selectMarket(m));
 
         if (model.currentMarket) {
-            this.selectedMarket(this.model.markets.find(m => m.id == model.currentMarket));
+            this.selectedMarket(this.model.markets.find(m => m.id === model.currentMarket));
         }
 
+        this.onlyFavorites = ko.observable(false);
+        this.onlyFavorites.subscribe(value => this.applyFilter(this.searchTerm(), value));
+
         this.searchTerm = ko.observable("");
-        this.searchTerm.subscribe(t => this.applyTermFilter(t));
+        this.searchTerm.subscribe(value => this.applyFilter(value, this.onlyFavorites()));
 
         this.itemsPerPage = ko.observable(15);
         this.currentPage = ko.observable(1);
@@ -48,20 +51,28 @@ export class ProductFavoriteEditor {
     public showPage(page: number) {
         this.currentPage(page);
 
-        let from = (this.currentPage() - 1) * this.itemsPerPage();
-        let to = this.currentPage() * this.itemsPerPage();
+        const from = (this.currentPage() - 1) * this.itemsPerPage();
+        const to = this.currentPage() * this.itemsPerPage();
 
         this.productPage.removeAll();
-        this.filteredProducts.slice(from, to).forEach(p => this.productPage.push(p))
+        this.filteredProducts.slice(from, to).forEach(p => this.productPage.push(p));
 
         setTimeout(() => FlatMate.blazy.revalidate(), 1);
     }
 
-    private applyTermFilter(term: string): void {
-        const self = this;
-
+    private applyFilter(term: string, onlyFavorites: boolean): void {
         this.filteredProducts.removeAll();
-        this.allProducts().filter(p => p.match(term)).forEach(p => self.filteredProducts.push(p));
+
+        for (const product of this.allProducts()) {
+            if (onlyFavorites && !product.isFavorite()) {
+                continue;
+            }
+
+            if (product.match(term)) {
+                this.filteredProducts.push(product);
+            }
+        }
+
         this.showPage(1);
     }
 
@@ -71,22 +82,22 @@ export class ProductFavoriteEditor {
         }
 
         // start api calls
-        let productsOfMarketTask = this.apiClient.getProducts(market.id);
-        let favProductsOfMarketTask = this.apiClient.getProductFavorites(market.id);
+        const productsOfMarketTask = this.apiClient.getProducts(market.id);
+        const favProductsOfMarketTask = this.apiClient.getProductFavorites(market.id);
 
         // wait for api calls
-        let productsOfMarket = (await productsOfMarketTask).sort((a, b) => a.name.localeCompare(b.name));
-        let favProductsOfMarket = await favProductsOfMarketTask;
+        const productsOfMarket = await productsOfMarketTask;
+        const favProductsOfMarket = await favProductsOfMarketTask;
 
-        // set loaded products
+        // apply loaded products
         this.allProducts.removeAll();
-        for (var i = 0; i < productsOfMarket.length; i++) {
-            var product = new ProductVm(productsOfMarket[i]);
-            product.isFavorite(favProductsOfMarket.some(fp => fp.id == product.id));
+        for (const productJso of productsOfMarket.sort((a, b) => a.name.localeCompare(b.name))) {
+            const product = new ProductVm(productJso);
+            product.isFavorite(favProductsOfMarket.some(fp => fp.id === product.id));
             this.allProducts.push(product);
         }
 
-        this.applyTermFilter("")
+        this.applyFilter(this.searchTerm(), this.onlyFavorites());
         this.showPage(1);
     }
 }

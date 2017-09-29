@@ -6,6 +6,8 @@ namespace FlatMate.Web.Areas.Offers.Data
 {
     public class ProductViewVm : BaseViewModel
     {
+        public bool IsFavorite { get; set; }
+
         public List<OfferJso> Offers { get; set; } = new List<OfferJso>();
 
         public List<PriceHistoryJso> PriceHistory { get; set; } = new List<PriceHistoryJso>();

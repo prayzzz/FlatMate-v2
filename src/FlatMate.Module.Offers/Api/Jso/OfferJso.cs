@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using FlatMate.Module.Offers.Domain;
+﻿using FlatMate.Module.Offers.Domain;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace FlatMate.Module.Offers.Api
 {
@@ -19,24 +19,17 @@ namespace FlatMate.Module.Offers.Api
 
         public string ImageUrl { get; set; }
 
-        public decimal Price { get; set; }
+        public bool IsFavorite { get; set; }
 
         public MarketJso Market { get; set; }
+
+        public decimal Price { get; set; }
 
         public ProductJso Product { get; set; }
 
         public int ProductId { get; set; }
 
         public DateTime To { get; set; }
-    }
-
-    public class OfferPeriodJso
-    {
-        public DateTime From { get; set; }
-
-        public DateTime To { get; set; }
-
-        public IEnumerable<OfferJso> Offers { get; set; }
     }
 
     [Inject]
@@ -66,6 +59,7 @@ namespace FlatMate.Module.Offers.Api
                 From = dto.From,
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
+                IsFavorite = dto.IsFavorite,
                 Market = ctx.Mapper.Map<MarketJso>(dto.Market),
                 Price = dto.Price,
                 Product = ctx.Mapper.Map<ProductJso>(dto.Product),
@@ -73,5 +67,14 @@ namespace FlatMate.Module.Offers.Api
                 To = dto.To
             };
         }
+    }
+
+    public class OfferPeriodJso
+    {
+        public DateTime From { get; set; }
+
+        public IEnumerable<OfferJso> Offers { get; set; }
+
+        public DateTime To { get; set; }
     }
 }

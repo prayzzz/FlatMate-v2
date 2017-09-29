@@ -1,6 +1,6 @@
 ﻿import { MarketJso } from ".";
 
 export interface ProductFavoriteManageVm {
-    markets: Array<MarketJso>;
+    markets: MarketJso[];
     currentMarket: number | undefined;
 }

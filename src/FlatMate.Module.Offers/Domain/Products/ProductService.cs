@@ -19,6 +19,8 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<List<ProductDto>> GetFavoriteProducts(int marketId);
 
+        Task<List<int>> GetFavoriteProductIds(int marketId);
+
         Task<(Result, ProductDto)> GetProduct(int id);
 
         Task<List<ProductCategoryDto>> GetProductCategories();
@@ -78,10 +80,18 @@ namespace FlatMate.Module.Offers.Domain
 
         public Task<List<ProductDto>> GetFavoriteProducts(int marketId)
         {
-            return (from p in _dbContext.Products.Include(p => p.Market)
+            return (from p in _dbContext.Products
                     join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
                     where f.UserId == CurrentUser.Id && p.MarketId == marketId
                     select _mapper.Map<ProductDto>(p)).ToListAsync();
+        }
+
+        public Task<List<int>> GetFavoriteProductIds(int marketId)
+        {
+            return (from p in _dbContext.Products
+                    join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
+                    where f.UserId == CurrentUser.Id && p.MarketId == marketId
+                    select p.Id).ToListAsync();
         }
 
         public async Task<(Result, ProductDto)> GetProduct(int id)
@@ -110,7 +120,7 @@ namespace FlatMate.Module.Offers.Domain
 
         public Task<List<PriceHistoryDto>> GetProductPriceHistory(int productId)
         {
-            return (from ph in _dbContext.PriceHistoryEntries
+            return (from ph in _dbContext.PriceHistoryEntries.Include(ph => ph.Product)
                     where ph.ProductId == productId
                     select _mapper.Map<PriceHistoryDto>(ph)).ToListAsync();
         }

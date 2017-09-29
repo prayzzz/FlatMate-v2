@@ -16,10 +16,12 @@ namespace FlatMate.Module.Offers.Api
         private const string RouteTemplate = "api/v1/offers/market";
 
         private readonly IMarketService _marketService;
+        private readonly IOfferService _offerService;
 
-        public MarketApiController(IMarketService marketService, IMapper mapper) : base(mapper)
+        public MarketApiController(IMarketService marketService, IOfferService offerService, IMapper mapper) : base(mapper)
         {
             _marketService = marketService;
+            _offerService = offerService;
         }
 
         [HttpGet]
@@ -43,7 +45,7 @@ namespace FlatMate.Module.Offers.Api
         [HttpGet("{marketId}/offer/")]
         public async Task<Result<OfferPeriodJso>> GetOffers(int marketId, [FromQuery] DateTime? date = null)
         {
-            return FromTuple(await _marketService.GetOffers(marketId, date ?? DateTime.Now), Map<OfferPeriodJso>);
+            return FromTuple(await _offerService.GetOffers(marketId, date ?? DateTime.Now), Map<OfferPeriodJso>);
         }
 
         [HttpGet("{marketId}/offer/import")]

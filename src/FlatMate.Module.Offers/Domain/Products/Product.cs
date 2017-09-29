@@ -76,6 +76,8 @@ namespace FlatMate.Module.Offers.Domain
 
         public string ImageUrl { get; set; }
 
+        public int MarketId { get; set; }
+
         public string Name { get; set; }
 
         public decimal Price { get; set; }
@@ -103,6 +105,7 @@ namespace FlatMate.Module.Offers.Domain
                 Id = product.Id,
                 ImageUrl = product.ImageUrl,
                 Name = product.Name,
+                MarketId = product.MarketId,
                 Price = product.Price,
                 ProductCategory = ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory),
                 SizeInfo = product.SizeInfo
