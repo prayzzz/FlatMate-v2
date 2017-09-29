@@ -5,6 +5,7 @@
   "repository": {},
   "license": "MIT",
   "dependencies": {
+    "array.prototype.find": "2.0.4",
     "atomicjs": "3.2.1",
     "blazy": "1.8.2",
     "es6-promise": "4.1.1",

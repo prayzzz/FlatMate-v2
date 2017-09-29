@@ -19,7 +19,7 @@ module.exports = env => {
     jsConfig.name = "js";
     jsConfig.entry = {
         app: "./js/app.ts",
-        vendor: ["knockout", "knockout-dragdrop", "es6-promise", "blazy"]
+        vendor: ["knockout", "knockout-dragdrop", "es6-promise", "blazy", "array.prototype.find"]
     };
     jsConfig.output = {
         path: path.resolve(__dirname, "./dist"),
