@@ -1,9 +1,9 @@
 ﻿const glob = require("glob");
-const path = require('path');
+const path = require("path");
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = (env) => {
+module.exports = env => {
     if (!env) {
         env = "Debug";
     }
@@ -19,23 +19,31 @@ module.exports = (env) => {
     jsConfig.name = "js";
     jsConfig.entry = {
         app: "./js/app.ts",
-        vendor: ["knockout", "knockout-dragdrop", "es6-promise"]
+        vendor: ["knockout", "knockout-dragdrop", "es6-promise", "blazy"]
     };
     jsConfig.output = {
-        path: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
-        filename: '[name].js'
+        path: path.resolve(__dirname, "./dist"),
+        publicPath: "/dist/",
+        filename: "[name].js"
     };
-    jsConfig.resolve = { extensions: [".ts", ".js"] };
+    jsConfig.resolve = {
+        extensions: [".ts", ".js"],
+        alias: { 'tslib$': 'tslib/tslib.es6.js', }
+    };
     jsConfig.module = {
         loaders: [{ test: /\.ts$/, loader: "ts-loader" }]
     };
     jsConfig.plugins = [
-        new webpack.optimize.CommonsChunkPlugin({ name: "vendor" })
-    ];
+        new webpack.optimize.CommonsChunkPlugin({ name: "vendor" }),
+        new webpack.ProvidePlugin({
+            '__assign': ['tslib', '__assign'],
+            '__awaiter': ['tslib', '__awaiter'],
+            '__extends': ['tslib', '__extends'],
+            '__generator': ['tslib', '__generator']
+        })];
 
     if ("Debug" === env) {
-        jsConfig.devtool = 'source-map';
+        jsConfig.devtool = "source-map";
     }
 
     if ("Release" === env) {
@@ -61,17 +69,12 @@ module.exports = (env) => {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: [
-                        { loader: "css-loader", options: cssLoaderOptions },
-                        { loader: "sass-loader" }
-                    ]
+                    use: [{ loader: "css-loader", options: cssLoaderOptions }, { loader: "sass-loader" }]
                 })
             }
         ]
     };
-    cssConfig.plugins = [
-        new ExtractTextPlugin("./dist/app.css")
-    ];
+    cssConfig.plugins = [new ExtractTextPlugin("./dist/app.css")];
 
     return [jsConfig, cssConfig];
 };
