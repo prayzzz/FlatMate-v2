@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace FlatMate.Module.Offers.Domain
 {
     public class OfferDuration

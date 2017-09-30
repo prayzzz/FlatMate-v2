@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Offers.Domain.Rewe
+namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
     [Inject]
     public class ReweOfferImporter : IOfferImporter
@@ -64,7 +64,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             try
             {
                 offerEnvelope = await _mobileApi.SearchOffers(market.ExternalId);
-                _logger.LogInformation($"Received {offerEnvelope.Items.Count} orders from Rewe Mobile API");
+                _logger.LogInformation($"Received {offerEnvelope.Items.Count} offers from Rewe Mobile API");
             }
             catch (Exception e)
             {
@@ -86,7 +86,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
         {
             var offerEnvelope = JsonConvert.DeserializeObject<Envelope<OfferJso>>(data);
 
-            _logger.LogInformation($"Importing {offerEnvelope.Items.Count} orders");
+            _logger.LogInformation($"Importing {offerEnvelope.Items.Count} offers");
 
             return ProcessOffers(offerEnvelope, market);
         }
@@ -98,7 +98,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
         {
             Check(product.Brand, offer.Brand, nameof(product.Brand));
             Check(product.Description, offer.Description, nameof(product.Description));
-            Check(product.ExternalId, offer.ProductId, nameof(product.ExternalId));
+            Check(product.ExternalId, offer.ExternalProductId, nameof(product.ExternalId));
             Check(product.ExternalProductCategory, offer.ExternalProductCategory, nameof(product.ExternalProductCategory));
             Check(product.ExternalProductCategoryId, offer.ExternalProductCategoryId, nameof(product.ExternalProductCategoryId));
             Check(product.Name, offer.Name, nameof(product.Name));
@@ -115,14 +115,14 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
         private Offer CreateOrUpdateOffer(ReweOfferDto offerDto)
         {
-            var offer = _repository.Offers.FirstOrDefault(o => o.ExternalId == offerDto.OfferId);
+            var offer = _repository.Offers.FirstOrDefault(o => o.ExternalId == offerDto.ExternalOfferId);
             if (offer == null)
             {
                 offer = new Offer();
                 _repository.Add(offer);
             }
 
-            offer.ExternalId = offerDto.OfferId;
+            offer.ExternalId = offerDto.ExternalOfferId;
             offer.From = offerDto.OfferedFrom;
             offer.ImageUrl = offerDto.ImageUrl;
             offer.Price = offerDto.OfferPrice;
@@ -136,7 +136,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
         private Product CreateOrUpdateProduct(ReweOfferDto offer)
         {
             var product = _repository.Products.Include(p => p.PriceHistoryEntries)
-                                             .FirstOrDefault(p => p.ExternalId == offer.ProductId);
+                                             .FirstOrDefault(p => p.ExternalId == offer.ExternalProductId);
             if (product == null)
             {
                 product = new Product();
@@ -144,7 +144,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
                 product.Brand = offer.Brand;
                 product.Description = offer.Description;
-                product.ExternalId = offer.ProductId;
+                product.ExternalId = offer.ExternalProductId;
                 product.ExternalProductCategory = offer.ExternalProductCategory;
                 product.ExternalProductCategoryId = offer.ExternalProductCategoryId;
                 product.ImageUrl = offer.ImageUrl;
@@ -214,43 +214,6 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
         }
 
-        private ReweOfferDto PreprocessOffer(OfferJso offer, Dictionary<string, ReweProductCategoryDto> categoryToEnum, Market market)
-        {
-            var productCategory = ReweProductCategoryDto.Default;
-            if (offer.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offer.CategoryIDs.FirstOrDefault(), out var category))
-            {
-                productCategory = category;
-            }
-
-            var regularPrice = ReweConstants.DefaultPrice;
-            if (offer.AdditionalFields.TryGetValue(ReweConstants.CrossOutPriceFieldName, out var crossedOutPrice))
-            {
-                regularPrice = _reweUtils.ParsePrice(crossedOutPrice);
-            }
-
-            // move startdate of offers to sunday
-            var offerDuration = GetOfferDuration(offer);
-
-            return new ReweOfferDto
-            {
-                Brand = _reweUtils.Trim(offer.Brand) ?? ReweConstants.DefaultBrand,
-                Description = _reweUtils.Trim(offer.AdditionalInformation),
-                ExternalProductCategory = productCategory.ExternalName,
-                ExternalProductCategoryId = productCategory.ExternalId,
-                ImageUrl = offer.Links?.ImageDigital.Href,
-                Market = market,
-                Name = _reweUtils.Trim(offer.Name),
-                OfferedFrom = offerDuration.From,
-                OfferedTo = offerDuration.To,
-                OfferId = offer.Id,
-                OfferPrice = (decimal)offer.Price,
-                ProductCategory = productCategory.ProductCategory,
-                ProductId = offer.ProductId,
-                RegularPrice = regularPrice,
-                SizeInfo = _reweUtils.Trim(offer.QuantityAndUnit)
-            };
-        }
-
         private OfferDuration GetOfferDuration(OfferJso offer)
         {
             var duration = new OfferDuration();
@@ -260,7 +223,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             {
                 duration.From = offer.OfferDuration.From;
             }
-            if (offer.OfferDuration.From.DayOfWeek == DayOfWeek.Saturday || offer.OfferDuration.From.DayOfWeek == DayOfWeek.Sunday)
+            else if (offer.OfferDuration.From.DayOfWeek == DayOfWeek.Saturday || offer.OfferDuration.From.DayOfWeek == DayOfWeek.Sunday)
             {
                 duration.From = offer.OfferDuration.From.GetNextWeekday(DayOfWeek.Monday);
             }
@@ -288,6 +251,43 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             return duration;
         }
 
+        private ReweOfferDto PreprocessOffer(OfferJso offer, Dictionary<string, ReweProductCategoryDto> categoryToEnum, Market market)
+        {
+            var productCategory = ReweProductCategoryDto.Default;
+            if (offer.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offer.CategoryIDs.FirstOrDefault(), out var category))
+            {
+                productCategory = category;
+            }
+
+            var regularPrice = ReweConstants.DefaultPrice;
+            if (offer.AdditionalFields.TryGetValue(ReweConstants.CrossOutPriceFieldName, out var crossedOutPrice))
+            {
+                regularPrice = _reweUtils.ParsePrice(crossedOutPrice);
+            }
+
+            // move startdate of offers to sunday
+            var offerDuration = GetOfferDuration(offer);
+
+            return new ReweOfferDto
+            {
+                Brand = _reweUtils.Trim(offer.Brand) ?? ReweConstants.DefaultBrand,
+                Description = _reweUtils.Trim(offer.AdditionalInformation),
+                ExternalOfferId = offer.Id,
+                ExternalProductCategory = productCategory.ExternalName,
+                ExternalProductCategoryId = productCategory.ExternalId,
+                ExternalProductId = offer.ProductId,
+                ImageUrl = offer.Links?.ImageDigital.Href,
+                Market = market,
+                Name = _reweUtils.Trim(offer.Name),
+                OfferedFrom = offerDuration.From,
+                OfferedTo = offerDuration.To,
+                OfferPrice = (decimal)offer.Price,
+                ProductCategory = productCategory.ProductCategory,
+                RegularPrice = regularPrice,
+                SizeInfo = _reweUtils.Trim(offer.QuantityAndUnit)
+            };
+        }
+
         /// <summary>
         ///     Creates or updates products based on the given offers
         /// </summary>
@@ -311,7 +311,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             var result = await _repository.SaveChangesAsync();
 
             stopwatch.Stop();
-            _logger.LogInformation($"Processed {envelope.Items.Count} orders in {stopwatch.ElapsedMilliseconds}ms");
+            _logger.LogInformation($"Processed {envelope.Items.Count} offers in {stopwatch.ElapsedMilliseconds}ms");
 
             return (result, offers);
         }
@@ -336,7 +336,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
             public DateTime OfferedTo { get; set; }
 
-            public string OfferId { get; set; }
+            public string ExternalOfferId { get; set; }
 
             public decimal OfferPrice { get; set; }
 
@@ -344,7 +344,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
 
             public ProductCategoryEnum ProductCategory { get; set; }
 
-            public string ProductId { get; set; }
+            public string ExternalProductId { get; set; }
 
             public decimal RegularPrice { get; set; }
 

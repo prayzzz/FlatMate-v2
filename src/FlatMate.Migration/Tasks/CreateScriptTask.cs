@@ -17,7 +17,11 @@ namespace FlatMate.Migration.Tasks
             _resourceLoader = resourceLoader;
         }
 
-        public void CreateScript(string scriptName, MigrationSettings settings)
+        /// <summary>
+        ///     Creates a with the given name
+        /// </summary>
+        /// <returns>FullPath of the created script</returns>
+        public string CreateScript(string scriptName, MigrationSettings settings)
         {
             _logger.LogDebug($"Creating script {scriptName}");
 
@@ -29,6 +33,8 @@ namespace FlatMate.Migration.Tasks
 
             var scriptFile = Path.GetFullPath(Path.Combine(settings.MigrationsFolder, scriptName + ".sql"));
             File.WriteAllText(scriptFile, script);
+
+            return scriptFile;
         }
     }
 }

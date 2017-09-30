@@ -1,6 +1,7 @@
 ﻿using FlatMate.Module.Common;
 using FlatMate.Module.Offers.Configuration;
-using FlatMate.Module.Offers.Domain.Rewe;
+using FlatMate.Module.Offers.Domain.Adapter.Penny;
+using FlatMate.Module.Offers.Domain.Adapter.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ namespace FlatMate.Module.Offers
             service.Configure<OffersConfiguration>(configuration.GetSection("Offers"));
 
             service.AddSingleton(RestService.For<IReweMobileApi>(offersConfiguration.Rewe.HostUrl));
+            service.AddSingleton(RestService.For<IPennyApi>(offersConfiguration.Penny.HostUrl));
 
             service.AddDbContext<OffersDbContext>(o => o.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }

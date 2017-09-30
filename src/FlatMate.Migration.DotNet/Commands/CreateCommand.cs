@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System;
 using System.Collections.Generic;
 using FlatMate.Migration.Common;
 using FlatMate.Migration.Tasks;
@@ -33,7 +35,12 @@ namespace FlatMate.Migration.DotNet.Commands
             }
 
             var task = new CreateScriptTask(_loggerFactory, _resourceLoader);
-            task.CreateScript(scriptName, _settings);
+            var filePath = task.CreateScript(scriptName, _settings);
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+            }
 
             return SuccessResult.Default;
         }

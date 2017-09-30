@@ -21,8 +21,8 @@ namespace FlatMate.Module.Offers.Domain
     {
         private readonly OffersDbContext _dbContext;
 
-        private readonly IMapper _mapper;
         private readonly ILogger<RawOfferDataService> _logger;
+        private readonly IMapper _mapper;
 
         public RawOfferDataService(OffersDbContext dbContext, IMapper mapper, ILogger<RawOfferDataService> logger)
         {

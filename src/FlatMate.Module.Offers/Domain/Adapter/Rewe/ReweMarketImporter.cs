@@ -5,7 +5,7 @@ using prayzzz.Common.Results;
 using System;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Offers.Domain.Rewe
+namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
     public interface IReweMarketImporter
     {

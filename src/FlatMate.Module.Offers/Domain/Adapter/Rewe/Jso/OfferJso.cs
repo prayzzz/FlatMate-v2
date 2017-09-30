@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace FlatMate.Module.Offers.Domain.Rewe
+namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
     public class OfferJso
     {

@@ -35,6 +35,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 Markets = (await _apiController.GetMarkets()).ToList()
             };
 
+            ApplyTempResult(model);
             return View(model);
         }
 

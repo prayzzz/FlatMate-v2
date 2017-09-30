@@ -10,9 +10,11 @@ namespace FlatMate.Module.Offers.Domain
     public enum Company
     {
         Rewe = 1,
-        Netto = 2,
-        Penny = 3,
-        Aldi = 4
+        Penny = 2,
+        NettoDiscount = 3,
+        Netto = 4,
+        AldiNord = 5,
+        AldiSued = 6,
     }
 
     [Table("CompanyData")]
@@ -27,11 +29,11 @@ namespace FlatMate.Module.Offers.Domain
 
     public class CompanyDto : DtoBase
     {
+        public Company Company { get; set; }
+
         public Guid? ImageGuid { get; set; }
 
         public string Name { get; set; }
-
-        public Company Company { get; set; }
     }
 
     [Inject]

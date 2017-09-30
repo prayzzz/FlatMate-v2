@@ -11,6 +11,12 @@ namespace FlatMate.Module.Offers.Domain
     [Table("RawOfferData")]
     public class RawOfferData : DboBase
     {
+        [ForeignKey(nameof(CompanyId))]
+        public CompanyData Company { get; set; }
+
+        [Required]
+        public int CompanyId { get; set; }
+
         [Required]
         public DateTime Created { get; set; }
 
@@ -19,23 +25,17 @@ namespace FlatMate.Module.Offers.Domain
 
         [Required]
         public string Hash { get; set; }
-
-        [ForeignKey(nameof(CompanyId))]
-        public CompanyData Company { get; set; }
-
-        [Required]
-        public int CompanyId { get; set; }
     }
 
     public class RawOfferDataDto : DtoBase
     {
-        public DateTime Created { get; set; }
-
-        public string Data { get; set; }
-
         public CompanyDto Company { get; set; }
 
         public int CompanyId { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public string Data { get; set; }
     }
 
     [Inject]

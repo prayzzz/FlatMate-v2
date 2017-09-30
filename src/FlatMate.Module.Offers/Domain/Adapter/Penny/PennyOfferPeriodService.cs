@@ -1,16 +1,16 @@
-﻿using prayzzz.Common.Attributes;
-using FlatMate.Module.Common.Extensions;
+﻿using FlatMate.Module.Common.Extensions;
+using prayzzz.Common.Attributes;
 using System;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Adapter.Penny
 {
     [Inject]
-    public class ReweOfferPeriodService : IOfferPeriodService
+    public class PennyOfferPeriodService : IOfferPeriodService
     {
-        private readonly DayOfWeek _startDay = DayOfWeek.Monday;
         private readonly DayOfWeek _endDay = DayOfWeek.Sunday;
+        private readonly DayOfWeek _startDay = DayOfWeek.Monday;
 
-        public Company Company => Company.Rewe;
+        public Company Company => Company.Penny;
 
         public OfferDuration ComputeOfferPeriod(DateTime date)
         {

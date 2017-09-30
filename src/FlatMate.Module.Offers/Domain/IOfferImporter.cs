@@ -8,8 +8,8 @@ namespace FlatMate.Module.Offers.Domain
     {
         Company Company { get; }
 
-        Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data);
-
         Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market);
+
+        Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data);
     }
 }

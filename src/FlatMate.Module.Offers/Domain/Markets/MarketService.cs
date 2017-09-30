@@ -1,10 +1,9 @@
-﻿using FlatMate.Module.Offers.Domain.Rewe;
+﻿using FlatMate.Module.Offers.Domain.Adapter.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +12,9 @@ namespace FlatMate.Module.Offers.Domain
 {
     public interface IMarketService
     {
-        Task<IEnumerable<MarketDto>> GetMarkets();
-
         Task<(Result, MarketDto)> GetMarket(int id);
+
+        Task<IEnumerable<MarketDto>> GetMarkets();
 
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
@@ -47,15 +46,6 @@ namespace FlatMate.Module.Offers.Domain
             _offerPeriodServices = offerPeriodServices;
         }
 
-        public async Task<IEnumerable<MarketDto>> GetMarkets()
-        {
-            var market = await _dbContext.Markets
-                                         .Include(m => m.Company)
-                                         .ToListAsync();
-
-            return market.Select(_mapper.Map<MarketDto>);
-        }
-
         public async Task<(Result, MarketDto)> GetMarket(int id)
         {
             var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == id);
@@ -65,6 +55,15 @@ namespace FlatMate.Module.Offers.Domain
             }
 
             return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
+        }
+
+        public async Task<IEnumerable<MarketDto>> GetMarkets()
+        {
+            var market = await _dbContext.Markets
+                                         .Include(m => m.Company)
+                                         .ToListAsync();
+
+            return market.Select(_mapper.Map<MarketDto>);
         }
 
         /// <summary>

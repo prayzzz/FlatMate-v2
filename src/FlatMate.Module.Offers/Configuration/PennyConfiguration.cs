@@ -1,6 +1,6 @@
 ﻿namespace FlatMate.Module.Offers.Configuration
 {
-    public class ReweConfiguration
+    public class PennyConfiguration
     {
         public string HostUrl { get; set; }
     }

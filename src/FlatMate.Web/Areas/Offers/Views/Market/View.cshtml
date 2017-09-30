@@ -48,7 +48,7 @@
                     <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@offer.ProductId" class="standard-box offer-box">
 
                         <div class="image">
-                            <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offer.ImageUrl?resize=150px:150px" width="150" height="150" />
+                            <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@OfferImageHelper.Get(offer, 150)" width="150" />
                         </div>
 
                         <div class="name">
@@ -83,7 +83,7 @@
                     <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@offer.ProductId" class="standard-box offer-box">
 
                         <div class="image">
-                            <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@offer.ImageUrl?resize=150px:150px" width="150" height="150" />
+                            <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="@OfferImageHelper.Get(offer, 150)" width="150" />
                         </div>
 
                         <div class="name">
@@ -93,6 +93,13 @@
                             }
                             <strong>@offer.Product.Name</strong>
                         </div>
+
+                        @if (Model.OffersFrom != offer.From)
+                        {
+                            <div>
+                                ab @offer.From.ToString("ddd"), @offer.From.ToShortDateString()
+                            </div>
+                        }
 
                         <div class="price">
                             <span style="font-size:1.5rem">@offer.Price €</span>

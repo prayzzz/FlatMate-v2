@@ -1,6 +1,6 @@
 ﻿using FlatMate.Module.Common.Extensions;
 using FlatMate.Module.Offers.Domain;
-using FlatMate.Module.Offers.Domain.Rewe;
+using FlatMate.Module.Offers.Domain.Adapter.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

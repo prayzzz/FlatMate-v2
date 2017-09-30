@@ -3,5 +3,7 @@
     public class OffersConfiguration
     {
         public ReweConfiguration Rewe { get; set; }
+
+        public PennyConfiguration Penny { get; set; }
     }
 }

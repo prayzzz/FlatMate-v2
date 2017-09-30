@@ -9,23 +9,23 @@ namespace FlatMate.Module.Offers.Domain.Products
     [Table("ProductFavorite")]
     public class ProductFavorite : DboBase
     {
-        [Required]
-        public int UserId { get; set; }
+        [ForeignKey(nameof(ProductId))]
+        public Product Product { get; set; }
 
         [Required]
         public int ProductId { get; set; }
 
-        [ForeignKey(nameof(ProductId))]
-        public Product Product { get; set; }
+        [Required]
+        public int UserId { get; set; }
     }
 
     public class ProductFavoriteDto : DtoBase
     {
-        public int UserId { get; set; }
+        public ProductDto Product { get; set; }
 
         public int ProductId { get; set; }
 
-        public ProductDto Product { get; set; }
+        public int UserId { get; set; }
     }
 
     public class ProductFavoriteMapper : IDboMapper

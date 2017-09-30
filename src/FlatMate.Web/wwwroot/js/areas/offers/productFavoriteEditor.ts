@@ -92,7 +92,7 @@ export class ProductFavoriteEditor {
         // apply loaded products
         this.allProducts.removeAll();
         for (const productJso of products.sort((a, b) => a.name.localeCompare(b.name))) {
-            const product = new ProductVm(productJso);
+            const product = new ProductVm(productJso, market);
             product.isFavorite(favProductIds.some(fp => fp === product.id));
             this.allProducts.push(product);
         }

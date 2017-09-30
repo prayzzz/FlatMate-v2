@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace FlatMate.Module.Offers.Domain.Rewe
+namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
     public interface IReweUtils
     {
@@ -16,12 +15,11 @@ namespace FlatMate.Module.Offers.Domain.Rewe
     [Inject]
     public class ReweUtils : IReweUtils
     {
-        private const char Comma = ',';
-        private const char DecimalPoint = '.';
-        private const string DecimalPointStr = ".";
+        private const string Comma = ",";
+        private const string DecimalPoint = ".";
 
-        private static readonly char[] TrimChars = new[] { ' ', '*', ',' };
         private static readonly CultureInfo DecimalCulture = new CultureInfo("en-US");
+        private static readonly char[] TrimChars = new[] { ' ', '*', ',' };
         private static readonly Regex TwoOrMoreWhitespaces = new Regex("[ ]{2,}");
 
         private readonly ILogger<ReweUtils> _logger;
@@ -58,7 +56,7 @@ namespace FlatMate.Module.Offers.Domain.Rewe
             }
 
             // add decimal point
-            price = price.Insert(price.Length - 2, DecimalPointStr);
+            price = price.Insert(price.Length - 2, DecimalPoint);
             return ParsePriceOrDefault(price);
 
             // returns DefaultPrice, if price couldn't be parsed
