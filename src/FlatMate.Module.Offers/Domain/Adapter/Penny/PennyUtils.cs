@@ -18,6 +18,8 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
     public class PennyUtils : IPennyUtils
     {
         private const string Comma = ",";
+        private const string Hyphen = "-";
+        private const string OtherHyphen = "–";
         private const string DecimalPoint = ".";
 
         private static readonly CultureInfo DecimalCulture = new CultureInfo("en-US");
@@ -38,7 +40,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                 return PennyConstants.DefaultPrice;
             }
 
+            // fix 123,45
             price = price.Replace(Comma, DecimalPoint);
+
+            // fix 123.-
+            price = price.Replace(Hyphen, string.Empty);
+            price = price.Replace(OtherHyphen, string.Empty);
 
             // if decimal point exists, parse now
             if (price.Contains(DecimalPoint))

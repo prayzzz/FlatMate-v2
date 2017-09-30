@@ -1,5 +1,4 @@
 ﻿using FlatMate.Module.Common.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using prayzzz.Common.Attributes;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 namespace FlatMate.Module.Offers.Domain.Adapter.Penny
 {
     [Inject]
-    public class PennyOfferImporter : IOfferImporter
+    public class PennyOfferImporter : OfferImporter
     {
         private readonly Dictionary<string, ProductCategoryEnum> _categoryNameToEnum = new Dictionary<string, ProductCategoryEnum>
         {
@@ -41,7 +40,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                                   IPennyApi pennyApi,
                                   IRawOfferDataService rawOfferService,
                                   IPennyUtils pennyUtils,
-                                  ILogger<PennyOfferImporter> logger)
+                                  ILogger<PennyOfferImporter> logger) : base(dbContext, logger)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -50,32 +49,32 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             _rawOfferService = rawOfferService;
         }
 
-        public Company Company => Company.Penny;
+        public override Company Company => Company.Penny;
 
-        public async Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market)
+        public override async Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market)
         {
             Envelope envelope;
             try
             {
                 envelope = await _pennyApi.GetOffers();
-                _logger.LogInformation($"Received {envelope.Offers.Count} offers from Penny API");
+                _logger.LogInformation($"Received {envelope.Offers.Count} offers from {nameof(IPennyApi)}");
             }
             catch (Exception e)
             {
-                _logger.LogWarning(0, e, "Error while requesting Penny API");
-                return (new ErrorResult(ErrorType.InternalError, "Penny API nicht verfügbar."), null);
+                _logger.LogWarning(0, e, $"Error while requesting {nameof(IPennyApi)}");
+                return (new ErrorResult(ErrorType.InternalError, $"{nameof(IPennyApi)} nicht verfügbar."), null);
             }
 
             var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(envelope), market.CompanyId);
             if (result.IsError)
             {
-                _logger.LogWarning(0, "Failed saving raw offer data");
+                _logger.LogWarning(0, "Saving raw offer data failed");
             }
 
             return await ProcessOffers(envelope, market);
         }
 
-        public Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
+        public override Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
         {
             var envelope = JsonConvert.DeserializeObject<Envelope>(data);
 
@@ -84,81 +83,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             return ProcessOffers(envelope, market);
         }
 
-        private void CheckForChangedProductProperties(Product product, PennyOfferDto offer)
+        private Dictionary<string, ProductCategoryTemp> ExtractCategoryMap(Envelope envelope)
         {
-            Check(product.Brand, offer.Brand, nameof(product.Brand));
-            Check(product.Description, offer.Description, nameof(product.Description));
-            Check(product.ExternalId, offer.ExternalProductId, nameof(product.ExternalId));
-            Check(product.ExternalProductCategory, offer.ExternalProductCategory, nameof(product.ExternalProductCategory));
-            Check(product.ExternalProductCategoryId, offer.ExternalProductCategoryId, nameof(product.ExternalProductCategoryId));
-            Check(product.Name, offer.Name, nameof(product.Name));
-            Check(product.SizeInfo, offer.SizeInfo, nameof(product.SizeInfo));
-
-            void Check(string current, string updated, string property)
-            {
-                if (current != updated)
-                {
-                    _logger.LogWarning($"{property} of product #{product.Id} changed: '{current}' -> '{updated}'");
-                }
-            }
-        }
-
-        private Offer CreateOrUpdateOffer(PennyOfferDto offerDto)
-        {
-            var offer = _dbContext.Offers.FirstOrDefault(o => o.ExternalId == offerDto.ExternalOfferId);
-            if (offer == null)
-            {
-                offer = new Offer();
-                _dbContext.Add(offer);
-            }
-
-            offer.ExternalId = offerDto.ExternalOfferId;
-            offer.From = offerDto.OfferedFrom;
-            offer.ImageUrl = offerDto.ImageUrl;
-            offer.Price = offerDto.OfferPrice;
-            offer.To = offerDto.OfferedTo;
-            offer.Market = offerDto.Market;
-            offer.Product = offerDto.Product;
-
-            return offer;
-        }
-
-        private Product CreateOrUpdateProduct(PennyOfferDto offer)
-        {
-            var product = _dbContext.Products.Include(p => p.PriceHistoryEntries)
-                                             .FirstOrDefault(p => p.ExternalId == offer.ExternalProductId);
-            if (product == null)
-            {
-                product = new Product();
-                _dbContext.Add(product);
-
-                product.Brand = offer.Brand;
-                product.Description = offer.Description;
-                product.ExternalId = offer.ExternalProductId;
-                product.ExternalProductCategory = offer.ExternalProductCategory;
-                product.ExternalProductCategoryId = offer.ExternalProductCategoryId;
-                product.ImageUrl = offer.ImageUrl;
-                product.Market = offer.Market;
-                product.Name = offer.Name;
-                product.ProductCategoryId = (int)offer.ProductCategory;
-                product.SizeInfo = offer.SizeInfo;
-
-                product.UpdatePrice(offer.RegularPrice);
-            }
-            else
-            {
-                CheckForChangedProductProperties(product, offer);
-
-                product.UpdatePrice(offer.RegularPrice);
-                product.ProductCategoryId = (int)offer.ProductCategory;
-            }
-
-            return product;
-        }
-
-        private Dictionary<string, PennyProductCategoryDto> ExtractCategoryMap(Envelope envelope)
-        {
-            var categories = new Dictionary<string, PennyProductCategoryDto>();
+            var categories = new Dictionary<string, ProductCategoryTemp>();
 
             foreach (var c in envelope.Categories)
             {
@@ -171,7 +98,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                     categoryEnum = matchedCategories.FirstOrDefault().Value;
                 }
 
-                categories.Add(c.Id, new PennyProductCategoryDto
+                categories.Add(c.Id, new ProductCategoryTemp
                 {
                     ExternalId = c.Id,
                     ExternalName = categoryTitle,
@@ -225,9 +152,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             return duration;
         }
 
-        private PennyOfferDto PreprocessOffer(OfferJso offerJso, Dictionary<string, PennyProductCategoryDto> categoryMap, Market market)
+        private OfferTemp PreprocessOffer(OfferJso offerJso, Dictionary<string, ProductCategoryTemp> categoryMap, Market market)
         {
-            var productCategory = PennyProductCategoryDto.Default;
+            var productCategory = ProductCategoryTemp.Default;
             if (categoryMap.TryGetValue(offerJso.CategoryId, out var category))
             {
                 productCategory = category;
@@ -235,7 +162,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
 
             var offerDuration = GetOfferDuration(offerJso);
 
-            return new PennyOfferDto
+            return new OfferTemp
             {
                 Brand = PennyConstants.DefaultBrand,
                 Description = _pennyUtils.StripHTML(offerJso.Beschreibung),
@@ -288,59 +215,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             _logger.LogInformation($"Processed {envelope.Offers.Count} offers in {stopwatch.ElapsedMilliseconds}ms");
 
             return (result, offers);
-        }
-
-        private class PennyOfferDto
-        {
-            public string Brand { get; set; }
-
-            public string Description { get; set; }
-
-            public string ExternalOfferId { get; set; }
-
-            public string ExternalProductCategory { get; set; }
-
-            public string ExternalProductCategoryId { get; set; }
-
-            public string ExternalProductId { get; set; }
-
-            public string ImageUrl { get; set; }
-
-            public Market Market { get; set; }
-
-            public string Name { get; set; }
-
-            public string OfferBasePrice { get; set; }
-
-            public DateTime OfferedFrom { get; set; }
-
-            public DateTime OfferedTo { get; set; }
-
-            public decimal OfferPrice { get; set; }
-
-            public Product Product { get; set; }
-
-            public ProductCategoryEnum ProductCategory { get; set; }
-
-            public decimal RegularPrice { get; set; }
-
-            public string SizeInfo { get; set; }
-        }
-
-        private class PennyProductCategoryDto
-        {
-            public static PennyProductCategoryDto Default => new PennyProductCategoryDto
-            {
-                ExternalId = string.Empty,
-                ExternalName = string.Empty,
-                ProductCategory = ProductCategoryEnum.Other
-            };
-
-            public string ExternalId { get; set; }
-
-            public string ExternalName { get; set; }
-
-            public ProductCategoryEnum ProductCategory { get; set; }
         }
     }
 }

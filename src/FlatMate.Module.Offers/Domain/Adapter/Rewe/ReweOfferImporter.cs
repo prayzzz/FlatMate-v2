@@ -1,5 +1,4 @@
 ﻿using FlatMate.Module.Common.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,7 +13,7 @@ using System.Threading.Tasks;
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
     [Inject]
-    public class ReweOfferImporter : IOfferImporter
+    public class ReweOfferImporter : OfferImporter
     {
         private readonly Dictionary<string, ProductCategoryEnum> _categoryNameToEnum = new Dictionary<string, ProductCategoryEnum>
         {
@@ -46,7 +45,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
                                  IReweUtils reweUtils,
                                  IRawOfferDataService rawOfferService,
                                  OffersDbContext dbContext,
-                                 ILogger<ReweOfferImporter> logger)
+                                 ILogger<ReweOfferImporter> logger) : base(dbContext, logger)
         {
             _mobileApi = mobileApi;
             _reweUtils = reweUtils;
@@ -55,21 +54,21 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             _rawOfferService = rawOfferService;
         }
 
-        public Company Company => Company.Rewe;
+        public override Company Company => Company.Rewe;
 
         /// <inheritdoc />
-        public async Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market)
+        public override async Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market)
         {
             Envelope<OfferJso> offerEnvelope;
             try
             {
                 offerEnvelope = await _mobileApi.SearchOffers(market.ExternalId);
-                _logger.LogInformation($"Received {offerEnvelope.Items.Count} offers from Rewe Mobile API");
+                _logger.LogInformation($"Received {offerEnvelope.Items.Count} offers from {nameof(IReweMobileApi)}");
             }
             catch (Exception e)
             {
-                _logger.LogWarning(0, e, "Error while requesting Rewe Mobile API");
-                return (new ErrorResult(ErrorType.InternalError, "Rewe Mobile API nicht verfügbar."), null);
+                _logger.LogWarning(0, e, $"Error while requesting {nameof(IReweMobileApi)}");
+                return (new ErrorResult(ErrorType.InternalError, $"{nameof(IReweMobileApi)} nicht verfügbar."), null);
             }
 
             var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(offerEnvelope), market.CompanyId);
@@ -82,7 +81,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
         }
 
         /// <inheritdoc />
-        public Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
+        public override Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
         {
             var offerEnvelope = JsonConvert.DeserializeObject<Envelope<OfferJso>>(data);
 
@@ -94,95 +93,23 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
         /// <summary>
         /// Some product properties should not change. This method logs them if they change.
         /// </summary>
-        private void CheckForChangedProductProperties(Product product, ReweOfferDto offer)
-        {
-            Check(product.Brand, offer.Brand, nameof(product.Brand));
-            Check(product.Description, offer.Description, nameof(product.Description));
-            Check(product.ExternalId, offer.ExternalProductId, nameof(product.ExternalId));
-            Check(product.ExternalProductCategory, offer.ExternalProductCategory, nameof(product.ExternalProductCategory));
-            Check(product.ExternalProductCategoryId, offer.ExternalProductCategoryId, nameof(product.ExternalProductCategoryId));
-            Check(product.Name, offer.Name, nameof(product.Name));
-            Check(product.SizeInfo, offer.SizeInfo, nameof(product.SizeInfo));
-
-            void Check(string current, string updated, string property)
-            {
-                if (current != updated)
-                {
-                    _logger.LogWarning($"{property} of product #{product.Id} changed: '{current}' -> '{updated}'");
-                }
-            }
-        }
-
-        private Offer CreateOrUpdateOffer(ReweOfferDto offerDto)
-        {
-            var offer = _repository.Offers.FirstOrDefault(o => o.ExternalId == offerDto.ExternalOfferId);
-            if (offer == null)
-            {
-                offer = new Offer();
-                _repository.Add(offer);
-            }
-
-            offer.ExternalId = offerDto.ExternalOfferId;
-            offer.From = offerDto.OfferedFrom;
-            offer.ImageUrl = offerDto.ImageUrl;
-            offer.Price = offerDto.OfferPrice;
-            offer.To = offerDto.OfferedTo;
-            offer.Market = offerDto.Market;
-            offer.Product = offerDto.Product;
-
-            return offer;
-        }
-
-        private Product CreateOrUpdateProduct(ReweOfferDto offer)
-        {
-            var product = _repository.Products.Include(p => p.PriceHistoryEntries)
-                                             .FirstOrDefault(p => p.ExternalId == offer.ExternalProductId);
-            if (product == null)
-            {
-                product = new Product();
-                _repository.Add(product);
-
-                product.Brand = offer.Brand;
-                product.Description = offer.Description;
-                product.ExternalId = offer.ExternalProductId;
-                product.ExternalProductCategory = offer.ExternalProductCategory;
-                product.ExternalProductCategoryId = offer.ExternalProductCategoryId;
-                product.ImageUrl = offer.ImageUrl;
-                product.Market = offer.Market;
-                product.Name = offer.Name;
-                product.ProductCategoryId = (int)offer.ProductCategory;
-                product.SizeInfo = offer.SizeInfo;
-
-                product.UpdatePrice(offer.RegularPrice);
-            }
-            else
-            {
-                CheckForChangedProductProperties(product, offer);
-
-                product.UpdatePrice(offer.RegularPrice);
-                product.ProductCategoryId = (int)offer.ProductCategory;
-            }
-
-            return product;
-        }
-
-        private Dictionary<string, ReweProductCategoryDto> ExtractCategoryMap(Envelope<OfferJso> envelope)
+        private Dictionary<string, ProductCategoryTemp> ExtractCategoryMap(Envelope<OfferJso> envelope)
         {
             if (!envelope.Meta.TryGetValue("categories", out var categories))
             {
                 _logger.LogWarning("Categories not available");
-                return new Dictionary<string, ReweProductCategoryDto>();
+                return new Dictionary<string, ProductCategoryTemp>();
             }
 
             if (categories.Type != JTokenType.Array)
             {
                 _logger.LogWarning("Category format changed");
-                return new Dictionary<string, ReweProductCategoryDto>();
+                return new Dictionary<string, ProductCategoryTemp>();
             }
 
             try
             {
-                var map = new Dictionary<string, ReweProductCategoryDto>();
+                var map = new Dictionary<string, ProductCategoryTemp>();
 
                 foreach (var item in categories.Value<JArray>())
                 {
@@ -190,7 +117,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
                     if (_categoryNameToEnum.TryGetValue(reweCategory.Name, out var categoryEnum))
                     {
-                        var dto = new ReweProductCategoryDto
+                        var dto = new ProductCategoryTemp
                         {
                             ExternalId = reweCategory.Id,
                             ExternalName = reweCategory.Name,
@@ -210,7 +137,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             catch (Exception e)
             {
                 _logger.LogError(e, "Error mapping categories");
-                return new Dictionary<string, ReweProductCategoryDto>();
+                return new Dictionary<string, ProductCategoryTemp>();
             }
         }
 
@@ -251,9 +178,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             return duration;
         }
 
-        private ReweOfferDto PreprocessOffer(OfferJso offer, Dictionary<string, ReweProductCategoryDto> categoryToEnum, Market market)
+        private OfferTemp PreprocessOffer(OfferJso offer, Dictionary<string, ProductCategoryTemp> categoryToEnum, Market market)
         {
-            var productCategory = ReweProductCategoryDto.Default;
+            var productCategory = ProductCategoryTemp.Default;
             if (offer.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offer.CategoryIDs.FirstOrDefault(), out var category))
             {
                 productCategory = category;
@@ -268,7 +195,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             // move startdate of offers to sunday
             var offerDuration = GetOfferDuration(offer);
 
-            return new ReweOfferDto
+            return new OfferTemp
             {
                 Brand = _reweUtils.Trim(offer.Brand) ?? ReweConstants.DefaultBrand,
                 Description = _reweUtils.Trim(offer.AdditionalInformation),
@@ -314,57 +241,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             _logger.LogInformation($"Processed {envelope.Items.Count} offers in {stopwatch.ElapsedMilliseconds}ms");
 
             return (result, offers);
-        }
-
-        private class ReweOfferDto
-        {
-            public string Brand { get; set; }
-
-            public string Description { get; set; }
-
-            public string ExternalProductCategory { get; set; }
-
-            public string ExternalProductCategoryId { get; set; }
-
-            public string ImageUrl { get; set; }
-
-            public Market Market { get; set; }
-
-            public string Name { get; set; }
-
-            public DateTime OfferedFrom { get; set; }
-
-            public DateTime OfferedTo { get; set; }
-
-            public string ExternalOfferId { get; set; }
-
-            public decimal OfferPrice { get; set; }
-
-            public Product Product { get; set; }
-
-            public ProductCategoryEnum ProductCategory { get; set; }
-
-            public string ExternalProductId { get; set; }
-
-            public decimal RegularPrice { get; set; }
-
-            public string SizeInfo { get; set; }
-        }
-
-        private class ReweProductCategoryDto
-        {
-            public static ReweProductCategoryDto Default => new ReweProductCategoryDto
-            {
-                ExternalId = string.Empty,
-                ExternalName = string.Empty,
-                ProductCategory = ProductCategoryEnum.Other
-            };
-
-            public string ExternalId { get; set; }
-
-            public string ExternalName { get; set; }
-
-            public ProductCategoryEnum ProductCategory { get; set; }
         }
     }
 }
