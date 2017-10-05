@@ -1,4 +1,5 @@
 ﻿using FlatMate.Module.Common.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using prayzzz.Common.Attributes;
@@ -72,6 +73,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             }
 
             return await ProcessOffers(envelope, market);
+        }
+
+        protected override Product FindExistingProduct(OfferTemp offerDto)
+        {
+            return DbContext.Products.Include(p => p.PriceHistoryEntries)
+                                     .FirstOrDefault(p => p.MarketId == offerDto.Market.Id && p.Name == offerDto.Name && p.SizeInfo == offerDto.SizeInfo);
         }
 
         public override Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
@@ -166,10 +173,10 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             {
                 Brand = PennyConstants.DefaultBrand,
                 Description = _pennyUtils.StripHTML(offerJso.Beschreibung),
-                ExternalOfferId = $"{offerJso.StartDate}_{offerJso.Id}",
+                ExternalOfferId = $"{offerJso.Id}",
                 ExternalProductCategory = productCategory.ExternalName,
                 ExternalProductCategoryId = productCategory.ExternalId,
-                ExternalProductId = offerJso.Id,
+                ExternalProductId = string.Empty,
                 ImageUrl = offerJso.Bild_original,
                 Market = market,
                 Name = _pennyUtils.Trim(offerJso.Titel),

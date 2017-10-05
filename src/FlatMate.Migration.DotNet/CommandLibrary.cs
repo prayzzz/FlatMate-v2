@@ -14,6 +14,7 @@ namespace FlatMate.Migration.DotNet
             _nameToCommand = new Dictionary<string, ICommand>();
 
             AddCommand(new CreateCommand(loggerFactory, settings));
+            AddCommand(new InitCommand(loggerFactory, settings));
         }
 
         public ICommand Get(string parameter)

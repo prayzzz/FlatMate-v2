@@ -56,7 +56,7 @@ namespace FlatMate.Module.Offers.Domain
 
         protected Offer CreateOrUpdateOffer(OfferTemp offerDto)
         {
-            var offer = DbContext.Offers.FirstOrDefault(o => o.ExternalId == offerDto.ExternalOfferId);
+            var offer = FindExistingOffer(offerDto);
             if (offer == null)
             {
                 offer = new Offer();
@@ -74,37 +74,47 @@ namespace FlatMate.Module.Offers.Domain
             return offer;
         }
 
-        protected Product CreateOrUpdateProduct(OfferTemp offer)
+        protected Product CreateOrUpdateProduct(OfferTemp offerDto)
         {
-            var product = DbContext.Products.Include(p => p.PriceHistoryEntries)
-                                            .FirstOrDefault(p => p.ExternalId == offer.ExternalProductId);
+            var product = FindExistingProduct(offerDto);
             if (product == null)
             {
                 product = new Product();
                 DbContext.Add(product);
 
-                product.Brand = offer.Brand;
-                product.Description = offer.Description;
-                product.ExternalId = offer.ExternalProductId;
-                product.ExternalProductCategory = offer.ExternalProductCategory;
-                product.ExternalProductCategoryId = offer.ExternalProductCategoryId;
-                product.ImageUrl = offer.ImageUrl;
-                product.Market = offer.Market;
-                product.Name = offer.Name;
-                product.ProductCategoryId = (int)offer.ProductCategory;
-                product.SizeInfo = offer.SizeInfo;
+                product.Brand = offerDto.Brand;
+                product.Description = offerDto.Description;
+                product.ExternalId = offerDto.ExternalProductId;
+                product.ExternalProductCategory = offerDto.ExternalProductCategory;
+                product.ExternalProductCategoryId = offerDto.ExternalProductCategoryId;
+                product.ImageUrl = offerDto.ImageUrl;
+                product.Market = offerDto.Market;
+                product.Name = offerDto.Name;
+                product.ProductCategoryId = (int)offerDto.ProductCategory;
+                product.SizeInfo = offerDto.SizeInfo;
 
-                product.UpdatePrice(offer.RegularPrice);
+                product.UpdatePrice(offerDto.RegularPrice);
             }
             else
             {
-                CheckForChangedProductProperties(product, offer);
+                CheckForChangedProductProperties(product, offerDto);
 
-                product.UpdatePrice(offer.RegularPrice);
-                product.ProductCategoryId = (int)offer.ProductCategory;
+                product.UpdatePrice(offerDto.RegularPrice);
+                product.ProductCategoryId = (int)offerDto.ProductCategory;
             }
 
             return product;
+        }
+
+        protected virtual Offer FindExistingOffer(OfferTemp offerDto)
+        {
+            return DbContext.Offers.FirstOrDefault(o => o.MarketId == offerDto.Market.Id && o.ExternalId == offerDto.ExternalOfferId);
+        }
+
+        protected virtual Product FindExistingProduct(OfferTemp offerDto)
+        {
+            return DbContext.Products.Include(p => p.PriceHistoryEntries)
+                                     .FirstOrDefault(p => p.MarketId == offerDto.Market.Id && p.ExternalId == offerDto.ExternalProductId);
         }
 
         protected class OfferTemp
