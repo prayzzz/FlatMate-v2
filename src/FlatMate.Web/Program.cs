@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using FlatMate.Web.Common;
+﻿using FlatMate.Web.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using System.Collections.Generic;
+using System.IO;
 
 namespace FlatMate.Web
 {

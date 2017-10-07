@@ -105,7 +105,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.AreEqual(offer.ProductId, savedProduct.ExternalId);
             Assert.AreEqual(offer.Name, savedProduct.Name);
             Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
-            Assert.AreEqual(1, savedProduct.PriceHistoryEntries.Count());
+            Assert.AreEqual(1, savedProduct.PriceHistoryEntries.Count);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.AreEqual(offer.ProductId, savedProduct.ExternalId);
             Assert.AreEqual(offer.Name, savedProduct.Name);
             Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
-            Assert.AreEqual(2, savedProduct.PriceHistoryEntries.Count());
+            Assert.AreEqual(2, savedProduct.PriceHistoryEntries.Count);
         }
 
         private T JsonClone<T>(T instance)

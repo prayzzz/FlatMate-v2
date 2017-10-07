@@ -1,4 +1,4 @@
-﻿using Refit;
+﻿using RestEase;
 using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Penny

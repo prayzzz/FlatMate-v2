@@ -31,8 +31,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             { "Spirituosen", ProductCategoryEnum.Beverages }
         };
 
-        private readonly OffersDbContext _dbContext;
-        private readonly ILogger<PennyOfferImporter> _logger;
         private readonly IPennyApi _pennyApi;
         private readonly IPennyUtils _pennyUtils;
         private readonly IRawOfferDataService _rawOfferService;
@@ -43,8 +41,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                                   IPennyUtils pennyUtils,
                                   ILogger<PennyOfferImporter> logger) : base(dbContext, logger)
         {
-            _logger = logger;
-            _dbContext = dbContext;
             _pennyUtils = pennyUtils;
             _pennyApi = pennyApi;
             _rawOfferService = rawOfferService;
@@ -58,18 +54,18 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             try
             {
                 envelope = await _pennyApi.GetOffers();
-                _logger.LogInformation($"Received {envelope.Offers.Count} offers from {nameof(IPennyApi)}");
+                Logger.LogInformation($"Received {envelope.Offers.Count} offers from {nameof(IPennyApi)}");
             }
             catch (Exception e)
             {
-                _logger.LogWarning(0, e, $"Error while requesting {nameof(IPennyApi)}");
+                Logger.LogWarning(0, e, $"Error while requesting {nameof(IPennyApi)}");
                 return (new ErrorResult(ErrorType.InternalError, $"{nameof(IPennyApi)} nicht verfügbar."), null);
             }
 
             var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(envelope), market.CompanyId);
             if (result.IsError)
             {
-                _logger.LogWarning(0, "Saving raw offer data failed");
+                Logger.LogWarning(0, "Saving raw offer data failed");
             }
 
             return await ProcessOffers(envelope, market);
@@ -85,7 +81,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
         {
             var envelope = JsonConvert.DeserializeObject<Envelope>(data);
 
-            _logger.LogInformation($"Importing {envelope.Offers.Count} offers");
+            Logger.LogInformation($"Importing {envelope.Offers.Count} offers");
 
             return ProcessOffers(envelope, market);
         }
@@ -124,7 +120,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                 if (category.Subkey.StartsWith("c", StringComparison.CurrentCultureIgnoreCase))
                 {
                     ignoredCategoryIds.Add(category.Id);
-                    _logger.LogInformation($"Ignoring category {category.Titel}");
+                    Logger.LogInformation($"Ignoring category {category.Titel}");
                 }
             }
 
@@ -190,9 +186,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             };
         }
 
-        /// <summary>
-        ///     Creates or updates products based on the given offers
-        /// </summary>
         private async Task<(Result, IEnumerable<Offer>)> ProcessOffers(Envelope envelope, Market market)
         {
             var stopwatch = new Stopwatch();
@@ -216,10 +209,10 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                 offers.Add(offerDbo);
             }
 
-            var result = await _dbContext.SaveChangesAsync();
+            var result = await DbContext.SaveChangesAsync();
 
             stopwatch.Stop();
-            _logger.LogInformation($"Processed {envelope.Offers.Count} offers in {stopwatch.ElapsedMilliseconds}ms");
+            Logger.LogInformation($"Processed {envelope.Offers.Count} offers in {stopwatch.ElapsedMilliseconds}ms");
 
             return (result, offers);
         }

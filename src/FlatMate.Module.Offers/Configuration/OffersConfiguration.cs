@@ -5,5 +5,7 @@
         public ReweConfiguration Rewe { get; set; }
 
         public PennyConfiguration Penny { get; set; }
+
+        public AldiConfiguration Aldi { get; set; }
     }
 }

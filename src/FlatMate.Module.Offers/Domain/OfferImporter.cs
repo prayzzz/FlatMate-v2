@@ -19,17 +19,17 @@ namespace FlatMate.Module.Offers.Domain
 
     public abstract class OfferImporter : IOfferImporter
     {
-        private readonly ILogger _logger;
-
         protected OfferImporter(OffersDbContext dbContext, ILogger logger)
         {
             DbContext = dbContext;
-            _logger = logger;
+            Logger = logger;
         }
 
         public abstract Company Company { get; }
 
         public OffersDbContext DbContext { get; }
+
+        public ILogger Logger { get; }
 
         public abstract Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market);
 
@@ -49,7 +49,7 @@ namespace FlatMate.Module.Offers.Domain
             {
                 if (current != updated)
                 {
-                    _logger.LogWarning($"{property} of product #{product.Id} changed: '{current}' -> '{updated}'");
+                    Logger.LogWarning($"{property} of product #{product.Id} changed: '{current}' -> '{updated}'");
                 }
             }
         }
