@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -69,6 +70,11 @@ namespace FlatMate.Web
                 app.UseExceptionHandler("/Error");
             }
 
+            // metrics
+            app.UseMetricsEndpoint();
+            app.UseMetricsActiveRequestMiddleware();
+            app.UseMetricsErrorTrackingMiddleware();
+
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSession();
@@ -108,10 +114,19 @@ namespace FlatMate.Web
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             // Framework
-            var mvc = services.AddMvc(o => o.Filters.Add(typeof(ApiResultFilter)));
+            var mvc = services.AddMvc(o =>
+            {
+                o.Filters.Add(typeof(ApiResultFilter));
+                o.AddMetricsResourceFilter();
+            });
             mvc.AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));
             mvc.ConfigureApplicationPartManager(c => Array.ForEach(Modules, m => c.ApplicationParts.Add(m)));
             mvc.AddControllersAsServices();
+
+            // Metrics
+            services.AddMetrics();
+            services.AddMetricsTrackingMiddleware();
+            services.AddMetricsEndpoints();
 
             services.AddOptions();
             services.AddSession();

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using App.Metrics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication;
@@ -15,11 +16,13 @@ namespace FlatMate.Module.Account.Api
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly IMetricsRoot _metrics;
 
-        public LoginApiController(IUserService userService, IMapper mapper)
+        public LoginApiController(IUserService userService, IMetricsRoot metrics, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
+            _metrics = metrics;
         }
 
         [HttpPost]
@@ -29,6 +32,7 @@ namespace FlatMate.Module.Account.Api
             var authorize = await _userService.AuthorizeAsync(loginJso.UserName, loginJso.Password);
             if (authorize.IsError)
             {
+                _metrics.Measure.Counter.Increment(Module.FailedLoginAttempts);
                 return new ErrorResult<UserInfoJso>(ErrorType.Unauthorized, "Unauthorized");
             }
 
