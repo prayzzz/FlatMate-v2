@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using FlatMate.Module.Common;
+﻿using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Infrastructure.Images;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
+using System;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Infrastructure.Api
 {
@@ -17,9 +16,14 @@ namespace FlatMate.Module.Infrastructure.Api
 
         private readonly IImageService _imageService;
 
-        public ImageApiController(IImageService imageService, IMapper mapper) : base(mapper)
+        public ImageApiController(IImageService imageService, IApiControllerServices services) : base(services)
         {
             _imageService = imageService;
+        }
+
+        public static string GetImageUrl(Guid guid)
+        {
+            return RouteTemplate + guid;
         }
 
         [HttpGet("{guid}")]
@@ -33,11 +37,6 @@ namespace FlatMate.Module.Infrastructure.Api
             }
 
             return new FileContentResult(imageDto.File, imageDto.ContentType);
-        }
-
-        public static string GetImageUrl(Guid guid)
-        {
-            return RouteTemplate + guid;
         }
 
         [HttpPost]

@@ -3,7 +3,6 @@ using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 using System.Threading.Tasks;
 
@@ -14,13 +13,11 @@ namespace FlatMate.Module.Account.Api
     {
         private const string RouteTemplate = "api/v1/account/user";
 
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserApiController(IUserService userService, IMapper mapper) : base(mapper)
+        public UserApiController(IUserService userService, IApiControllerServices services) : base(services)
         {
             _userService = userService;
-            _mapper = mapper;
         }
 
         [HttpPost("password")]
@@ -35,7 +32,7 @@ namespace FlatMate.Module.Account.Api
         public Task<Result<UserJso>> CreateUserAsync([FromBody] CreateUserJso jso)
         {
             return _userService.CreateAsync(Map<UserDto>(jso), jso.Password)
-                               .WithResultDataAs(dto => _mapper.Map<UserJso>(dto));
+                               .WithResultDataAs(dto => Mapper.Map<UserJso>(dto));
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

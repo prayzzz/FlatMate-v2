@@ -4,7 +4,6 @@ using FlatMate.Module.Infrastructure.Images;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace FlatMate.Module.Offers.Api
 
         private readonly IImageService _imageService;
 
-        public CompanyApiController(ICompanyService companyService, IImageService imageService, IMapper mapper) : base(mapper)
+        public CompanyApiController(ICompanyService companyService, IImageService imageService, IApiControllerServices services) : base(services)
         {
             _companyService = companyService;
             _imageService = imageService;

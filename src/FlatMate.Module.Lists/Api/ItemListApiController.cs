@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FlatMate.Module.Account.Api;
 using FlatMate.Module.Common.Api;
+using FlatMate.Module.Lists.Api.Jso;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using FlatMate.Module.Account.Api;
-using FlatMate.Module.Lists.Api.Jso;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Lists.Api
 {
@@ -26,7 +26,7 @@ namespace FlatMate.Module.Lists.Api
         public ItemListApiController(UserApiController userApi,
                                      IItemListService itemListService,
                                      IItemListFavoriteService favoriteService,
-                                     IMapper mapper) : base(mapper)
+                                     IApiControllerServices services) : base(services)
         {
             _itemListService = itemListService;
             _favoriteService = favoriteService;
