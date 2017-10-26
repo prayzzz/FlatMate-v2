@@ -1,5 +1,6 @@
 ﻿using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Offers.Domain.Adapter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;

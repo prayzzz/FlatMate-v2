@@ -1,9 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace FlatMate.Web.Mvc.Startup
 {
@@ -25,9 +26,16 @@ namespace FlatMate.Web.Mvc.Startup
 
         private static Task OnRedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
         {
-            if (context.Request.Path.StartsWithSegments("/api/v1"))
+            if (context.Request.Path.StartsWithSegments("/api"))
             {
                 context.Response.StatusCode = 401;
+
+                // Disable statuscode page
+                var statusCodeFeature = context.HttpContext.Features.Get<IStatusCodePagesFeature>();
+                if (statusCodeFeature != null)
+                {
+                    statusCodeFeature.Enabled = false;
+                }
             }
             else
             {

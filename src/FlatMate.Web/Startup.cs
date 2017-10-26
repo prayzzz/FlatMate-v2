@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using Microsoft.AspNetCore.Routing;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Migration;
 using FlatMate.Module.Common;
@@ -21,6 +22,7 @@ using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Globalization;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace FlatMate.Web
 {
@@ -75,6 +77,7 @@ namespace FlatMate.Web
             app.UseMetricsActiveRequestMiddleware();
             app.UseMetricsErrorTrackingMiddleware();
 
+            app.UseRewriter(new RewriteOptions().AddRedirect("^favicon.ico", "img/favicon.ico"));
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSession();
@@ -83,10 +86,8 @@ namespace FlatMate.Web
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture("de-DE"),
-                // Formatting numbers, dates, etc.
-                SupportedCultures = supportedCultures,
-                // UI strings that we have localized.
-                SupportedUICultures = supportedCultures
+                SupportedCultures = supportedCultures, // Formatting numbers, dates, etc.                
+                SupportedUICultures = supportedCultures // UI strings that we have localized.
             });
 
             app.UseStatusCodePagesWithReExecute("/Error/{0}");

@@ -130,14 +130,17 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var offers = new List<Offer>();
+            var offerTemp = new HashSet<OfferTemp>();
             foreach (var article in articles)
             {
-                var preprocessedOffer = PreprocessOffer(article, market);
-                preprocessedOffer.Product = CreateOrUpdateProduct(preprocessedOffer);
+                offerTemp.Add(PreprocessOffer(article, market));
+            }
 
-                var offerDbo = CreateOrUpdateOffer(preprocessedOffer);
-                offers.Add(offerDbo);
+            var offers = new List<Offer>();
+            foreach (var o in offerTemp)
+            {
+                o.Product = CreateOrUpdateProduct(o);
+                offers.Add(CreateOrUpdateOffer(o));
             }
 
             var result = await DbContext.SaveChangesAsync();

@@ -1,4 +1,5 @@
-﻿using FlatMate.Module.Offers.Domain.Adapter.Rewe;
+﻿using FlatMate.Module.Offers.Domain.Adapter;
+using FlatMate.Module.Offers.Domain.Adapter.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;

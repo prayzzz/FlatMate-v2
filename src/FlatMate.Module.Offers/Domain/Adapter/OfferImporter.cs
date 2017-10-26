@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Drawing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Adapter
 {
     public interface IOfferImporter
     {
@@ -117,7 +118,7 @@ namespace FlatMate.Module.Offers.Domain
                                      .FirstOrDefault(p => p.MarketId == offerDto.Market.Id && p.ExternalId == offerDto.ExternalProductId);
         }
 
-        protected class OfferTemp
+        protected class OfferTemp : IEquatable<OfferTemp>
         {
             public string Brand { get; set; }
 
@@ -152,6 +153,17 @@ namespace FlatMate.Module.Offers.Domain
             public decimal RegularPrice { get; set; }
 
             public string SizeInfo { get; set; }
+
+            public bool Equals(OfferTemp other)
+            {
+                return Name.Equals(other.Name, StringComparison.CurrentCultureIgnoreCase)
+                    && SizeInfo.Equals(other.SizeInfo, StringComparison.CurrentCultureIgnoreCase);
+            }
+
+            public override int GetHashCode()
+            {
+                return Name.GetHashCode() ^ SizeInfo.GetHashCode();
+            }
         }
 
         protected class ProductCategoryTemp

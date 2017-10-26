@@ -158,7 +158,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
         private OfferTemp PreprocessOffer(OfferJso offerJso, Dictionary<string, ProductCategoryTemp> categoryMap, Market market)
         {
             var productCategory = ProductCategoryTemp.Default;
-            if (categoryMap.TryGetValue(offerJso.CategoryId, out var category))
+            if (!string.IsNullOrEmpty(offerJso.CategoryId) && categoryMap.TryGetValue(offerJso.CategoryId, out var category))
             {
                 productCategory = category;
             }
@@ -194,7 +194,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             var categoryMap = ExtractCategoryMap(envelope);
             var categoriesToIgnore = GetIgnoredCategories(envelope);
 
-            var offers = new List<Offer>();
+            var offerTemp = new HashSet<OfferTemp>();
             foreach (var offerJso in envelope.Offers)
             {
                 if (categoriesToIgnore.Contains(offerJso.CategoryId))
@@ -202,11 +202,14 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                     continue;
                 }
 
-                var preprocessedOffer = PreprocessOffer(offerJso, categoryMap, market);
-                preprocessedOffer.Product = CreateOrUpdateProduct(preprocessedOffer);
+                offerTemp.Add(PreprocessOffer(offerJso, categoryMap, market));
+            }
 
-                var offerDbo = CreateOrUpdateOffer(preprocessedOffer);
-                offers.Add(offerDbo);
+            var offers = new List<Offer>();
+            foreach (var o in offerTemp)
+            {
+                o.Product = CreateOrUpdateProduct(o);
+                offers.Add(CreateOrUpdateOffer(o));
             }
 
             var result = await DbContext.SaveChangesAsync();
