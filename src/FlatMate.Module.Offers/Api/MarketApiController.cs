@@ -1,7 +1,6 @@
 ﻿using FlatMate.Module.Common.Api;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 using System;
 using System.Collections.Generic;
@@ -18,16 +17,16 @@ namespace FlatMate.Module.Offers.Api
         private readonly IMarketService _marketService;
         private readonly IOfferService _offerService;
 
-        public MarketApiController(IMarketService marketService, IOfferService offerService, IMapper mapper) : base(mapper)
+        public MarketApiController(IMarketService marketService, IOfferService offerService, IApiControllerServices services) : base(services)
         {
             _marketService = marketService;
             _offerService = offerService;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<MarketJso>> GetMarkets()
+        [HttpGet("import/{externalMarketId}")]
+        public async Task<Result<MarketJso>> Get(string externalMarketId)
         {
-            return (await _marketService.GetMarkets()).Select(Map<MarketJso>);
+            return FromTuple(await _marketService.ImportMarket(externalMarketId), Map<MarketJso>);
         }
 
         [HttpGet("{marketId}")]
@@ -36,10 +35,10 @@ namespace FlatMate.Module.Offers.Api
             return FromTuple(await _marketService.GetMarket(marketId), Map<MarketJso>);
         }
 
-        [HttpGet("import/{externalMarketId}")]
-        public async Task<Result<MarketJso>> Get(string externalMarketId)
+        [HttpGet]
+        public async Task<IEnumerable<MarketJso>> GetMarkets()
         {
-            return FromTuple(await _marketService.ImportMarket(externalMarketId), Map<MarketJso>);
+            return (await _marketService.GetMarkets()).Select(Map<MarketJso>);
         }
 
         [HttpGet("{marketId}/offer/")]

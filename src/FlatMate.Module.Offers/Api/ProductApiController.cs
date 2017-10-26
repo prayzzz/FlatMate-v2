@@ -1,7 +1,6 @@
 ﻿using FlatMate.Module.Common.Api;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace FlatMate.Module.Offers.Api
 
         private readonly IProductService _productService;
 
-        public ProductApiController(IProductService productService, IMapper mapper) : base(mapper)
+        public ProductApiController(IProductService productService, IApiControllerServices services) : base(services)
         {
             _productService = productService;
         }

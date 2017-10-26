@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using App.Metrics;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Migration;
 using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Web.Common;
+using FlatMate.Web.Metrics;
 using FlatMate.Web.Mvc.Json;
 using FlatMate.Web.Mvc.Startup;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +24,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Globalization;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Routing;
 
 namespace FlatMate.Web
 {
@@ -58,6 +60,8 @@ namespace FlatMate.Web
             new Migrator(loggerFactory, migrationSettings).Run();
 
             // configure middleware
+            app.UseMiddleware<RequestMetricMiddleware>();
+
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
@@ -74,8 +78,6 @@ namespace FlatMate.Web
 
             // metrics
             app.UseMetricsEndpoint();
-            app.UseMetricsActiveRequestMiddleware();
-            app.UseMetricsErrorTrackingMiddleware();
 
             app.UseRewriter(new RewriteOptions().AddRedirect("^favicon.ico", "img/favicon.ico"));
             app.UseStaticFiles();
@@ -125,8 +127,8 @@ namespace FlatMate.Web
             mvc.AddControllersAsServices();
 
             // Metrics
-            services.AddMetrics();
-            services.AddMetricsTrackingMiddleware();
+            var metrics = new MetricsBuilder().OutputMetrics.Using<TelegrafMetricFormatter>().Build();
+            services.AddMetrics(metrics);
             services.AddMetricsEndpoints();
 
             services.AddOptions();

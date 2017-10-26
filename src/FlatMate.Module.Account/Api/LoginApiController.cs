@@ -1,28 +1,23 @@
-﻿using App.Metrics;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using FlatMate.Module.Account.Api.Jso;
 using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using FlatMate.Module.Account.Api.Jso;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace FlatMate.Module.Account.Api
 {
     [Route("api/v1/account/login")]
-    public class LoginApiController : Controller
+    public class LoginApiController : ApiController
     {
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
-        private readonly IMetricsRoot _metrics;
 
-        public LoginApiController(IUserService userService, IMetricsRoot metrics, IMapper mapper)
+        public LoginApiController(IUserService userService, IApiControllerServices services) : base(services)
         {
             _userService = userService;
-            _mapper = mapper;
-            _metrics = metrics;
         }
 
         [HttpPost]
@@ -32,9 +27,11 @@ namespace FlatMate.Module.Account.Api
             var authorize = await _userService.AuthorizeAsync(loginJso.UserName, loginJso.Password);
             if (authorize.IsError)
             {
-                _metrics.Measure.Counter.Increment(Module.FailedLoginAttempts);
+                MetricsRoot.Measure.Meter.Mark(ModuleMetrics.LoginAttempts, authorize.ErrorType.ToString());
                 return new ErrorResult<UserInfoJso>(ErrorType.Unauthorized, "Unauthorized");
             }
+
+            MetricsRoot.Measure.Meter.Mark(ModuleMetrics.LoginAttempts, "Success");
 
             var user = authorize.Data;
 
@@ -47,7 +44,7 @@ namespace FlatMate.Module.Account.Api
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
 
-            return authorize.WithDataAs(dto => _mapper.Map<UserInfoJso>(dto));
+            return authorize.WithDataAs(dto => Mapper.Map<UserInfoJso>(dto));
         }
     }
 }
