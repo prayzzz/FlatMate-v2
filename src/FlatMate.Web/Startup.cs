@@ -14,17 +14,18 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using prayzzz.Common;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Globalization;
-using Microsoft.AspNetCore.Rewrite;
-using Microsoft.AspNetCore.Routing;
 
 namespace FlatMate.Web
 {
@@ -80,7 +81,11 @@ namespace FlatMate.Web
             app.UseMetricsEndpoint();
 
             app.UseRewriter(new RewriteOptions().AddRedirect("^favicon.ico", "img/favicon.ico"));
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx => ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + TimeSpan.FromDays(7).TotalSeconds
+            });
+
             app.UseAuthentication();
             app.UseSession();
 
@@ -88,7 +93,7 @@ namespace FlatMate.Web
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture("de-DE"),
-                SupportedCultures = supportedCultures, // Formatting numbers, dates, etc.                
+                SupportedCultures = supportedCultures, // Formatting numbers, dates, etc.
                 SupportedUICultures = supportedCultures // UI strings that we have localized.
             });
 
@@ -132,6 +137,7 @@ namespace FlatMate.Web
             services.AddMetricsEndpoints();
 
             services.AddOptions();
+            services.AddResponseCaching();
             services.AddSession();
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
