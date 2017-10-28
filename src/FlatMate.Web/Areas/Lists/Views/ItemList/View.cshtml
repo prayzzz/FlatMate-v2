@@ -4,6 +4,7 @@
     Layout = "_Layout";
     ViewData["Title"] = "Liste: " + Model.List.Name;
     ViewData["PageTitle"] = Model.List.Name;
+    ViewData["MainClass"] = "itemlist-view";
 }
 
 <section class="container">
@@ -58,16 +59,16 @@
             <div class="row draggable" data-bind="css: { dragging: isDragging }, dragZone: $parent.dragZone, dragEvents: $parent.dragEvents($data)">
                 <div class="cell">
                     <div style="display:flex; align-items:center">
+
                         <span class="fa-host" style="margin-right: 1rem;">
                             <i class="fa fa-bars gray"></i>
                         </span>
-                        <div style="flex:1;" data-bind="click: enterEditMode">
+                        <div style="flex:1; word-break:break-all" data-bind="click: enterEditMode">
                             <span data-bind="text: name, visible: !isInEditMode()"></span>
                             <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode" />
                         </div>
-                        @*<div v-if="showOwner()">
-                                von {{item.user.userName}}
-                            </div>*@
+                        <div class="lasteditor" data-bind="visible: isLastEditorVisible">von <span data-bind="text: lastEditor"></span></div>
+
                     </div>
                 </div>
                 <div class="cell icon"></div>
@@ -76,8 +77,8 @@
                     <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeItem, visible: !isRemoveLoading()">
                         <i class="fa fa-times danger" aria-hidden="true"></i>
                     </a>
-                    <span class="fa-host" data-bind="visible: isRemoveLoading">                    
-                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" ></i>
+                    <span class="fa-host" data-bind="visible: isRemoveLoading">
+                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i>
                     </span>
 
                 </div>

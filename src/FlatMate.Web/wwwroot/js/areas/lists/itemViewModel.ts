@@ -1,6 +1,7 @@
 ﻿import * as ko from "knockout";
 import { ItemJso, ItemListApi } from ".";
 import { IDraggable } from "../../ko/dragdrop";
+import { FlatMate } from "../../app";
 
 export class ItemViewModel implements IDraggable {
     // from model
@@ -26,6 +27,14 @@ export class ItemViewModel implements IDraggable {
 
     public get id(): number | undefined {
         return this.model().id;
+    }
+
+    public get lastEditor(): string {
+        return this.model().lastEditor.userName;
+    }
+
+    public get isLastEditorVisible(): boolean {
+        return this.model().lastEditor.id != FlatMate.currentUser.id;
     }
 
     public leaveEditMode = (): boolean => {

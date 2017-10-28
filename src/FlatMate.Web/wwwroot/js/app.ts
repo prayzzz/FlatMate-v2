@@ -2,9 +2,10 @@
 import * as Blazy from "blazy";
 import * as promiseFill from "es6-promise";
 import * as findFill from "array.prototype.find";
-import { KoStartup } from "./koStartup";
+import { KoStartup, StartupHelper } from "./koStartup";
 import "./shared/objectExtensions";
 import { IWindow } from "./window";
+import { UserInfoJso } from "./areas/account/jso";
 
 promiseFill.polyfill();
 findFill.shim();
@@ -17,4 +18,6 @@ KoStartup.start();
 
 export class FlatMate {
     public static blazy = new Blazy({});
+
+    public static currentUser = StartupHelper.readViewData<UserInfoJso>("current-user")
 }

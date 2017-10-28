@@ -27,7 +27,7 @@ namespace FlatMate.Module.Infrastructure.Api
         }
 
         [HttpGet("{guid}")]
-        [ResponseCache(Duration = 60 * 60 * 24 * 30)]
+        [ResponseCache(Duration = 60 * 60 * 24)]
         public async Task<IActionResult> Get(Guid guid)
         {
             var (result, imageDto) = await _imageService.Get(guid);

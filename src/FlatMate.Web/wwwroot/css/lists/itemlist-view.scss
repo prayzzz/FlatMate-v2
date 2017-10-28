@@ -1,0 +1,11 @@
+﻿.itemlist-view {
+    .lasteditor {
+        display: block;
+    }
+
+    @media (max-width: 576px) {
+        .lasteditor {
+            display: none;
+        }
+    }
+}
