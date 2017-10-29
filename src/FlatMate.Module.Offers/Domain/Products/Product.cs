@@ -70,6 +70,8 @@ namespace FlatMate.Module.Offers.Domain
     {
         public string Brand { get; set; }
 
+        public int? CompanyId { get; set; }
+
         public string Description { get; set; }
 
         public string ExternalId { get; set; }
@@ -100,6 +102,7 @@ namespace FlatMate.Module.Offers.Domain
             return new ProductDto
             {
                 Brand = product.Brand,
+                CompanyId = product.Market?.CompanyId,
                 Description = product.Description,
                 ExternalId = product.ExternalId,
                 Id = product.Id,

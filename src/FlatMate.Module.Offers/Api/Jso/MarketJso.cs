@@ -13,6 +13,9 @@ namespace FlatMate.Module.Offers.Api
         public CompanyJso Company { get; set; }
 
         [ReadOnly(true)]
+        public int CompanyId { get; set; }
+
+        [ReadOnly(true)]
         public int? Id { get; set; }
 
         public string Name { get; set; }
@@ -50,6 +53,7 @@ namespace FlatMate.Module.Offers.Api
             {
                 City = dto.City,
                 Company = ctx.Mapper.Map<CompanyJso>(dto.Company),
+                CompanyId = dto.CompanyId,
                 Id = dto.Id,
                 Name = dto.Name,
                 PostalCode = dto.PostalCode.PadLeft(5, '0'),

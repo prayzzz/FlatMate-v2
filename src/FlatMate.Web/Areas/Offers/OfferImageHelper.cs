@@ -1,5 +1,4 @@
-﻿using FlatMate.Module.Offers.Api;
-using FlatMate.Module.Offers.Domain;
+﻿using FlatMate.Module.Offers.Domain;
 
 namespace FlatMate.Web.Areas.Offers
 {
@@ -8,31 +7,26 @@ namespace FlatMate.Web.Areas.Offers
     {
         private static readonly int[] PennyImageSizes = new[] { 312, 382, 468, 624, 936, 1080 };
 
-        public static string Get(OfferJso offer, int width)
+        public static string Get(string imageUrl, Company company, int width)
         {
-            if (offer.Market == null || offer.Market.Company == null)
+            switch (company)
             {
-                return offer.ImageUrl;
-            }
+                case Company.Rewe:
+                    return $"{imageUrl}?resize={width}px:{width}px";
 
-            switch (offer.Market.Company.Id)
-            {
-                case (int)Company.Rewe:
-                    return $"{offer.ImageUrl}?resize={width}px:{width}px";
-
-                case (int)Company.Penny:
+                case Company.Penny:
                     foreach (var size in PennyImageSizes)
                     {
                         if (size > width)
                         {
-                            return offer.ImageUrl.Replace("/1080/", $"/{size}/");
+                            return imageUrl.Replace("/1080/", $"/{size}/");
                         }
                     }
 
-                    return offer.ImageUrl;
+                    return imageUrl;
 
                 default:
-                    return offer.ImageUrl;
+                    return imageUrl;
             }
         }
     }

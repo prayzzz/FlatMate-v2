@@ -20,6 +20,8 @@ namespace FlatMate.Module.Offers.Api
 
         public int MarketId { get; set; }
 
+        public int? CompanyId { get; set; }
+
         public string Name { get; set; }
 
         public decimal Price { get; set; }
@@ -42,6 +44,7 @@ namespace FlatMate.Module.Offers.Api
             return new ProductJso
             {
                 Brand = dto.Brand,
+                CompanyId = dto.CompanyId,
                 Description = dto.Description,
                 ExternalId = dto.ExternalId,
                 Id = dto.Id,

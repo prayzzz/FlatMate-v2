@@ -106,7 +106,7 @@ namespace FlatMate.Module.Offers.Domain
 
         public async Task<(Result, ProductDto)> GetProduct(int id)
         {
-            var product = await _dbContext.Products.FindAsync(id);
+            var product = await _dbContext.Products.Include(x => x.Market).FirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
                 return (new ErrorResult(ErrorType.NotFound, "Product not found"), null);

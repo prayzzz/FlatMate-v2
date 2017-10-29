@@ -77,7 +77,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
         /// <summary>
         /// Update:
         /// - update price for pricehistory
-        /// - update image url to prevent removal
+        /// - update image url to prevent dead links
         /// </summary>
         protected Product CreateOrUpdateProduct(OfferTemp offerDto)
         {

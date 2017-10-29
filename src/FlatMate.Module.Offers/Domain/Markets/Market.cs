@@ -41,6 +41,8 @@ namespace FlatMate.Module.Offers.Domain
 
         public CompanyDto Company { get; set; }
 
+        public int CompanyId { get; set; }
+
         public string Name { get; set; }
 
         public string PostalCode { get; set; }
@@ -62,6 +64,7 @@ namespace FlatMate.Module.Offers.Domain
             {
                 City = market.City,
                 Company = mappingContext.Mapper.Map<CompanyDto>(market.Company),
+                CompanyId = market.CompanyId,
                 Id = market.Id,
                 Name = market.Name,
                 PostalCode = market.PostalCode,
