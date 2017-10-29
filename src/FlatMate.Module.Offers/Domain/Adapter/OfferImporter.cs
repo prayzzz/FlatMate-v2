@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 using System;
@@ -75,6 +74,11 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             return offer;
         }
 
+        /// <summary>
+        /// Update:
+        /// - update price for pricehistory
+        /// - update image url to prevent removal
+        /// </summary>
         protected Product CreateOrUpdateProduct(OfferTemp offerDto)
         {
             var product = FindExistingProduct(offerDto);
@@ -100,8 +104,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             {
                 CheckForChangedProductProperties(product, offerDto);
 
-                product.UpdatePrice(offerDto.RegularPrice);
+                product.ImageUrl = offerDto.ImageUrl;
                 product.ProductCategoryId = (int)offerDto.ProductCategory;
+                product.UpdatePrice(offerDto.RegularPrice);
             }
 
             return product;
