@@ -8,4 +8,17 @@
             display: none;
         }
     }
+
+    .drag-handle {
+        margin-right: 1rem;
+        cursor: move;
+    }
+
+    .group-row {
+        background-color: #f6f6f9
+    }
+
+    .add-item-cell {
+        padding-left: calc(1rem + 16px)
+    }
 }

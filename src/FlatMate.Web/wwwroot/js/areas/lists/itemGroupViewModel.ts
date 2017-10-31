@@ -47,8 +47,13 @@ export class ItemGroupViewModel {
         return new DragEvents<ItemViewModel>(this.dragZoneName, this.reorder, new DragZoneData<ItemViewModel>(item, this.items));
     };
 
-    public dragStart = (item: ItemViewModel) => {
-        item.isDragging(true);
+    public dragStart = (item: ItemViewModel, event: Event) => {
+        if (this.getClosest(event.srcElement, '.drag-handle') !== null) {
+            item.isDragging(true);
+            return true;
+        } else {
+            return false;
+        }
     };
 
     public dragEnd = (item: ItemViewModel) => {
@@ -190,5 +195,26 @@ export class ItemGroupViewModel {
         }
 
         return new Promise<void>((resolve, reject) => resolve());
+    }
+
+    private getClosest(element: Element | null, selector: string): Element | null {
+        if (!element) {
+            return null;
+        }
+
+        do {
+            if (document.documentElement.matches.call(element, selector)) {
+                return element;
+            }
+
+            if (!element.parentNode) {
+                return null;
+            }
+
+            element = element.parentNode as Element;
+
+        } while (element);
+
+        return null;
     }
 }
