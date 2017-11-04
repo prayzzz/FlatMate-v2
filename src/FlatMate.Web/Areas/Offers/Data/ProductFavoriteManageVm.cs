@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FlatMate.Web.Areas.Offers.Data
 {
-    public class ProductFavoriteManageVm : BaseViewModel
+    public class ProductFavoriteManageVm : MvcViewModel
     {
         public int? CurrentMarket { get; set; }
 

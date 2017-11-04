@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlatMate.Web.Areas.Lists.Data
 {
-    public class ItemListUpdateVm : BaseViewModel
+    public class ItemListUpdateVm : MvcViewModel
     {
         [Display(Name = "Beschreibung")]
         public string Description { get; set; }

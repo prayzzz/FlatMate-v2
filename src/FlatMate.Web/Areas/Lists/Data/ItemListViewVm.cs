@@ -3,7 +3,7 @@ using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Lists.Data
 {
-    public class ItemListViewVm : BaseViewModel
+    public class ItemListViewVm : MvcViewModel
     {
         public ItemListJso List { get; set; }
     }

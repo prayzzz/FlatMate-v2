@@ -19,12 +19,12 @@
 
         @foreach (var market in Model.Markets)
         {
-            <div class="col-lg-6 col-market">
+            <div class="col-sm-6 col-market">
                 <a asp-action="View" asp-route-id="@market.Id" class="standard-box market-box">
-                    @if (!string.IsNullOrEmpty(market.Company.ImageLink))
+                    @if (!string.IsNullOrEmpty(market.CompanyData.ImageLink))
                     {
                         <div class="image">
-                            <img src="@market.Company.ImageLink" style="width:100%" />
+                            <img src="@market.CompanyData.ImageLink" style="width:100%" />
                         </div>
                     }
 

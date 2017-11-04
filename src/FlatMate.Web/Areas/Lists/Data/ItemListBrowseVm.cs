@@ -5,7 +5,7 @@ using FlatMate.Module.Lists.Api.Jso;
 
 namespace FlatMate.Web.Areas.Lists.Data
 {
-    public class ItemListBrowseVm : BaseViewModel
+    public class ItemListBrowseVm : MvcViewModel
     {
         public IEnumerable<ItemListJso> Favorites { get; set; }
 

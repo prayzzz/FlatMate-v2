@@ -3,7 +3,7 @@ using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Lists.Data
 {
-    public class ItemListCreateVm : BaseViewModel
+    public class ItemListCreateVm : MvcViewModel
     {
         [Display(Name = "Beschreibung")]
         public string Description { get; set; }

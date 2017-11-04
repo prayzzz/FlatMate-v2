@@ -3,11 +3,11 @@ using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Mvc.Base
 {
-    public class EmptyViewModel : BaseViewModel
+    public class EmptyViewModel : MvcViewModel
     {
     }
 
-    public abstract class BaseViewModel
+    public abstract class MvcViewModel
     {
         public UserInfoJso CurrentUser { get; set; }
 

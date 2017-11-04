@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace FlatMate.Web.Areas.Offers.Data
 {
-    public class MarketViewVm : BaseViewModel
+    public class MarketViewVm : MvcViewModel
     {
         public MarketJso Market { get; set; }
 

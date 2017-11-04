@@ -242,6 +242,8 @@ ModelManifest.xml
 
 .vscode/
 
+.idea/
+
 # FlatMate
 *.lock
 typings/

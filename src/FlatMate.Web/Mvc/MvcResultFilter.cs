@@ -20,7 +20,7 @@ namespace FlatMate.Web.Mvc
                 return;
             }
 
-            var model = viewResult.Model as BaseViewModel;
+            var model = viewResult.Model as MvcViewModel;
 
             if (model == null || !model.IsError || model.Result == null)
             {

@@ -1,0 +1,50 @@
+﻿@model FlatMate.Web.Areas.Offers.Data.AdminManageProductDuplicatesVm
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Manage Duplicates";
+    ViewData["PageTitle"] = "Manage Duplicates";
+    ViewData["MainClass"] = "admin-manage-product-duplicates";
+}
+
+<section class="container">
+    @foreach (var grouping in Model.GroupedProducts)
+    {
+        var market = Model.Markets.First(x => x.Id == grouping.First().MarketId);
+
+        <h3>@grouping.Key.Name (@grouping.Key.SizeInfo) bei @market.Name</h3>
+        <div class="row">
+            <div class="col col-product">
+                <div class="row no-gutters standard-box">
+
+                    @foreach (var productJso in grouping)
+                    {
+                        var otherIds = grouping.Where(x => x.Id != productJso.Id).Select(x => x.Id);
+
+                        <div class="col col-image">
+                            <img src="@OfferImageHelper.Get(productJso.ImageUrl, market.Company, 150)" width="150"/>
+                        </div>
+                        <div class="col col-info">
+                            <table>
+                                <tr>
+                                    <td>Id</td>
+                                    <td>@productJso.Id</td>
+                                </tr>
+                                <tr>
+                                    <td>Marke</td>
+                                    <td>@productJso.Brand</td>
+                                </tr>
+                                <tr>
+                                    <td>Preis</td>
+                                    <td>@productJso.Price</td>
+                                </tr>
+                            </table>
+                            <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@productJso.Id" class="btn btn-secondary">Details</a>
+                            <a asp-area="Offers" asp-controller="Admin" asp-action="Merge" asp-route-id="@productJso.Id" asp-route-otherProductIds="@string.Join(",", otherIds)" class="btn btn-secondary">Merge to this</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</section>

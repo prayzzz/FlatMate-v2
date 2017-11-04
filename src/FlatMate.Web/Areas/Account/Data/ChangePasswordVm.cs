@@ -3,7 +3,7 @@ using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Account.Data
 {
-    public class ChangePasswordVm : BaseViewModel
+    public class ChangePasswordVm : MvcViewModel
     {
         [Required]
         [DataType(DataType.Password)]

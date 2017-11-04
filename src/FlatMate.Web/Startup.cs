@@ -125,7 +125,8 @@ namespace FlatMate.Web
             var mvc = services.AddMvc(o =>
             {
                 o.Filters.Add(typeof(ApiResultFilter));
-                o.AddMetricsResourceFilter();
+
+                // o.AddMetricsResourceFilter(); // fixed in 2.0.0 
             });
             mvc.AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));
             mvc.ConfigureApplicationPartManager(c => Array.ForEach(Modules, m => c.ApplicationParts.Add(m)));

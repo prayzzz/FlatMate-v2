@@ -1,10 +1,10 @@
-﻿using FlatMate.Module.Common.Api;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlatMate.Module.Common.Api;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Api
 {
@@ -33,7 +33,7 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("favorite/id")]
-        public async Task<IEnumerable<int>> GetFavoriteProductIds([FromQuery]int? marketId = null)
+        public async Task<IEnumerable<int>> GetFavoriteProductIds([FromQuery] int? marketId = null)
         {
             if (!marketId.HasValue)
             {
@@ -44,7 +44,7 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("favorite")]
-        public async Task<IEnumerable<ProductJso>> GetFavoriteProducts([FromQuery]int? marketId = null)
+        public async Task<IEnumerable<ProductJso>> GetFavoriteProducts([FromQuery] int? marketId = null)
         {
             if (!marketId.HasValue)
             {

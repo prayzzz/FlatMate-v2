@@ -1,4 +1,8 @@
-﻿using FlatMate.Module.Account.Shared;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
@@ -6,10 +10,6 @@ using Microsoft.Extensions.Caching.Memory;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain
 {
@@ -18,6 +18,8 @@ namespace FlatMate.Module.Offers.Domain
         Task<Result> AddProductFavorite(int productId);
 
         Task<Result> DeleteProductFavorite(int productId);
+
+        Task<List<ProductDto>> GetDuplicateProducts();
 
         Task<List<int>> GetFavoriteProductIds(int marketId);
 
@@ -32,13 +34,15 @@ namespace FlatMate.Module.Offers.Domain
         Task<List<PriceHistoryDto>> GetProductPriceHistory(int productId);
 
         Task<List<ProductDto>> GetProducts(int marketId);
+
+        Task<Result> MergeProducts(int productId, int otherProductId);
     }
 
     [Inject]
-    public class ProductService : IProductService
+    public partial class ProductService : IProductService
     {
         private const string CachePrefix = "Offers.Products";
-        private static readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(2));
+        private static readonly MemoryCacheEntryOptions CacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(2));
 
         private readonly IAuthenticationContext _authenticationContext;
         private readonly IMemoryCache _cache;
@@ -146,7 +150,7 @@ namespace FlatMate.Module.Offers.Domain
 
                 if (products.Count > 0)
                 {
-                    _cache.Set(cacheKey, products, _cacheEntryOptions);
+                    _cache.Set(cacheKey, products, CacheEntryOptions);
                 }
             }
 

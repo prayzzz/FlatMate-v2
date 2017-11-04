@@ -10,7 +10,10 @@ namespace FlatMate.Module.Offers.Api
         public string City { get; set; }
 
         [ReadOnly(true)]
-        public CompanyJso Company { get; set; }
+        public CompanyJso CompanyData { get; set; }
+
+        [ReadOnly(true)]
+        public Company Company => (Company) CompanyId;
 
         [ReadOnly(true)]
         public int CompanyId { get; set; }
@@ -39,7 +42,7 @@ namespace FlatMate.Module.Offers.Api
             return new MarketDto
             {
                 City = jso.City,
-                Company = ctx.Mapper.Map<CompanyDto>(jso.Company),
+                Company = ctx.Mapper.Map<CompanyDto>(jso.CompanyData),
                 Id = jso.Id,
                 Name = jso.Name,
                 PostalCode = jso.PostalCode,
@@ -52,7 +55,7 @@ namespace FlatMate.Module.Offers.Api
             return new MarketJso
             {
                 City = dto.City,
-                Company = ctx.Mapper.Map<CompanyJso>(dto.Company),
+                CompanyData = ctx.Mapper.Map<CompanyJso>(dto.Company),
                 CompanyId = dto.CompanyId,
                 Id = dto.Id,
                 Name = dto.Name,

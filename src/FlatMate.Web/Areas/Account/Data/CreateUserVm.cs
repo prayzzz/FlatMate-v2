@@ -4,7 +4,7 @@ using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Account.Data
 {
-    public class CreateUserVm : BaseViewModel
+    public class CreateUserVm : MvcViewModel
     {
         [Required]
         [DisplayName("Email")]

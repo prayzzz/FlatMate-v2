@@ -61,7 +61,7 @@ namespace FlatMate.Web.Mvc.Base
                 viewResult.ViewData.Model = new EmptyViewModel();
             }
 
-            var model = viewResult.Model as BaseViewModel;
+            var model = viewResult.Model as MvcViewModel;
             if (model == null)
             {
                 return;
@@ -79,7 +79,7 @@ namespace FlatMate.Web.Mvc.Base
             TempData[Constants.TempData.Result] = JsonService.Serialize(result);
         }
 
-        protected T ApplyTempResult<T>(T model) where T : BaseViewModel
+        protected T ApplyTempResult<T>(T model) where T : MvcViewModel
         {
             // check for passed result from redirect
             if (TempData.TryGetValue(Constants.TempData.Result, out var data))

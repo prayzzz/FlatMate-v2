@@ -4,7 +4,7 @@ using FlatMate.Web.Mvc.Base;
 
 namespace FlatMate.Web.Areas.Account.Data
 {
-    public class LoginVm : BaseViewModel
+    public class LoginVm : MvcViewModel
     {
         [Required]
         [DataType(DataType.Password)]
