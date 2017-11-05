@@ -7,6 +7,7 @@ using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -45,6 +46,7 @@ namespace FlatMate.Module.Offers.Domain
         private static readonly MemoryCacheEntryOptions CacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(2));
 
         private readonly IAuthenticationContext _authenticationContext;
+        private readonly ILogger<ProductService> _logger;
         private readonly IMemoryCache _cache;
         private readonly OffersDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -52,11 +54,13 @@ namespace FlatMate.Module.Offers.Domain
         public ProductService(OffersDbContext dbContext,
                               IMemoryCache cache,
                               IAuthenticationContext authenticationContext,
+                              ILogger<ProductService> logger,
                               IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _authenticationContext = authenticationContext;
+            _logger = logger;
             _cache = cache;
         }
 

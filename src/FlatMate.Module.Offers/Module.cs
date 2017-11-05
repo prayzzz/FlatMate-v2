@@ -6,6 +6,7 @@ using FlatMate.Module.Offers.Domain.Adapter.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RestEase;
 
 namespace FlatMate.Module.Offers
@@ -27,5 +28,11 @@ namespace FlatMate.Module.Offers
 
             service.AddDbContext<OffersDbContext>(o => o.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }
+    }
+
+    public static class LoggingEvents
+    {
+        // 1 - 99: ProductService
+        public static readonly EventId ProductServiceMergeProducts = new EventId(50001, "ProductService_MergeProducts");
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain
@@ -33,19 +34,20 @@ namespace FlatMate.Module.Offers.Domain
 
         public async Task<Result> MergeProducts(int productId, int otherProductId)
         {
-            var product = _dbContext.Products.FirstOrDefault(x => x.Id == productId);
-            var otherProduct = _dbContext.Products.FirstOrDefault(x => x.Id == otherProductId);
-
             // Move Price History
             var priceHistories = _dbContext.PriceHistoryEntries.Where(x => x.ProductId == productId).ToList();
             var otherPriceHistories = _dbContext.PriceHistoryEntries.Where(x => x.ProductId == otherProductId).ToList();
 
             foreach (var other in otherPriceHistories)
             {
-                // if there's no entry on the same date
+                // only if there's no entry on the same date
                 if (priceHistories.All(x => x.Date.Date != other.Date.Date))
                 {
                     other.ProductId = productId;
+                }
+                else
+                {
+                    _dbContext.PriceHistoryEntries.Remove(other);
                 }
             }
 
@@ -55,10 +57,14 @@ namespace FlatMate.Module.Offers.Domain
 
             foreach (var other in otherfavorites)
             {
-                // if user doesnt not already favor the main product
+                // only if user doesn't not already favor the main product
                 if (favorites.All(x => x.UserId != other.UserId))
                 {
                     other.ProductId = productId;
+                }
+                else
+                {
+                    _dbContext.ProductFavorites.Remove(other);
                 }
             }
 
@@ -68,15 +74,31 @@ namespace FlatMate.Module.Offers.Domain
 
             foreach (var other in otherOffers)
             {
-                // if main product doesn't contain the same offer
+                // only if main product doesn't contain the same offer
                 if (offers.All(x => x.From.Date != other.From.Date))
                 {
                     other.ProductId = productId;
                 }
+                else
+                {
+                    _dbContext.Offers.Remove(other);
+                }
             }
 
+            var otherProduct = _dbContext.Products.FirstOrDefault(x => x.Id == otherProductId);
             _dbContext.Products.Remove(otherProduct);
-            return await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+
+            if (result.IsSuccess)
+            {
+                _logger.LogInformation(LoggingEvents.ProductServiceMergeProducts, "Merged #{otherProductId} to #{productId}", otherProductId, productId);
+            }
+            else
+            {
+                _logger.LogInformation(LoggingEvents.ProductServiceMergeProducts, "Failed merging #{otherProductId} to #{productId}: {error}", otherProductId, productId, result.Message);
+            }
+
+            return result;
         }
     }
 }
