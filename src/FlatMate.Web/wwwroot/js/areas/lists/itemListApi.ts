@@ -1,5 +1,5 @@
 ﻿import { ItemGroupJso, ItemJso } from ".";
-import ApiClient from "../../api/apiClient";
+import ApiClient from "Api/ApiClient";
 
 /**
  * Singleton

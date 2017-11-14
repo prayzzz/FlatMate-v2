@@ -1,9 +1,11 @@
-﻿import Ajax from "../shared/ajax";
-import { AlertService, ResultJso } from "../shared/alert";
+﻿import Ajax from "shared/ajax";
+import { AlertService, ResultJso } from "shared/alert";
 
 export interface IApiClient {
     get<TData>(path: string, doneCallback?: (d: TData) => void, failCallback?: (e: ResultJso) => void): void;
+
     put<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: ResultJso) => void): void;
+
     post<TData, TResult>(path: string, data: TData, doneCallback?: (d: TResult) => void, failCallback?: (e: ResultJso) => void): void;
 }
 

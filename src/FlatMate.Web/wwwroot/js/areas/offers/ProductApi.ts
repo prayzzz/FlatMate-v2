@@ -1,5 +1,6 @@
 ﻿import { ProductJso } from ".";
-import ApiClient from "../../api/apiClient";
+import ApiClient from "Api/ApiClient";
+import { PartialList, PartialListParameter } from "Api/PartialList";
 
 /**
  * Singleton
@@ -19,8 +20,8 @@ export class ProductApi {
         return ProductApi.instance;
     }
 
-    public getProducts(marketId: number): Promise<ProductJso[]> {
-        return this.apiClient.get<ProductJso[]>(`offers/product?marketId=${marketId}`);
+    public searchProducts(marketId: number, searchTerm: string, listQuery: PartialListParameter): Promise<PartialList<ProductJso>> {
+        return this.apiClient.get<PartialList<ProductJso>>(`offers/product?marketId=${marketId}&searchTerm=${searchTerm}&limit=${listQuery.limit}&offset=${listQuery.offset}`);
     }
 
     public getProductFavorites(marketId: number): Promise<ProductJso[]> {
@@ -37,5 +38,9 @@ export class ProductApi {
 
     public unfavorite(productId: number): Promise<void> {
         return this.apiClient.delete(`offers/product/favorite`, { productId });
+    }
+
+    searchFavorites(marketId: number, searchTerm: string, listQuery: PartialListParameter) {
+        return this.apiClient.get<PartialList<ProductJso>>(`offers/product/favorite?marketId=${marketId}&searchTerm=${searchTerm}&limit=${listQuery.limit}&offset=${listQuery.offset}`);
     }
 }

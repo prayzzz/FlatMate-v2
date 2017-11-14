@@ -13,7 +13,7 @@
 
 </section>
 
-<script type="text/x-template" id="product-favorite-editor-template">
+<script type="text/html" id="product-favorite-editor-template">
 
     <div class="row select-market">
         <div class="col-2 align-self-center">
@@ -29,11 +29,11 @@
             Suche:
         </div>
         <div class="col-4 align-self-center">
-            <input type="text" data-bind="value: searchTerm" placeholder="Name, Marke oder Beschreibung..." />
+            <input type="text" data-bind="value: searchTerm" placeholder="Name, Marke oder Beschreibung..."/>
         </div>
         <div class="col-6 align-self-center">
             <label>
-                <input type="checkbox" data-bind="checked: onlyFavorites" /> Nur Favoriten
+                <input type="checkbox" data-bind="checked: onlyFavorites"/> Nur Favoriten
             </label>
         </div>
     </div>
@@ -46,11 +46,11 @@
             <div class="standard-box product-box">
 
                 <div class="image">
-                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-bind="attr: {  'data-src': imageUrl }" width="150" height="150" />
+                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-bind="attr: {  'data-src': imageUrl }" width="150" height="150"/>
                 </div>
 
                 <div class="name">
-                    <span data-bind="text: name"></span><br />
+                    <span data-bind="text: name"></span><br/>
                 </div>
 
                 <div class="row no-gutters product-actions">
@@ -83,24 +83,25 @@
         <!-- /ko -->
 
     </div>
-
-    <div class="row" data-bind="if: filteredProducts().length > 0">
+    
+    <div class="row">
         <div class="col">
-
             <div class="row actions">
-                <div class="col-auto" data-bind="if: currentPage() > 1">
+                <div class="col-auto" data-bind="if: currentPage() > 0">
                     <a href="#" data-bind="click: prevPage">&lt; Zurück</a>
                 </div>
-
             </div>
         </div>
+        
+        <div class="col flex-h-center flex-v-center" style="margin-bottom: .5rem">        
+            <span data-bind="text: pageString"></span>            
+        </div>
+        
         <div class="col">
-
             <div class="row align-right actions">
-                <div class="col-auto" data-bind="if: currentPage() < filteredProducts().length / itemsPerPage()">
+                <div class="col-auto" data-bind="if: hasMoreProducts()">
                     <a href="#" data-bind="click: nextPage">Weiter &gt;</a>
                 </div>
-
             </div>
         </div>
     </div>

@@ -15,7 +15,7 @@ module.exports = env => {
     /**
      * Setup Javascript configuration
      */
-    var jsConfig = {};
+    const jsConfig = {};
     jsConfig.name = "js";
     jsConfig.entry = {
         app: "./js/app.ts",
@@ -28,7 +28,11 @@ module.exports = env => {
     };
     jsConfig.resolve = {
         extensions: [".ts", ".js"],
-        alias: { 'tslib$': 'tslib/tslib.es6.js' }
+        alias: {'tslib$': 'tslib/tslib.es6.js'},
+        modules: [
+            path.resolve('./node_modules'),
+            path.resolve('./js')
+        ]
     };
     jsConfig.module = {
         loaders: [{ test: /\.ts$/, loader: "ts-loader" }]
@@ -59,7 +63,7 @@ module.exports = env => {
         cssLoaderOptions.minimize = true;
     }
 
-    var cssConfig = {};
+    const cssConfig = {};
     cssConfig.name = "css";
     cssConfig.entry = glob.sync("./css/**/*.scss");
     cssConfig.output = { filename: "./dist/app.css" };

@@ -7,6 +7,14 @@ namespace FlatMate.Web.Common
 {
     public static class ConfigurationBuilderExtensions
     {
+        /// <summary>
+        /// PRODUCTION AND STAGING:
+        /// Reads user and password which are configuration separatly e.g. environment variables
+        /// and build a new default connection string.
+        /// 
+        /// For environment variables use:
+        /// [PREFIX]_db__user and [PREFIX]_db_password 
+        /// </summary>
         public static IConfigurationBuilder AddProductionConnection(this IConfigurationBuilder builder, IHostingEnvironment env)
         {
             var config = builder.Build();

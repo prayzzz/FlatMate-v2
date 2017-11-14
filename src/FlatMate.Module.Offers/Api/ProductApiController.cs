@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Api;
+using FlatMate.Module.Common.Domain;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
@@ -44,14 +45,9 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("favorite")]
-        public async Task<IEnumerable<ProductJso>> GetFavoriteProducts([FromQuery] int? marketId = null)
+        public async Task<PartialList<ProductJso>> SearchFavoriteProducts([FromQuery] int? marketId, [FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList)
         {
-            if (!marketId.HasValue)
-            {
-                return Enumerable.Empty<ProductJso>();
-            }
-
-            return (await _productService.GetFavoriteProducts(marketId.Value)).Select(Map<ProductJso>);
+            return (await _productService.SearchFavoriteProducts(marketId, searchTerm, partialList)).MapTo(Map<ProductJso>);
         }
 
         [HttpGet("{id}")]
@@ -79,14 +75,9 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProductJso>> GetProducts([FromQuery] int? marketId)
+        public async Task<PartialList<ProductJso>> SearchProducts([FromQuery] int? marketId, [FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList)
         {
-            if (!marketId.HasValue)
-            {
-                return Enumerable.Empty<ProductJso>();
-            }
-
-            return (await _productService.GetProducts(marketId.Value)).Select(Map<ProductJso>);
+            return (await _productService.SearchProducts(marketId, searchTerm, partialList)).MapTo(Map<ProductJso>);
         }
     }
 }

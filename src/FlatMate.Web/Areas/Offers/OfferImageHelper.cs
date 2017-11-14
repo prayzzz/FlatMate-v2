@@ -5,7 +5,7 @@ namespace FlatMate.Web.Areas.Offers
     // TODO replace with taghelper
     public static class OfferImageHelper
     {
-        private static readonly int[] PennyImageSizes = new[] { 312, 382, 468, 624, 936, 1080 };
+        private static readonly int[] PennyImageSizes = { 312, 382, 468, 624, 936, 1080 };
 
         public static string Get(string imageUrl, Company company, int width)
         {
