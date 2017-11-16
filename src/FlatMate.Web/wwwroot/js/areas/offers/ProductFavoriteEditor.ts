@@ -13,9 +13,10 @@ export class ProductFavoriteEditor {
     private productPage: KnockoutObservableArray<ProductVm>;
     private totalCount: KnockoutObservable<number>;
 
-    // @ts-ignore: used by knockout
+    // @ts-ignore: used by view
     private hasMoreProducts: KnockoutComputed<boolean>;
-    private pageString: KnockoutComputed<boolean>;
+    // @ts-ignore: used by view
+    private pageString: KnockoutComputed<string>;
 
     private productsPerPage: KnockoutObservable<number>;
     private currentPage: KnockoutObservable<number>;
