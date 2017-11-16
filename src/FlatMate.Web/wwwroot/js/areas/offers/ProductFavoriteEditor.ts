@@ -49,7 +49,7 @@ export class ProductFavoriteEditor {
         });
 
         this.pageString = ko.computed<string>(() => {
-            let totalPages = Math.floor(this.totalCount() / this.productsPerPage());
+            let totalPages = Math.ceil(this.totalCount() / this.productsPerPage());
             if (totalPages < 1) {
                 totalPages = 1;
             }
