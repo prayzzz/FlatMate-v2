@@ -1,5 +1,21 @@
-﻿@{
+﻿@model FlatMate.Web.Areas.Home.Data.DashboardIndexVm
+
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Mein Dashboard";
     ViewData["PageTitle"] = "Mein Dashboard";
+    ViewData["MainClass"] = "dashboard-index";
 }
+
+<section class="container">
+
+    <div class="tile-grid">
+        @foreach (var tile in Model.Tiles)
+        {
+            <div class="tile standard-box">
+                @await Component.InvokeAsync(tile.DashboardTile)
+            </div>
+        }
+    </div>
+
+</section>

@@ -10,6 +10,8 @@ namespace FlatMate.Module.Account.DataAccess
         {
         }
 
+        public DbSet<UserDashboardTileDbo> UserDashboardTiles { get; set; }
+
         public DbSet<UserDbo> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

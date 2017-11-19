@@ -1,10 +1,13 @@
-﻿using FlatMate.Module.Account.Api.Jso;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlatMate.Module.Account.Api.Jso;
+using FlatMate.Module.Account.DataAccess.Users;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Account.Api
 {
@@ -12,12 +15,16 @@ namespace FlatMate.Module.Account.Api
     public class UserApiController : ApiController
     {
         private const string RouteTemplate = "api/v1/account/user";
+        private readonly IUserDashboardTileRepository _dashboardTileRepository;
 
         private readonly IUserService _userService;
 
-        public UserApiController(IUserService userService, IApiControllerServices services) : base(services)
+        public UserApiController(IUserService userService,
+                                 IUserDashboardTileRepository dashboardTileRepository,
+                                 IApiControllerServices services) : base(services)
         {
             _userService = userService;
+            _dashboardTileRepository = dashboardTileRepository;
         }
 
         [HttpPost("password")]
@@ -44,12 +51,19 @@ namespace FlatMate.Module.Account.Api
             return get.Result.WithDataAs(Map<UserInfoJso>);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{userId}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Task<Result<UserInfoJso>> GetAsync(int id)
+        public Task<Result<UserInfoJso>> GetAsync(int userId)
         {
-            return _userService.GetAsync(id)
+            return _userService.GetAsync(userId)
                                .WithResultDataAs(Map<UserInfoJso>);
+        }
+
+        [HttpGet("{userId}/dashboard-tiles/")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<UserDashboardTileJso>> GetDashboardTilesAsync(int userId)
+        {
+            return (await _dashboardTileRepository.GetDashboardTiles(userId)).Select(Mapper.Map<UserDashboardTileJso>);
         }
     }
 }

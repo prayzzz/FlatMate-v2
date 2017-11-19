@@ -1,0 +1,22 @@
+.dashboard-index {
+
+    .tile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-auto-rows: 300px;
+        grid-gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .tile-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .tile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+}

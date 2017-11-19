@@ -1,0 +1,11 @@
+﻿@model FlatMate.Web.Areas.Lists.Components.MyListsTileVm
+
+<div style="padding: .5rem">
+
+    @foreach (var list in Model.Lists)
+    {
+        <div>
+            @list
+        </div>
+    }
+</div>
