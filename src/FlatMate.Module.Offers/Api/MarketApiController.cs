@@ -24,15 +24,15 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("import/{externalMarketId}")]
-        public async Task<Result<MarketJso>> Get(string externalMarketId)
+        public async Task<(Result, MarketJso)> Get(string externalMarketId)
         {
-            return FromTuple(await _marketService.ImportMarket(externalMarketId), Map<MarketJso>);
+            return MapResultTuple(await _marketService.ImportMarket(externalMarketId), Map<MarketJso>);
         }
 
         [HttpGet("{marketId}")]
-        public async Task<Result<MarketJso>> GetMarket(int marketId)
+        public async Task<(Result, MarketJso)> GetMarket(int marketId)
         {
-            return FromTuple(await _marketService.GetMarket(marketId), Map<MarketJso>);
+            return MapResultTuple(await _marketService.GetMarket(marketId), Map<MarketJso>);
         }
 
         [HttpGet]
@@ -42,9 +42,9 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("{marketId}/offer/")]
-        public async Task<Result<OfferPeriodJso>> GetOffers(int marketId, [FromQuery] DateTime? date = null)
+        public async Task<(Result, OfferPeriodJso)> GetOffers(int marketId, [FromQuery] DateTime? date = null)
         {
-            return FromTuple(await _offerService.GetOffers(marketId, date ?? DateTime.Now), Map<OfferPeriodJso>);
+            return MapResultTuple(await _offerService.GetOffers(marketId, date ?? DateTime.Now), Map<OfferPeriodJso>);
         }
 
         [HttpGet("{marketId}/offer/import")]

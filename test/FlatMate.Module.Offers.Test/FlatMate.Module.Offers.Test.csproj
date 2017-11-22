@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\build\common.props"/>
+    <Import Project="..\..\build\common.props"/>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\*.json"/>
+      <EmbeddedResource Include="Data\*.json"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"/>
-    <PackageReference Include="MSTest.TestAdapter" Version="1.2.0"/>
-    <PackageReference Include="MSTest.TestFramework" Version="1.2.0"/>
-    <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-dev-28"/>
-    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0"/>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1"/>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"/>
+      <PackageReference Include="MSTest.TestAdapter" Version="1.2.0"/>
+      <PackageReference Include="MSTest.TestFramework" Version="1.2.0"/>
+      <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-dev-29"/>
+      <PackageReference Include="Roslynator.Analyzers" Version="1.5.0"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj"/>
+      <ProjectReference Include="..\..\src\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj"/>
   </ItemGroup>
 </Project>

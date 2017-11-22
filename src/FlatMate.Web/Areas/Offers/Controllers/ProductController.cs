@@ -33,7 +33,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new ProductViewVm();
 
-            var productResult = await _apiController.GetProduct(id);
+            var (productResult, product) = await _apiController.GetProduct(id);
             if (productResult.IsError)
             {
                 if (productResult.ErrorType == ErrorType.NotFound)
@@ -44,7 +44,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 TempData[Constants.TempData.Result] = JsonService.Serialize(productResult);
                 return RedirectToAction("Index");
             }
-            var product = productResult.Data;
+//            var product = productResult.Data;
 
             var offersTask = _apiController.GetProductOffers(id);
             var priceHistoryTask = _apiController.GetProductPriceHistory(id);

@@ -51,9 +51,9 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("{id}")]
-        public async Task<Result<ProductJso>> GetProduct(int id)
+        public async Task<(Result, ProductJso)> GetProduct(int id)
         {
-            return FromTuple(await _productService.GetProduct(id), Map<ProductJso>);
+            return MapResultTuple(await _productService.GetProduct(id), Map<ProductJso>);
         }
 
         [HttpGet("category")]

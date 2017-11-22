@@ -24,6 +24,7 @@ using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Globalization;
+using FlatMate.Web.Mvc.Api;
 
 namespace FlatMate.Web
 {

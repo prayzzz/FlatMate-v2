@@ -1,13 +1,12 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
-using FlatMate.Web.Mvc.Base;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using FlatMate.Module.Offers.Api;
-using Microsoft.AspNetCore.Mvc;
 using FlatMate.Web.Areas.Offers.Data;
 using FlatMate.Web.Mvc;
-using System.Linq;
-using System;
+using FlatMate.Web.Mvc.Base;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Offers.Controllers
@@ -44,7 +43,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new MarketViewVm();
 
-            var marketResult = await _apiController.GetMarket(id);
+            var (marketResult, market) = await _apiController.GetMarket(id);
             if (marketResult.IsError)
             {
                 if (marketResult.ErrorType == ErrorType.NotFound)
@@ -55,7 +54,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 SetTempResult(marketResult);
                 return RedirectToActionPreserveMethod("Index");
             }
-            var market = marketResult.Data;
 
             var date = DateTime.Now;
             if (date.DayOfWeek == DayOfWeek.Sunday)
@@ -67,14 +65,13 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             var productCategoriesTask = _productApiController.GetProductCategories();
             var productFavoriteIdsTask = _productApiController.GetFavoriteProductIds(market.Id);
 
-            var offerPeriodResult = await offerPeriodTask;
+            var (offerPeriodResult, offerPeriod) = await offerPeriodTask;
             if (offerPeriodResult.IsError)
             {
                 SetTempResult(offerPeriodResult);
                 return RedirectToActionPreserveMethod("Index");
             }
 
-            var offerPeriod = offerPeriodResult.Data;
             var productFavoriteIds = await productFavoriteIdsTask;
 
             model.Market = market;

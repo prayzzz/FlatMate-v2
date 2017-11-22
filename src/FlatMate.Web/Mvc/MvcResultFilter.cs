@@ -7,8 +7,8 @@ using System;
 
 namespace FlatMate.Web.Mvc
 {
-    [Inject(DependencyLifetime.Singleton, typeof(MvcResultFilter))]
     [AttributeUsage(AttributeTargets.Class)]
+    [Inject(DependencyLifetime.Singleton, typeof(MvcResultFilter))]
     public class MvcResultFilter : ActionFilterAttribute
     {
         public override void OnActionExecuted(ActionExecutedContext context)

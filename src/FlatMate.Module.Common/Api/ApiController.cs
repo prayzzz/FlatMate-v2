@@ -22,9 +22,9 @@ namespace FlatMate.Module.Common.Api
             MappingContext = new MappingContext();
         }
 
-        public IMapper Mapper => _services.Mapper;
+        protected IMapper Mapper => _services.Mapper;
 
-        public IMetricsRoot MetricsRoot => _services.MetricsRoot;
+        protected IMetricsRoot MetricsRoot => _services.MetricsRoot;
 
         protected int CurrentUserId
         {
@@ -35,29 +35,14 @@ namespace FlatMate.Module.Common.Api
             }
         }
 
-        protected Result<TResult> FromTuple<TData, TResult>((Result Result, TData Value) tuple, Func<TData, TResult> map)
-        {
-            return FromTuple(tuple.Result, map(tuple.Value));
-        }
-
-        protected Result<TResult> FromTuple<TResult>((Result Result, TResult Value) tuple)
-        {
-            return FromTuple(tuple.Result, tuple.Value);
-        }
-
         protected T Map<T>(object data) where T : class
         {
             return Mapper.Map<T>(data, MappingContext);
         }
 
-        private Result<TResult> FromTuple<TResult>(Result result, TResult value)
+        protected static (Result, TOut) MapResultTuple<TIn, TOut>((Result, TIn) result, Func<TIn, TOut> mappingFunc)
         {
-            if (result.IsError)
-            {
-                return new ErrorResult<TResult>(result);
-            }
-
-            return new SuccessResult<TResult>(value);
+            return (result.Item1, mappingFunc(result.Item2));
         }
     }
 }

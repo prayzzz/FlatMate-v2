@@ -27,29 +27,29 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpPost("{id}/image")]
-        public async Task<Result<CompanyJso>> AddCompanyImage(int id, IFormFile file)
+        public async Task<(Result, CompanyJso)> AddCompanyImage(int id, IFormFile file)
         {
             var (getResult, company) = await _companyService.Get(id);
             if (getResult.IsError)
             {
-                return new ErrorResult<CompanyJso>(getResult);
+                return (getResult, null);
             }
 
             var (saveResult, image) = await _imageService.Save(ByteHelper.ReadToEnd(file.OpenReadStream()), file.ContentType);
             if (saveResult.IsError)
             {
-                return new ErrorResult<CompanyJso>(saveResult);
+                return (saveResult, null);
             }
 
             company.ImageGuid = image.Guid;
 
-            return FromTuple(await _companyService.UpdateCompany(id, company), Map<CompanyJso>);
+            return MapResultTuple(await _companyService.UpdateCompany(id, company), Map<CompanyJso>);
         }
 
         [HttpGet("{id}")]
-        public async Task<Result<CompanyJso>> Get(int id)
+        public async Task<(Result, CompanyJso)> Get(int id)
         {
-            return FromTuple(await _companyService.Get(id), Map<CompanyJso>);
+            return MapResultTuple(await _companyService.Get(id), Map<CompanyJso>);
         }
 
         [HttpGet]
