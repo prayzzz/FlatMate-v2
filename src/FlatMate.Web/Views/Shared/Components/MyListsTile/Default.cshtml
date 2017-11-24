@@ -1,11 +1,10 @@
 ﻿@model FlatMate.Web.Areas.Lists.Components.MyListsTileVm
 
-<div style="padding: .5rem">
+<h3>Listen</h3>
 
-    @foreach (var list in Model.Lists)
-    {
-        <div>
-            @list
-        </div>
-    }
-</div>
+@foreach (var list in Model.Lists)
+{
+    <div class="list-entry">
+        @list
+    </div>
+}

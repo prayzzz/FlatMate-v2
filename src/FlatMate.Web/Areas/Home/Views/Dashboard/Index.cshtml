@@ -12,7 +12,7 @@
     <div class="tile-grid">
         @foreach (var tile in Model.Tiles)
         {
-            <div class="tile standard-box">
+            <div class="tile-box standard-box">
                 @await Component.InvokeAsync(tile.DashboardTile)
             </div>
         }

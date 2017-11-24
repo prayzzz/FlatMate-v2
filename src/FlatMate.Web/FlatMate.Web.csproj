@@ -1,6 +1,6 @@
 ﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
-    <Import Project="..\..\build\common.props"/>
-    <Import Project="..\..\version.props"/>
+  <Import Project="..\..\build\common.props" />
+  <Import Project="..\..\version.props" />
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>win-x64,linux-x64</RuntimeIdentifiers>
@@ -9,62 +9,62 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
   <ItemGroup>
-      <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never"/>
-      <Content Include="_Migrations/**" CopyToPublishDirectory="Always"/>
+    <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never" />
+    <Content Include="_Migrations/**" CopyToPublishDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
-      <PackageReference Include="App.Metrics" Version="2.0.0-alpha"/>
-      <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0-alpha"/>
-      <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0"/>
-      <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.0.1" PrivateAssets="All"/>
-      <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1"/>
-      <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-dev-29"/>
-      <PackageReference Include="Roslynator.Analyzers" Version="1.5.0"/>
-      <PackageReference Include="Serilog" Version="2.5.0"/>
-      <PackageReference Include="Serilog.Enrichers.Demystify" Version="0.1.0-dev-00011"/>
-      <PackageReference Include="Serilog.Settings.Configuration" Version="2.4.0"/>
-      <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2"/>
-      <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="5.4.0"/>
-      <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0"/>
-      <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0"/>
-      <PackageReference Include="Serilog.Sinks.Trace" Version="2.1.0"/>
-      <PackageReference Include="SodaPop.ConfigExplorer" Version="1.0.0"/>
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0"/>
-      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="1.1.0"/>
+    <PackageReference Include="App.Metrics" Version="2.0.0-alpha" />
+    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0-alpha" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+    <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-dev-30" />
+    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
+    <PackageReference Include="Serilog" Version="2.5.0" />
+    <PackageReference Include="Serilog.Enrichers.Demystify" Version="0.1.0-dev-00011" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="2.4.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="5.4.0" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.Trace" Version="2.1.0" />
+    <PackageReference Include="SodaPop.ConfigExplorer" Version="1.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
-      <ProjectReference Include="..\FlatMate.Migration\FlatMate.Migration.csproj"/>
-      <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj"/>
-      <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj"/>
-      <ProjectReference Include="..\FlatMate.Module.Infrastructure\FlatMate.Module.Infrastructure.csproj"/>
-      <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj"/>
-      <ProjectReference Include="..\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj"/>
+    <ProjectReference Include="..\FlatMate.Migration\FlatMate.Migration.csproj" />
+    <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
+    <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
+    <ProjectReference Include="..\FlatMate.Module.Infrastructure\FlatMate.Module.Infrastructure.csproj" />
+    <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
+    <ProjectReference Include="..\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj" />
   </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Areas\Lists\Views\Shared\Components"/>
-        <Folder Include="Views\Shared\Components"/>
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Lists\Views\Shared\Components" />
+    <Folder Include="Views\Shared\Components" />
+  </ItemGroup>
   <Target Name="PrintVersion" BeforeTargets="BeforeBuild">
-      <Message Text="Building $(AssemblyName) version $(Version)" Importance="High"/>
+    <Message Text="Building $(AssemblyName) version $(Version)" Importance="High" />
   </Target>
   <Target Name="BuildFrontend" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release'">
     <ItemGroup>
-        <FrontendFiles Include="./wwwroot/dist/*"/>
+      <FrontendFiles Include="./wwwroot/dist/*" />
     </ItemGroup>
-      <Delete Files="@(FrontendFiles)"/>
-      <Exec Command="yarn --force" WorkingDirectory="wwwroot"/>
-      <Exec Command="./node_modules/.bin/webpack --env=$(Configuration)" WorkingDirectory="wwwroot"/>
+    <Delete Files="@(FrontendFiles)" />
+    <Exec Command="yarn --force" WorkingDirectory="wwwroot" />
+    <Exec Command="./node_modules/.bin/webpack --env=$(Configuration)" WorkingDirectory="wwwroot" />
   </Target>
   <Target Name="PublishFrontend" AfterTargets="PrepareForPublish" DependsOnTargets="BuildFrontend">
     <ItemGroup>
-        <DistFolder Include="wwwroot/dist/**/*"/>
+      <DistFolder Include="wwwroot/dist/**/*" />
     </ItemGroup>
-      <Copy SourceFiles="@(DistFolder)" DestinationFolder="$(PublishDir)\wwwroot\dist\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(DistFolder)" DestinationFolder="$(PublishDir)\wwwroot\dist\%(RecursiveDir)" />
   </Target>
 </Project>

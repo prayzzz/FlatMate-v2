@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\build\common.props"/>
+  <Import Project="..\..\build\common.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1"/>
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0"/>
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0"/>
-      <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-29"/>
-      <PackageReference Include="Roslynator.Analyzers" Version="1.5.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
+    <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-30" />
+    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
   </ItemGroup>
   <ItemGroup>
-      <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj"/>
+    <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
   </ItemGroup>
 </Project>
