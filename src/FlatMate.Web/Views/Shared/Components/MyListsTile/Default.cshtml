@@ -5,6 +5,6 @@
 @foreach (var list in Model.Lists)
 {
     <div class="list-entry">
-        @list
+        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
     </div>
 }

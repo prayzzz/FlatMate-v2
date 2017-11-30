@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Lists.Api;
+using FlatMate.Module.Lists.Api.Jso;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,7 @@ namespace FlatMate.Web.Areas.Lists.Components
         {
             var allLists = await _itemListApi.GetAllLists(new GetAllListsQuery { OwnerId = CurrentUserId });
 
-            var model = new MyListsTileVm();
-            model.Lists = allLists.Select(x => x.Name).ToList();
+            var model = new MyListsTileVm { Lists = allLists.ToList() };
 
             return View(model);
         }
@@ -34,6 +34,6 @@ namespace FlatMate.Web.Areas.Lists.Components
 
     public class MyListsTileVm : MvcViewModel
     {
-        public List<string> Lists { get; set; }
+        public List<ItemListJso> Lists { get; set; }
     }
 }
