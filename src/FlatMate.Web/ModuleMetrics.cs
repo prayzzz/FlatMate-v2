@@ -11,5 +11,11 @@ namespace FlatMate.Web
             Name = "FlatMate.Web." + nameof(ResponseStatusCodes),
             MeasurementUnit = Unit.Calls
         };
+
+        public static HistogramOptions ResponseTimes => new HistogramOptions
+        {
+            Name = "FlatMate.Web." + nameof(ResponseTimes),
+            MeasurementUnit = Unit.Calls
+        };
     }
 }

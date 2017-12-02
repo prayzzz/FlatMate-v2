@@ -23,6 +23,8 @@ namespace FlatMate.Web.Metrics
         public Dictionary<string, object> Gauges { get; } = new Dictionary<string, object>();
 
         public Dictionary<string, object> Meters { get; } = new Dictionary<string, object>();
+
+        public Dictionary<string, object> Histogram { get; } = new Dictionary<string, object>();
     }
 
     public class TelegrafMetricFormatter : IMetricsOutputFormatter
@@ -43,6 +45,15 @@ namespace FlatMate.Web.Metrics
                 foreach (var gauges in context.Gauges)
                 {
                     envelop.Gauges.Add(gauges.Name, gauges.Value);
+                }
+
+                foreach (var histogram in context.Histograms)
+                {
+                    envelop.Histogram.Add(histogram.Name + "." + "mean", histogram.Value.Mean);
+                    envelop.Histogram.Add(histogram.Name + "." + "median", histogram.Value.Median);
+                    envelop.Histogram.Add(histogram.Name + "." + "p95", histogram.Value.Percentile95);
+                    envelop.Histogram.Add(histogram.Name + "." + "p98", histogram.Value.Percentile98);
+                    envelop.Histogram.Add(histogram.Name + "." + "p99", histogram.Value.Percentile99);
                 }
 
                 foreach (var meter in context.Meters)

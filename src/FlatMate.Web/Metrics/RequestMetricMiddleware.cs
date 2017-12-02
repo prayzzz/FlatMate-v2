@@ -17,8 +17,11 @@ namespace FlatMate.Web.Metrics
 
         public Task Invoke(HttpContext context)
         {
+            var startTime = _metrics.Clock.Nanoseconds;
             var result = _next(context);
+            var elapsed = _metrics.Clock.Nanoseconds - startTime;
 
+            _metrics.Measure.Histogram.Update(ModuleMetrics.ResponseTimes, elapsed);
             _metrics.Measure.Meter.Mark(ModuleMetrics.ResponseStatusCodes, context.Response.StatusCode.ToString());
 
             return result;
