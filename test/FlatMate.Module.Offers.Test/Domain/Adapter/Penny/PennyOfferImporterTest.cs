@@ -21,7 +21,7 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
         [TestMethod]
         public async Task ImportOffersFromApiDuplicate()
         {
-            var dbContext = new OffersDbContext(new DbContextOptionsBuilder<OffersDbContext>().UseInMemoryDatabase("LoadOffers_Large").Options,
+            var dbContext = new OffersDbContext(new DbContextOptionsBuilder<OffersDbContext>().UseInMemoryDatabase("ImportOffersFromApiDuplicate").Options,
                                     new ConsoleLogger<OffersDbContext>());
 
             var offerEnvelop = new Envelope

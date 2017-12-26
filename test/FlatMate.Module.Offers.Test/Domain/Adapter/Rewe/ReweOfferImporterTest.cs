@@ -114,7 +114,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
         [TestMethod]
         public async Task LoadOffers_ProductUpdate()
         {
-            var dbContext = new OffersDbContext(new DbContextOptionsBuilder<OffersDbContext>().UseInMemoryDatabase("LoadOffers_ProductOfferUpdate").Options,
+            var dbContext = new OffersDbContext(new DbContextOptionsBuilder<OffersDbContext>().UseInMemoryDatabase("LoadOffers_ProductUpdate").Options,
                                                 new ConsoleLogger<OffersDbContext>());
 
             var offer = new OfferJso

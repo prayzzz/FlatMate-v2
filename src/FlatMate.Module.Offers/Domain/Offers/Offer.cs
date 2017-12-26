@@ -1,17 +1,23 @@
-﻿using FlatMate.Module.Common.DataAccess;
-using FlatMate.Module.Common.Dtos;
-using prayzzz.Common.Attributes;
-using prayzzz.Common.Mapping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Common.Dtos;
+using prayzzz.Common.Attributes;
+using prayzzz.Common.Mapping;
 
 namespace FlatMate.Module.Offers.Domain
 {
     [Table("Offer")]
     public class Offer : DboBase
     {
+        [ForeignKey(nameof(CompanyId))]
+        public CompanyData Company { get; set; }
+
+        [Required]
+        public int CompanyId { get; set; }
+
         [Required]
         public string ExternalId { get; set; }
 
