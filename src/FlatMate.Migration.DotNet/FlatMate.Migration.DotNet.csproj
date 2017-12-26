@@ -13,7 +13,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-30" />
-    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlatMate.Migration\FlatMate.Migration.csproj" />

@@ -9,6 +9,5 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
     <PackageReference Include="prayzzz.Common" Version="1.0.0-dev-30" />
-    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
   </ItemGroup>
 </Project>

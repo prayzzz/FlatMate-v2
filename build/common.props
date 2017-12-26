@@ -3,6 +3,5 @@
     <Product>FlatMate</Product>
     <RepositoryUrl>https://github.com/prayzzz/FlatMate-v2</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <CodeAnalysisRuleSet>..\..\FlatMate.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 </Project>
