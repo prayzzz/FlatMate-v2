@@ -89,7 +89,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
             var (result, importedOffers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
             var savedOffer = dbContext.Offers.FirstOrDefault(o => o.ExternalId == offer.Id);
-            var savedProduct = dbContext.Products.FirstOrDefault(p => p.ExternalId == offer.ProductId);
+            var savedProduct = dbContext.Products.FirstOrDefault();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(SuccessResult));
@@ -100,9 +100,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.AreEqual(DayOfWeek.Sunday, savedOffer.To.DayOfWeek);
 
             Assert.IsNotNull(savedProduct);
-            Assert.AreEqual(3.29M, savedProduct.Price);
             Assert.AreEqual(offer.Brand, savedProduct.Brand);
-            Assert.AreEqual(offer.ProductId, savedProduct.ExternalId);
             Assert.AreEqual(offer.Name, savedProduct.Name);
             Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
             Assert.AreEqual(1, savedProduct.PriceHistoryEntries.Count);
@@ -152,16 +150,14 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var (result, importedOffers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
             var (result2, importedOffers2) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
-            var savedProduct = dbContext.Products.FirstOrDefault(p => p.ExternalId == offer.ProductId);
+            var savedProduct = dbContext.Products.FirstOrDefault();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(SuccessResult));
             Assert.IsInstanceOfType(result2, typeof(SuccessResult));
 
             Assert.IsNotNull(savedProduct);
-            Assert.AreEqual(3.39M, savedProduct.Price);
             Assert.AreEqual(offer.Brand, savedProduct.Brand);
-            Assert.AreEqual(offer.ProductId, savedProduct.ExternalId);
             Assert.AreEqual(offer.Name, savedProduct.Name);
             Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
             Assert.AreEqual(2, savedProduct.PriceHistoryEntries.Count);
