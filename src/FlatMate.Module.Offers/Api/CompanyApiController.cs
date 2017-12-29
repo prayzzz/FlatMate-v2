@@ -1,13 +1,13 @@
-﻿using FlatMate.Module.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Infrastructure.Images;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Api
 {
@@ -41,6 +41,11 @@ namespace FlatMate.Module.Offers.Api
                 return (saveResult, null);
             }
 
+            if (company.ImageGuid != null)
+            {
+                await _imageService.Delete(company.ImageGuid.Value);
+            }
+
             company.ImageGuid = image.Guid;
 
             return MapResultTuple(await _companyService.UpdateCompany(id, company), Map<CompanyJso>);
@@ -55,7 +60,7 @@ namespace FlatMate.Module.Offers.Api
         [HttpGet]
         public async Task<IEnumerable<CompanyJso>> GetList()
         {
-            return (await _companyService.GetList()).Select(Map<CompanyJso>);
+            return (await _companyService.SearchCompanies()).Select(Map<CompanyJso>);
         }
     }
 }

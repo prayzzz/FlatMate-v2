@@ -22,9 +22,9 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<List<ProductDto>> GetDuplicateProducts();
 
-        Task<List<int>> GetFavoriteProductIds(int marketId);
+        Task<List<int>> GetFavoriteProductIds(Company company);
 
-        Task<List<ProductDto>> GetFavoriteProducts(int marketId);
+        Task<List<ProductDto>> GetFavoriteProducts(Company company);
 
         Task<(Result, ProductDto)> GetProduct(int id);
 
@@ -36,9 +36,9 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<Result> MergeProducts(int productId, int otherProductId);
 
-        Task<PartialList<ProductDto>> SearchProducts(int? marketId, string searchTerm, PartialListParameter parameter);
+        Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter);
 
-        Task<PartialList<ProductDto>> SearchFavoriteProducts(int? marketId, string searchTerm, PartialListParameter parameter);
+        Task<PartialList<ProductDto>> SearchFavoriteProducts(Company company, string searchTerm, PartialListParameter parameter);
     }
 
     [Inject]
@@ -92,25 +92,25 @@ namespace FlatMate.Module.Offers.Domain
             return SuccessResult.Default;
         }
 
-        public Task<List<int>> GetFavoriteProductIds(int marketId)
+        public Task<List<int>> GetFavoriteProductIds(Company company)
         {
             return (from p in _dbContext.Products
                     join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
-                    where f.UserId == CurrentUser.Id && p.MarketId == marketId
+                    where f.UserId == CurrentUser.Id && p.CompanyId == (int) company
                     select p.Id).ToListAsync();
         }
 
-        public Task<List<ProductDto>> GetFavoriteProducts(int marketId)
+        public Task<List<ProductDto>> GetFavoriteProducts(Company company)
         {
             return (from p in _dbContext.Products
                     join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
-                    where f.UserId == CurrentUser.Id && p.MarketId == marketId
+                    where f.UserId == CurrentUser.Id && p.CompanyId == (int) company
                     select _mapper.Map<ProductDto>(p)).ToListAsync();
         }
 
         public async Task<(Result, ProductDto)> GetProduct(int id)
         {
-            var product = await _dbContext.Products.Include(x => x.Market).FirstOrDefaultAsync(x => x.Id == id);
+            var product = await _dbContext.Products.Include(x => x.CompanyData).FirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
                 return (new ErrorResult(ErrorType.NotFound, "Product not found"), null);
@@ -139,13 +139,13 @@ namespace FlatMate.Module.Offers.Domain
                     select _mapper.Map<PriceHistoryDto>(ph)).ToListAsync();
         }
 
-        public async Task<PartialList<ProductDto>> SearchProducts(int? marketId, string searchTerm, PartialListParameter parameter)
+        public async Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter)
         {
             IQueryable<Product> productsQuery = _dbContext.Products;
 
-            if (marketId.HasValue)
+            if (company != Company.None)
             {
-                productsQuery = productsQuery.Where(p => p.MarketId == marketId);
+                productsQuery = productsQuery.Where(p => p.CompanyId == (int) company);
             }
 
             if (!string.IsNullOrEmpty(searchTerm))
@@ -165,16 +165,16 @@ namespace FlatMate.Module.Offers.Domain
             return new PartialList<ProductDto>(products.Select(_mapper.Map<ProductDto>), parameter, totalCount);
         }
 
-        public async Task<PartialList<ProductDto>> SearchFavoriteProducts(int? marketId, string searchTerm, PartialListParameter parameter)
+        public async Task<PartialList<ProductDto>> SearchFavoriteProducts(Company company, string searchTerm, PartialListParameter parameter)
         {
             var productsQuery = from p in _dbContext.Products
                                 join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
                                 where f.UserId == CurrentUser.Id
                                 select p;
 
-            if (marketId.HasValue)
+            if (company != Company.None)
             {
-                productsQuery = productsQuery.Where(p => p.MarketId == marketId);
+                productsQuery = productsQuery.Where(p => p.CompanyId == (int) company);
             }
 
             if (!string.IsNullOrEmpty(searchTerm))

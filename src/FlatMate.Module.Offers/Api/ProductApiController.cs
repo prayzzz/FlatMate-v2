@@ -34,20 +34,20 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("favorite/id")]
-        public async Task<IEnumerable<int>> GetFavoriteProductIds([FromQuery] int? marketId = null)
+        public async Task<IEnumerable<int>> GetFavoriteProductIds([FromQuery] Company companyId = Company.None)
         {
-            if (!marketId.HasValue)
+            if (companyId == Company.None)
             {
                 return Enumerable.Empty<int>();
             }
 
-            return await _productService.GetFavoriteProductIds(marketId.Value);
+            return await _productService.GetFavoriteProductIds(companyId);
         }
 
         [HttpGet("favorite")]
-        public async Task<PartialList<ProductJso>> SearchFavoriteProducts([FromQuery] int? marketId, [FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList)
+        public async Task<PartialList<ProductJso>> SearchFavoriteProducts([FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList, [FromQuery] int companyId = 0)
         {
-            return (await _productService.SearchFavoriteProducts(marketId, searchTerm, partialList)).MapTo(Map<ProductJso>);
+            return (await _productService.SearchFavoriteProducts((Company) companyId, searchTerm, partialList)).MapTo(Map<ProductJso>);
         }
 
         [HttpGet("{id}")]
@@ -75,9 +75,9 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet]
-        public async Task<PartialList<ProductJso>> SearchProducts([FromQuery] int? marketId, [FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList)
+        public async Task<PartialList<ProductJso>> SearchProducts([FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList, [FromQuery] int companyId = 0)
         {
-            return (await _productService.SearchProducts(marketId, searchTerm, partialList)).MapTo(Map<ProductJso>);
+            return (await _productService.SearchProducts((Company) companyId, searchTerm, partialList)).MapTo(Map<ProductJso>);
         }
     }
 }

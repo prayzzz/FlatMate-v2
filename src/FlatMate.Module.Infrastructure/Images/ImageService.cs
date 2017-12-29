@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
@@ -17,6 +18,8 @@ namespace FlatMate.Module.Infrastructure.Images
         Task<(Result, ImageDto)> Get(int id);
 
         Task<(Result, ImageDto)> Save(byte[] file, string contentType);
+
+        Task<Result> Delete(Guid guid);
     }
 
     [Inject]
@@ -97,6 +100,12 @@ namespace FlatMate.Module.Infrastructure.Images
             }
 
             return (SuccessResult.Default, _mapper.Map<ImageDto>(image));
+        }
+
+        public Task<Result> Delete(Guid guid)
+        {
+            _dbContext.Images.RemoveRange(_dbContext.Images.Where(i => i.Guid == guid));
+            return Task.FromResult((Result) SuccessResult.Default);
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using prayzzz.Common.Results;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter
 {
@@ -27,9 +27,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter
 
         public abstract Company Company { get; }
 
-        public OffersDbContext DbContext { get; }
+        protected OffersDbContext DbContext { get; }
 
-        public ILogger Logger { get; }
+        protected ILogger Logger { get; }
 
         public abstract Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market);
 
@@ -38,10 +38,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter
         protected void CheckForChangedProductProperties(Product product, OfferTemp offer)
         {
             Check(product.Brand, offer.Brand, nameof(product.Brand));
-            Check(product.Description, offer.Description, nameof(product.Description));
-            Check(product.ExternalId, offer.ExternalProductId, nameof(product.ExternalId));
-            Check(product.ExternalProductCategory, offer.ExternalProductCategory, nameof(product.ExternalProductCategory));
-            Check(product.ExternalProductCategoryId, offer.ExternalProductCategoryId, nameof(product.ExternalProductCategoryId));
+
+            //            Check(product.ExternalProductCategory, offer.ExternalProductCategory, nameof(product.ExternalProductCategory));
+            //            Check(product.ExternalProductCategoryId, offer.ExternalProductCategoryId, nameof(product.ExternalProductCategoryId));
             Check(product.Name, offer.Name, nameof(product.Name));
             Check(product.SizeInfo, offer.SizeInfo, nameof(product.SizeInfo));
 
@@ -75,9 +74,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter
         }
 
         /// <summary>
-        /// Update:
-        /// - update price for pricehistory
-        /// - update image url to prevent dead links
+        ///     Update:
+        ///     - update price for pricehistory
+        ///     - update image url to prevent dead links
         /// </summary>
         protected Product CreateOrUpdateProduct(OfferTemp offerDto)
         {
@@ -88,44 +87,48 @@ namespace FlatMate.Module.Offers.Domain.Adapter
                 DbContext.Add(product);
 
                 product.Brand = offerDto.Brand;
+                product.CompanyId = (int) offerDto.Company;
                 product.Description = offerDto.Description;
-                product.ExternalId = offerDto.ExternalProductId;
                 product.ExternalProductCategory = offerDto.ExternalProductCategory;
                 product.ExternalProductCategoryId = offerDto.ExternalProductCategoryId;
                 product.ImageUrl = offerDto.ImageUrl;
-                product.Market = offerDto.Market;
                 product.Name = offerDto.Name;
-                product.ProductCategoryId = (int)offerDto.ProductCategory;
+                product.ProductCategoryId = (int) offerDto.ProductCategory;
                 product.SizeInfo = offerDto.SizeInfo;
 
-                product.UpdatePrice(offerDto.RegularPrice);
+                product.UpdatePrice(offerDto.RegularPrice, offerDto.Market);
             }
             else
             {
                 CheckForChangedProductProperties(product, offerDto);
 
+                product.Description = offerDto.Description;
                 product.ImageUrl = offerDto.ImageUrl;
-                product.ProductCategoryId = (int)offerDto.ProductCategory;
-                product.UpdatePrice(offerDto.RegularPrice);
+                product.ProductCategoryId = (int) offerDto.ProductCategory;
+                product.UpdatePrice(offerDto.RegularPrice, offerDto.Market);
             }
 
             return product;
         }
 
-        protected virtual Offer FindExistingOffer(OfferTemp offerDto)
+        protected Offer FindExistingOffer(OfferTemp offerDto)
         {
-            return DbContext.Offers.FirstOrDefault(o => o.MarketId == offerDto.Market.Id && o.ExternalId == offerDto.ExternalOfferId);
+            return DbContext.Offers
+                            .FirstOrDefault(o => o.MarketId == offerDto.Market.Id && o.ExternalId == offerDto.ExternalOfferId);
         }
 
-        protected virtual Product FindExistingProduct(OfferTemp offerDto)
+        protected Product FindExistingProduct(OfferTemp offerDto)
         {
-            return DbContext.Products.Include(p => p.PriceHistoryEntries)
-                                     .FirstOrDefault(p => p.MarketId == offerDto.Market.Id && p.ExternalId == offerDto.ExternalProductId);
+            return DbContext.Products
+                            .Include(p => p.PriceHistoryEntries)
+                            .FirstOrDefault(p => p.CompanyId == (int) offerDto.Company && p.Name == offerDto.Name && p.SizeInfo == offerDto.SizeInfo);
         }
 
         protected class OfferTemp : IEquatable<OfferTemp>
         {
             public string Brand { get; set; }
+
+            public Company Company { get; set; }
 
             public string Description { get; set; }
 
@@ -135,15 +138,11 @@ namespace FlatMate.Module.Offers.Domain.Adapter
 
             public string ExternalProductCategoryId { get; set; }
 
-            public string ExternalProductId { get; set; }
-
             public string ImageUrl { get; set; }
 
             public Market Market { get; set; }
 
             public string Name { get; set; }
-
-            public string OfferBasePrice { get; set; }
 
             public DateTime OfferedFrom { get; set; }
 
@@ -162,7 +161,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             public bool Equals(OfferTemp other)
             {
                 return Name.Equals(other.Name, StringComparison.CurrentCultureIgnoreCase)
-                    && SizeInfo.Equals(other.SizeInfo, StringComparison.CurrentCultureIgnoreCase);
+                       && SizeInfo.Equals(other.SizeInfo, StringComparison.CurrentCultureIgnoreCase);
             }
 
             public override int GetHashCode()

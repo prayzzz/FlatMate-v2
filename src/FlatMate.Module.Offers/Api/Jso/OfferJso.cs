@@ -1,10 +1,10 @@
-﻿using FlatMate.Module.Offers.Domain;
-using prayzzz.Common.Attributes;
-using prayzzz.Common.Mapping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using FlatMate.Module.Offers.Domain;
+using prayzzz.Common.Attributes;
+using prayzzz.Common.Mapping;
 
 namespace FlatMate.Module.Offers.Api
 {
@@ -19,7 +19,7 @@ namespace FlatMate.Module.Offers.Api
 
         public string ImageUrl { get; set; }
 
-        public MarketJso Market { get; set; }
+        public int MarketId { get; set; }
 
         public decimal Price { get; set; }
 
@@ -57,7 +57,7 @@ namespace FlatMate.Module.Offers.Api
                 From = dto.From,
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
-                Market = ctx.Mapper.Map<MarketJso>(dto.Market),
+                MarketId = dto.MarketId,
                 Price = dto.Price,
                 Product = ctx.Mapper.Map<ProductJso>(dto.Product),
                 ProductId = dto.ProductId,

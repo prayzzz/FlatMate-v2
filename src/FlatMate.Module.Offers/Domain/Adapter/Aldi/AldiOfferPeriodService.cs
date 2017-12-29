@@ -1,21 +1,21 @@
-﻿using prayzzz.Common.Attributes;
+﻿using System;
 using FlatMate.Module.Common.Extensions;
-using System;
+using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 {
     [Inject]
     public class AldiOfferPeriodService : IOfferPeriodService
     {
-        private readonly DayOfWeek _endDay = DayOfWeek.Sunday;
-        private readonly DayOfWeek _startDay = DayOfWeek.Monday;
+        private const DayOfWeek EndDay = DayOfWeek.Sunday;
+        private const DayOfWeek StartDay = DayOfWeek.Monday;
 
         public Company Company => Company.AldiNord;
 
         public OfferDuration ComputeOfferPeriod(DateTime date)
         {
-            var from = date.GetPreviousWeekday(_startDay);
-            var to = date.GetNextWeekday(_endDay);
+            var from = date.GetPreviousWeekday(StartDay);
+            var to = date.GetNextWeekday(EndDay);
 
             return new OfferDuration { From = from, To = to };
         }

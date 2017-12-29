@@ -28,7 +28,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             var model = new ProductFavoriteManageVm
             {
-                Markets = (await _marketApi.GetMarkets()).ToList(),
+                Markets = (await _marketApi.SearchMarkets()).ToList(),
                 CurrentMarket = marketId
             };
 

@@ -1,14 +1,13 @@
-﻿using FlatMate.Module.Common.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using prayzzz.Common.Attributes;
-using prayzzz.Common.Results;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common.Extensions;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using prayzzz.Common.Attributes;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Penny
 {
@@ -62,19 +61,13 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                 return (new ErrorResult(ErrorType.InternalError, $"{nameof(IPennyApi)} nicht verfügbar."), null);
             }
 
-            var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(envelope), market.CompanyId);
+            var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(envelope), market.Id);
             if (result.IsError)
             {
                 Logger.LogWarning(0, "Saving raw offer data failed");
             }
 
             return await ProcessOffers(envelope, market);
-        }
-
-        protected override Product FindExistingProduct(OfferTemp offerDto)
-        {
-            return DbContext.Products.Include(p => p.PriceHistoryEntries)
-                                     .FirstOrDefault(p => p.MarketId == offerDto.Market.Id && p.Name == offerDto.Name && p.SizeInfo == offerDto.SizeInfo);
         }
 
         public override Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
@@ -172,11 +165,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
                 ExternalOfferId = $"{offerJso.Id}",
                 ExternalProductCategory = productCategory.ExternalName,
                 ExternalProductCategoryId = productCategory.ExternalId,
-                ExternalProductId = string.Empty,
                 ImageUrl = offerJso.Bild_original,
                 Market = market,
                 Name = _pennyUtils.Trim(offerJso.Titel),
-                OfferBasePrice = _pennyUtils.Trim(offerJso.Grundpreis),
                 OfferedFrom = offerDuration.From,
                 OfferedTo = offerDuration.To,
                 OfferPrice = _pennyUtils.ParsePrice(offerJso.Preis),

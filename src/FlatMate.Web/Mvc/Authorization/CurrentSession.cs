@@ -13,7 +13,7 @@ namespace FlatMate.Web.Mvc.Authorization
         {
             var httpContext = httpContextAccessor.HttpContext;
 
-            var userClaim = httpContext.User?.FindFirst(ClaimTypes.Sid);
+            var userClaim = httpContext?.User?.FindFirst(ClaimTypes.Sid);
             if (userClaim != null)
             {
                 CurrentUserId = Convert.ToInt32(userClaim.Value);

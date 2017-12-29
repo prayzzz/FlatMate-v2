@@ -1,32 +1,28 @@
-﻿using FlatMate.Module.Common.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using FlatMate.Module.Common.Tasks;
 using FlatMate.Module.Offers.Domain;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Tasks
 {
     [Inject(typeof(ScheduledTask))]
     public class ImportOffersTask : ScheduledTask
     {
-        private readonly OffersDbContext _dbContext;
-
         private readonly ILogger<ImportOffersTask> _logger;
-
         private readonly IMarketService _marketService;
 
-        public ImportOffersTask(OffersDbContext dbContext,
-                                IMarketService marketService,
+        public ImportOffersTask(IMarketService marketService,
                                 ILogger<ImportOffersTask> logger)
         {
-            _dbContext = dbContext;
             _marketService = marketService;
             _logger = logger;
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Every Sunday 10:00
+        ///     Every Sunday 10:00
         /// </summary>
         public override string Schedule => "0 10 * * 0";
 
@@ -34,7 +30,7 @@ namespace FlatMate.Module.Offers.Tasks
         {
             _logger.LogInformation("Starting {taskName}", nameof(ImportOffersTask));
 
-            foreach (var market in await _marketService.GetMarkets())
+            foreach (var market in await _marketService.SearchMarkets(Company.None))
             {
                 _logger.LogInformation("Importing offers for {market}", market.Name);
                 await _marketService.ImportOffers(market.Id.Value);

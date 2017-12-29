@@ -15,16 +15,16 @@ namespace FlatMate.Web.Areas.Offers.Controllers
     public class AdminController : MvcController
     {
         private readonly AdminApiController _adminApi;
-        private readonly MarketApiController _marketApi;
+        private readonly CompanyApiController _companyApi;
         private readonly ILogger<AdminController> _logger;
 
         public AdminController(AdminApiController adminApi,
-                               MarketApiController marketApi,
+                               CompanyApiController companyApi,
                                ILogger<AdminController> logger,
                                IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _adminApi = adminApi;
-            _marketApi = marketApi;
+            _companyApi = companyApi;
             _logger = logger;
         }
 
@@ -33,8 +33,8 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             var model = ApplyTempResult(new AdminManageProductDuplicatesVm());
 
             var duplicates = await _adminApi.GetDuplicates();
-            model.GroupedProducts = duplicates.GroupBy(x => (x.Name, x.SizeInfo, x.MarketId)).ToList();
-            model.Markets = (await _marketApi.GetMarkets()).ToList();
+            model.GroupedProducts = duplicates.GroupBy(x => (x.Name, x.SizeInfo, x.CompanyId)).ToList();
+            model.Companies = (await _companyApi.GetList()).ToList();
 
             return View(model);
         }

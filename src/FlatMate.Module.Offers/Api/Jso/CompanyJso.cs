@@ -10,13 +10,13 @@ namespace FlatMate.Module.Offers.Api
     public class CompanyJso
     {
         [ReadOnly(true)]
-        public int? Id { get; set; }
+        public Company Id { get; set; }
 
         [ReadOnly(true)]
         public Guid? ImageGuid { get; set; }
 
         [ReadOnly(true)]
-        public string ImageLink { get; set; }
+        public string ImagePath { get; set; }
 
         public string Name { get; set; }
     }
@@ -30,28 +30,28 @@ namespace FlatMate.Module.Offers.Api
             mapper.Configure<CompanyJso, CompanyDto>(MapToDto);
         }
 
-        private CompanyDto MapToDto(CompanyJso jso, MappingContext ctx)
+        private static CompanyDto MapToDto(CompanyJso jso, MappingContext ctx)
         {
             return new CompanyDto
             {
-                Id = jso.Id,
+                Id = (int) jso.Id,
                 ImageGuid = jso.ImageGuid,
                 Name = jso.Name
             };
         }
 
-        private CompanyJso MapToJso(CompanyDto dto, MappingContext ctx)
+        private static CompanyJso MapToJso(CompanyDto dto, MappingContext ctx)
         {
             var jso = new CompanyJso
             {
-                Id = dto.Id,
+                Id = (Company) dto.Id,
                 ImageGuid = dto.ImageGuid,
                 Name = dto.Name
             };
 
             if (dto.ImageGuid.HasValue)
             {
-                jso.ImageLink = ImageApiController.GetImageUrl(dto.ImageGuid.Value);
+                jso.ImagePath = ImageApiController.GetImagePath(dto.ImageGuid.Value);
             }
 
             return jso;

@@ -14,7 +14,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Market");
+            return RedirectToAction("Index", "Company");
         }
     }
 }

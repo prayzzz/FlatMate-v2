@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace FlatMate.Web.Areas.Offers.Data
 {
-    public class MarketViewVm : MvcViewModel
+    public class CompanyViewVm : MvcViewModel
     {
-        public MarketJso Market { get; set; }
+        public CompanyJso Company { get; set; }
 
         public List<OfferJso> Offers { get; set; } = new List<OfferJso>();
 
@@ -15,8 +15,10 @@ namespace FlatMate.Web.Areas.Offers.Data
 
         public DateTime OffersTo { get; set; }
 
-        public Dictionary<int, ProductCategoryJso> ProductCategories { get; set; } = new Dictionary<int, ProductCategoryJso>();
+        public List<ProductCategoryJso> ProductCategories { get; set; } = new List<ProductCategoryJso>();
 
         public List<OfferJso> Favorites { get; set; } = new List<OfferJso>();
+
+        public List<MarketJso> Markets { get; set; } = new List<MarketJso>();
     }
 }

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace FlatMate.Web.Areas.Offers.Data
 {
-    public class MarketIndexVm : MvcViewModel
+    public class CompanyIndexVm : MvcViewModel
     {
-        public List<MarketJso> Markets { get; set; } = new List<MarketJso>();
+        public List<CompanyJso> Companies { get; set; } = new List<CompanyJso>();
     }
 }

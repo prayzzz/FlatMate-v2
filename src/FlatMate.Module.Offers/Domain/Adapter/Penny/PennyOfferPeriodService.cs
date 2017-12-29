@@ -7,15 +7,15 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
     [Inject]
     public class PennyOfferPeriodService : IOfferPeriodService
     {
-        private readonly DayOfWeek _endDay = DayOfWeek.Sunday;
-        private readonly DayOfWeek _startDay = DayOfWeek.Monday;
+        private const DayOfWeek EndDay = DayOfWeek.Sunday;
+        private const DayOfWeek StartDay = DayOfWeek.Monday;
 
         public Company Company => Company.Penny;
 
         public OfferDuration ComputeOfferPeriod(DateTime date)
         {
-            var from = date.GetPreviousWeekday(_startDay);
-            var to = date.GetNextWeekday(_endDay);
+            var from = date.GetPreviousWeekday(StartDay);
+            var to = date.GetNextWeekday(EndDay);
 
             return new OfferDuration { From = from, To = to };
         }

@@ -16,6 +16,17 @@ export class MarketJso {
     public street: string;
 }
 
+export class OfferJso {
+    public externalId: string;
+    public from: string;
+    public id: number;
+    public imageUrl: string;
+    public marketId: number;
+    public price: number;
+    public product: ProductJso;
+    public to: string;
+}
+
 export class ProductCategoryJso {
     public id: number;
     public name: string;
@@ -24,6 +35,7 @@ export class ProductCategoryJso {
 
 export class ProductJso {
     public brand: string;
+    public companyId: number;
     public description: string;
     public externalId: string;
     public id: number;

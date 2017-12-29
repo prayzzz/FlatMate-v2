@@ -1,6 +1,6 @@
-﻿import { MarketJso, ProductApi, ProductVm } from ".";
-import { FlatMate } from "app";
-import { PartialListParameter } from "Api/PartialList";
+﻿import {MarketJso, ProductApi, ProductVm} from ".";
+import {FlatMate} from "app";
+import {PartialListParameter} from "Api/PartialList";
 
 export interface ProductFavoriteManageVm {
     markets: MarketJso[];
@@ -63,16 +63,6 @@ export class ProductFavoriteEditor {
                 this.selectedMarket(market);
             }
         }
-
-
-        //
-        // this.searchTerm = ko.observable("");
-        // this.searchTerm.subscribe(value => this.loadProducts());
-        //
-        // this.productsPerPage = ko.observable(15);
-        // this.currentPage = ko.observable(1);
-        //
-        // this.productPage = ko.observableArray();
     }
 
     public nextPage() {
@@ -125,23 +115,5 @@ export class ProductFavoriteEditor {
         }
 
         setTimeout(() => FlatMate.blazy.revalidate(), 1);
-
-        //
-        // // start api calls
-        // const queryParam = {limit: this.productsPerPage(), offset: this.productsPerPage() * this.currentPage() - 1};
-        // const productsTask = this.apiClient.searchProducts(market.id, this.searchTerm(), queryParam);
-        // const favProductIdsTask = this.apiClient.getProductFavoriteIds(market.id);
-        //
-        // // wait for api calls
-        // const products = await productsTask;
-        // const favProductIds = await favProductIdsTask;
-        //
-        // // apply loaded products
-        // this.productPage.removeAll();
-        // for (const productJso of products.sort((a: ProductJso, b: ProductJso) => a.name.localeCompare(b.name))) {
-        //     const product = new ProductVm(productJso, market);
-        //     product.isFavorite(favProductIds.some(fp => fp === product.id));
-        //     this.productPage.push(product);
-        // }
     }
 }

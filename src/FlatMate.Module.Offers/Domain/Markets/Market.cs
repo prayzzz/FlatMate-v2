@@ -1,10 +1,9 @@
-﻿using FlatMate.Module.Common.DataAccess;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Offers.Domain
 {
@@ -16,6 +15,7 @@ namespace FlatMate.Module.Offers.Domain
         [ForeignKey(nameof(CompanyId))]
         public CompanyData Company { get; set; }
 
+        [Required]
         public int CompanyId { get; set; }
 
         [Required]
@@ -24,13 +24,7 @@ namespace FlatMate.Module.Offers.Domain
         [Required]
         public string Name { get; set; }
 
-        [InverseProperty(nameof(Product.Market))]
-        public List<Offer> Offers { get; set; }
-
         public string PostalCode { get; set; }
-
-        [InverseProperty(nameof(Offer.Market))]
-        public List<Product> Products { get; set; }
 
         public string Street { get; set; }
     }
@@ -41,7 +35,7 @@ namespace FlatMate.Module.Offers.Domain
 
         public CompanyDto Company { get; set; }
 
-        public int CompanyId { get; set; }
+        public Company CompanyId { get; set; }
 
         public string Name { get; set; }
 
@@ -64,7 +58,7 @@ namespace FlatMate.Module.Offers.Domain
             {
                 City = market.City,
                 Company = mappingContext.Mapper.Map<CompanyDto>(market.Company),
-                CompanyId = market.CompanyId,
+                CompanyId = (Company) market.CompanyId,
                 Id = market.Id,
                 Name = market.Name,
                 PostalCode = market.PostalCode,

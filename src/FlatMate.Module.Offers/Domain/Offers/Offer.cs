@@ -12,12 +12,6 @@ namespace FlatMate.Module.Offers.Domain
     [Table("Offer")]
     public class Offer : DboBase
     {
-        [ForeignKey(nameof(CompanyId))]
-        public CompanyData Company { get; set; }
-
-        [Required]
-        public int CompanyId { get; set; }
-
         [Required]
         public string ExternalId { get; set; }
 
@@ -53,7 +47,7 @@ namespace FlatMate.Module.Offers.Domain
 
         public string ImageUrl { get; set; }
 
-        public MarketDto Market { get; set; }
+        public int MarketId { get; set; }
 
         public decimal Price { get; set; }
 
@@ -72,7 +66,7 @@ namespace FlatMate.Module.Offers.Domain
             mapper.Configure<Offer, OfferDto>(MapToDto);
         }
 
-        private OfferDto MapToDto(Offer offer, MappingContext ctx)
+        private static OfferDto MapToDto(Offer offer, MappingContext ctx)
         {
             return new OfferDto
             {
@@ -80,7 +74,7 @@ namespace FlatMate.Module.Offers.Domain
                 Id = offer.Id,
                 ExternalId = offer.ExternalId,
                 ImageUrl = offer.ImageUrl,
-                Market = ctx.Mapper.Map<MarketDto>(offer.Market),
+                MarketId = offer.MarketId,
                 Price = offer.Price,
                 Product = ctx.Mapper.Map<ProductDto>(offer.Product),
                 ProductId = offer.ProductId,
@@ -92,6 +86,8 @@ namespace FlatMate.Module.Offers.Domain
     public class OfferPeriodDto : DtoBase
     {
         public DateTime From { get; set; }
+
+        public CompanyDto Company { get; set; }
 
         public IEnumerable<OfferDto> Offers { get; set; }
 

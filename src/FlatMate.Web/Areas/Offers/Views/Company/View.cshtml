@@ -1,0 +1,231 @@
+﻿@model FlatMate.Web.Areas.Offers.Data.CompanyViewVm
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Company.Name;
+    ViewData["PageTitle"] = "Im Angebot";
+    ViewData["MainClass"] = "company-view";
+}
+
+<section class="container" style="min-height: 100vh">
+
+    <company-offers-list style="height: 100%"></company-offers-list>
+
+</section>
+
+<script type="text/html" id="company-offers-list-template">
+    <div class="row align-right actions">
+        <div class="col-auto">
+            <a data-bind="attr: { href: productFavoriteLink }">Favoriten verwalten</a>
+        </div>
+    </div>
+
+    <div class="standard-box market-info-box">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-market-image">
+                <img data-bind="attr: { src: model.company.imagePath, alt: model.company.name }" height="66"/>
+            </div>
+            <div class="col-sm-12 col-md-5 col-market-info">
+            </div>
+            <div class="col-sm-12 col-md-3 col-offer-count">
+                <span data-bind="text: model.offers.length"></span> Produkte im Angebot<br/>
+                von <span data-bind="text: offersFrom.toLocaleDateString('de-DE')"></span> bis <span data-bind="text: offersTo.toLocaleDateString('de-DE')"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ko if: model.favorites.length > 0 -->
+
+    <h3>Favoriten</h3>
+
+    <div class="row">
+
+        <!-- ko foreach: favorites -->
+        <div class="col-sm-6 col-lg-4 col-xl-3 col-offer">
+            <a data-bind="attr: { 'href': productUrl }" class="standard-box offer-box">
+                <div class="image">
+                    <img class="b-lazy"
+                         src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                         data-bind="attr: { 'data-src': imageUrl, 'alt': name }"
+                         width="150"/>
+                </div>
+
+                <div class="name">
+                    <strong>
+                        <span data-bind="text: name"></span>
+                    </strong>
+                </div>
+
+                <div class="price">
+                    <span style="font-size: 1.5rem"><span data-bind="text: price"></span> €</span>
+                </div>
+            </a>
+        </div>
+        <!-- /ko -->
+
+    </div>
+
+    <!-- /ko -->
+
+    <!-- ko foreach: categoryToOffers -->
+
+    <h3>
+        <span data-bind="text: category.name"></span>
+    </h3>
+
+    <div class="row">
+
+        <!-- ko foreach: offers -->
+
+        <div class="col-sm-6 col-lg-4 col-xl-3 col-offer" data-bind="component: {name: 'offer-tile', params : {offer: $data}} "></div>
+
+        <!-- /ko-->
+
+    </div>
+
+    <!-- /ko-->
+</script>
+
+<script type="text/html" id="offer-tile-template">
+    <a data-bind="attr: { 'href': productUrl }" class="standard-box offer-box">
+
+        <div class="image">
+            <img class="b-lazy"
+                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                 data-bind="attr: { 'data-src': imageUrl, 'alt': name }"
+                 width="150"
+                 alt=""/>
+        </div>
+
+        <div class="name">
+            <span data-bind="if: isFavorite">
+                <i class="fa fa-heart" aria-hidden="true"></i>
+            </span>
+            <strong>
+                <span data-bind="text: name"></span>
+            </strong>
+        </div>
+
+        <div data-bind="if: isStartingLater">
+            ab <span data-bind="text: from.toLocaleDateString('de-DE')"></span>
+        </div>
+
+        <div class="price">
+            <span style="font-size: 1.5rem"><span data-bind="text: price"></span> €</span>
+        </div>
+
+    </a>
+</script>
+
+@section viewData {
+    <script type="text/json" id="data-company-offers-list">
+        @Json.Serialize(Model)
+    </script>
+}
+
+
+
+@*
+<section class="container">
+
+    <div class="row align-right actions">
+        <div class="col-auto">
+            <a asp-controller="ProductFavorite" asp-action="Manage" asp-route-marketId="@((int)Model.Company.Id)">Favoriten verwalten</a>
+        </div>
+    </div>
+
+    <div class="standard-box market-info-box">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-market-image">
+                <img src="@Model.Company.ImagePath" height="66" alt="@Model.Company.Name"/>
+            </div>
+            <div class="col-sm-12 col-md-3 col-offer-count">
+                @Model.Offers.Count Produkte im Angebot<br/>
+                von @Model.OffersFrom.ToShortDateString() bis @Model.OffersTo.ToShortDateString()
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Favorites.Count > 0)
+    {
+        <h3>Favoriten</h3>
+
+        <div class="row">
+
+            @foreach (var offer in Model.Favorites)
+            {
+                <div class="col-sm-6 col-lg-4 col-xl-3 col-offer">
+                    <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@offer.ProductId" class="standard-box offer-box">
+
+                        <div class="image">
+                            <img class="b-lazy"
+                                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                 data-src="@OfferImageHelper.Get(offer.ImageUrl, (Company) Model.Company.Id, 150)"
+                                 width="150"
+                                 alt="@Model.Company.Name"/>
+                        </div>
+
+                        <div class="name">
+                            <strong>@offer.Product.Name</strong>
+                        </div>
+
+                        <div class="price">
+                            <span style="font-size: 1.5rem">@offer.Price €</span>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+    @{
+        var offersByProductCategory = Model.Offers.OrderByDescending(o => o.Product.ProductCategory.SortWeight)
+                                           .GroupBy(o => o.Product.ProductCategory.Id.Value);
+    }
+
+    @foreach (var offersGroup in offersByProductCategory)
+    {
+        <h3>@Model.ProductCategories[offersGroup.Key].Name</h3>
+
+        <div class="row">
+
+            @foreach (var offer in offersGroup.OrderBy(x => x.From).ThenBy(x => x.Product.ExternalId))
+            {
+                <div class="col-sm-6 col-lg-4 col-xl-3 col-offer">
+                    <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@offer.ProductId" class="standard-box offer-box">
+
+                        <div class="image">
+                            <img class="b-lazy"
+                                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                 data-src="@OfferImageHelper.Get(offer.ImageUrl, (Company) Model.Company.Id, 150)"
+                                 width="150"
+                                 alt="@Model.Company.Name"/>
+                        </div>
+
+                        <div class="name">
+                            @if (Model.Favorites.Contains(offer))
+                            {
+                                <i class="fa fa-heart" aria-hidden="true"></i>
+                            }
+                            <strong>@offer.Product.Name</strong>
+                        </div>
+
+                        @if (Model.OffersFrom != offer.From)
+                        {
+                            <div>
+                                ab @offer.From.ToString("ddd"), @offer.From.ToShortDateString()
+                            </div>
+                        }
+
+                        <div class="price">
+                            <span style="font-size: 1.5rem">@offer.Price €</span>
+                        </div>
+
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</section>*@

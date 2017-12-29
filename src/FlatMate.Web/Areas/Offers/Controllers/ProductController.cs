@@ -44,11 +44,10 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 TempData[Constants.TempData.Result] = JsonService.Serialize(productResult);
                 return RedirectToAction("Index");
             }
-//            var product = productResult.Data;
 
             var offersTask = _apiController.GetProductOffers(id);
             var priceHistoryTask = _apiController.GetProductPriceHistory(id);
-            var productFavoritesTask = _apiController.GetFavoriteProductIds(product.MarketId);
+            var productFavoritesTask = _apiController.GetFavoriteProductIds(product.CompanyId);
 
             model.Product = product;
             model.IsFavorite = (await productFavoritesTask).Any(pf => pf == product.Id);

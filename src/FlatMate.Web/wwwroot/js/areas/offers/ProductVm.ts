@@ -1,4 +1,4 @@
-﻿import { ProductApi, ProductJso, MarketJso } from ".";
+﻿import {MarketJso, ProductApi, ProductJso} from ".";
 
 export class ProductVm {
     public isFavorite: KnockoutObservable<boolean>;

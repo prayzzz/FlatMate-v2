@@ -1,10 +1,10 @@
-﻿using FlatMate.Module.Common.DataAccess;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Offers.Domain
 {
@@ -17,19 +17,30 @@ namespace FlatMate.Module.Offers.Domain
         {
         }
 
-        public PriceHistory(decimal price, Product product) : this(price, DateTime.Now, product)
+        public PriceHistory(decimal price, Product product, Market market) : this(price, DateTime.Now, product, market)
         {
         }
 
-        private PriceHistory(decimal price, DateTime date, Product product)
+        private PriceHistory(decimal price, DateTime date, Product product, Market market)
         {
             Price = price;
             Date = date;
             Product = product;
+            Market = market;
         }
 
         [Required]
-        public DateTime Date { get => _date; set => _date = value.Date; }
+        public DateTime Date
+        {
+            get => _date;
+            set => _date = value.Date;
+        }
+
+        [ForeignKey(nameof(MarketId))]
+        public Market Market { get; set; }
+
+        [Required]
+        public int MarketId { get; set; }
 
         [Required]
         public decimal Price { get; set; }
@@ -45,6 +56,8 @@ namespace FlatMate.Module.Offers.Domain
     {
         public DateTime Date { get; set; }
 
+        public MarketDto Market { get; set; }
+
         public decimal Price { get; set; }
 
         public ProductDto Product { get; set; }
@@ -58,11 +71,12 @@ namespace FlatMate.Module.Offers.Domain
             mapper.Configure<PriceHistory, PriceHistoryDto>(MapToDto);
         }
 
-        private PriceHistoryDto MapToDto(PriceHistory history, MappingContext ctx)
+        private static PriceHistoryDto MapToDto(PriceHistory history, MappingContext ctx)
         {
             return new PriceHistoryDto
             {
                 Date = history.Date,
+                Market = ctx.Mapper.Map<MarketDto>(history.Market),
                 Price = history.Price,
                 Product = ctx.Mapper.Map<ProductDto>(history.Product)
             };

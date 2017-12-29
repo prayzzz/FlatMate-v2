@@ -1,13 +1,13 @@
-﻿using FlatMate.Module.Offers.Domain.Adapter;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlatMate.Module.Offers.Domain.Adapter;
 using FlatMate.Module.Offers.Domain.Adapter.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain
 {
@@ -15,11 +15,11 @@ namespace FlatMate.Module.Offers.Domain
     {
         Task<(Result, MarketDto)> GetMarket(int id);
 
-        Task<IEnumerable<MarketDto>> GetMarkets();
-
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
-        Task<(Result, IEnumerable<OfferDto>)> ImportOffers(int marketId);
+        Task<Result> ImportOffers(int marketId);
+
+        Task<IEnumerable<MarketDto>> SearchMarkets(Company company);
     }
 
     [Inject]
@@ -30,10 +30,8 @@ namespace FlatMate.Module.Offers.Domain
         private readonly IMapper _mapper;
         private readonly IReweMarketImporter _marketImporter;
         private readonly IEnumerable<IOfferImporter> _offerImporters;
-        private readonly IEnumerable<IOfferPeriodService> _offerPeriodServices;
 
         public MarketService(IReweMarketImporter marketImporter,
-                             IEnumerable<IOfferPeriodService> offerPeriodServices,
                              IEnumerable<IOfferImporter> offerImporters,
                              OffersDbContext dbContext,
                              IMapper mapper,
@@ -44,7 +42,6 @@ namespace FlatMate.Module.Offers.Domain
             _mapper = mapper;
             _logger = logger;
             _offerImporters = offerImporters;
-            _offerPeriodServices = offerPeriodServices;
         }
 
         public async Task<(Result, MarketDto)> GetMarket(int id)
@@ -58,17 +55,8 @@ namespace FlatMate.Module.Offers.Domain
             return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
         }
 
-        public async Task<IEnumerable<MarketDto>> GetMarkets()
-        {
-            var market = await _dbContext.Markets
-                                         .Include(m => m.Company)
-                                         .ToListAsync();
-
-            return market.Select(_mapper.Map<MarketDto>);
-        }
-
         /// <summary>
-        /// TODO only works for REWE
+        ///     TODO only works for REWE
         /// </summary>
         public async Task<(Result, MarketDto)> ImportMarket(string externalId)
         {
@@ -82,29 +70,44 @@ namespace FlatMate.Module.Offers.Domain
             return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
         }
 
-        public async Task<(Result, IEnumerable<OfferDto>)> ImportOffers(int marketId)
+        public async Task<Result> ImportOffers(int marketId)
         {
-            var market = await _dbContext.Markets.Include(m => m.Company).FirstOrDefaultAsync(m => m.Id == marketId);
+            var market = await _dbContext.Markets.FirstOrDefaultAsync(m => m.Id == marketId);
             if (market == null)
             {
-                return (new ErrorResult(ErrorType.NotFound, "Market not found"), null);
+                return new ErrorResult(ErrorType.NotFound, "Market not found");
             }
 
-            var importer = _offerImporters.FirstOrDefault(o => o.Company == market.Company.Company);
+            var company = (Company) market.CompanyId;
+
+            var importer = _offerImporters.FirstOrDefault(o => o.Company == company);
             if (importer == null)
             {
-                _logger.LogError($"No importer found for company {market.Company.Company.ToString()}");
-                return (new ErrorResult(ErrorType.InternalError, $"No importer found for company {market.Company.Company.ToString()}"), null);
+                _logger.LogError($"No importer found for company {company}");
+                return new ErrorResult(ErrorType.InternalError, $"No importer found for company {company}");
             }
 
-            var (result, offers) = await importer.ImportOffersFromApi(market);
+            var (result, _) = await importer.ImportOffersFromApi(market);
             if (result.IsError)
             {
-                _logger.LogWarning("Offer import failed");
-                return (new ErrorResult(result), null);
+                _logger.LogWarning("Offer import failed: {error}", result.ToMessageString());
+                return new ErrorResult(result);
             }
 
-            return (SuccessResult.Default, offers.Select(_mapper.Map<OfferDto>));
+            return SuccessResult.Default;
+        }
+
+        public async Task<IEnumerable<MarketDto>> SearchMarkets(Company company)
+        {
+            IQueryable<Market> query = _dbContext.Markets.Include(m => m.Company);
+
+            if (company != Company.None)
+            {
+                query = query.Where(m => m.CompanyId == (int) company);
+            }
+
+            var markets = await query.ToListAsync();
+            return markets.Select(_mapper.Map<MarketDto>);
         }
     }
 }

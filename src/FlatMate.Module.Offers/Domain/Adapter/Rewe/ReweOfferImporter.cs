@@ -71,7 +71,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
                 return (new ErrorResult(ErrorType.InternalError, $"{nameof(IReweMobileApi)} nicht verfügbar."), null);
             }
 
-            var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(offerEnvelope), market.CompanyId);
+            var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(offerEnvelope), market.Id);
             if (result.IsError)
             {
                 _logger.LogWarning(0, "Failed saving raw offer data");
@@ -198,11 +198,11 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             return new OfferTemp
             {
                 Brand = _reweUtils.Trim(offer.Brand) ?? ReweConstants.DefaultBrand,
+                Company = Company,
                 Description = _reweUtils.Trim(offer.AdditionalInformation),
                 ExternalOfferId = offer.Id,
                 ExternalProductCategory = productCategory.ExternalName,
                 ExternalProductCategoryId = productCategory.ExternalId,
-                ExternalProductId = offer.ProductId,
                 ImageUrl = offer.Links?.ImageDigital.Href,
                 Market = market,
                 Name = _reweUtils.Trim(offer.Name),

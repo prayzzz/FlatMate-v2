@@ -1,13 +1,13 @@
-﻿using FlatMate.Module.Common;
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using FlatMate.Module.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using System;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain
 {
@@ -31,14 +31,14 @@ namespace FlatMate.Module.Offers.Domain
             _logger = logger;
         }
 
-        public async Task<(Result, RawOfferDataDto)> Save(string data, int companyId)
+        public async Task<(Result, RawOfferDataDto)> Save(string data, int marketId)
         {
             var offerData = new RawOfferData
             {
-                CompanyId = companyId,
                 Created = DateTime.Now,
                 Data = data,
-                Hash = ComputeHash(data)
+                Hash = ComputeHash(data),
+                MarketId = marketId
             };
 
             var response = await _dbContext.RawOfferData.FirstOrDefaultAsync(d => d.Hash == offerData.Hash);
@@ -50,12 +50,14 @@ namespace FlatMate.Module.Offers.Domain
 
             _dbContext.RawOfferData.Add(offerData);
             var result = await _dbContext.SaveChangesAsync();
-            var savedOfferData = await _dbContext.RawOfferData.Include(d => d.Company).FirstOrDefaultAsync(d => d.Id == offerData.Id);
+            var savedOfferData = await _dbContext.RawOfferData
+                                                 .Include(d => d.Market)
+                                                 .FirstOrDefaultAsync(d => d.Id == offerData.Id);
 
-            return (result, _mapper.Map<RawOfferDataDto>(offerData));
+            return (result, _mapper.Map<RawOfferDataDto>(savedOfferData));
         }
 
-        private string ComputeHash(string data)
+        private static string ComputeHash(string data)
         {
             using (var md5 = MD5.Create())
             {

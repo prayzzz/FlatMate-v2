@@ -1,13 +1,15 @@
-﻿using FlatMate.Module.Offers.Domain;
+﻿using System.ComponentModel;
+using FlatMate.Module.Offers.Domain;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System.ComponentModel;
 
 namespace FlatMate.Module.Offers.Api
 {
     public class ProductJso
     {
         public string Brand { get; set; }
+
+        public Company CompanyId { get; set; }
 
         public string Description { get; set; }
 
@@ -18,13 +20,7 @@ namespace FlatMate.Module.Offers.Api
 
         public string ImageUrl { get; set; }
 
-        public int MarketId { get; set; }
-
-        public int? CompanyId { get; set; }
-
         public string Name { get; set; }
-
-        public decimal Price { get; set; }
 
         public ProductCategoryJso ProductCategory { get; set; }
 
@@ -39,19 +35,16 @@ namespace FlatMate.Module.Offers.Api
             mapper.Configure<ProductDto, ProductJso>(MapToDto);
         }
 
-        private ProductJso MapToDto(ProductDto dto, MappingContext ctx)
+        private static ProductJso MapToDto(ProductDto dto, MappingContext ctx)
         {
             return new ProductJso
             {
                 Brand = dto.Brand,
                 CompanyId = dto.CompanyId,
                 Description = dto.Description,
-                ExternalId = dto.ExternalId,
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
                 Name = dto.Name,
-                MarketId = dto.MarketId,
-                Price = dto.Price,
                 ProductCategory = ctx.Mapper.Map<ProductCategoryJso>(dto.ProductCategory),
                 SizeInfo = dto.SizeInfo
             };

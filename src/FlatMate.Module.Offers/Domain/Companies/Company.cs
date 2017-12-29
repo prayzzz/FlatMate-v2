@@ -9,6 +9,7 @@ namespace FlatMate.Module.Offers.Domain
 {
     public enum Company
     {
+        None = 0,
         Rewe = 1,
         Penny = 2,
         NettoDiscount = 3,

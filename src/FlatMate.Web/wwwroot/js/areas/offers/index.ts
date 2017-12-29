@@ -1,4 +1,4 @@
-﻿export * from "./jso";
-export * from "./offersRegistry";
+﻿export * from "./Jso";
+export * from "./OffersRegistry";
 export * from "./ProductApi";
-export * from "./productVm";
+export * from "./ProductVm";

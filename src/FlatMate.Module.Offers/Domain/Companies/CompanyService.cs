@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Offers.Domain
 {
@@ -13,7 +13,7 @@ namespace FlatMate.Module.Offers.Domain
     {
         Task<(Result, CompanyDto)> Get(int id);
 
-        Task<IEnumerable<CompanyDto>> GetList();
+        Task<IEnumerable<CompanyDto>> SearchCompanies();
 
         Task<(Result, CompanyDto)> UpdateCompany(int id, CompanyDto dto);
     }
@@ -45,7 +45,7 @@ namespace FlatMate.Module.Offers.Domain
             return (SuccessResult.Default, _mapper.Map<CompanyDto>(company));
         }
 
-        public async Task<IEnumerable<CompanyDto>> GetList()
+        public async Task<IEnumerable<CompanyDto>> SearchCompanies()
         {
             return (await _dbContext.Companies.ToListAsync()).Select(_mapper.Map<CompanyDto>);
         }

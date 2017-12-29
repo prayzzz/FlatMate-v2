@@ -1,7 +1,7 @@
-﻿using FlatMate.Module.Offers.Domain;
+﻿using System.ComponentModel;
+using FlatMate.Module.Offers.Domain;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System.ComponentModel;
 
 namespace FlatMate.Module.Offers.Api
 {
@@ -13,10 +13,7 @@ namespace FlatMate.Module.Offers.Api
         public CompanyJso CompanyData { get; set; }
 
         [ReadOnly(true)]
-        public Company Company => (Company) CompanyId;
-
-        [ReadOnly(true)]
-        public int CompanyId { get; set; }
+        public Company CompanyId { get; set; }
 
         [ReadOnly(true)]
         public int? Id { get; set; }

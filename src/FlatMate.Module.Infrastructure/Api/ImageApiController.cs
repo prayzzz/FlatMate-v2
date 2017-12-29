@@ -21,7 +21,7 @@ namespace FlatMate.Module.Infrastructure.Api
             _imageService = imageService;
         }
 
-        public static string GetImageUrl(Guid guid)
+        public static string GetImagePath(Guid guid)
         {
             return RouteTemplate + guid;
         }

@@ -1,22 +1,16 @@
-﻿using FlatMate.Module.Common.DataAccess;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Offers.Domain
 {
     [Table("RawOfferData")]
     public class RawOfferData : DboBase
     {
-        [ForeignKey(nameof(CompanyId))]
-        public CompanyData Company { get; set; }
-
-        [Required]
-        public int CompanyId { get; set; }
-
         [Required]
         public DateTime Created { get; set; }
 
@@ -25,17 +19,23 @@ namespace FlatMate.Module.Offers.Domain
 
         [Required]
         public string Hash { get; set; }
+
+        [ForeignKey(nameof(MarketId))]
+        public Market Market { get; set; }
+
+        [Required]
+        public int MarketId { get; set; }
     }
 
     public class RawOfferDataDto : DtoBase
     {
-        public CompanyDto Company { get; set; }
-
-        public int CompanyId { get; set; }
-
         public DateTime Created { get; set; }
 
         public string Data { get; set; }
+
+        public MarketDto Market { get; set; }
+
+        public int MarketId { get; set; }
     }
 
     [Inject]
@@ -46,15 +46,15 @@ namespace FlatMate.Module.Offers.Domain
             mapper.Configure<RawOfferData, RawOfferDataDto>(MapToDto);
         }
 
-        private RawOfferDataDto MapToDto(RawOfferData offer, MappingContext ctx)
+        private static RawOfferDataDto MapToDto(RawOfferData offer, MappingContext ctx)
         {
-            return new RawOfferDataDto()
+            return new RawOfferDataDto
             {
-                Company = ctx.Mapper.Map<CompanyDto>(offer.Company),
-                CompanyId = offer.CompanyId,
-                Data = offer.Data,
                 Created = offer.Created,
+                Data = offer.Data,
                 Id = offer.Id,
+                Market = ctx.Mapper.Map<MarketDto>(offer.Market),
+                MarketId = offer.MarketId
             };
         }
     }

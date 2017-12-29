@@ -18,15 +18,12 @@ namespace FlatMate.Module.Offers.Domain
         public string Brand { get; set; }
 
         [ForeignKey(nameof(CompanyId))]
-        public CompanyData Company { get; set; }
+        public CompanyData CompanyData { get; set; }
 
         [Required]
         public int CompanyId { get; set; }
 
         public string Description { get; set; }
-
-        [Required]
-        public string ExternalId { get; set; }
 
         public string ExternalProductCategory { get; set; }
 
@@ -34,17 +31,8 @@ namespace FlatMate.Module.Offers.Domain
 
         public string ImageUrl { get; set; }
 
-        [ForeignKey(nameof(MarketId))]
-        public Market Market { get; set; }
-
-        [Required]
-        public int MarketId { get; set; }
-
         [Required]
         public string Name { get; set; }
-
-        [Required]
-        public decimal Price { get; private set; }
 
         [InverseProperty(nameof(PriceHistory.Product))]
         public IReadOnlyList<PriceHistory> PriceHistoryEntries => _priceHistoryEntries;
@@ -57,16 +45,14 @@ namespace FlatMate.Module.Offers.Domain
 
         public string SizeInfo { get; set; }
 
-        public void UpdatePrice(decimal price)
+        public void UpdatePrice(decimal price, Market market)
         {
-            Price = price;
-
             if (price > 0)
             {
                 var lastHistoryEntry = PriceHistoryEntries.OrderByDescending(x => x.Date).FirstOrDefault();
                 if (lastHistoryEntry == null || lastHistoryEntry.Price != price)
                 {
-                    _priceHistoryEntries.Add(new PriceHistory(price, this));
+                    _priceHistoryEntries.Add(new PriceHistory(price, this, market));
                 }
             }
         }
@@ -76,19 +62,13 @@ namespace FlatMate.Module.Offers.Domain
     {
         public string Brand { get; set; }
 
-        public int? CompanyId { get; set; }
+        public Company CompanyId { get; set; }
 
         public string Description { get; set; }
 
-        public string ExternalId { get; set; }
-
         public string ImageUrl { get; set; }
 
-        public int MarketId { get; set; }
-
         public string Name { get; set; }
-
-        public decimal Price { get; set; }
 
         public ProductCategoryDto ProductCategory { get; set; }
 
@@ -108,14 +88,11 @@ namespace FlatMate.Module.Offers.Domain
             return new ProductDto
             {
                 Brand = product.Brand,
-                CompanyId = product.Market?.CompanyId,
+                CompanyId = (Company) product.CompanyId,
                 Description = product.Description,
-                ExternalId = product.ExternalId,
                 Id = product.Id,
                 ImageUrl = product.ImageUrl,
                 Name = product.Name,
-                MarketId = product.MarketId,
-                Price = product.Price,
                 ProductCategory = ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory),
                 SizeInfo = product.SizeInfo
             };

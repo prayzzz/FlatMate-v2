@@ -1,14 +1,14 @@
-﻿using prayzzz.Common.Attributes;
-using FlatMate.Module.Common;
-using FlatMate.Module.Common.Extensions;
-using FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso;
-using Microsoft.Extensions.Logging;
-using prayzzz.Common.Results;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common;
+using FlatMate.Module.Common.Extensions;
+using FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso;
+using Microsoft.Extensions.Logging;
+using prayzzz.Common.Attributes;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 {
@@ -56,7 +56,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 
             var articles = offerChunks.SelectMany(o => o.Area.SelectMany(a => a.Articles.Article)).ToList();
 
-            var (result, _) = await _rawOfferService.Save(XmlConvert.Serialize(articles), market.CompanyId);
+            var (result, _) = await _rawOfferService.Save(XmlConvert.Serialize(articles), market.Id);
             if (result.IsError)
             {
                 Logger.LogWarning(0, "Saving raw offer data failed");
@@ -74,7 +74,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             return ProcessOffers(articles, market);
         }
 
-        private OfferDuration GetOfferDuration(Article article)
+        private static OfferDuration GetOfferDuration(Article article)
         {
             var duration = new OfferDuration();
 
@@ -108,14 +108,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             {
                 Brand = _aldiUtils.Trim(article.Producer),
                 Description = _aldiUtils.StripHTML(article.Shorttext),
-                ExternalOfferId = $"{((DateTimeOffset)offerDuration.From).ToUnixTimeSeconds()}_{article.Articleid}",
+                ExternalOfferId = $"{((DateTimeOffset) offerDuration.From).ToUnixTimeSeconds()}_{article.Articleid}",
                 ExternalProductCategory = string.Empty,
                 ExternalProductCategoryId = article.Catrel,
-                ExternalProductId = article.Articleid,
                 ImageUrl = imageUrl,
                 Market = market,
                 Name = _aldiUtils.Trim(article.Title),
-                OfferBasePrice = article.Price_calc,
                 OfferedFrom = offerDuration.From,
                 OfferedTo = offerDuration.To,
                 OfferPrice = _aldiUtils.ParsePrice(article.Price),
