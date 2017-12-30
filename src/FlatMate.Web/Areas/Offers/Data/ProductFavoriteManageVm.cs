@@ -6,8 +6,8 @@ namespace FlatMate.Web.Areas.Offers.Data
 {
     public class ProductFavoriteManageVm : MvcViewModel
     {
-        public int? CurrentMarket { get; set; }
+        public int? CurrentCompany { get; set; }
 
-        public List<MarketJso> Markets { get; set; }
+        public List<CompanyJso> Companies { get; set; }
     }
 }

@@ -21,15 +21,15 @@ export class ProductApi {
     }
 
     public searchProducts(marketId: number, searchTerm: string, listQuery: PartialListParameter): Promise<PartialList<ProductJso>> {
-        return this.apiClient.get<PartialList<ProductJso>>(`offers/product?marketId=${marketId}&searchTerm=${searchTerm}&limit=${listQuery.limit}&offset=${listQuery.offset}`);
+        return this.apiClient.get<PartialList<ProductJso>>(`offers/product?companyId=${marketId}&searchTerm=${searchTerm}&limit=${listQuery.limit}&offset=${listQuery.offset}`);
     }
 
     public getProductFavorites(marketId: number): Promise<ProductJso[]> {
-        return this.apiClient.get<ProductJso[]>(`offers/product/favorite?marketId=${marketId}`);
+        return this.apiClient.get<ProductJso[]>(`offers/product/favorite?companyId=${marketId}`);
     }
 
     public getProductFavoriteIds(marketId: number): Promise<number[]> {
-        return this.apiClient.get<number[]>(`offers/product/favorite/id?marketId=${marketId}`);
+        return this.apiClient.get<number[]>(`offers/product/favorite/id?companyId=${marketId}`);
     }
 
     public favorite(productId: number): Promise<void> {
@@ -41,6 +41,6 @@ export class ProductApi {
     }
 
     searchFavorites(marketId: number, searchTerm: string, listQuery: PartialListParameter) {
-        return this.apiClient.get<PartialList<ProductJso>>(`offers/product/favorite?marketId=${marketId}&searchTerm=${searchTerm}&limit=${listQuery.limit}&offset=${listQuery.offset}`);
+        return this.apiClient.get<PartialList<ProductJso>>(`offers/product/favorite?companyId=${marketId}&searchTerm=${searchTerm}&limit=${listQuery.limit}&offset=${listQuery.offset}`);
     }
 }

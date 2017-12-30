@@ -1,4 +1,4 @@
-﻿import {MarketJso, ProductApi, ProductJso} from ".";
+﻿import { CompanyJso, ProductApi, ProductJso } from ".";
 
 export class ProductVm {
     public isFavorite: KnockoutObservable<boolean>;
@@ -10,13 +10,13 @@ export class ProductVm {
 
     private productApi = new ProductApi();
     private model: KnockoutObservable<ProductJso>;
-    private market: MarketJso;
+    private company: CompanyJso;
 
-    constructor(model: ProductJso, market: MarketJso) {
+    constructor(model: ProductJso, company: CompanyJso) {
         const self = this;
 
         this.model = ko.observable(model);
-        this.market = market;
+        this.company = company;
 
         this.detailUrl = "/Offers/Product/View/" + this.model().id;
         this.isFavorite = ko.observable(false);
@@ -40,11 +40,11 @@ export class ProductVm {
     }
 
     public get imageUrl(): string | undefined {
-        if (!this.market.company) {
+        if (!this.company) {
             return this.model().imageUrl;
         }
 
-        switch (this.market.company.id) {
+        switch (this.company.id) {
             case 1:
                 return `${this.model().imageUrl}?resize=150px:150px`;
             case 2:

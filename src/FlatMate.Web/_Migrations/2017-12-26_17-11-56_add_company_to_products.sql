@@ -31,16 +31,6 @@ ALTER TABLE [Offers].[Product]
 GO
 
 
-ALTER TABLE [Offers].[Product]
-  DROP CONSTRAINT [FK_Product_Market]
-GO
-
-
-ALTER TABLE [Offers].[Product]
-  DROP COLUMN [MarketId]
-GO
-
-
 --
 -- Migration
 --

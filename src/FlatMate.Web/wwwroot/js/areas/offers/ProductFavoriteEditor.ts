@@ -1,14 +1,14 @@
-﻿import {MarketJso, ProductApi, ProductVm} from ".";
-import {FlatMate} from "app";
-import {PartialListParameter} from "Api/PartialList";
+﻿import { CompanyJso, ProductApi, ProductVm } from ".";
+import { FlatMate } from "app";
+import { PartialListParameter } from "Api/PartialList";
 
 export interface ProductFavoriteManageVm {
-    markets: MarketJso[];
-    currentMarket: number | undefined;
+    companies: CompanyJso[];
+    currentCompany: number | undefined;
 }
 
 export class ProductFavoriteEditor {
-    private selectedMarket: KnockoutObservable<MarketJso | undefined>;
+    private selectedCompany: KnockoutObservable<CompanyJso | undefined>;
 
     private productPage: KnockoutObservableArray<ProductVm>;
     private totalCount: KnockoutObservable<number>;
@@ -30,8 +30,8 @@ export class ProductFavoriteEditor {
         this.model = model;
 
         // setup observables
-        this.selectedMarket = ko.observable(undefined);
-        this.selectedMarket.subscribe(() => this.showPage(0));
+        this.selectedCompany = ko.observable(undefined);
+        this.selectedCompany.subscribe(() => this.showPage(0));
 
         this.searchTerm = ko.observable("");
         this.searchTerm.subscribe(() => this.showPage(0));
@@ -57,10 +57,10 @@ export class ProductFavoriteEditor {
         });
 
         // init editor
-        if (model.currentMarket) {
-            let market = this.model.markets.find(m => m.id === model.currentMarket);
+        if (model.currentCompany) {
+            let market = this.model.companies.find(m => m.id === model.currentCompany);
             if (market) {
-                this.selectedMarket(market);
+                this.selectedCompany(market);
             }
         }
     }
@@ -80,7 +80,7 @@ export class ProductFavoriteEditor {
     }
 
     private async loadProductPage(): Promise<void> {
-        const market = this.selectedMarket();
+        const market = this.selectedCompany();
         if (!market) {
             return;
         }

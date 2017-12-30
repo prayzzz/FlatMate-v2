@@ -1,4 +1,4 @@
-import {OfferVm} from "./CompanyOffersList";
+import { OfferVm } from "./CompanyOffersList";
 
 export class OfferTile {
     private readonly model: OfferVm;
@@ -36,18 +36,7 @@ export class OfferTile {
     }
 
     public get imageUrl() {
-        if (!this.model.product.companyId) {
-            return this.model.imageUrl;
-        }
-
-        switch (this.model.product.companyId) {
-            case 1:
-                return `${this.model.imageUrl}?resize=150px:150px`;
-            case 2:
-                return this.model.imageUrl.replace("/1080/", "/312/");
-            default:
-                return this.model.imageUrl;
-        }
+        return this.model.imageUrl;
     }
 
     public get productUrl() {

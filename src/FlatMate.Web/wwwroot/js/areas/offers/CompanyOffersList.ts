@@ -1,4 +1,4 @@
-import {CompanyJso, MarketJso, OfferJso, ProductCategoryJso} from ".";
+import { CompanyJso, MarketJso, OfferJso, ProductCategoryJso } from ".";
 
 export interface CompanyOffersListVm {
     company: CompanyJso;
@@ -80,8 +80,6 @@ export class CompanyOffersList {
     // @ts-ignore: used by view
     private readonly favorites: OfferVm[];
     // @ts-ignore: used by view
-    private readonly productFavoriteLink: KnockoutComputed<string>;
-    // @ts-ignore: used by view
     private readonly offersFrom: Date;
     // @ts-ignore: used by view
     private readonly offersTo: Date;
@@ -91,9 +89,6 @@ export class CompanyOffersList {
 
         this.offersFrom = new Date(this.model.offersFrom);
         this.offersTo = new Date(this.model.offersTo);
-        this.productFavoriteLink = ko.computed<string>(() => {
-            return `/Offers/ProductFavorite/Manage/${this.model.company.id}`;
-        });
 
         let offerVms = this.model.offers.map(o => new OfferVm(o));
         offerVms.forEach(x => {
@@ -102,6 +97,10 @@ export class CompanyOffersList {
         });
         this.categoryToOffers = this.groupOffersInCategory(offerVms);
         this.favorites = this.model.favorites.map(o => new OfferVm(o));
+    }
+
+    private get productFavoriteLink(): string {
+        return `/Offers/ProductFavorite/Manage?companyId=${this.model.company.id}`;
     }
 
     private groupOffersInCategory(offerVms: OfferVm[]): CategoryToOffers[] {

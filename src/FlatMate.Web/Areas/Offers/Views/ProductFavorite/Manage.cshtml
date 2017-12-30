@@ -15,12 +15,12 @@
 
 <script type="text/html" id="product-favorite-editor-template">
 
-    <div class="row select-market">
+    <div class="row select-company">
         <div class="col-2 align-self-center">
-            Markt:
+            Firma:
         </div>
         <div class="col-4 align-self-center">
-            <select data-bind="options: model.markets, optionsText: 'name', value: selectedMarket,"></select>
+            <select data-bind="options: model.companies, optionsText: 'name', value: selectedCompany,"></select>
         </div>
     </div>
 
@@ -83,7 +83,7 @@
         <!-- /ko -->
 
     </div>
-    
+
     <div class="row">
         <div class="col">
             <div class="row actions">
@@ -92,11 +92,11 @@
                 </div>
             </div>
         </div>
-        
-        <div class="col flex-h-center flex-v-center" style="margin-bottom: .5rem">        
-            <span data-bind="text: pageString"></span>            
+
+        <div class="col flex-h-center flex-v-center" style="margin-bottom: .5rem">
+            <span data-bind="text: pageString"></span>
         </div>
-        
+
         <div class="col">
             <div class="row align-right actions">
                 <div class="col-auto" data-bind="if: hasMoreProducts()">

@@ -12,24 +12,22 @@ namespace FlatMate.Web.Areas.Offers.Controllers
     [Area("Offers")]
     public class ProductFavoriteController : MvcController
     {
-        private readonly MarketApiController _marketApi;
-        private readonly ProductApiController _productApi;
+        private readonly CompanyApiController _companyApi;
 
-        public ProductFavoriteController(MarketApiController marketApi,
+        public ProductFavoriteController(CompanyApiController companyApi,
                                          ProductApiController productApi,
                                          ILogger<ProductFavoriteController> logger,
                                          IMvcControllerServices services) : base(logger, services)
         {
-            _productApi = productApi;
-            _marketApi = marketApi;
+            _companyApi = companyApi;
         }
 
-        public async Task<IActionResult> Manage([FromQuery] int? marketId)
+        public async Task<IActionResult> Manage([FromQuery] int? companyId)
         {
             var model = new ProductFavoriteManageVm
             {
-                Markets = (await _marketApi.SearchMarkets()).ToList(),
-                CurrentMarket = marketId
+                Companies = (await _companyApi.GetList()).ToList(),
+                CurrentCompany = companyId
             };
 
             return View(model);

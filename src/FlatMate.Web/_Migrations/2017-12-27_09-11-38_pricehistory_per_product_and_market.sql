@@ -30,6 +30,15 @@ ALTER TABLE [Offers].[PriceHistory]
   ALTER COLUMN [MarketId] INT NOT NULL
 GO
 
+ALTER TABLE [Offers].[Product]
+  DROP CONSTRAINT [FK_Product_Market]
+GO
+
+
+ALTER TABLE [Offers].[Product]
+  DROP COLUMN [MarketId]
+GO
+
 
 --
 -- Migration
