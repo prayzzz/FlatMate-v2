@@ -84,6 +84,8 @@
 
     </div>
 
+    <!-- ko if: productPage.length > 0 -->
+
     <div class="row">
         <div class="col">
             <div class="row actions">
@@ -106,6 +108,17 @@
         </div>
     </div>
 
+    <!-- /ko -->
+
+    <!-- ko if: productPage.length === 0 -->
+
+    <div class="row">
+        <div class="col align-center">
+            Keine Produkte gefunden.
+        </div>
+    </div>
+
+    <!-- /ko -->
 
 </script>
 

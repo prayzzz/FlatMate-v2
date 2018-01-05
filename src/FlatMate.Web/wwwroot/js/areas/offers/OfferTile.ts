@@ -1,22 +1,20 @@
-import { OfferVm } from "./CompanyOffersList";
+import { OfferedProduct } from "./CompanyOffersList";
 
 export class OfferTile {
-    private readonly model: OfferVm;
+    private readonly model: OfferedProduct;
 
     constructor(params: any) {
         this.model = params.offer;
     }
 
-    public get id() {
-        return this.model.id;
-    }
-
     public get isFavorite() {
-        return this.model.isFavorite;
+        // return this.model.isFavorite;
+        return false;
     }
 
     public get isStartingLater() {
-        return this.model.isStartingLater;
+        // return this.model.isStartingLater;
+        return false;
     }
 
     public get name() {
@@ -28,15 +26,15 @@ export class OfferTile {
     }
 
     public get price() {
-        return this.model.price;
+        return this.model.offerMarkets[0].price;
     }
 
     public get from() {
-        return new Date(this.model.from);
+        return this.model.offerMarkets[0].from;
     }
 
     public get imageUrl() {
-        return this.model.imageUrl;
+        return this.model.product.imageUrl;
     }
 
     public get productUrl() {

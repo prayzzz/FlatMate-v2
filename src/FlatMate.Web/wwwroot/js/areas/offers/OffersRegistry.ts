@@ -1,8 +1,8 @@
 ﻿import * as ko from "knockout";
-import {StartupHelper} from "../../koStartup";
-import {ProductFavoriteEditor, ProductFavoriteManageVm} from "./ProductFavoriteEditor";
-import {CompanyOffersList, CompanyOffersListVm} from "./CompanyOffersList";
-import {OfferTile} from "./OfferTile";
+import { StartupHelper } from "../../koStartup";
+import { ProductFavoriteEditor, ProductFavoriteManageVm } from "./ProductFavoriteEditor";
+import { CompanyOffersList, CompanyOffersListData as CompanyOffersListVm } from "./CompanyOffersList";
+import { OfferTile } from "./OfferTile";
 
 export class OffersRegistry {
     public static registerComponents() {

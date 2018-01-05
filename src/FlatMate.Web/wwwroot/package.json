@@ -5,9 +5,11 @@
   "repository": {},
   "license": "MIT",
   "dependencies": {
+    "@types/dateformat": "^1.0.1",
     "array.prototype.find": "2.0.4",
     "atomicjs": "3.2.1",
     "blazy": "1.8.2",
+    "dateformat": "3.0.2",
     "es6-promise": "4.2.2",
     "glob": "7.1.2",
     "knockout": "3.4.2",
