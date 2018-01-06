@@ -1,4 +1,4 @@
-export interface IStringDictionary<T> {
-    [c: string]: T;
+export interface IDictionary<T> {
+    [key: string]: T;
 }
 

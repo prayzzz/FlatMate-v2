@@ -24,18 +24,18 @@
 
         <div class="row">
             <div class="col-sm-12 col-md-4 col-market-image">
-                <img data-bind="attr: { src: model.company.imagePath, alt: model.company.name }" height="66"/>
+                <img data-bind="attr: { src: company.imagePath, alt: company.name }" height="66"/>
             </div>
             <div class="col-sm-12 col-md-5 col-market-info">
             </div>
             <div class="col-sm-12 col-md-3 col-offer-count">
-                <span data-bind="text: model.offers.length"></span> Produkte im Angebot<br/>
+                <span data-bind="text: offerCount"></span> Produkte im Angebot<br/>
                 von <span data-bind="text: offersFrom"></span> bis <span data-bind="text: offersTo"></span>
             </div>
         </div>
     </div>
 
-    <!-- ko if: model.favorites.length > 0 -->
+    <!-- ko if: favorites.length > 0 -->
 
     <h3>Favoriten</h3>
     <div class="row">
@@ -81,11 +81,20 @@
         </div>
 
         <div class="name">
-            <span data-bind="if: isFavorite">
-                <i class="fa fa-heart" aria-hidden="true"></i>
-            </span>
             <strong>
                 <span data-bind="text: name"></span>
+
+                <!-- ko if: model_.offerMarkets.length != model_.markets.length -->
+                <i class="fa fa-map-marker market-location"></i>
+                <div class="market-list">
+                    Nur verfügbar bei:
+                    <ul data-bind="foreach: model_.offerMarkets">
+                        <li>
+                            <span data-bind="text: market.name"></span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /ko-->
             </strong>
         </div>
 
@@ -97,9 +106,6 @@
             <span style="font-size: 1.5rem"><span data-bind="text: price"></span> €</span>
         </div>
 
-        <div>
-            in <span data-bind="text: model_.offerMarkets.length"></span> Märkten
-        </div>
 
     </a>
 </script>

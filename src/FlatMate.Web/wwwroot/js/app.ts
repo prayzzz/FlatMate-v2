@@ -6,6 +6,7 @@ import { KoStartup, StartupHelper } from "./koStartup";
 import "./shared/objectExtensions";
 import { IWindow } from "./window";
 import { UserInfoJso } from "./areas/account/jso";
+import "./shared/arrayExtensions";
 
 promiseFill.polyfill();
 findFill.shim();

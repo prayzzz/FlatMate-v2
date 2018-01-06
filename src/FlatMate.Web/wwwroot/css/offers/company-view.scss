@@ -41,4 +41,23 @@
             text-align: right;
         }
     }
+
+    .market-list {
+        display: none;
+        position: absolute;
+        background-color: rgba(0, 0, 0, .8);
+        color: #fff;
+        z-index: 999;
+        padding: .5em;
+        font-size: .75rem;
+
+        ul {
+            padding-left: .25rem;
+            margin: .1em;
+        }
+    }
+
+    .market-location:hover ~ .market-list {
+        display: block;
+    }
 }
