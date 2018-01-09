@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -76,12 +77,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
         {
             if (string.IsNullOrEmpty(str))
             {
-                return ReweConstants.DefaultBrand;
-            }
-
-            if (str.StartsWith("++"))
-            {
-                return ReweConstants.DefaultBrand;
+                return string.Empty;
             }
 
             str = str.Trim(TrimChars);

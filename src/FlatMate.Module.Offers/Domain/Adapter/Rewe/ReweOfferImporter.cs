@@ -180,6 +180,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
         private OfferTemp PreprocessOffer(OfferJso offer, Dictionary<string, ProductCategoryTemp> categoryToEnum, Market market)
         {
+            var brand = _reweUtils.Trim(offer.Brand);
+            if (brand.StartsWith("++"))
+            {
+                brand = ReweConstants.DefaultBrand;
+            }
+
             var productCategory = ProductCategoryTemp.Default;
             if (offer.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offer.CategoryIDs.FirstOrDefault(), out var category))
             {
@@ -197,12 +203,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
             return new OfferTemp
             {
-                Brand = _reweUtils.Trim(offer.Brand) ?? ReweConstants.DefaultBrand,
+                Brand = brand,
                 Company = Company,
                 Description = _reweUtils.Trim(offer.AdditionalInformation),
                 ExternalOfferId = offer.Id,
-                ExternalProductCategory = productCategory.ExternalName,
-                ExternalProductCategoryId = productCategory.ExternalId,
+                ExternalProductCategory = _reweUtils.Trim(productCategory.ExternalName),
+                ExternalProductCategoryId = _reweUtils.Trim(productCategory.ExternalId),
                 ImageUrl = offer.Links?.ImageDigital.Href,
                 Market = market,
                 Name = _reweUtils.Trim(offer.Name),
