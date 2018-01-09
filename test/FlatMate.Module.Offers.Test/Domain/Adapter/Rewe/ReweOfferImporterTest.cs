@@ -36,7 +36,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
 
             var utilsMock = TestHelper.Mock<IReweUtils>();
             utilsMock.Setup(x => x.ParsePrice(It.IsAny<string>())).Returns(0.00M);
-            utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x);
+            utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x ?? string.Empty);
 
             // Act
             var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
