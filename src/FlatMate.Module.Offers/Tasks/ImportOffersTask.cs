@@ -33,7 +33,7 @@ namespace FlatMate.Module.Offers.Tasks
             foreach (var market in await _marketService.SearchMarkets(Company.None))
             {
                 _logger.LogInformation("Importing offers for {market}", market.Name);
-                await _marketService.ImportOffers(market.Id.Value);
+                await _marketService.ImportOffersFromApi(market.Id.Value);
             }
 
             _logger.LogInformation("Finished {taskName}", nameof(ImportOffersTask));

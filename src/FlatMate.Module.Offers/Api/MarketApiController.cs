@@ -7,6 +7,7 @@ using FlatMate.Module.Offers.Domain;
 using FlatMate.Module.Offers.Domain.Adapter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Api
@@ -75,7 +76,13 @@ namespace FlatMate.Module.Offers.Api
         [HttpGet("{marketId}/offer/import")]
         public async Task<Result> ImportOffers(int marketId)
         {
-            return await _marketService.ImportOffers(marketId);
+            return await _marketService.ImportOffersFromApi(marketId);
+        }
+
+        [HttpPost("{marketId}/offer/import")]
+        public async Task<Result> ImportOffersFromString(int marketId, [FromBody] JToken data)
+        {
+            return await _marketService.ImportOffersFromString(marketId, data.ToString());
         }
 
         [HttpGet]

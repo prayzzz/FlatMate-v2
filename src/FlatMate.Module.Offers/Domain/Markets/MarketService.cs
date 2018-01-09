@@ -17,7 +17,9 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
-        Task<Result> ImportOffers(int marketId);
+        Task<Result> ImportOffersFromApi(int marketId);
+
+        Task<Result> ImportOffersFromString(int marketId, string offers);
 
         Task<IEnumerable<MarketDto>> SearchMarkets(Company company);
     }
@@ -70,7 +72,7 @@ namespace FlatMate.Module.Offers.Domain
             return (SuccessResult.Default, _mapper.Map<MarketDto>(market));
         }
 
-        public async Task<Result> ImportOffers(int marketId)
+        public async Task<Result> ImportOffersFromApi(int marketId)
         {
             var market = await _dbContext.Markets.FirstOrDefaultAsync(m => m.Id == marketId);
             if (market == null)
@@ -88,6 +90,33 @@ namespace FlatMate.Module.Offers.Domain
             }
 
             var (result, _) = await importer.ImportOffersFromApi(market);
+            if (result.IsError)
+            {
+                _logger.LogWarning("Offer import failed: {error}", result.ToMessageString());
+                return new ErrorResult(result);
+            }
+
+            return SuccessResult.Default;
+        }
+
+        public async Task<Result> ImportOffersFromString(int marketId, string offers)
+        {
+            var market = await _dbContext.Markets.FirstOrDefaultAsync(m => m.Id == marketId);
+            if (market == null)
+            {
+                return new ErrorResult(ErrorType.NotFound, "Market not found");
+            }
+
+            var company = (Company) market.CompanyId;
+
+            var importer = _offerImporters.FirstOrDefault(o => o.Company == company);
+            if (importer == null)
+            {
+                _logger.LogError($"No importer found for company {company}");
+                return new ErrorResult(ErrorType.InternalError, $"No importer found for company {company}");
+            }
+
+            var (result, _) = await importer.ImportOffersFromRaw(market, offers);
             if (result.IsError)
             {
                 _logger.LogWarning("Offer import failed: {error}", result.ToMessageString());
