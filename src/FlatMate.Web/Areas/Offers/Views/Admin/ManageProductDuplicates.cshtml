@@ -21,11 +21,13 @@
                     {
                         var otherIds = grouping.Where(x => x.Id != productJso.Id).Select(x => x.Id);
 
-                        <div class="col col-image">
-                            <img src="@OfferImageHelper.Get(productJso.ImageUrl, company.Id, 150)" width="150"/>
-                        </div>
                         <div class="col col-info">
                             <table>
+                                <tr>
+                                    <td colspan="2">
+                                        <img src="@OfferImageHelper.Get(productJso.ImageUrl, company.Id, 150)" width="150"/>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>Id</td>
                                     <td>@productJso.Id</td>
@@ -38,9 +40,14 @@
                                     <td>Beschr.</td>
                                     <td>@productJso.Description.Truncate(100)</td>
                                 </tr>
+                                <tr>
+                                    <td>Angebote</td>
+                                    <td>@productJso.OfferCount</td>
+                                </tr>
                             </table>
                             <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@productJso.Id" class="btn btn-secondary">Details</a>
-                            <a asp-area="Offers" asp-controller="Admin" asp-action="Merge" asp-route-id="@productJso.Id" asp-route-otherProductIds="@string.Join(",", otherIds)" class="btn btn-secondary">Merge to this</a>
+                            <a href="@Url.Action("Merge", "Admin", new { id = productJso.Id, otherProductIds = otherIds })" class="btn btn-secondary">Merge to this</a>
+@*                            <a asp-area="Offers" asp-controller="Admin" asp-action="Merge" asp-route-id="@productJso.Id" asp-route-otherProductIds="@string.Join(",", otherIds)" class="btn btn-secondary">Merge to this</a>*@
                         </div>
                     }
                 </div>

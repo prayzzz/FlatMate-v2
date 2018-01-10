@@ -25,6 +25,8 @@ namespace FlatMate.Module.Offers.Api
         public ProductCategoryJso ProductCategory { get; set; }
 
         public string SizeInfo { get; set; }
+
+        public int OfferCount { get; set; }
     }
 
     [Inject]
@@ -33,6 +35,7 @@ namespace FlatMate.Module.Offers.Api
         public void Configure(IMapperConfiguration mapper)
         {
             mapper.Configure<ProductDto, ProductJso>(MapToDto);
+            mapper.Configure<ProductInfoDto, ProductJso>(MapToDto);
         }
 
         private static ProductJso MapToDto(ProductDto dto, MappingContext ctx)
@@ -46,6 +49,21 @@ namespace FlatMate.Module.Offers.Api
                 ImageUrl = dto.ImageUrl,
                 Name = dto.Name,
                 ProductCategory = ctx.Mapper.Map<ProductCategoryJso>(dto.ProductCategory),
+                SizeInfo = dto.SizeInfo
+            };
+        }
+
+        private static ProductJso MapToDto(ProductInfoDto dto, MappingContext ctx)
+        {
+            return new ProductJso
+            {
+                Brand = dto.Brand,
+                CompanyId = (Company) dto.CompanyId,
+                Description = dto.Description,
+                Id = dto.Id,
+                ImageUrl = dto.ImageUrl,
+                Name = dto.Name,
+                OfferCount = dto.OfferCount,
                 SizeInfo = dto.SizeInfo
             };
         }

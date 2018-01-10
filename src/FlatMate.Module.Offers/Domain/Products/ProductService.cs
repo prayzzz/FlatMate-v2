@@ -20,7 +20,7 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<Result> DeleteProductFavorite(int productId);
 
-        Task<List<ProductDto>> GetDuplicateProducts();
+        Task<List<ProductInfoDto>> GetDuplicateProducts();
 
         Task<List<int>> GetFavoriteProductIds(Company company);
 

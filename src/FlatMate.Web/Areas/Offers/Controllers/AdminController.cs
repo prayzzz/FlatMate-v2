@@ -39,7 +39,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Merge(int id, List<int> otherProductIds)
+        public async Task<IActionResult> Merge(int id, [FromQuery]List<int> otherProductIds)
         {
             foreach (var otherProductId in otherProductIds)
             {

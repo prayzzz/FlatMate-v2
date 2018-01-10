@@ -36,6 +36,8 @@ namespace FlatMate.Module.Offers
 
         public virtual DbSet<RawOfferData> RawOfferData { get; set; }
 
+        public virtual DbSet<ProductInfoDto> ProductInfoDtos { get; set; }
+
         public new Result SaveChanges()
         {
             try

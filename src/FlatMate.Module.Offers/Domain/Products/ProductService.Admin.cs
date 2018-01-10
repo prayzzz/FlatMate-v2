@@ -9,27 +9,27 @@ namespace FlatMate.Module.Offers.Domain
 {
     public partial class ProductService
     {
-        public async Task<List<ProductDto>> GetDuplicateProducts()
+        public async Task<List<ProductInfoDto>> GetDuplicateProducts()
         {
-            var products = await _dbContext.Products.FromSql(@"
+            var products = await _dbContext.ProductInfoDtos.FromSql(@"
                 SELECT p.*, offers.OfferCount
                 FROM Offers.Product p
-                INNER JOIN ( 
-                    SELECT Name, SizeInfo, MarketId, ExternalId 
-                    FROM Offers.Product 
-                    GROUP BY Name, SizeInfo, MarketId, ExternalId 
+                INNER JOIN (
+                    SELECT Name, SizeInfo, CompanyId, Brand
+                    FROM Offers.Product
+                    GROUP BY Name, SizeInfo, CompanyId, Brand
                     HAVING COUNT(*) > 1
-                ) pInner ON p.Name = pInner.Name 
-                        AND p.SizeInfo = pInner.SizeInfo 
-                        AND p.MarketId = pInner.MarketId 
-                        AND p.ExternalId = pInner.ExternalId
+                ) pInner ON p.Name = pInner.Name
+                        AND p.SizeInfo = pInner.SizeInfo
+                        AND p.CompanyId = pInner.CompanyId
+                        AND p.Brand = pInner.Brand
                 LEFT JOIN (
-                    SELECT COUNT(*) as OfferCount, ProductId 
+                    SELECT COUNT(*) as OfferCount, ProductId
                     FROM Offers.Offer GROUP BY ProductId
                 ) offers ON offers.ProductId = p.Id
-                ORDER BY name").ToListAsync();
+                ORDER BY name").AsNoTracking().ToListAsync();
 
-            return products.Select(_mapper.Map<ProductDto>).ToList();
+            return products;
         }
 
         public async Task<Result> MergeProducts(int productId, int otherProductId)
@@ -40,14 +40,21 @@ namespace FlatMate.Module.Offers.Domain
 
             foreach (var other in otherPriceHistories)
             {
-                // only if there's no entry on the same date
-                if (priceHistories.All(x => x.Date.Date != other.Date.Date))
+                var activePrice = priceHistories.Where(p => p.Date <= other.Date).OrderByDescending(p => p.Date).FirstOrDefault();
+
+                if (activePrice == null || activePrice.Price != other.Price)
                 {
                     other.ProductId = productId;
                 }
                 else
                 {
                     _dbContext.PriceHistoryEntries.Remove(other);
+                }
+
+                var nextPrice = priceHistories.Where(p => p.Date > other.Date).OrderBy(p => p.Date).FirstOrDefault();
+                if (nextPrice.Price == other.Price)
+                {
+                    _dbContext.PriceHistoryEntries.Remove(nextPrice);
                 }
             }
 
