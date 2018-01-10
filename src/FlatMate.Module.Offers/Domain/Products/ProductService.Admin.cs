@@ -52,7 +52,7 @@ namespace FlatMate.Module.Offers.Domain
                 }
 
                 var nextPrice = priceHistories.Where(p => p.Date > other.Date).OrderBy(p => p.Date).FirstOrDefault();
-                if (nextPrice.Price == other.Price)
+                if (nextPrice != null && nextPrice.Price == other.Price)
                 {
                     _dbContext.PriceHistoryEntries.Remove(nextPrice);
                 }
