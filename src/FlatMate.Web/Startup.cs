@@ -3,7 +3,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Migration;
 using FlatMate.Module.Common;
-using FlatMate.Module.Common.Api;
 using FlatMate.Web.Common;
 using FlatMate.Web.Metrics;
 using FlatMate.Web.Mvc.Json;
@@ -69,7 +68,7 @@ namespace FlatMate.Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"));
 
-                //app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
+//                app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
             }
             else
             {
@@ -125,7 +124,7 @@ namespace FlatMate.Web
             {
                 o.Filters.Add(typeof(ApiResultFilter));
 
-                // o.AddMetricsResourceFilter(); // fixed in 2.0.0 
+                // o.AddMetricsResourceFilter(); // fixed in 2.0.0
             });
 
             mvc.AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));

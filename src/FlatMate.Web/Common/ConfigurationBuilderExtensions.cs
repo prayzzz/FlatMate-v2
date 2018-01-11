@@ -8,27 +8,25 @@ namespace FlatMate.Web.Common
     public static class ConfigurationBuilderExtensions
     {
         /// <summary>
-        /// PRODUCTION AND STAGING:
         /// Reads user and password which are configuration separatly e.g. environment variables
         /// and build a new default connection string.
-        /// 
+        ///
         /// For environment variables use:
-        /// [PREFIX]_db__user and [PREFIX]_db_password 
+        /// User: [PREFIX]_connectionstrings__flatmate__user
+        /// Password: [PREFIX]_connectionstrings__flatmate_password
         /// </summary>
-        public static IConfigurationBuilder AddProductionConnection(this IConfigurationBuilder builder, IHostingEnvironment env)
+        public static IConfigurationBuilder BuildConnectionString(this IConfigurationBuilder builder)
         {
             var config = builder.Build();
 
-            if (env.IsStaging() || env.IsProduction())
+            var connections = config.GetSection("ConnectionStrings");
+            var connectionStringBuilder = new SqlConnectionStringBuilder(connections["Flatmate:Url"])
             {
-                var connectionStringBuilder = new SqlConnectionStringBuilder(config.GetConnectionString("Production"))
-                {
-                    UserID = config.GetValue<string>("db:user"),
-                    Password = config.GetValue<string>("db:password")
-                };
+                UserID = connections["Flatmate:User"],
+                Password = connections["Flatmate:Password"]
+            };
 
-                builder.AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:DefaultConnection", connectionStringBuilder.ConnectionString } });
-            }
+            builder.AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:DefaultConnection", connectionStringBuilder.ConnectionString } });
 
             return builder;
         }

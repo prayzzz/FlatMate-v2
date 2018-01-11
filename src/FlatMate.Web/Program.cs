@@ -33,7 +33,7 @@ namespace FlatMate.Web
             builder.AddJsonFile("appsettings.json", true, true)
                    .AddJsonFile($"appsettings.{env.EnvironmentName.ToLower()}.json", true, true)
                    .AddEnvironmentVariables("flatmate_")
-                   .AddProductionConnection(env);
+                   .BuildConnectionString();
         }
 
         private static void ConfigureLogging(WebHostBuilderContext context, ILoggingBuilder builder)

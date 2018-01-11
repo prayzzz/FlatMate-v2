@@ -27,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A1EA2608
 	ProjectSection(SolutionItems) = preProject
 		build\common.props = build\common.props
 		build\release.ps1 = build\release.ps1
+		build\web-build.props = build\web-build.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{24B0B756-7332-4BBC-B4A4-636D84008D82}"
