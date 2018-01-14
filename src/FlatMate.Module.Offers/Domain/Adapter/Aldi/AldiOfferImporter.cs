@@ -107,6 +107,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             return new OfferTemp
             {
                 Brand = _aldiUtils.Trim(article.Producer),
+                Company = Company,
                 Description = _aldiUtils.StripHTML(article.Shorttext),
                 ExternalOfferId = $"{((DateTimeOffset) offerDuration.From).ToUnixTimeSeconds()}_{article.Articleid}",
                 ExternalProductCategory = string.Empty,

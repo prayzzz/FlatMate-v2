@@ -161,6 +161,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             return new OfferTemp
             {
                 Brand = PennyConstants.DefaultBrand,
+                Company = Company,
                 Description = _pennyUtils.StripHTML(offerJso.Beschreibung),
                 ExternalOfferId = $"{offerJso.Id}",
                 ExternalProductCategory = productCategory.ExternalName,
