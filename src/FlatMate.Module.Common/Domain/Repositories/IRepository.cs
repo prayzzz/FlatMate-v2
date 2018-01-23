@@ -9,6 +9,8 @@ namespace FlatMate.Module.Common.Domain
 
         Task<Result<TEntity>> GetAsync(int id);
 
+        Result<TEntity> Get(int id);
+
         Task<Result<TEntity>> SaveAsync(TEntity entity);
     }
 }

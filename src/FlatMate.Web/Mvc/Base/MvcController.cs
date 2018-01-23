@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 using FlatMate.Module.Account.Api.Jso;
+using FlatMate.Web.Mvc.Authorization;
 
 namespace FlatMate.Web.Mvc.Base
 {
     [Authorize]
     [ServiceFilter(typeof(MvcResultFilter))]
+    [ServiceFilter(typeof(AreaRestrictionFilter))]
     public abstract class MvcController : Controller
     {
         protected readonly IJsonService JsonService;

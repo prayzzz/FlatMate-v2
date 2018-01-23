@@ -24,6 +24,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Globalization;
 using FlatMate.Web.Mvc.Api;
+using FlatMate.Web.Mvc.Authorization;
 
 namespace FlatMate.Web
 {
@@ -95,7 +96,7 @@ namespace FlatMate.Web
                 SupportedUICultures = supportedCultures // UI strings that we have localized.
             });
 
-            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
             app.UseMvc(routes =>
             {
                 routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });
@@ -122,7 +123,8 @@ namespace FlatMate.Web
             // Framework
             var mvc = services.AddMvc(o =>
             {
-                o.Filters.Add(typeof(ApiResultFilter));
+                o.Filters.Add<ApiResultFilter>();
+                o.Filters.Add<AreaRestrictionFilter>();
 
                 // o.AddMetricsResourceFilter(); // fixed in 2.0.0
             });

@@ -22,10 +22,14 @@ namespace FlatMate.Web.Controllers
         [HttpGet]
         public IActionResult Index(int? statusCode)
         {
+            statusCode = statusCode ?? HttpContext.Response.StatusCode;
+
             switch (statusCode)
             {
+                case 401:
+                    return View("Unauthorized");
                 case 404:
-                    return PageNotFound();
+                    return View("PageNotFound");
             }
 
             return View();

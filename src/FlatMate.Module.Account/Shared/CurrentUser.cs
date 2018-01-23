@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace FlatMate.Module.Account.Shared
 {
     public class CurrentUser

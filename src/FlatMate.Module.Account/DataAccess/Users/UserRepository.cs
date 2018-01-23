@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Account.Domain.Models;
 using FlatMate.Module.Account.Domain.Repositories;

@@ -162,6 +162,17 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             return new SuccessResult<UserDto>(ModelToDto(get.Data));
         }
 
+        public Result<UserDto> Get(int id)
+        {
+            var get = _userRepository.Get(id);
+            if (get.IsError)
+            {
+                return new ErrorResult<UserDto>(get);
+            }
+
+            return new SuccessResult<UserDto>(ModelToDto(get.Data));
+        }
+
         private static UserDto ModelToDto(User user)
         {
             return new UserDto

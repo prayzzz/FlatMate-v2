@@ -13,5 +13,7 @@ namespace FlatMate.Module.Account.Shared.Interfaces
         Task<Result<UserDto>> CreateAsync(UserDto userDto, string password);
 
         Task<Result<UserDto>> GetAsync(int id);
+
+        Result<UserDto> Get(int id);
     }
 }

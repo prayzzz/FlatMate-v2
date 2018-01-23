@@ -104,6 +104,26 @@ namespace FlatMate.Module.Common.DataAccess
             return new SuccessResult<TEntity>(entity);
         }
 
+        public Result<TEntity> Get(int id)
+        {
+            if (_requestCache.TryGetValue(id, out var cachedEntity))
+            {
+                return new SuccessResult<TEntity>(cachedEntity);
+            }
+
+            var dbo = DbosIncluded.FirstOrDefault(g => g.Id == id);
+
+            if (dbo == null)
+            {
+                return new ErrorResult<TEntity>(ErrorType.NotFound, "Entity not found");
+            }
+
+            var entity = Mapper.Map<TEntity>(dbo);
+            _requestCache[dbo.Id] = entity;
+
+            return new SuccessResult<TEntity>(entity);
+        }
+
         public async Task<Result<TEntity>> SaveAsync(TEntity entity)
         {
             TDbo dbo;
