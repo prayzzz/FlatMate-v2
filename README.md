@@ -1,6 +1,6 @@
 # FlatMate
 
-Multipurpose home application
+Multipurpose home application 
 
 ## Developement Requirements
 
