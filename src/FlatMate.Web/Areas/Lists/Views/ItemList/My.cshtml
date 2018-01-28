@@ -17,43 +17,53 @@
 <section class="container">
 
     <div class="standard-box">
-        <table>
-            <thead>
-            <tr>
-                <th width="75%">Name</th>
-                <th class="show-large">öffentlich?</th>
-                <th class="icon show-large"></th>
-            </tr>
-            </thead>
 
-            <tbody>
-            @foreach (var list in Model.MyLists)
-            {
+        @if (!Model.MyLists.Any())
+        {
+            <div style="padding: .5rem 1rem; text-align: center">
+                Du hast noch keine Listen angelegt.
+            </div>
+        }
+        else
+        {
+            <table>
+                <thead>
                 <tr>
-                    <td>
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
-                    </td>
-                    <td class="show-large">
-                        <span class="fa-inline-host">
-                            @if (list.IsPublic)
-                            {
-                                <i class="fa fa-check"></i>
-                            }
-                            else
-                            {
-                                <i class="fa fa-times"></i>
-                            }
-                        </span>
-                    </td>
-                    <td class="icon show-large">
-                        <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="fa-host" title="Bearbeiten">
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                        </a>
-                    </td>
+                    <th width="75%">Name</th>
+                    <th class="show-large">öffentlich?</th>
+                    <th class="icon show-large"></th>
                 </tr>
-            }
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                @foreach (var list in Model.MyLists)
+                {
+                    <tr>
+                        <td>
+                            <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
+                        </td>
+                        <td class="show-large">
+                            <span class="fa-inline-host">
+                                @if (list.IsPublic)
+                                {
+                                    <i class="fa fa-check"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-times"></i>
+                                }
+                            </span>
+                        </td>
+                        <td class="icon show-large">
+                            <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="fa-host" title="Bearbeiten">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
     </div>
 
 </section>

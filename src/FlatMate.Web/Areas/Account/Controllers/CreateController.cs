@@ -54,7 +54,9 @@ namespace FlatMate.Web.Areas.Account.Controllers
             }
 
             ModelState.Clear();
-            return View(new CreateUserVm { Result = new SuccessResult($"Neuer Nutzer angelegt: {model.UserName}") });
+
+            TempData[Constants.TempData.Result] = JsonService.Serialize(new SuccessResult("Nutzer angelegt"));
+            return RedirectToAction("Index", "Login");
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FlatMate.Module.Account.Domain.Models;
 using FlatMate.Module.Account.Domain.Repositories;
 using FlatMate.Module.Account.Shared;
@@ -36,9 +35,9 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
         {
             // get user
             var getUser = await _userRepository.GetByUserNameAsync(username);
-            if (getUser.IsError)
+            if (getUser.IsError || !getUser.Data.IsActivated)
             {
-                return new ErrorResult<UserDto>(ErrorType.Unauthorized, "User not found");
+                return new ErrorResult<UserDto>(ErrorType.NotFound, "User not found");
             }
 
             var user = getUser.Data;
@@ -180,6 +179,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
                 Created = user.Created,
                 Email = user.Email,
                 Id = user.Id,
+                IsActivated = user.IsActivated,
                 UserName = user.UserName
             };
         }

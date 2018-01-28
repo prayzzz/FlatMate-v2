@@ -14,6 +14,7 @@ namespace FlatMate.Module.Account.Domain.Models
             Created = DateTime.Now;
             Email = email;
             UserName = userName;
+            IsActivated = false;
         }
 
         public DateTime Created { get; set; }
@@ -21,6 +22,8 @@ namespace FlatMate.Module.Account.Domain.Models
         public string Email { get; }
 
         public string UserName { get; }
+
+        public bool IsActivated { get; private set; }
 
         public static Result<User> Create(string userName, string email)
         {
@@ -46,6 +49,12 @@ namespace FlatMate.Module.Account.Domain.Models
             #endregion
 
             return new SuccessResult<User>(new User(id, userName, email));
+        }
+
+        public Result Activate()
+        {
+            IsActivated = true;
+            return SuccessResult.Default;
         }
 
         private static Result ValidateEmail(string email)

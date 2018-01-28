@@ -38,6 +38,11 @@ namespace FlatMate.Module.Account.DataAccess.Users
             var user = createResult.Data;
             user.Created = dbo.Created;
 
+            if (dbo.IsActivated)
+            {
+                user.Activate();
+            }
+
             return user;
         }
 
@@ -59,6 +64,9 @@ namespace FlatMate.Module.Account.DataAccess.Users
             dbo.Created = entity.Created;
             dbo.Email = entity.Email;
             dbo.UserName = entity.UserName;
+            dbo.IsActivated = entity.IsActivated;
+            dbo.PasswordHash = "";
+            dbo.Salt = "";
 
             return dbo;
         }

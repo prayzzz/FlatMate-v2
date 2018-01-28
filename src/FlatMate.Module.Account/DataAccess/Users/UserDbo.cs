@@ -23,5 +23,8 @@ namespace FlatMate.Module.Account.DataAccess.Users
 
         [Required]
         public string UserName { get; set; }
+
+        [Required]
+        public bool IsActivated { get; set; }
     }
 }

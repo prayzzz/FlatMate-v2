@@ -28,7 +28,9 @@ namespace FlatMate.Web.Areas.Account.Controllers
         [AllowAnonymous]
         public IActionResult Index([FromQuery] string returnUrl)
         {
-            return View(new LoginVm { ReturnUrl = returnUrl });
+            var model = ApplyTempResult(new LoginVm { ReturnUrl = returnUrl });
+
+            return View(model);
         }
 
         [HttpPost]
@@ -38,7 +40,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
+                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte fÃ¼ll das Formular korrekt aus");
                 return View(model);
             }
 

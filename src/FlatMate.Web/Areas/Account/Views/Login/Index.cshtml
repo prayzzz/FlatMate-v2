@@ -9,14 +9,22 @@
 
     <h1 style="text-align: center">FlatMate</h1>
 
-    <div class="alert-wrapper">
-        @if (Model.IsError)
-        {
-            <div class="alert alert-error">@Model.Result.Message</div>
-        }
-    </div>
-
     <form asp-area="Account" asp-controller="Login" method="post">
+
+        <div class="alert-wrapper">
+            @if (Model.Result != null)
+            {
+                if (Model.IsError)
+                {
+                    <div class="alert alert-error">@Model.Result.Message</div>
+                }
+                if (Model.IsSuccess)
+                {
+                    <div class="alert alert-success">@Model.Result.Message</div>
+                }
+            }
+        </div>
+
         <fieldset>
             <input asp-for="ReturnUrl" type="hidden"/>
 

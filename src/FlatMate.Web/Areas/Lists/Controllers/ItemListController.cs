@@ -156,23 +156,32 @@ namespace FlatMate.Web.Areas.Lists.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(int id, [FromForm] ItemListUpdateVm model)
+        public async Task<IActionResult> Update(int id, [FromForm] ItemListUpdateVm updateModel)
         {
             if (!ModelState.IsValid)
             {
-                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
-                return View(model);
+                updateModel.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
+                return View(updateModel);
             }
 
-            var updateList = await _listApi.Update(id, new ItemListJso { Description = model.Description, Id = model.Id, IsPublic = model.IsPublic, Name = model.Name });
+            var updateList = await _listApi.Update(id, new ItemListJso { Description = updateModel.Description, Id = updateModel.Id, IsPublic = updateModel.IsPublic, Name = updateModel.Name });
             if (updateList.IsError)
             {
-                model.Result = updateList;
-                return View(model);
+                updateModel.Result = updateList;
+                return View(updateModel);
             }
 
+            var itemList = updateList.Data;
+
             ModelState.Clear();
-            model.Result = new SuccessResult("Änderungen gespeichert");
+            var model = new ItemListUpdateVm
+            {
+                Description = itemList.Description,
+                Id = itemList.Id.Value,
+                IsPublic = itemList.IsPublic,
+                Name = itemList.Name,
+                Result = new SuccessResult("Änderungen gespeichert")
+            };
             return View(model);
         }
 
