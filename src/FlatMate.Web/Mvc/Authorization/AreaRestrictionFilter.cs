@@ -7,7 +7,7 @@ using prayzzz.Common.Enums;
 
 namespace FlatMate.Web.Mvc.Authorization
 {
-    [Inject(DependencyLifetime.Singleton, typeof(AreaRestrictionFilter))]
+    [Inject(DependencyLifetime.Scoped, typeof(AreaRestrictionFilter))]
     public class AreaRestrictionFilter : IAuthorizationFilter
     {
         private readonly ICurrentSession _session;
