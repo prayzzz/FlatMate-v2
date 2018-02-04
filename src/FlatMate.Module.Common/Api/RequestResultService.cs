@@ -17,7 +17,7 @@ namespace FlatMate.Module.Common.Api
         /// <summary>
         ///     Creates a new <see cref="IActionResult" /> from the given <see cref="Result" />
         /// </summary>
-        IActionResult Get(IResult result, object obj, HttpContext context);
+        IActionResult Get(Result result, object obj, HttpContext context);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ namespace FlatMate.Module.Common.Api
             return new OkResult();
         }
 
-        public IActionResult Get(IResult result, object obj, HttpContext context)
+        public IActionResult Get(Result result, object obj, HttpContext context)
         {
             if (result.IsError)
             {
@@ -57,20 +57,20 @@ namespace FlatMate.Module.Common.Api
             return new OkObjectResult(obj);
         }
 
-        private static IActionResult GetErrorResult(IResult result)
+        private static IActionResult GetErrorResult(Result result)
         {
             switch (result.ErrorType)
             {
                 case ErrorType.Unknown:
-                    return new ObjectResult(new ErrorResult(ErrorType.Unknown, "Unbekannter Fehler.")) { StatusCode = 500 };
+                    return new ObjectResult(new Result(ErrorType.Unknown, "Unbekannter Fehler.")) { StatusCode = 500 };
                 case ErrorType.InternalError:
-                    return new ObjectResult(new ErrorResult(ErrorType.InternalError, result)) { StatusCode = 500 };
+                    return new ObjectResult(new Result(ErrorType.InternalError, result.Message, result.MessageArgs)) { StatusCode = 500 };
                 case ErrorType.NotFound:
-                    return new NotFoundObjectResult(new ErrorResult(ErrorType.NotFound, result));
+                    return new NotFoundObjectResult(new Result(ErrorType.NotFound, result.Message, result.MessageArgs));
                 case ErrorType.ValidationError:
-                    return new BadRequestObjectResult(new ErrorResult(ErrorType.ValidationError, result));
+                    return new BadRequestObjectResult(new Result(ErrorType.ValidationError, result.Message, result.MessageArgs));
                 case ErrorType.Unauthorized:
-                    return new ObjectResult(new ErrorResult(ErrorType.Unauthorized, result)) { StatusCode = 401 };
+                    return new ObjectResult(new Result(ErrorType.Unauthorized, result.Message, result.MessageArgs)) { StatusCode = 401 };
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -42,16 +42,9 @@ namespace FlatMate.Module.Infrastructure.Api
 
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Result> Save(byte[] file, string contentType)
+        public async Task<(Result, ImageJso)> Save(byte[] file, string contentType)
         {
-            var (result, dto) = await _imageService.Save(file, contentType);
-
-            if (result.IsError)
-            {
-                return result;
-            }
-
-            return new SuccessResult<ImageJso>(Map<ImageJso>(dto));
+            return MapResultTuple(await _imageService.Save(file, contentType), Map<ImageJso>);
         }
 
         /// <summary>
@@ -60,16 +53,9 @@ namespace FlatMate.Module.Infrastructure.Api
         /// </summary>
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Result> SaveFromForm(IFormFile file)
+        public async Task<(Result, ImageJso)> SaveFromForm(IFormFile file)
         {
-            var (result, dto) = await _imageService.Save(ByteHelper.ReadToEnd(file.OpenReadStream()), file.ContentType);
-
-            if (result.IsError)
-            {
-                return result;
-            }
-
-            return new SuccessResult<ImageJso>(Map<ImageJso>(dto));
+            return MapResultTuple(await _imageService.Save(ByteHelper.ReadToEnd(file.OpenReadStream()), file.ContentType), Map<ImageJso>);
         }
     }
 }

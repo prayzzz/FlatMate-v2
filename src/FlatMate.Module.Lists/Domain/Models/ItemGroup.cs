@@ -9,19 +9,19 @@ namespace FlatMate.Module.Lists.Domain.Models
     {
         private static ItemGroup _defaultInstance;
 
-        private ItemGroup(int? id, string name, int owner, ItemList list) : base(id)
+        private ItemGroup(int? id, string name, int owner, ItemList list, DateTime created) : base(id)
         {
             Rename(name);
 
-            Created = Modified = DateTime.Now;
+            Created = Modified = created;
             ItemList = list;
             OwnerId = LastEditorId = owner;
             SortIndex = 0;
         }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; }
 
-        public static ItemGroup Default => _defaultInstance ?? (_defaultInstance = new ItemGroup(null, "Default", 0, ItemList.Default));
+        public static ItemGroup Default => _defaultInstance ?? (_defaultInstance = new ItemGroup(null, "Default", 0, ItemList.Default, DateTime.UtcNow));
 
         public bool IsPublic => ItemList.IsPublic;
 
@@ -40,32 +40,32 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         ///     Creates a new <see cref="ItemGroup" />
         /// </summary>
-        public static Result<ItemGroup> Create(string name, int ownerId, ItemList list)
+        public static (Result, ItemGroup) Create(string name, int ownerId, ItemList list)
         {
-            return Create(null, name, ownerId, list);
+            return Create(null, name, ownerId, list, DateTime.UtcNow);
         }
 
         /// <summary>
         ///     Creates an exisiting <see cref="ItemGroup" />
         /// </summary>
-        public static Result<ItemGroup> Create(int? id, string name, int ownerId, ItemList list)
+        public static (Result, ItemGroup) Create(int? id, string name, int ownerId, ItemList list, DateTime created)
         {
             #region Validation
 
             var result = ValidateName(name);
-            if (!result.IsSuccess)
+            if (result.IsError)
             {
-                return new ErrorResult<ItemGroup>(result);
+                return (result, null);
             }
 
             if (list == null)
             {
-                return new ErrorResult<ItemGroup>(ErrorType.ValidationError, "ItemList cannot be null");
+                return (new Result(ErrorType.ValidationError, "ItemList cannot be null"), null);
             }
 
             #endregion
 
-            return new SuccessResult<ItemGroup>(new ItemGroup(id, name, ownerId, list));
+            return (Result.Success, new ItemGroup(id, name, ownerId, list, created));
         }
 
         /// <summary>
@@ -80,17 +80,17 @@ namespace FlatMate.Module.Lists.Domain.Models
             }
 
             Name = name;
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         private static Result ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return new ErrorResult(ErrorType.ValidationError, $"{nameof(name)} must not be empty.");
+                return new Result(ErrorType.ValidationError, $"{nameof(name)} must not be empty.");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
     }
 }

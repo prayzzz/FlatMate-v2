@@ -3,10 +3,10 @@ using FlatMate.Web.Areas.Account.Data;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using prayzzz.Common.Results;
 using FlatMate.Web.Mvc;
 using FlatMate.Module.Account.Api;
 using FlatMate.Module.Account.Api.Jso;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
@@ -33,13 +33,13 @@ namespace FlatMate.Web.Areas.Account.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
+                model.Result = new Result(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
                 return View(model);
             }
 
             if (model.NewPassword != model.NewPasswordConfirmation)
             {
-                model.Result = new ErrorResult(ErrorType.ValidationError, "Das eingebenene Passwort stimmt nicht überein");
+                model.Result = new Result(ErrorType.ValidationError, "Das eingebenene Passwort stimmt nicht überein");
                 return View(model);
             }
 
@@ -51,21 +51,20 @@ namespace FlatMate.Web.Areas.Account.Controllers
             }
 
             ModelState.Clear();
-            return View(new ChangePasswordVm { Result = new SuccessResult("Passwort geändert") });
+            return View(new ChangePasswordVm { Result = new Result(ErrorType.None, "Passwort geändert") });
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var result = await _userApi.GetAsync(CurrentUserId);
-
+            var (result, user) = await _userApi.GetAsync(CurrentUserId);
             if (result.IsError)
             {
                 Logger.LogError($"No profile found for user #${CurrentUserId}");
                 return View("Error");
             }
 
-            return View(new MyProfileVm { UserJso = result.Data });
+            return View(new MyProfileVm { UserJso = user });
         }
     }
 }

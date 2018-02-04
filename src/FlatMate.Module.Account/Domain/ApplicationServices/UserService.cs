@@ -4,7 +4,6 @@ using FlatMate.Module.Account.Domain.Repositories;
 using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
-using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
 
@@ -15,47 +14,42 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
     {
         private readonly IAuthenticationContext _authenticationContext;
         private readonly IAuthenticationRepository _authenticationRepository;
-        private readonly ILogger _logger;
         private readonly IUserRepository _userRepository;
 
         public UserService(IUserRepository userRepository,
                            IAuthenticationContext authenticationContext,
-                           IAuthenticationRepository authenticationRepository,
-                           ILoggerFactory loggerFactory)
+                           IAuthenticationRepository authenticationRepository)
         {
             _userRepository = userRepository;
             _authenticationContext = authenticationContext;
             _authenticationRepository = authenticationRepository;
-            _logger = loggerFactory.CreateLogger(GetType());
         }
 
         private CurrentUser CurrentUser => _authenticationContext.CurrentUser;
 
-        public async Task<Result<UserDto>> AuthorizeAsync(string username, string password)
+        public async Task<(Result, UserDto)> AuthorizeAsync(string username, string password)
         {
             // get user
-            var getUser = await _userRepository.GetByUserNameAsync(username);
-            if (getUser.IsError || !getUser.Data.IsActivated)
+            var (getUserResult, user) = await _userRepository.GetByUserNameAsync(username);
+            if (getUserResult.IsError || !user.IsActivated)
             {
-                return new ErrorResult<UserDto>(ErrorType.NotFound, "User not found");
+                return (Result.NotFound, null);
             }
 
-            var user = getUser.Data;
-
             // get authentication information
-            var getAuthentication = await _authenticationRepository.GetAuthenticationAsync(user.Id.Value);
-            if (getAuthentication.IsError)
+            var (getAuthResult, authInfo) = await _authenticationRepository.GetAuthenticationAsync(user.Id);
+            if (getAuthResult.IsError)
             {
-                return new ErrorResult<UserDto>(ErrorType.Unauthorized, "Authentication not found");
+                return (new Result(ErrorType.Unauthorized, "Authentication not found"), null);
             }
 
             // verify password
-            if (!getAuthentication.Data.VerifyPassword(password))
+            if (!authInfo.VerifyPassword(password))
             {
-                return new ErrorResult<UserDto>(ErrorType.Unauthorized, "Incorrect authentication");
+                return (new Result(ErrorType.Unauthorized, "Incorrect authentication"), null);
             }
 
-            return new SuccessResult<UserDto>(ModelToDto(user));
+            return (Result.Success, ModelToDto(user));
         }
 
         /// <summary>
@@ -66,110 +60,98 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
             // must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
+                return new Result(ErrorType.Unauthorized, "Unauthorized");
             }
 
             // get authentication information of current user
-            var getAuthentication = await _authenticationRepository.GetAuthenticationAsync(CurrentUser.Id);
-            if (getAuthentication.IsError)
+            var (getAuthResult, authInfo) = await _authenticationRepository.GetAuthenticationAsync(CurrentUser.Id);
+            if (getAuthResult.IsError)
             {
-                return getAuthentication;
+                return getAuthResult;
             }
 
             // verify entered password against current password
-            var authenticationInfo = getAuthentication.Data;
-            if (!authenticationInfo.VerifyPassword(oldPassword))
+            if (!authInfo.VerifyPassword(oldPassword))
             {
-                return new ErrorResult(ErrorType.ValidationError, "Incorrect old password.");
+                return new Result(ErrorType.ValidationError, "Incorrect old password.");
             }
 
             // create new authentication information
-            var create = AuthenticationInformation.Create(newPassword, authenticationInfo.UserId);
-            if (!create.IsSuccess)
+            var (createResult, newAuthInfo) = AuthenticationInformation.Create(newPassword, authInfo.UserId);
+            if (createResult.IsError)
             {
-                return new ErrorResult(create);
+                return createResult;
             }
 
-            return await _authenticationRepository.SaveAsync(create.Data);
+            return await _authenticationRepository.SaveAsync(newAuthInfo);
         }
 
         /// <summary>
         ///     Creates a new user with the given password
         /// </summary>
-        public async Task<Result<UserDto>> CreateAsync(UserDto userDto, string password)
+        public async Task<(Result, UserDto)> CreateAsync(UserDto userDto, string password)
         {
             // get user by name
-            var getByUsername = await _userRepository.GetByUserNameAsync(userDto.UserName);
-            if (getByUsername.IsSuccess)
+            var (getByUserNameResult, _) = await _userRepository.GetByUserNameAsync(userDto.UserName);
+            if (getByUserNameResult.IsSuccess)
             {
-                return new ErrorResult<UserDto>(ErrorType.ValidationError, "Username already in use");
+                return (new Result(ErrorType.ValidationError, "Username already in use"), null);
             }
 
             // get user by mail
-            var getByMail = await _userRepository.GetByEmailAsync(userDto.Email);
-            if (getByMail.IsSuccess)
+            var (getByMailResult, _) = await _userRepository.GetByEmailAsync(userDto.Email);
+            if (getByMailResult.IsSuccess)
             {
-                return new ErrorResult<UserDto>(ErrorType.ValidationError, "Email already in use");
+                return (new Result(ErrorType.ValidationError, "Email already in use"), null);
             }
 
             // create user
-            var createUser = User.Create(userDto.UserName, userDto.Email);
-            if (!createUser.IsSuccess)
+            var (createResult, user) = User.Create(userDto.UserName, userDto.Email);
+            if (createResult.IsError)
             {
-                return new ErrorResult<UserDto>(createUser);
+                return (createResult, null);
             }
 
             // validate password
             var validatePassword = AuthenticationInformation.ValidatePlainPassword(password);
-            if (!validatePassword.IsSuccess)
+            if (validatePassword.IsError)
             {
-                return new ErrorResult<UserDto>(validatePassword);
+                return (validatePassword, null);
             }
 
             // save user
-            var saveUser = await _userRepository.SaveAsync(createUser.Data);
-            if (saveUser.IsError)
+            var (saveUserResult, savedUser) = await _userRepository.SaveAsync(user);
+            if (saveUserResult.IsError)
             {
-                return new ErrorResult<UserDto>(saveUser);
+                return (saveUserResult, null);
             }
 
             // instantiate authentication-information
-            var createAuthInfo = AuthenticationInformation.Create(password, saveUser.Data.Id.Value);
-            if (!createAuthInfo.IsSuccess)
+            var (createAuthInfoResult, authInfo) = AuthenticationInformation.Create(password, savedUser.Id);
+            if (createAuthInfoResult.IsError)
             {
-                return new ErrorResult<UserDto>(createAuthInfo);
+                return (createAuthInfoResult, null);
             }
 
             // save authentication-information
-            var saveAuthInfo = await _authenticationRepository.SaveAsync(createAuthInfo.Data);
+            var saveAuthInfo = await _authenticationRepository.SaveAsync(authInfo);
             if (saveAuthInfo.IsError)
             {
-                return new ErrorResult<UserDto>(saveAuthInfo);
+                return (saveAuthInfo, null);
             }
 
-            return new SuccessResult<UserDto>(ModelToDto(saveUser.Data));
+            return (Result.Success, ModelToDto(savedUser));
         }
 
-        public async Task<Result<UserDto>> GetAsync(int id)
+        public async Task<(Result, UserDto)> GetAsync(int id)
         {
-            var get = await _userRepository.GetAsync(id);
-            if (get.IsError)
+            var(result, user) = await _userRepository.GetAsync(id);
+            if (result.IsError)
             {
-                return new ErrorResult<UserDto>(get);
+                return (result, null);
             }
 
-            return new SuccessResult<UserDto>(ModelToDto(get.Data));
-        }
-
-        public Result<UserDto> Get(int id)
-        {
-            var get = _userRepository.Get(id);
-            if (get.IsError)
-            {
-                return new ErrorResult<UserDto>(get);
-            }
-
-            return new SuccessResult<UserDto>(ModelToDto(get.Data));
+            return (Result.Success, ModelToDto(user));
         }
 
         private static UserDto ModelToDto(User user)

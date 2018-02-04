@@ -29,37 +29,37 @@ namespace FlatMate.Module.Account.DataAccess.Users
 
         protected override IQueryable<UserDbo> DbosIncluded => Dbos;
 
-        public async Task<Result<AuthenticationInformation>> GetAuthenticationAsync(int userId)
+        public async Task<(Result, AuthenticationInformation)> GetAuthenticationAsync(int userId)
         {
             var user = await Dbos.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
             {
-                return new ErrorResult<AuthenticationInformation>(ErrorType.NotFound, "Not Found");
+                return (new Result(ErrorType.NotFound, "Not Found"), null);
             }
 
-            return new SuccessResult<AuthenticationInformation>(Mapper.Map<AuthenticationInformation>(user));
+            return (Result.Success, Mapper.Map<AuthenticationInformation>(user));
         }
 
-        public async Task<Result<User>> GetByEmailAsync(string email)
+        public async Task<(Result, User)> GetByEmailAsync(string email)
         {
             var user = await Dbos.FirstOrDefaultAsync(x => x.Email == email);
             if (user == null)
             {
-                return new ErrorResult<User>(ErrorType.NotFound, "Not Found");
+                return (new Result(ErrorType.NotFound, "Not Found"), null);
             }
 
-            return new SuccessResult<User>(Mapper.Map<User>(user));
+            return (Result.Success, Mapper.Map<User>(user));
         }
 
-        public async Task<Result<User>> GetByUserNameAsync(string userName)
+        public async Task<(Result, User)> GetByUserNameAsync(string userName)
         {
             var user = await Dbos.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
-                return new ErrorResult<User>(ErrorType.NotFound, "Not Found");
+                return (new Result(ErrorType.NotFound, "Not Found"), null);
             }
 
-            return new SuccessResult<User>(Mapper.Map<User>(user));
+            return (Result.Success, Mapper.Map<User>(user));
         }
 
         public async Task<Result> SaveAsync(AuthenticationInformation authInfo)
@@ -67,7 +67,7 @@ namespace FlatMate.Module.Account.DataAccess.Users
             var user = await Dbos.FirstOrDefaultAsync(x => x.Id == authInfo.UserId);
             if (user == null)
             {
-                return new ErrorResult<AuthenticationInformation>(ErrorType.NotFound, "Not Found");
+                return new Result(ErrorType.NotFound, "Not Found");
             }
 
             Mapper.Map(authInfo, user);

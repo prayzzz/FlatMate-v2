@@ -17,15 +17,12 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
         private static ItemGroup DboToEntity(ItemGroupDbo dbo, MappingContext ctx)
         {
             var itemList = ctx.Mapper.Map<ItemList>(dbo.ItemList);
-            var createResult = ItemGroup.Create(dbo.Id, dbo.Name, dbo.OwnerId, itemList);
-
-            if (!createResult.IsSuccess)
+            var (result, itemGroup) = ItemGroup.Create(dbo.Id, dbo.Name, dbo.OwnerId, itemList, dbo.Created);
+            if (result.IsError)
             {
-                throw new ValidationException(createResult.Message);
+                throw new ValidationException(result.Message);
             }
 
-            var itemGroup = createResult.Data;
-            itemGroup.Created = dbo.Created;
             itemGroup.LastEditorId = dbo.LastEditorId;
             itemGroup.Modified = dbo.Modified;
             itemGroup.SortIndex = dbo.SortIndex;
@@ -35,13 +32,13 @@ namespace FlatMate.Module.Lists.DataAccess.ItemGroups
 
         private static ItemGroupDbo EntityToDbo(ItemGroup entity, ItemGroupDbo dbo, MappingContext ctx)
         {
-            if (entity.Id.HasValue)
+            if (entity.IsSaved)
             {
-                dbo.Id = entity.Id.Value;
+                dbo.Id = entity.Id;
             }
 
             dbo.Created = entity.Created;
-            dbo.ItemListId = entity.ItemList.Id.Value;
+            dbo.ItemListId = entity.ItemList.Id;
             dbo.LastEditorId = entity.LastEditorId;
             dbo.Modified = entity.Modified;
             dbo.Name = entity.Name;

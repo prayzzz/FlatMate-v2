@@ -36,20 +36,20 @@ namespace FlatMate.Module.Offers.Api
             var company = (Company) companyId;
             if (company == Company.None)
             {
-                return (new ErrorResult(ErrorType.ValidationError, "Invalid companyId"), null);
+                return (new Result(ErrorType.ValidationError, "Invalid companyId"), null);
             }
 
             var periodService = _offerPeriodServices.FirstOrDefault(s => s.Company == company);
             if (periodService == null)
             {
                 _logger.LogError($"No OfferPeriod found for Company '{company}'");
-                return (new ErrorResult(ErrorType.InternalError, $"No OfferPeriod found for Company '{company}'"), null);
+                return (new Result(ErrorType.InternalError, $"No OfferPeriod found for Company '{company}'"), null);
             }
 
             var offerDuration = periodService.ComputeOfferPeriod(date ?? DateTime.Now);
             var offerDtos = await _offerService.GetCompanyOffers(company, offerDuration);
 
-            return (SuccessResult.Default, new OfferPeriodJso
+            return (Result.Success, new OfferPeriodJso
             {
                 From = offerDuration.From,
                 Offers = offerDtos.Select(Mapper.Map<OfferJso>),

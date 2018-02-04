@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared;
+using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using FlatMate.Module.Lists.Domain.Services;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore.Update;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -43,23 +45,22 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 
         private CurrentUser CurrentUser => _authorizationService.CurrentUser;
 
-        public async Task<Result<ItemListDto>> CreateAsync(ItemListDto dto)
+        public async Task<(Result, ItemListDto)> CreateAsync(ItemListDto dto)
         {
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
+                return (Result.Unauthorized, null);
             }
 
             // create ItemList
-            var createList = ItemList.Create(dto.Name, CurrentUser.Id);
-            if (createList.IsError)
+            var (result, itemList) = ItemList.Create(dto.Name, CurrentUser.Id);
+            if (result.IsError)
             {
-                return new ErrorResult<ItemListDto>(createList);
+                return (result, null);
             }
 
             // set optional data
-            var itemList = createList.Data;
             itemList.Description = dto.Description;
             itemList.IsPublic = dto.IsPublic;
 
@@ -71,41 +72,41 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
+                return Result.Unauthorized;
             }
 
             // get ItemList
-            var getList = await _itemListRepository.GetAsync(listId);
-            if (getList.IsError)
+            var (result, itemList) = await _itemListRepository.GetAsync(listId);
+            if (result.IsError)
             {
-                return getList;
+                return result;
             }
 
             // check permission
-            if (!_authorizationService.CanDelete(getList.Data))
+            if (!_authorizationService.CanDelete(itemList))
             {
-                return new ErrorResult(ErrorType.NotFound, "Entity not found");
+                return Result.NotFound;
             }
 
             return await _itemListRepository.DeleteAsync(listId);
         }
 
-        public async Task<Result<ItemListDto>> GetListAsync(int listId)
+        public async Task<(Result, ItemListDto)> GetListAsync(int listId)
         {
             // get ItemList
-            var getList = await _itemListRepository.GetAsync(listId);
-            if (getList.IsError)
+            var (result, itemList) = await _itemListRepository.GetAsync(listId);
+            if (result.IsError)
             {
-                return new ErrorResult<ItemListDto>(getList);
+                return (result, null);
             }
 
             // check permission
-            if (!_authorizationService.CanRead(getList.Data))
+            if (!_authorizationService.CanRead(itemList))
             {
-                return new ErrorResult<ItemListDto>(ErrorType.NotFound, "Entity not found");
+                return (Result.NotFound, null);
             }
 
-            return getList.WithDataAs(_mapper.Map<ItemListDto>);
+            return (Result.Success, _mapper.Map<ItemListDto>(itemList));
         }
 
         public async Task<IEnumerable<ItemListDto>> GetListsAsync(int? ownerId)
@@ -114,29 +115,28 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                                                                    .Select(_mapper.Map<ItemListDto>);
         }
 
-        public async Task<Result<ItemListDto>> UpdateAsync(int listId, ItemListDto dto)
+        public async Task<(Result, ItemListDto)> UpdateAsync(int listId, ItemListDto dto)
         {
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
+                return (Result.Unauthorized, null);
             }
 
             // get ItemList
-            var getResult = await _itemListRepository.GetAsync(listId);
-            if (getResult.IsError)
+            var (result, itemList) = await _itemListRepository.GetAsync(listId);
+            if (result.IsError)
             {
-                return new ErrorResult<ItemListDto>(getResult);
+                return (result, null);
             }
 
             // check permission
-            if (!_authorizationService.CanEdit(getResult.Data))
+            if (!_authorizationService.CanEdit(itemList))
             {
-                return new ErrorResult<ItemListDto>(ErrorType.Unauthorized, "Unauthorized");
+                return (Result.Unauthorized, null);
             }
 
             // update data
-            var itemList = getResult.Data;
             itemList.Rename(dto.Name);
             itemList.Description = dto.Description;
             itemList.IsPublic = dto.IsPublic;
@@ -144,12 +144,18 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return await SaveAsync(itemList);
         }
 
-        private Task<Result<ItemListDto>> SaveAsync(ItemList itemList)
+        private async Task<(Result, ItemListDto)> SaveAsync(ItemList itemList)
         {
             itemList.Modified = DateTime.Now;
             itemList.LastEditorId = CurrentUser.Id;
 
-            return _itemListRepository.SaveAsync(itemList).WithResultDataAs(_mapper.Map<ItemListDto>);
+            var (result, savedItemList) = await _itemListRepository.SaveAsync(itemList);
+            if (result.IsError)
+            {
+                return (result, null);
+            }
+
+            return (Result.Success, _mapper.Map<ItemListDto>(savedItemList));
         }
     }
 }

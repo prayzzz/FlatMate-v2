@@ -4,10 +4,10 @@ using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
-using prayzzz.Common.Results;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers
 {
@@ -47,10 +47,10 @@ namespace FlatMate.Module.Offers
             catch (Exception e)
             {
                 _logger.LogError(0, e, "Error while saving changes");
-                return new ErrorResult(ErrorType.InternalError, "Datenbankfehler");
+                return new Result(ErrorType.InternalError, "Datenbankfehler");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         public new async Task<Result> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -62,10 +62,10 @@ namespace FlatMate.Module.Offers
             catch (Exception e)
             {
                 _logger.LogError(0, e, "Error while saving changes");
-                return new ErrorResult(ErrorType.InternalError, "Datenbankfehler");
+                return new Result(ErrorType.InternalError, "Datenbankfehler");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

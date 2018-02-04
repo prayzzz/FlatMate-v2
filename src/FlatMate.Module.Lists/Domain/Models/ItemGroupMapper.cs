@@ -18,7 +18,7 @@ namespace FlatMate.Module.Lists.Domain.Models
             {
                 Created = itemGroup.Created,
                 Id = itemGroup.Id,
-                ItemListId = itemGroup.ItemList.Id.Value,
+                ItemListId = itemGroup.ItemList.Id,
                 IsPublic = itemGroup.IsPublic,
                 LastEditorId = itemGroup.LastEditorId,
                 Modified = itemGroup.Modified,

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using prayzzz.Common.Results;
 using Moq;
 using FlatMate.Module.Offers.Domain;
 using FlatMate.Module.Offers.Domain.Adapter.Penny;
@@ -8,6 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using prayzzz.Common.Unit;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FlatMate.Module.Common;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
 {
@@ -37,7 +38,7 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
             apiMock.Setup(x => x.GetOffers()).Returns(Task.FromResult(offerEnvelop));
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
-            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), 0)).Returns(Task.FromResult<(Result, RawOfferDataDto)>((SuccessResult.Default, null)));
+            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), 0)).Returns(Task.FromResult<(Result, RawOfferDataDto)>((Result.Success, null)));
 
             var utilsMocks = TestHelper.Mock<IPennyUtils>();
             utilsMocks.Setup(x => x.StripHTML(It.IsAny<string>())).Returns((string x) => x);

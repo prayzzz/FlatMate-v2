@@ -4,9 +4,9 @@ using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Results;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Api
 {
@@ -22,18 +22,16 @@ namespace FlatMate.Module.Account.Api
 
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Result<UserInfoJso>> LoginAsync([FromBody] LoginJso loginJso)
+        public async Task<(Result, UserInfoJso)> LoginAsync([FromBody] LoginJso loginJso)
         {
-            var authorize = await _userService.AuthorizeAsync(loginJso.UserName, loginJso.Password);
-            if (authorize.IsError)
+            var (result, user) = await _userService.AuthorizeAsync(loginJso.UserName, loginJso.Password);
+            if (result.IsError)
             {
-                MetricsRoot.Measure.Meter.Mark(ModuleMetrics.LoginAttempts, authorize.ErrorType.ToString());
-                return new ErrorResult<UserInfoJso>(ErrorType.Unauthorized, "Unauthorized");
+                MetricsRoot.Measure.Meter.Mark(ModuleMetrics.LoginAttempts, result.ErrorType.ToString());
+                return (new Result(ErrorType.Unauthorized, "Unauthorized"), null);
             }
 
             MetricsRoot.Measure.Meter.Mark(ModuleMetrics.LoginAttempts, "Success");
-
-            var user = authorize.Data;
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
@@ -44,7 +42,7 @@ namespace FlatMate.Module.Account.Api
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
 
-            return authorize.WithDataAs(dto => Mapper.Map<UserInfoJso>(dto));
+            return (result, Mapper.Map<UserInfoJso>(user));
         }
     }
 }

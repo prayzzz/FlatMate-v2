@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
-using prayzzz.Common.Results;
 using System;
 using System.Threading.Tasks;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
@@ -42,7 +42,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             catch (Exception e)
             {
                 _logger.LogWarning(0, e, "Error while requesting Rewe Mobile API");
-                return (new ErrorResult(ErrorType.InternalError, "Rewe Mobile API nicht verfügbar."), null);
+                return (new Result(ErrorType.InternalError, "Rewe Mobile API nicht verfügbar."), null);
             }
 
             return await CreateOrUpdateMarket(marketJso);

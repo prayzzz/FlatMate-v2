@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
-using prayzzz.Common.Results;
 using prayzzz.Common.Unit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Test.Rewe
 {
@@ -29,7 +30,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
                                                 new ConsoleLogger<OffersDbContext>());
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
-            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult(((Result)SuccessResult.Default, new RawOfferDataDto())));
+            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult((Result.Success, new RawOfferDataDto())));
 
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.Setup(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(LoadJsonData<Envelope<OfferJso>>("2017-08-26_OfferSearch_193146.json")));
@@ -43,7 +44,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var (result, offers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(SuccessResult));
+            Assert.IsInstanceOfType(result, typeof(Result));
             Assert.IsNotNull(dbContext.Products.FirstOrDefault());
             Assert.IsNotNull(dbContext.Offers.FirstOrDefault());
 
@@ -76,7 +77,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var offers = new Envelope<OfferJso> { Items = new List<OfferJso> { offer }, Meta = new Dictionary<string, Newtonsoft.Json.Linq.JToken>() };
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
-            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult(((Result)SuccessResult.Default, new RawOfferDataDto())));
+            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult((Result.Success, new RawOfferDataDto())));
 
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.Setup(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(offers));
@@ -92,7 +93,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var savedProduct = dbContext.Products.FirstOrDefault();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(SuccessResult));
+            Assert.IsInstanceOfType(result, typeof(Result));
             Assert.IsNotNull(savedOffer);
             Assert.AreEqual((decimal)offer.Price, savedOffer.Price);
             Assert.AreEqual(offer.Id, savedOffer.ExternalId);
@@ -135,7 +136,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var offers2 = new Envelope<OfferJso> { Items = new List<OfferJso> { offer2 }, Meta = new Dictionary<string, Newtonsoft.Json.Linq.JToken>() };
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
-            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult(((Result)SuccessResult.Default, new RawOfferDataDto())));
+            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult((Result.Success, new RawOfferDataDto())));
 
             var mobileApiMock = TestHelper.Mock<IReweMobileApi>();
             mobileApiMock.SetupSequence(x => x.SearchOffers(MarketId)).Returns(Task.FromResult(offers)).Returns(Task.FromResult(offers2));
@@ -153,8 +154,8 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var savedProduct = dbContext.Products.FirstOrDefault();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(SuccessResult));
-            Assert.IsInstanceOfType(result2, typeof(SuccessResult));
+            Assert.IsInstanceOfType(result, typeof(Result));
+            Assert.IsInstanceOfType(result2, typeof(Result));
 
             Assert.IsNotNull(savedProduct);
             Assert.AreEqual(offer.Brand, savedProduct.Brand);

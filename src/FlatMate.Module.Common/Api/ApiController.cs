@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
-using prayzzz.Common.Results;
 using System;
 using System.Security.Claims;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Common.Api
 {

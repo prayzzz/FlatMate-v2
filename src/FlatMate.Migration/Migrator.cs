@@ -39,7 +39,7 @@ namespace FlatMate.Migration
                 }
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         private void EnsureMigrationStructure(IDbConnection connection)

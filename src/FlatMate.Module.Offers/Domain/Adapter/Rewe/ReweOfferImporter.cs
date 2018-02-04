@@ -3,12 +3,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using prayzzz.Common.Attributes;
-using prayzzz.Common.Results;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
@@ -68,7 +68,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             catch (Exception e)
             {
                 _logger.LogWarning(0, e, $"Error while requesting {nameof(IReweMobileApi)}");
-                return (new ErrorResult(ErrorType.InternalError, $"{nameof(IReweMobileApi)} nicht verfügbar."), null);
+                return (new Result(ErrorType.InternalError, $"{nameof(IReweMobileApi)} nicht verfügbar."), null);
             }
 
             var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(offerEnvelope), market.Id);

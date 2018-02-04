@@ -30,10 +30,10 @@ namespace FlatMate.Module.Lists.Api.Jso
                 Id = dto.Id,
                 ItemListId = dto.ItemListId,
                 ItemGroupId = dto.ItemGroupId,
-                LastEditor = userApi.Get(dto.LastEditorId).Data,
+                LastEditor = userApi.Get(dto.LastEditorId).User,
                 Modified = dto.Modified,
                 Name = dto.Name,
-                Owner = userApi.Get(dto.OwnerId).Data,
+                Owner = userApi.Get(dto.OwnerId).User,
                 SortIndex = dto.SortIndex
             };
         }
@@ -47,10 +47,10 @@ namespace FlatMate.Module.Lists.Api.Jso
                 Created = dto.Created,
                 Id = dto.Id,
                 ItemListId = dto.ItemListId,
-                LastEditor = userApi.Get(dto.LastEditorId).Data,
+                LastEditor = userApi.Get(dto.LastEditorId).User,
                 Modified = dto.Modified,
                 Name = dto.Name,
-                Owner = userApi.Get(dto.OwnerId).Data,
+                Owner = userApi.Get(dto.OwnerId).User,
                 SortIndex = dto.SortIndex
             };
         }
@@ -66,10 +66,10 @@ namespace FlatMate.Module.Lists.Api.Jso
                 Id = dto.Id,
                 IsPublic = dto.IsPublic,
                 ItemCount = dto.Meta.ItemCount,
-                LastEditor = userApi.Get(dto.LastEditorId).Data,
+                LastEditor = userApi.Get(dto.LastEditorId).User,
                 Modified = dto.Modified,
                 Name = dto.Name,
-                Owner = userApi.Get(dto.OwnerId).Data
+                Owner = userApi.Get(dto.OwnerId).User
             };
         }
 

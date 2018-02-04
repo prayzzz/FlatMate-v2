@@ -46,7 +46,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 await _adminApi.MergeProducts(id, otherProductId);
             }
 
-            TempData[Constants.TempData.Result] = JsonService.Serialize(new SuccessResult("Product merged"));
+            TempData[Constants.TempData.Result] = JsonService.Serialize(new Result(ErrorType.None, "Product merged"));
             var referer = HttpContext.Request.Headers["Referer"].ToString();
             if (!string.IsNullOrEmpty(referer))
             {

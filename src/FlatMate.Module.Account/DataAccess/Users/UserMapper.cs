@@ -18,25 +18,22 @@ namespace FlatMate.Module.Account.DataAccess.Users
 
         private static AuthenticationInformation DboToAuthEntity(UserDbo dbo, MappingContext ctx)
         {
-            var createResult = AuthenticationInformation.Create(dbo.PasswordHash, dbo.Salt, dbo.Id);
-            if (!createResult.IsSuccess)
+            var (result, authInfo) = AuthenticationInformation.Create(dbo.PasswordHash, dbo.Salt, dbo.Id);
+            if (result.IsError)
             {
-                throw new ValidationException(createResult.Message);
+                throw new ValidationException(result.Message);
             }
 
-            return createResult.Data;
+            return authInfo;
         }
 
         private static User DboToEntity(UserDbo dbo, MappingContext ctx)
         {
-            var createResult = User.Create(dbo.Id, dbo.UserName, dbo.Email);
-            if (!createResult.IsSuccess)
+            var (result, user) = User.Create(dbo.Id, dbo.UserName, dbo.Email, dbo.Created);
+            if (result.IsError)
             {
-                throw new ValidationException(createResult.Message);
+                throw new ValidationException(result.Message);
             }
-
-            var user = createResult.Data;
-            user.Created = dbo.Created;
 
             if (dbo.IsActivated)
             {
@@ -56,9 +53,9 @@ namespace FlatMate.Module.Account.DataAccess.Users
 
         private static UserDbo EntityToDbo(User entity, UserDbo dbo, MappingContext ctx)
         {
-            if (entity.Id.HasValue)
+            if (entity.IsSaved)
             {
-                dbo.Id = entity.Id.Value;
+                dbo.Id = entity.Id;
             }
 
             dbo.Created = entity.Created;

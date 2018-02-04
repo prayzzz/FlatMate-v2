@@ -58,7 +58,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             catch (Exception e)
             {
                 Logger.LogWarning(0, e, $"Error while requesting {nameof(IPennyApi)}");
-                return (new ErrorResult(ErrorType.InternalError, $"{nameof(IPennyApi)} nicht verfügbar."), null);
+                return (new Result(ErrorType.InternalError, $"{nameof(IPennyApi)} nicht verfügbar."), null);
             }
 
             var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(envelope), market.Id);

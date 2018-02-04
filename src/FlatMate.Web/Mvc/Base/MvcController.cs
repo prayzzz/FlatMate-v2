@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using prayzzz.Common.Results;
 using FlatMate.Module.Account.Api.Jso;
+using FlatMate.Module.Common;
 using FlatMate.Web.Mvc.Authorization;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Mvc.Base
 {
     [Authorize]
-    [ServiceFilter(typeof(MvcResultFilter))]
     [ServiceFilter(typeof(AreaRestrictionFilter))]
     public abstract class MvcController : Controller
     {
@@ -81,9 +81,11 @@ namespace FlatMate.Web.Mvc.Base
             TempData[Constants.TempData.Result] = JsonService.Serialize(result);
         }
 
+        /// <summary>
+        /// check for passed result from redirect and sets it to the given model.
+        /// </summary>
         protected T ApplyTempResult<T>(T model) where T : MvcViewModel
         {
-            // check for passed result from redirect
             if (TempData.TryGetValue(Constants.TempData.Result, out var data))
             {
                 try

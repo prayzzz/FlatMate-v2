@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Common.Domain;
 using FlatMate.Module.Offers.Domain;

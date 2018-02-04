@@ -4,7 +4,7 @@ namespace FlatMate.Module.Common
 {
     public static class ByteHelper
     {
-        private static readonly uint[] _lookup32 = CreateLookup32();
+        private static readonly uint[] Lookup32 = CreateLookup32();
 
         /// <summary>
         ///     https://stackoverflow.com/a/221941
@@ -24,9 +24,9 @@ namespace FlatMate.Module.Common
             }
         }
 
-        public static string ToHexString(byte[] bytes)
+        public static string ToHexString(this byte[] bytes)
         {
-            var lookup32 = _lookup32;
+            var lookup32 = Lookup32;
             var result = new char[bytes.Length * 2];
             for (var i = 0; i < bytes.Length; i++)
             {

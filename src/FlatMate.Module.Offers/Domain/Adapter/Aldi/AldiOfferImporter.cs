@@ -40,7 +40,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
                 var areas = XmlConvert.Deserialize<Data>(await _aldiApi.GetAreas());
                 if (areas == null)
                 {
-                    return (new ErrorResult(ErrorType.InternalError, "Aldi Api error"), null);
+                    return (new Result(ErrorType.InternalError, "Aldi Api error"), null);
                 }
 
                 foreach (var teaser in areas.Area.SelectMany(a => a.Teasers.Teaser))
@@ -51,7 +51,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             catch (Exception e)
             {
                 Logger.LogWarning(0, e, $"Error while requesting {nameof(IAldiApi)}");
-                return (new ErrorResult(ErrorType.InternalError, $"{nameof(IAldiApi)} nicht verfügbar."), null);
+                return (new Result(ErrorType.InternalError, $"{nameof(IAldiApi)} nicht verfügbar."), null);
             }
 
             var articles = offerChunks.SelectMany(o => o.Area.SelectMany(a => a.Articles.Article)).ToList();

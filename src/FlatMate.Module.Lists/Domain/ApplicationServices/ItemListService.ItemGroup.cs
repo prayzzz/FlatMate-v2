@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Results;
@@ -10,30 +11,29 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
 {
     public partial class ItemListService
     {
-        public async Task<Result<ItemGroupDto>> CreateAsync(int listId, ItemGroupDto dto)
+        public async Task<(Result, ItemGroupDto)> CreateAsync(int listId, ItemGroupDto dto)
         {
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult<ItemGroupDto>(ErrorType.Unauthorized, "Unauthorized");
+                return (Result.Unauthorized, null);
             }
 
             // get ItemList
-            var getList = await _itemListRepository.GetAsync(listId);
-            if (getList.IsError)
+            var (getItemListResult, itemList) = await _itemListRepository.GetAsync(listId);
+            if (getItemListResult.IsError)
             {
-                return new ErrorResult<ItemGroupDto>(getList);
+                return (getItemListResult, null);
             }
 
             // create ItemGroup
-            var createGroup = ItemGroup.Create(dto.Name, CurrentUser.Id, getList.Data);
-            if (createGroup.IsError)
+            var (createItemGroupResult, itemGroup) = ItemGroup.Create(dto.Name, CurrentUser.Id, itemList);
+            if (createItemGroupResult.IsError)
             {
-                return new ErrorResult<ItemGroupDto>(getList);
+                return (createItemGroupResult, null);
             }
 
             // set additional data
-            var itemGroup = createGroup.Data;
             itemGroup.SortIndex = dto.SortIndex;
 
             return await Save(itemGroup);
@@ -44,48 +44,48 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
+                return Result.Unauthorized;
             }
 
             // get ItemGroup
-            var getGroup = await _itemGroupRepository.GetAsync(groupId);
-            if (getGroup.IsError)
+            var (result, itemGroup) = await _itemGroupRepository.GetAsync(groupId);
+            if (result.IsError)
             {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
+                return Result.Unauthorized;
             }
 
             // check permission
-            if (!_authorizationService.CanDelete(getGroup.Data))
+            if (!_authorizationService.CanDelete(itemGroup))
             {
-                return new ErrorResult(ErrorType.NotFound, "Entity not found");
+                return Result.NotFound;
             }
 
-            return await _itemGroupRepository.DeleteAsync(groupId);
+            return await _itemGroupRepository.DeleteAsync(itemGroup.Id);
         }
 
-        public async Task<Result<ItemGroupDto>> GetGroupAsync(int groupId)
+        public async Task<(Result, ItemGroupDto)> GetGroupAsync(int groupId)
         {
             // get ItemGroup
-            var getGroup = await _itemGroupRepository.GetAsync(groupId);
-            if (getGroup.IsError)
+            var (result, itemGroup) = await _itemGroupRepository.GetAsync(groupId);
+            if (result.IsError)
             {
-                return new ErrorResult<ItemGroupDto>(getGroup);
+                return (result, null);
             }
 
             // check permission
-            if (!_authorizationService.CanRead(getGroup.Data))
+            if (!_authorizationService.CanRead(itemGroup))
             {
-                return new ErrorResult<ItemGroupDto>(ErrorType.NotFound, "Entity not found");
+                return (Result.NotFound, null);
             }
 
-            return getGroup.WithDataAs(_mapper.Map<ItemGroupDto>);
+            return (Result.Success, _mapper.Map<ItemGroupDto>(itemGroup));
         }
 
         public async Task<IEnumerable<ItemGroupDto>> GetGroupsAsync(int listId)
         {
             // get ItemList
-            var getList = await _itemListRepository.GetAsync(listId);
-            if (getList.IsError || !_authorizationService.CanRead(getList.Data))
+            var (result, itemList) = await _itemListRepository.GetAsync(listId);
+            if (result.IsError || !_authorizationService.CanRead(itemList))
             {
                 return Enumerable.Empty<ItemGroupDto>();
             }
@@ -93,41 +93,46 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             return (await _itemGroupRepository.GetAllAsync(listId)).Select(_mapper.Map<ItemGroupDto>);
         }
 
-        public async Task<Result<ItemGroupDto>> UpdateAsync(int itemGroupId, ItemGroupDto dto)
+        public async Task<(Result, ItemGroupDto)> UpdateAsync(int itemGroupId, ItemGroupDto dto)
         {
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult<ItemGroupDto>(ErrorType.Unauthorized, "Unauthorized");
+                return (Result.Unauthorized, null);
             }
 
             // get ItemGroup
-            var getGroup = await _itemGroupRepository.GetAsync(itemGroupId);
-            if (getGroup.IsError)
+            var (result, itemGroup) = await _itemGroupRepository.GetAsync(itemGroupId);
+            if (result.IsError)
             {
-                return new ErrorResult<ItemGroupDto>(getGroup);
+                return (result, null);
             }
 
             // check permission
-            if (!_authorizationService.CanEdit(getGroup.Data))
+            if (!_authorizationService.CanEdit(itemGroup))
             {
-                return new ErrorResult<ItemGroupDto>(ErrorType.Unauthorized, "Unauthorized");
+                return (Result.Unauthorized, null);
             }
 
             // update data
-            var group = getGroup.Data;
-            group.Rename(dto.Name);
-            group.SortIndex = dto.SortIndex;
+            itemGroup.Rename(dto.Name);
+            itemGroup.SortIndex = dto.SortIndex;
 
-            return await Save(group);
+            return await Save(itemGroup);
         }
 
-        private Task<Result<ItemGroupDto>> Save(ItemGroup itemGroup)
+        private async Task<(Result, ItemGroupDto)> Save(ItemGroup itemGroup)
         {
             itemGroup.Modified = DateTime.Now;
             itemGroup.LastEditorId = CurrentUser.Id;
 
-            return _itemGroupRepository.SaveAsync(itemGroup).WithResultDataAs(_mapper.Map<ItemGroupDto>);
+            var (result, savedItemGroup) = await _itemGroupRepository.SaveAsync(itemGroup);
+            if (result.IsError)
+            {
+                return (result, null);
+            }
+
+            return (Result.Success, _mapper.Map<ItemGroupDto>(savedItemGroup));
         }
     }
 }

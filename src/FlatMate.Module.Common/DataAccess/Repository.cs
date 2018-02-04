@@ -40,10 +40,10 @@ namespace FlatMate.Module.Common.DataAccess
             catch (Exception e)
             {
                 Logger.LogError(0, e, "Error while saving changes");
-                return new ErrorResult(ErrorType.InternalError, "Datenbankfehler");
+                return new Result(ErrorType.InternalError, "Datenbankfehler");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
     }
 
@@ -70,7 +70,7 @@ namespace FlatMate.Module.Common.DataAccess
 
             if (dbo == null)
             {
-                return new ErrorResult(ErrorType.NotFound, "Entity not found");
+                return new Result(ErrorType.NotFound, "Entity not found");
             }
 
             Context.Remove(dbo);
@@ -78,53 +78,53 @@ namespace FlatMate.Module.Common.DataAccess
             var save = await SaveChanges();
             if (save.IsError)
             {
-                return new ErrorResult(save);
+                return new Result(save);
             }
 
-            return new SuccessResult();
+            return Result.Success;
         }
 
-        public async Task<Result<TEntity>> GetAsync(int id)
+        public async Task<(Result, TEntity)> GetAsync(int id)
         {
             if (_requestCache.TryGetValue(id, out var cachedEntity))
             {
-                return new SuccessResult<TEntity>(cachedEntity);
+                return (Result.Success, cachedEntity);
             }
 
             var dbo = await DbosIncluded.FirstOrDefaultAsync(g => g.Id == id);
 
             if (dbo == null)
             {
-                return new ErrorResult<TEntity>(ErrorType.NotFound, "Entity not found");
+                return (Result.NotFound, null);
             }
 
             var entity = Mapper.Map<TEntity>(dbo);
             _requestCache[dbo.Id] = entity;
 
-            return new SuccessResult<TEntity>(entity);
+            return (Result.Success, entity);
         }
 
-        public Result<TEntity> Get(int id)
+        public (Result, TEntity) Get(int id)
         {
             if (_requestCache.TryGetValue(id, out var cachedEntity))
             {
-                return new SuccessResult<TEntity>(cachedEntity);
+                return (Result.Success, cachedEntity);
             }
 
             var dbo = DbosIncluded.FirstOrDefault(g => g.Id == id);
 
             if (dbo == null)
             {
-                return new ErrorResult<TEntity>(ErrorType.NotFound, "Entity not found");
+                return (Result.NotFound, null);
             }
 
             var entity = Mapper.Map<TEntity>(dbo);
             _requestCache[dbo.Id] = entity;
 
-            return new SuccessResult<TEntity>(entity);
+            return (Result.Success, entity);
         }
 
-        public async Task<Result<TEntity>> SaveAsync(TEntity entity)
+        public async Task<(Result, TEntity)> SaveAsync(TEntity entity)
         {
             TDbo dbo;
             if (entity.IsSaved)
@@ -133,7 +133,7 @@ namespace FlatMate.Module.Common.DataAccess
 
                 if (dbo == null)
                 {
-                    return new ErrorResult<TEntity>(ErrorType.NotFound, "Entity not found");
+                    return (new Result(ErrorType.InternalError, "Entity not found"), null);
                 }
             }
             else
@@ -146,10 +146,10 @@ namespace FlatMate.Module.Common.DataAccess
             var save = await SaveChanges();
             if (save.IsError)
             {
-                return new ErrorResult<TEntity>(save);
+                return (new Result(save), null);
             }
 
-            return new SuccessResult<TEntity>(Mapper.Map<TEntity>(dbo));
+            return (Result.Success, Mapper.Map<TEntity>(dbo));
         }
 
         protected override void BeforeSaveChanges()

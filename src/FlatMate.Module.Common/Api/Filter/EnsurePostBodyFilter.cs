@@ -32,13 +32,13 @@ namespace FlatMate.Module.Common.Api
                     if (argument == null)
                     {
                         // argument null
-                        context.Result = new BadRequestObjectResult(new ErrorResult(ErrorType.ValidationError, "Body should not empty"));
+                        context.Result = new BadRequestObjectResult(new Result(ErrorType.ValidationError, "Body should not empty"));
                     }
                 }
                 else
                 {
                     // argument not found
-                    context.Result = new BadRequestObjectResult(new ErrorResult(ErrorType.ValidationError, "Body should not empty"));
+                    context.Result = new BadRequestObjectResult(new Result(ErrorType.ValidationError, "Body should not empty"));
                 }
             }
         }

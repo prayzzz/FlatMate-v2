@@ -34,7 +34,7 @@ namespace FlatMate.Migration.DotNet.Commands
                 new TableTask(_loggerFactory, _resourceLoader, _sqlCommandExecutor).CreateTable(connection, _settings);
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
     }
 }

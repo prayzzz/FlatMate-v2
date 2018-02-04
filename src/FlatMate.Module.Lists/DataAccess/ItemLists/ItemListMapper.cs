@@ -16,28 +16,25 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
         private static ItemList DboToEntity(ItemListDbo dbo, MappingContext arg2)
         {
-            var createResult = ItemList.Create(dbo.Id, dbo.Name, dbo.OwnerId);
-
-            if (!createResult.IsSuccess)
+            var (result, itemList) = ItemList.Create(dbo.Id, dbo.Name, dbo.OwnerId, dbo.Created);
+            if (!result.IsSuccess)
             {
-                throw new ValidationException(createResult.Message);
+                throw new ValidationException(result.Message);
             }
 
-            var itemList = createResult.Data;
-            itemList.Created = dbo.Created;
             itemList.Description = dbo.Description;
             itemList.IsPublic = dbo.IsPublic;
             itemList.LastEditorId = dbo.LastEditorId;
             itemList.Modified = dbo.Modified;
 
-            return createResult.Data;
+            return itemList;
         }
 
         private static ItemListDbo EntityToDbo(ItemList entity, ItemListDbo dbo, MappingContext ctx)
         {
-            if (entity.Id.HasValue)
+            if (entity.IsSaved)
             {
-                dbo.Id = entity.Id.Value;
+                dbo.Id = entity.Id;
             }
 
             dbo.Created = entity.Created;

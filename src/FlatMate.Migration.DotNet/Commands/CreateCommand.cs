@@ -42,7 +42,7 @@ namespace FlatMate.Migration.DotNet.Commands
                 Process.Start("explorer.exe", $"/select,\"{filePath}\"");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
     }
 }

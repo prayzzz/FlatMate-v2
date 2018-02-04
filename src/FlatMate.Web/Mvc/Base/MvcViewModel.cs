@@ -1,4 +1,5 @@
 ﻿using FlatMate.Module.Account.Api.Jso;
+using FlatMate.Module.Common;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Mvc.Base
@@ -11,10 +12,10 @@ namespace FlatMate.Web.Mvc.Base
     {
         public UserInfoJso CurrentUser { get; set; }
 
-        public bool IsError => Result?.IsError == true;
+        public bool IsError => Result.HasValue && Result.Value.IsError;
 
-        public bool IsSuccess => Result?.IsSuccess == true;
+        public bool IsSuccess => Result.HasValue && Result.Value.IsSuccess;
 
-        public Result Result { get; set; }
+        public Result? Result { get; set; }
     }
 }

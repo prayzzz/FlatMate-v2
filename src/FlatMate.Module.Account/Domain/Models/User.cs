@@ -9,15 +9,15 @@ namespace FlatMate.Module.Account.Domain.Models
     {
         private static readonly Regex EmailRegex = new Regex("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-        private User(int? id, string userName, string email) : base(id)
+        private User(int? id, string userName, string email, DateTime created) : base(id)
         {
-            Created = DateTime.Now;
+            Created = created;
             Email = email;
             UserName = userName;
             IsActivated = false;
         }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; }
 
         public string Email { get; }
 
@@ -25,61 +25,61 @@ namespace FlatMate.Module.Account.Domain.Models
 
         public bool IsActivated { get; private set; }
 
-        public static Result<User> Create(string userName, string email)
+        public static (Result, User) Create(string userName, string email)
         {
-            return Create(null, userName, email);
+            return Create(null, userName, email, DateTime.UtcNow);
         }
 
-        public static Result<User> Create(int? id, string userName, string email)
+        public static (Result, User) Create(int? id, string userName, string email, DateTime created)
         {
             #region Validation
 
             var result = ValidateUserName(userName);
-            if (!result.IsSuccess)
+            if (result.IsError)
             {
-                return new ErrorResult<User>(result);
+                return (result, null);
             }
 
             result = ValidateEmail(email);
-            if (!result.IsSuccess)
+            if (result.IsError)
             {
-                return new ErrorResult<User>(result);
+                return (result, null);
             }
 
             #endregion
 
-            return new SuccessResult<User>(new User(id, userName, email));
+            return (Result.Success, new User(id, userName, email, created));
         }
 
         public Result Activate()
         {
             IsActivated = true;
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         private static Result ValidateEmail(string email)
         {
             if (string.IsNullOrEmpty(email))
             {
-                return new ErrorResult(ErrorType.ValidationError, "Email must not be empty.");
+                return new Result(ErrorType.ValidationError, "Email must not be empty.");
             }
 
             if (!EmailRegex.IsMatch(email))
             {
-                return new ErrorResult(ErrorType.ValidationError, "Invalid email address");
+                return new Result(ErrorType.ValidationError, "Invalid email address");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         private static Result ValidateUserName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return new ErrorResult(ErrorType.ValidationError, "UserName must not be empty.");
+                return new Result(ErrorType.ValidationError, "UserName must not be empty.");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
     }
 }

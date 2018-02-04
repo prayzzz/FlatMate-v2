@@ -45,7 +45,7 @@ namespace FlatMate.Module.Offers.Domain
             if (response != null)
             {
                 _logger.LogInformation("OfferData with same hash already saved");
-                return (SuccessResult.Default, _mapper.Map<RawOfferDataDto>(response));
+                return (Result.Success, _mapper.Map<RawOfferDataDto>(response));
             }
 
             _dbContext.RawOfferData.Add(offerData);
@@ -61,7 +61,7 @@ namespace FlatMate.Module.Offers.Domain
         {
             using (var md5 = MD5.Create())
             {
-                return ByteHelper.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes(data)));
+                return md5.ComputeHash(Encoding.UTF8.GetBytes(data)).ToHexString();
             }
         }
     }

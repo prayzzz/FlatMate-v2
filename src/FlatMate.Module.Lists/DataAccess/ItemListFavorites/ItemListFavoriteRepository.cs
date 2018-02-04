@@ -36,7 +36,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
 
             if (favorite == null)
             {
-                return new ErrorResult(ErrorType.NotFound, "Entity not found");
+                return Result.NotFound;
             }
 
             _dbContext.ItemListFavorites.Remove(favorite);
@@ -58,7 +58,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
 
             if (favorite != null)
             {
-                return new SuccessResult();
+                return Result.Success;
             }
 
             _dbContext.ItemListFavorites.Add(new ItemListFavoriteDbo { ItemListId = listId, UserId = userId });

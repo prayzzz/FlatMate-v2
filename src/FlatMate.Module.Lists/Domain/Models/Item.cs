@@ -7,18 +7,18 @@ namespace FlatMate.Module.Lists.Domain.Models
 {
     public class Item : Entity, IOwnedEntity
     {
-        private Item(int? id, string name, int owner, ItemList list, ItemGroup group) : base(id)
+        private Item(int? id, string name, int owner, ItemList list, ItemGroup group, DateTime created) : base(id)
         {
             Rename(name);
 
-            Created = Modified = DateTime.Now;
+            Created = Modified = created;
             ItemList = list;
             ItemGroup = group;
             OwnerId = LastEditorId = owner;
             SortIndex = 0;
         }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; }
 
         public bool IsPublic => ItemList.IsPublic;
 
@@ -39,63 +39,63 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         ///     Creates a new <see cref="Item" />
         /// </summary>
-        public static Result<Item> Create(string name, int ownerId, ItemList list)
+        public static (Result, Item) Create(string name, int ownerId, ItemList list)
         {
-            return Create(null, name, ownerId, list);
+            return Create(null, name, ownerId, list, DateTime.UtcNow);
         }
 
         /// <summary>
         ///     Creates a new <see cref="Item" />
         /// </summary>
-        public static Result<Item> Create(string name, int ownerId, ItemGroup group)
+        public static (Result, Item) Create(string name, int ownerId, ItemGroup group)
         {
-            return Create(null, name, ownerId, group);
+            return Create(null, name, ownerId, group, DateTime.UtcNow);
         }
 
         /// <summary>
         ///     Creates an exisiting <see cref="Item" />
         /// </summary>
-        public static Result<Item> Create(int? id, string name, int ownerId, ItemList list)
+        public static (Result, Item) Create(int? id, string name, int ownerId, ItemList list, DateTime created)
         {
             #region Validation
 
             var result = ValidateName(name);
             if (result.IsError)
             {
-                return new ErrorResult<Item>(result);
+                return (result, null);
             }
 
             if (list == null)
             {
-                return new ErrorResult<Item>(ErrorType.ValidationError, "ItemList should'nt be null");
+                return (new Result(ErrorType.ValidationError, "ItemList can't be null"), null);
             }
 
             #endregion
 
-            return new SuccessResult<Item>(new Item(id, name, ownerId, list, ItemGroup.Default));
+            return (Result.Success, new Item(id, name, ownerId, list, ItemGroup.Default, created));
         }
 
         /// <summary>
         ///     Creates an exisiting <see cref="Item" />
         /// </summary>
-        public static Result<Item> Create(int? id, string name, int ownerId, ItemGroup group)
+        public static (Result, Item) Create(int? id, string name, int ownerId, ItemGroup group, DateTime created)
         {
             #region Validation
 
             var result = ValidateName(name);
             if (!result.IsSuccess)
             {
-                return new ErrorResult<Item>(result);
+                return (result, null);
             }
 
             if (group == null)
             {
-                return new ErrorResult<Item>(ErrorType.ValidationError, "ItemList cannot be null");
+                return (new Result(ErrorType.ValidationError, "ItemList can't be null"), null);
             }
 
             #endregion
 
-            return new SuccessResult<Item>(new Item(id, name, ownerId, group.ItemList, group));
+            return (Result.Success, new Item(id, name, ownerId, group.ItemList, group, created));
         }
 
         /// <summary>
@@ -110,17 +110,17 @@ namespace FlatMate.Module.Lists.Domain.Models
             }
 
             Name = name;
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         private static Result ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return new ErrorResult(ErrorType.ValidationError, $"{nameof(name)} must not be empty.");
+                return new Result(ErrorType.ValidationError, $"{nameof(name)} must not be empty.");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
     }
 }

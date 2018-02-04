@@ -23,12 +23,12 @@ namespace FlatMate.Module.Account.Domain.Models
         /// <summary>
         ///     Creates new PasswordInformations
         /// </summary>
-        public static Result<AuthenticationInformation> Create(string password, int userId)
+        public static (Result, AuthenticationInformation) Create(string password, int userId)
         {
             var result = ValidatePlainPassword(password);
-            if (!result.IsSuccess)
+            if (result.IsError)
             {
-                return new ErrorResult<AuthenticationInformation>(result);
+                return (result, null);
             }
 
             var salt = CreateSalt();
@@ -40,19 +40,19 @@ namespace FlatMate.Module.Account.Domain.Models
         /// <summary>
         ///     Creates existing AuthenticationInformation
         /// </summary>
-        public static Result<AuthenticationInformation> Create(string passwordHash, string salt, int userId)
+        public static (Result, AuthenticationInformation) Create(string passwordHash, string salt, int userId)
         {
-            return new SuccessResult<AuthenticationInformation>(new AuthenticationInformation(passwordHash, salt, userId));
+            return (Result.Success, new AuthenticationInformation(passwordHash, salt, userId));
         }
 
         public static Result ValidatePlainPassword(string password)
         {
             if (password.Length < 8)
             {
-                return new ErrorResult(ErrorType.ValidationError, "Password must contain atleast 8 characters.");
+                return new Result(ErrorType.ValidationError, "Password must contain atleast 8 characters.");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         public bool VerifyPassword(string otherPassword)

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using prayzzz.Common.Results;
 using FlatMate.Web.Mvc;
 using FlatMate.Module.Account.Api;
 using FlatMate.Module.Account.Api.Jso;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Account.Controllers
 {
@@ -40,15 +40,14 @@ namespace FlatMate.Web.Areas.Account.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Result = new ErrorResult(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
+                model.Result = new Result(ErrorType.ValidationError, "Bitte füll das Formular korrekt aus");
                 return View(model);
             }
 
-            var result = await _loginApi.LoginAsync(new LoginJso { UserName = model.UserName, Password = model.Password });
-
-            if (!result.IsSuccess)
+            var (result, _) = await _loginApi.LoginAsync(new LoginJso { UserName = model.UserName, Password = model.Password });
+            if (result.IsError)
             {
-                model.Result = new ErrorResult(ErrorType.ValidationError, "Login fehlgeschlagen");
+                model.Result = new Result(ErrorType.ValidationError, "Login fehlgeschlagen");
                 return View(model);
             }
 

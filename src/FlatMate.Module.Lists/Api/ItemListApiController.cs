@@ -4,17 +4,17 @@ using FlatMate.Module.Lists.Api.Jso;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Mapping;
-using prayzzz.Common.Results;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Api
 {
     public class GetAllListsQuery
     {
-        public int? OwnerId { get; set; } = null;
+        public int? OwnerId { get; set; }
     }
 
     [Route("api/v1/lists/itemlist")]
@@ -36,10 +36,9 @@ namespace FlatMate.Module.Lists.Api
 
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Task<Result<ItemListJso>> CreateList([FromBody] ItemListJso jso)
+        public async Task<(Result, ItemListJso)> CreateList([FromBody] ItemListJso jso)
         {
-            return _itemListService.CreateAsync(Map<ItemListDto>(jso))
-                                   .WithResultDataAs(Map<ItemListJso>);
+            return MapResultTuple(await _itemListService.CreateAsync(Map<ItemListDto>(jso)), Map<ItemListJso>);
         }
 
         [HttpDelete("{listId}")]
@@ -58,33 +57,32 @@ namespace FlatMate.Module.Lists.Api
 
         [HttpGet("{listId}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Result<ItemListJso>> GetList(int listId, [FromQuery] bool full = false)
+        public async Task<(Result, ItemListJso)> GetList(int listId, [FromQuery] bool full = false)
         {
-            var getList = await _itemListService.GetListAsync(listId);
-            if (getList.IsError)
+            var (result, itemListDto) = await _itemListService.GetListAsync(listId);
+            if (result.IsError)
             {
-                return new ErrorResult<ItemListJso>(getList);
+                return (result, null);
             }
 
             if (!full)
             {
-                return getList.WithDataAs(Map<ItemListJso>);
+                return (Result.Success, Map<ItemListJso>(itemListDto));
             }
 
             // collect additional data
-            var itemList = Map<ItemListJso>(getList.Data);
+            var itemList = Map<ItemListJso>(itemListDto);
             itemList.ItemGroups = await GetAllGroups(listId);
             itemList.Items = await GetAllListItems(listId);
 
-            return new SuccessResult<ItemListJso>(itemList);
+            return (Result.Success, itemList);
         }
 
         [HttpPut("{listId}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Task<Result<ItemListJso>> Update(int listId, [FromBody] ItemListJso jso)
+        public async Task<(Result, ItemListJso)> Update(int listId, [FromBody] ItemListJso jso)
         {
-            return _itemListService.UpdateAsync(listId, Map<ItemListDto>(jso))
-                                   .WithResultDataAs(Map<ItemListJso>);
+            return MapResultTuple(await _itemListService.UpdateAsync(listId, Map<ItemListDto>(jso)), Map<ItemListJso>);
         }
     }
 }

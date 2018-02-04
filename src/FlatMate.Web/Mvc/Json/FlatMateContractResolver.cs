@@ -1,4 +1,5 @@
 ﻿using System;
+using FlatMate.Module.Common;
 using Newtonsoft.Json.Serialization;
 using prayzzz.Common.Mvc.Json;
 
@@ -13,10 +14,10 @@ namespace FlatMate.Web.Mvc.Json
 
         private FlatMateContractResolver()
         {
-            _dateTimeConverter = new DateTimeConverter();
-            _resultConverter = new ResultConverter();
-
             NamingStrategy = new CamelCaseNamingStrategy();
+
+            _dateTimeConverter = new DateTimeConverter();
+            _resultConverter = new ResultConverter(NamingStrategy);
         }
 
         public static FlatMateContractResolver Instance => _instance ?? (_instance = new FlatMateContractResolver());

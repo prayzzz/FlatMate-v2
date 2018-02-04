@@ -1,27 +1,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Shared.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Results;
 using FlatMate.Module.Lists.Api.Jso;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Api
 {
     public partial class ItemListApiController
     {
         [HttpPost("{listId}/item")]
-        public Task<Result<ItemJso>> CreateItem(int listId, [FromBody] ItemJso jso)
+        public async Task<(Result, ItemJso)> CreateItem(int listId, [FromBody] ItemJso jso)
         {
-            return _itemListService.CreateAsync(listId, null, Map<ItemDto>(jso))
-                                   .WithResultDataAs(Map<ItemJso>);
+            return MapResultTuple(await _itemListService.CreateAsync(listId, null, Map<ItemDto>(jso)), Map<ItemJso>);
         }
 
         [HttpPost("{listId}/group/{groupId}/item")]
-        public Task<Result<ItemJso>> CreateItem(int listId, int groupId, [FromBody] ItemJso jso)
+        public async Task<(Result, ItemJso)> CreateItem(int listId, int groupId, [FromBody] ItemJso jso)
         {
-            return _itemListService.CreateAsync(listId, groupId, Map<ItemDto>(jso))
-                                   .WithResultDataAs(Map<ItemJso>);
+            return MapResultTuple(await _itemListService.CreateAsync(listId, groupId, Map<ItemDto>(jso)), Map<ItemJso>);
         }
 
         [HttpDelete("{listId}/item/{itemId}")]
@@ -48,18 +47,16 @@ namespace FlatMate.Module.Lists.Api
         [HttpGet("{listId}/item/{itemId}")]
         [HttpGet("{listId}/group/{groupId}/item/{itemId}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Task<Result<ItemJso>> GetItem(int itemId)
+        public async Task<(Result, ItemJso)> GetItem(int itemId)
         {
-            return _itemListService.GetItemAsync(itemId)
-                                   .WithResultDataAs(dto => Map<ItemJso>(dto));
+            return MapResultTuple(await _itemListService.GetItemAsync(itemId), Map<ItemJso>);
         }
 
         [HttpPut("{listId}/item/{itemId}")]
         [HttpPut("{listId}/group/{groupId}/item/{itemId}")]
-        public Task<Result<ItemJso>> Update(int itemId, [FromBody] ItemJso jso)
+        public async Task<(Result, ItemJso)> Update(int itemId, [FromBody] ItemJso jso)
         {
-            return _itemListService.UpdateAsync(itemId, Map<ItemDto>(jso))
-                                   .WithResultDataAs(Map<ItemJso>);
+            return MapResultTuple(await _itemListService.UpdateAsync(itemId, Map<ItemDto>(jso)), Map<ItemJso>);
         }
     }
 }

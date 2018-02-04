@@ -9,19 +9,19 @@ namespace FlatMate.Module.Lists.Domain.Models
     {
         private static ItemList _defaultInstance;
 
-        private ItemList(int? id, string name, int ownerId)
+        private ItemList(int? id, string name, int ownerId, DateTime created)
             : base(id)
         {
             Rename(name);
 
-            Created = Modified = DateTime.Now;
+            Created = Modified = created;
             Description = string.Empty;
             OwnerId = LastEditorId = ownerId;
         }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; }
 
-        public static ItemList Default => _defaultInstance ?? (_defaultInstance = new ItemList(null, "Default", 0));
+        public static ItemList Default => _defaultInstance ?? (_defaultInstance = new ItemList(null, "Default", 0, DateTime.UtcNow));
 
         public string Description { get; set; }
 
@@ -38,27 +38,27 @@ namespace FlatMate.Module.Lists.Domain.Models
         /// <summary>
         ///     Creates a new <see cref="ItemList" />
         /// </summary>
-        public static Result<ItemList> Create(string name, int ownerId)
+        public static (Result, ItemList) Create(string name, int ownerId)
         {
-            return Create(null, name, ownerId);
+            return Create(null, name, ownerId, DateTime.UtcNow);
         }
 
         /// <summary>
         ///     Creates an exisiting <see cref="ItemList" />
         /// </summary>
-        public static Result<ItemList> Create(int? id, string name, int ownerId)
+        public static (Result, ItemList) Create(int? id, string name, int ownerId, DateTime created)
         {
             #region Validation
 
             var result = ValidateName(name);
             if (!result.IsSuccess)
             {
-                return new ErrorResult<ItemList>(result);
+                return (result, null);
             }
 
             #endregion
 
-            return new SuccessResult<ItemList>(new ItemList(id, name, ownerId));
+            return (Result.Success, new ItemList(id, name, ownerId, created));
         }
 
         /// <summary>
@@ -73,17 +73,17 @@ namespace FlatMate.Module.Lists.Domain.Models
             }
 
             Name = name;
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         private static Result ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return new ErrorResult(ErrorType.ValidationError, $"{nameof(name)} must not be empty.");
+                return new Result(ErrorType.ValidationError, $"{nameof(name)} must not be empty.");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
     }
 }

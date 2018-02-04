@@ -66,12 +66,12 @@ namespace FlatMate.Module.Offers.Domain
         {
             if (await _dbContext.ProductFavorites.AnyAsync(f => f.ProductId == productId && f.UserId == CurrentUser.Id))
             {
-                return SuccessResult.Default;
+                return Result.Success;
             }
 
             if (!await _dbContext.Products.AnyAsync(p => p.Id == productId))
             {
-                return new ErrorResult(ErrorType.ValidationError, "Product not found");
+                return new Result(ErrorType.ValidationError, "Product not found");
             }
 
             var favorite = new ProductFavorite { ProductId = productId, UserId = CurrentUser.Id };
@@ -89,7 +89,7 @@ namespace FlatMate.Module.Offers.Domain
                 return await _dbContext.SaveChangesAsync();
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         public Task<List<int>> GetFavoriteProductIds(Company company)
@@ -113,10 +113,10 @@ namespace FlatMate.Module.Offers.Domain
             var product = await _dbContext.Products.Include(x => x.CompanyData).FirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
-                return (new ErrorResult(ErrorType.NotFound, "Product not found"), null);
+                return (new Result(ErrorType.NotFound, "Product not found"), null);
             }
 
-            return (SuccessResult.Default, _mapper.Map<ProductDto>(product));
+            return (Result.Success, _mapper.Map<ProductDto>(product));
         }
 
         public Task<List<ProductCategoryDto>> GetProductCategories()

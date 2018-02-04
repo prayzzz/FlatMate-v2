@@ -39,10 +39,10 @@ namespace FlatMate.Module.Offers.Domain
             var company = await _dbContext.Companies.FindAsync(id);
             if (company == null)
             {
-                return (new ErrorResult(ErrorType.NotFound, "Company not found"), null);
+                return (new Result(ErrorType.NotFound, "Company not found"), null);
             }
 
-            return (SuccessResult.Default, _mapper.Map<CompanyDto>(company));
+            return (Result.Success, _mapper.Map<CompanyDto>(company));
         }
 
         public async Task<IEnumerable<CompanyDto>> SearchCompanies()
@@ -55,7 +55,7 @@ namespace FlatMate.Module.Offers.Domain
             var company = await _dbContext.Companies.FindAsync(id);
             if (company == null)
             {
-                return (new ErrorResult(ErrorType.NotFound, "Company not found"), null);
+                return (new Result(ErrorType.NotFound, "Company not found"), null);
             }
 
             company.ImageGuid = dto.ImageGuid;

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using prayzzz.Common.Results;
 using Microsoft.Extensions.Caching.Memory;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Infrastructure.Images
 {
@@ -31,7 +30,7 @@ namespace FlatMate.Module.Infrastructure.Images
         private const long MaxImageSize = 5 * 1024 * 1024;
 
         private static readonly string[] SupportedContentTypes = { "image/jpg", "image/jpeg", "image/png" };
-        private static readonly MemoryCacheEntryOptions _cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(24));
+        private static readonly MemoryCacheEntryOptions CacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(24));
 
         private readonly IMemoryCache _cache;
         private readonly InfrastructureDbContext _dbContext;
@@ -52,10 +51,10 @@ namespace FlatMate.Module.Infrastructure.Images
 
             if (image == null)
             {
-                return (new ErrorResult(ErrorType.NotFound, "Image not found"), null);
+                return (new Result(ErrorType.NotFound, "Image not found"), null);
             }
 
-            return (SuccessResult.Default, _mapper.Map<ImageDto>(image));
+            return (Result.Success, _mapper.Map<ImageDto>(image));
         }
 
         public async Task<(Result, ImageDto)> Get(Guid hash)
@@ -65,25 +64,25 @@ namespace FlatMate.Module.Infrastructure.Images
                 image = await _dbContext.Images.FirstOrDefaultAsync(x => x.Guid == hash);
                 if (image == null)
                 {
-                    return (new ErrorResult(ErrorType.NotFound, "Image not found"), null);
+                    return (new Result(ErrorType.NotFound, "Image not found"), null);
                 }
 
-                _cache.Set(hash, image, _cacheEntryOptions);
+                _cache.Set(hash, image, CacheEntryOptions);
             }
 
-            return (SuccessResult.Default, _mapper.Map<ImageDto>(image));
+            return (Result.Success, _mapper.Map<ImageDto>(image));
         }
 
         public async Task<(Result, ImageDto)> Save(byte[] file, string contentType)
         {
             if (file.LongLength > MaxImageSize)
             {
-                return (new ErrorResult(ErrorType.ValidationError, "File to large"), null);
+                return (new Result(ErrorType.ValidationError, "File to large"), null);
             }
 
             if (!SupportedContentTypes.Contains(contentType, StringComparer.CurrentCultureIgnoreCase))
             {
-                return (new ErrorResult(ErrorType.ValidationError, "Unsupported media type"), null);
+                return (new Result(ErrorType.ValidationError, "Unsupported media type"), null);
             }
 
             var image = new Image { File = file, Guid = Guid.NewGuid(), ContentType = contentType.ToLower() };
@@ -96,16 +95,16 @@ namespace FlatMate.Module.Infrastructure.Images
             catch (Exception e)
             {
                 _logger.LogError(0, e, "Error while saving changes");
-                return (new ErrorResult(ErrorType.InternalError, "Datenbankfehler"), null);
+                return (new Result(ErrorType.InternalError, "Datenbankfehler"), null);
             }
 
-            return (SuccessResult.Default, _mapper.Map<ImageDto>(image));
+            return (Result.Success, _mapper.Map<ImageDto>(image));
         }
 
         public Task<Result> Delete(Guid guid)
         {
             _dbContext.Images.RemoveRange(_dbContext.Images.Where(i => i.Guid == guid));
-            return Task.FromResult((Result) SuccessResult.Default);
+            return Task.FromResult(Result.Success);
         }
     }
 }

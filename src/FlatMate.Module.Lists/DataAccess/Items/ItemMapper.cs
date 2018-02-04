@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Models;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
@@ -17,25 +18,12 @@ namespace FlatMate.Module.Lists.DataAccess.Items
 
         private static Item DboToEntity(ItemDbo dbo, MappingContext ctx)
         {
-            Result<Item> createResult;
-            if (dbo.ItemGroupId.HasValue)
+            var (result, item) = CreateItem(dbo, ctx);
+            if (result.IsError)
             {
-                var itemGroup = ctx.Mapper.Map<ItemGroup>(dbo.ItemGroup);
-                createResult = Item.Create(dbo.Id, dbo.Name, dbo.OwnerId, itemGroup);
-            }
-            else
-            {
-                var itemList = ctx.Mapper.Map<ItemList>(dbo.ItemList);
-                createResult = Item.Create(dbo.Id, dbo.Name, dbo.OwnerId, itemList);
+                throw new ValidationException(result.Message);
             }
 
-            if (!createResult.IsSuccess)
-            {
-                throw new ValidationException(createResult.Message);
-            }
-
-            var item = createResult.Data;
-            item.Created = dbo.Created;
             item.LastEditorId = dbo.LastEditorId;
             item.Modified = dbo.Modified;
             item.SortIndex = dbo.SortIndex;
@@ -43,15 +31,32 @@ namespace FlatMate.Module.Lists.DataAccess.Items
             return item;
         }
 
+        private static (Result Result, Item Item) CreateItem(ItemDbo dbo, MappingContext ctx)
+        {
+            (Result Result, Item Item) createResult;
+            if (dbo.ItemGroupId.HasValue)
+            {
+                var itemGroup = ctx.Mapper.Map<ItemGroup>(dbo.ItemGroup);
+                createResult = Item.Create(dbo.Id, dbo.Name, dbo.OwnerId, itemGroup, dbo.Created);
+            }
+            else
+            {
+                var itemList = ctx.Mapper.Map<ItemList>(dbo.ItemList);
+                createResult = Item.Create(dbo.Id, dbo.Name, dbo.OwnerId, itemList, dbo.Created);
+            }
+
+            return createResult;
+        }
+
         private static ItemDbo EntityToDbo(Item entity, ItemDbo dbo, MappingContext ctx)
         {
-            if (entity.Id.HasValue)
+            if (entity.IsSaved)
             {
-                dbo.Id = entity.Id.Value;
+                dbo.Id = entity.Id;
             }
 
             dbo.Created = entity.Created;
-            dbo.ItemListId = entity.ItemList.Id.Value;
+            dbo.ItemListId = entity.ItemList.Id;
             dbo.ItemGroupId = entity.ItemGroup.Id;
             dbo.LastEditorId = entity.LastEditorId;
             dbo.Modified = entity.Modified;

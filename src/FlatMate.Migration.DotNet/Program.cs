@@ -37,13 +37,12 @@ namespace FlatMate.Migration.DotNet
 
         public static void Main(string[] args)
         {
-            var loadSettings = LoadSettings(args);
-            if (loadSettings.IsError)
+            var (result, settings) = LoadSettings(args);
+            if (result.IsError)
             {
-                Exit(loadSettings);
+                Exit(result);
             }
 
-            var settings = loadSettings.Data;
             _commandLibrary = new CommandLibrary(LoggerFactory, settings);
 
             var checkSettings = CheckSettings(settings);
@@ -60,24 +59,24 @@ namespace FlatMate.Migration.DotNet
         {
             if (!Directory.Exists(settings.MigrationsFolder))
             {
-                return new ErrorResult(ErrorType.NotFound, $"Directory '{settings.MigrationsFolder}' doesn't exist");
+                return new Result(ErrorType.NotFound, $"Directory '{settings.MigrationsFolder}' doesn't exist");
             }
 
-            return SuccessResult.Default;
+            return Result.Success;
         }
 
         private static Result EvaluateArguments(IReadOnlyList<string> args)
         {
             if (args.Count < 1)
             {
-                return new ErrorResult(ErrorType.ValidationError, "No command");
+                return new Result(ErrorType.ValidationError, "No command");
             }
 
             var commandName = args[0];
             var command = _commandLibrary.Get(commandName);
             if (command == null)
             {
-                return new ErrorResult(ErrorType.ValidationError, $"Unknown command: {commandName}");
+                return new Result(ErrorType.ValidationError, $"Unknown command: {commandName}");
             }
 
             return command.Execute(args.Skip(1));
@@ -94,7 +93,7 @@ namespace FlatMate.Migration.DotNet
             Environment.Exit(0);
         }
 
-        private static Result<MigrationSettings> LoadSettings(IReadOnlyList<string> args)
+        private static (Result, MigrationSettings) LoadSettings(IReadOnlyList<string> args)
         {
             // remove command from args
             var strippedArgs = args.ToArray();
@@ -122,7 +121,7 @@ namespace FlatMate.Migration.DotNet
                                   .GetSection("Migration")
                                   .Get<MigrationSettings>();
 
-            return new SuccessResult<MigrationSettings>(settings);
+            return (Result.Success, settings);
         }
     }
 }

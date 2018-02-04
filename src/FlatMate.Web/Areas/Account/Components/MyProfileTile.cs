@@ -23,14 +23,14 @@ namespace FlatMate.Web.Areas.Account.Components
         {
             var model = new MyProfileTileVm();
 
-            var result = await _userApi.GetAsync(CurrentUserId);
+            var (result, user) = await _userApi.GetAsync(CurrentUserId);
             if (result.IsError)
             {
                 model.Result = result;
                 return View(model);
             }
 
-            model.UserName = result.Data.UserName;
+            model.UserName = user.UserName;
 
             return View(model);
         }

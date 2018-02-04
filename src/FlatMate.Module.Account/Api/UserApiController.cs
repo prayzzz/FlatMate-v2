@@ -5,6 +5,7 @@ using FlatMate.Module.Account.Api.Jso;
 using FlatMate.Module.Account.DataAccess.Users;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
@@ -36,27 +37,25 @@ namespace FlatMate.Module.Account.Api
 
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Task<Result<UserJso>> CreateUserAsync([FromBody] CreateUserJso jso)
+        public async Task<(Result, UserJso)> CreateUserAsync([FromBody] CreateUserJso jso)
         {
-            return _userService.CreateAsync(Map<UserDto>(jso), jso.Password)
-                               .WithResultDataAs(dto => Mapper.Map<UserJso>(dto));
+            return MapResultTuple(await _userService.CreateAsync(Map<UserDto>(jso), jso.Password), Mapper.Map<UserJso>);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Result<UserInfoJso> Get(int id)
+        public (Result Result, UserInfoJso User) Get(int id)
         {
             var get = _userService.GetAsync(id);
             get.Wait();
 
-            return get.Result.WithDataAs(Map<UserInfoJso>);
+            return MapResultTuple(get.Result, Map<UserInfoJso>);
         }
 
         [HttpGet("{userId}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public Task<Result<UserInfoJso>> GetAsync(int userId)
+        public async Task<(Result, UserInfoJso)> GetAsync(int userId)
         {
-            return _userService.GetAsync(userId)
-                               .WithResultDataAs(Map<UserInfoJso>);
+            return MapResultTuple(await _userService.GetAsync(userId), Mapper.Map<UserInfoJso>);
         }
 
         [HttpGet("{userId}/dashboard-tiles/")]

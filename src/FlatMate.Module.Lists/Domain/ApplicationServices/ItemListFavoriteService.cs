@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Repositories;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
@@ -41,7 +42,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return Task.FromResult<Result>(new ErrorResult(ErrorType.Unauthorized, "Unauthorized"));
+                return Task.FromResult(Result.Unauthorized);
             }
 
             return _favoriteRepository.DeleteAsync(CurrentUser.Id, listId);
@@ -63,18 +64,18 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             // the user must be logged in
             if (CurrentUser.IsAnonymous)
             {
-                return new ErrorResult(ErrorType.Unauthorized, "Unauthorized");
+                return Result.Unauthorized;
             }
 
-            // get item list
-            var getItemList = await _itemListRepository.GetAsync(listId);
-            if (getItemList.IsError)
+            // get itemlist
+            var (result, itemList) = await _itemListRepository.GetAsync(listId);
+            if (result.IsError)
             {
-                return new ErrorResult(getItemList);
+                return result;
             }
 
             // save
-            return await _favoriteRepository.SaveAsync(CurrentUser.Id, getItemList.Data.Id.Value);
+            return await _favoriteRepository.SaveAsync(CurrentUser.Id, itemList.Id);
         }
     }
 }

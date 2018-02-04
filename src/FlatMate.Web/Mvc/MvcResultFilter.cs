@@ -22,7 +22,7 @@ namespace FlatMate.Web.Mvc
 
             var model = viewResult.Model as MvcViewModel;
 
-            if (model == null || !model.IsError || model.Result == null)
+            if (model == null || !model.IsError)
             {
             }
         }

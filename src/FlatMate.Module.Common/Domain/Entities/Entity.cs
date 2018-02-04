@@ -4,11 +4,11 @@
     {
         protected Entity(int? id)
         {
-            Id = id;
+            Id = id ?? 0;
         }
 
-        public int? Id { get; }
+        public int Id { get; }
 
-        public bool IsSaved => Id.HasValue;
+        public bool IsSaved => Id > 0;
     }
 }

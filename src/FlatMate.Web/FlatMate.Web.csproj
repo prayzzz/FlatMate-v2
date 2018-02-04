@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
-    <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-dev-30" />
+      <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-unstable-45.develop"/>
     <PackageReference Include="Serilog" Version="2.6.0" />
     <PackageReference Include="Serilog.Enrichers.Demystify" Version="0.1.0-dev-00011" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="2.4.0" />
