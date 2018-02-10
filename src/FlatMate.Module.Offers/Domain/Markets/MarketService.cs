@@ -16,6 +16,8 @@ namespace FlatMate.Module.Offers.Domain
     {
         Task<(Result, MarketDto)> GetMarket(int id);
 
+        Task<List<MarketDto>> GetMarkets(List<int> ids);
+
         Task<(Result, MarketDto)> ImportMarket(string externalId);
 
         Task<Result> ImportOffersFromApi(int marketId);
@@ -56,6 +58,12 @@ namespace FlatMate.Module.Offers.Domain
             }
 
             return (Result.Success, _mapper.Map<MarketDto>(market));
+        }
+
+        public async Task<List<MarketDto>> GetMarkets(List<int> ids)
+        {
+            var markets = await _dbContext.Markets.Include(m => m.Company).Where(m => ids.Contains(m.Id)).ToListAsync();
+            return markets.Select(_mapper.Map<MarketDto>).ToList();
         }
 
         /// <summary>

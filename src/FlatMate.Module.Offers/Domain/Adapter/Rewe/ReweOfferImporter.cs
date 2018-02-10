@@ -143,39 +143,21 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
         private OfferDuration GetOfferDuration(OfferJso offer)
         {
-            var duration = new OfferDuration();
-
             // duration.From
-            if (offer.OfferDuration.From.DayOfWeek == DayOfWeek.Monday)
+            var from = offer.OfferDuration.From;
+            if (offer.OfferDuration.From.DayOfWeek == DayOfWeek.Saturday || offer.OfferDuration.From.DayOfWeek == DayOfWeek.Sunday)
             {
-                duration.From = offer.OfferDuration.From;
-            }
-            else if (offer.OfferDuration.From.DayOfWeek == DayOfWeek.Saturday || offer.OfferDuration.From.DayOfWeek == DayOfWeek.Sunday)
-            {
-                duration.From = offer.OfferDuration.From.GetNextWeekday(DayOfWeek.Monday);
-            }
-            else
-            {
-                duration.From = offer.OfferDuration.From;
-                _logger.LogWarning($"Unhandled offer startdate {offer.OfferDuration.From.DayOfWeek} {offer.OfferDuration.From}");
+                from = offer.OfferDuration.From.GetNextWeekday(DayOfWeek.Monday);
             }
 
             // duration.To
-            if (offer.OfferDuration.Until.DayOfWeek == DayOfWeek.Sunday)
+            var to = offer.OfferDuration.Until;
+            if (offer.OfferDuration.Until.DayOfWeek == DayOfWeek.Saturday)
             {
-                duration.To = offer.OfferDuration.Until;
-            }
-            else if (offer.OfferDuration.Until.DayOfWeek == DayOfWeek.Saturday)
-            {
-                duration.To = offer.OfferDuration.Until.GetNextWeekday(DayOfWeek.Sunday);
-            }
-            else
-            {
-                duration.To = offer.OfferDuration.Until.GetNextWeekday(DayOfWeek.Sunday);
-                _logger.LogWarning($"Unhandled offer enddate {offer.OfferDuration.Until.DayOfWeek} {offer.OfferDuration.Until}");
+                to = offer.OfferDuration.Until.GetNextWeekday(DayOfWeek.Sunday);
             }
 
-            return duration;
+            return new OfferDuration(from, to);
         }
 
         private OfferTemp PreprocessOffer(OfferJso offer, Dictionary<string, ProductCategoryTemp> categoryToEnum, Market market)
@@ -214,7 +196,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
                 Name = _reweUtils.Trim(offer.Name),
                 OfferedFrom = offerDuration.From,
                 OfferedTo = offerDuration.To,
-                OfferPrice = (decimal)offer.Price,
+                OfferPrice = (decimal) offer.Price,
                 ProductCategory = productCategory.ProductCategory,
                 RegularPrice = regularPrice,
                 SizeInfo = _reweUtils.Trim(offer.QuantityAndUnit)

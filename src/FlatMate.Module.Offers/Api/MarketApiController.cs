@@ -20,16 +20,16 @@ namespace FlatMate.Module.Offers.Api
 
         private readonly IMarketService _marketService;
         private readonly IEnumerable<IOfferPeriodService> _offerPeriodServices;
-        private readonly IOfferService _offerService;
+        private readonly IOfferViewService _offerViewService;
 
         public MarketApiController(IMarketService marketService,
-                                   IOfferService offerService,
+                                   IOfferViewService offerViewService,
                                    IEnumerable<IOfferPeriodService> offerPeriodServices,
                                    IApiControllerServices services,
                                    ILogger<MarketApiController> logger) : base(services)
         {
             _marketService = marketService;
-            _offerService = offerService;
+            _offerViewService = offerViewService;
             _offerPeriodServices = offerPeriodServices;
             _logger = logger;
         }
@@ -63,7 +63,7 @@ namespace FlatMate.Module.Offers.Api
             }
 
             var offerDuration = periodService.ComputeOfferPeriod(date ?? DateTime.Now);
-            var offerDtos = await _offerService.GetOffers(marketId, offerDuration);
+            var offerDtos = await _offerViewService.GetOffers(marketId, offerDuration);
 
             return (Result.Success, new OfferPeriodJso
             {

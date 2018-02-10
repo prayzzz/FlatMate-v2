@@ -120,32 +120,22 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             return ignoredCategoryIds;
         }
 
-        private OfferDuration GetOfferDuration(OfferJso offer)
+        private static OfferDuration GetOfferDuration(OfferJso offer)
         {
-            var duration = new OfferDuration();
-
             var from = DateTimeOffset.FromUnixTimeSeconds(offer.StartDate).DateTime;
             var to = DateTimeOffset.FromUnixTimeSeconds(offer.EndDate).DateTime;
 
             if (from.DayOfWeek == DayOfWeek.Saturday || from.DayOfWeek == DayOfWeek.Sunday)
             {
-                duration.From = from.GetNextWeekday(DayOfWeek.Monday);
-            }
-            else
-            {
-                duration.From = from;
+                from = from.GetNextWeekday(DayOfWeek.Monday);
             }
 
             if (to.DayOfWeek == DayOfWeek.Saturday)
             {
-                duration.To = to.GetNextWeekday(DayOfWeek.Sunday);
-            }
-            else
-            {
-                duration.To = to;
+                to = to.GetNextWeekday(DayOfWeek.Sunday);
             }
 
-            return duration;
+            return new OfferDuration(from, to);
         }
 
         private OfferTemp PreprocessOffer(OfferJso offerJso, Dictionary<string, ProductCategoryTemp> categoryMap, Market market)

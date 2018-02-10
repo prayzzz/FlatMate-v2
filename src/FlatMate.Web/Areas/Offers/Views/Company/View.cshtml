@@ -1,4 +1,4 @@
-﻿@model FlatMate.Web.Areas.Offers.Data.CompanyViewVm
+﻿@model FlatMate.Web.Areas.Offers.Data.MarketOffersVm
 
 @{
     Layout = "_Layout";
@@ -30,7 +30,7 @@
             </div>
             <div class="col-sm-12 col-md-3 col-offer-count">
                 <span data-bind="text: offerCount"></span> Produkte im Angebot<br/>
-                von <span data-bind="text: offersFrom"></span> bis <span data-bind="text: offersTo"></span>
+                von <span data-bind="text: offersFromFormatted"></span> bis <span data-bind="text: offersToFormatted"></span>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
 
         <!-- ko foreach: favorites -->
 
-        <div class="col-sm-6 col-lg-4 col-xl-3 col-offer" data-bind="component: {name: 'offer-tile', params : {offer: $data}} "></div>
+        <div class="col-sm-6 col-lg-4 col-xl-3 col-offer" data-bind="component: {name: 'offered-product-tile', params : {product: $parentContext.$component.getOfferedProductModel($data)}} "></div>
 
         <!-- /ko-->
 
@@ -50,26 +50,24 @@
 
     <!-- /ko -->
 
-    <!-- ko foreach: categoryToOffers -->
-    <!-- ko if: offers.length > 0 -->
+    <!-- ko foreach: categories -->
     <h3>
-        <span data-bind="text: category.name"></span>
+        <span data-bind="text: name"></span>
     </h3>
     <div class="row">
 
-        <!-- ko foreach: offers -->
+        <!-- ko foreach: products -->
 
-        <div class="col-sm-6 col-lg-4 col-xl-3 col-offer" data-bind="component: {name: 'offer-tile', params : {offer: $data}} "></div>
+        <div class="col-sm-6 col-lg-4 col-xl-3 col-offer" data-bind="component: {name: 'offered-product-tile', params : {product: $parentContext.$component.getOfferedProductModel($data)}} "></div>
 
         <!-- /ko-->
 
     </div>
 
     <!-- /ko-->
-    <!-- /ko-->
 </script>
 
-<script type="text/html" id="offer-tile-template">
+<script type="text/html" id="offered-product-tile-template">
     <a data-bind="attr: { 'href': productUrl }" class="standard-box offer-box">
 
         <div class="image">
@@ -84,13 +82,13 @@
             <strong>
                 <span data-bind="text: name"></span>
 
-                <!-- ko if: model_.offerMarkets.length != model_.markets.length -->
+                <!-- ko if: !isEverywhereAvailable -->
                 <i class="fa fa-map-marker market-location"></i>
                 <div class="market-list">
                     Nur verfügbar bei:
-                    <ul data-bind="foreach: model_.offerMarkets">
+                    <ul data-bind="foreach: offers">
                         <li>
-                            <span data-bind="text: market.name"></span>
+                            <span data-bind="text: $parent.getMarketName(marketId).name"></span>
                         </li>
                     </ul>
                 </div>
@@ -99,7 +97,7 @@
         </div>
 
         <div data-bind="if: isStartingLater">
-            ab <span data-bind="text: from.toLocaleDateString('de-DE')"></span>
+            ab <span data-bind="text: offerFrom"></span>
         </div>
 
         <div class="price">

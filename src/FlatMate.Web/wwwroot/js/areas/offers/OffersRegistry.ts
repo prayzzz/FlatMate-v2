@@ -1,8 +1,8 @@
 ﻿import * as ko from "knockout";
-import { StartupHelper } from "../../koStartup";
-import { ProductFavoriteEditor, ProductFavoriteManageVm } from "./ProductFavoriteEditor";
-import { CompanyOffersList, CompanyOffersListData as CompanyOffersListVm } from "./CompanyOffersList";
-import { OfferTile } from "./OfferTile";
+import {StartupHelper} from "../../koStartup";
+import {ProductFavoriteEditor, ProductFavoriteManageVm} from "./ProductFavoriteEditor";
+import {MarketOffersView as CompanyOffersList, MarketOffersVm as CompanyOffersListVm} from "./MarketOffersView";
+import {OfferedProductTile as OfferTile} from "./OfferedProductTile";
 
 export class OffersRegistry {
     public static registerComponents() {
@@ -18,8 +18,8 @@ export class OffersRegistry {
                 return new CompanyOffersList(StartupHelper.readViewData<CompanyOffersListVm>("company-offers-list"));
             }
         });
-        ko.components.register("offer-tile", {
-            template: {element: "offer-tile-template"},
+        ko.components.register("offered-product-tile", {
+            template: {element: "offered-product-tile-template"},
             viewModel: function (params) {
                 return new OfferTile(params);
             }

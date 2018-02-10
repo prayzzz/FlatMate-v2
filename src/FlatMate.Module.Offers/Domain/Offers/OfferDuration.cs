@@ -4,19 +4,14 @@ namespace FlatMate.Module.Offers.Domain
 {
     public class OfferDuration
     {
-        private DateTime _from;
-        private DateTime _to;
-
-        public DateTime From
+        public OfferDuration(DateTime from, DateTime to)
         {
-            get { return _from; }
-            set { _from = value.Date; }
+            From = from.Date;
+            To = to.Date;
         }
 
-        public DateTime To
-        {
-            get { return _to; }
-            set { _to = value.Date; }
-        }
+        public DateTime From { get; }
+
+        public DateTime To { get; }
     }
 }

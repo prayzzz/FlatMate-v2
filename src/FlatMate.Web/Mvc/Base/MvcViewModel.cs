@@ -1,5 +1,4 @@
 ﻿using FlatMate.Module.Account.Api.Jso;
-using FlatMate.Module.Common;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Mvc.Base

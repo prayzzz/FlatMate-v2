@@ -17,7 +17,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             var from = date.GetPreviousWeekday(StartDay);
             var to = date.GetNextWeekday(EndDay);
 
-            return new OfferDuration { From = from, To = to };
+            return new OfferDuration(from, to);
         }
     }
 }

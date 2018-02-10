@@ -76,21 +76,16 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 
         private static OfferDuration GetOfferDuration(Article article)
         {
-            var duration = new OfferDuration();
 
             var from = DateTimeOffset.FromUnixTimeSeconds(long.Parse(article.Pack_timestamp_actiondate)).DateTime;
             if (from.DayOfWeek == DayOfWeek.Sunday)
             {
-                duration.From = from.GetNextWeekday(DayOfWeek.Monday);
-            }
-            else
-            {
-                duration.From = from;
+                from = from.GetNextWeekday(DayOfWeek.Monday);
             }
 
-            duration.To = duration.From.GetNextWeekday(DayOfWeek.Sunday);
+            var to =  from.GetNextWeekday(DayOfWeek.Sunday);
 
-            return duration;
+            return new OfferDuration(from, to);
         }
 
         private OfferTemp PreprocessOffer(Article article, Market market)

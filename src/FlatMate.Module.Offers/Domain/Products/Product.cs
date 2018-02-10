@@ -72,6 +72,8 @@ namespace FlatMate.Module.Offers.Domain
 
         public ProductCategoryDto ProductCategory { get; set; }
 
+        public int ProductCategoryId { get; set; }
+
         public string SizeInfo { get; set; }
     }
 
@@ -93,7 +95,8 @@ namespace FlatMate.Module.Offers.Domain
                 Id = product.Id,
                 ImageUrl = product.ImageUrl,
                 Name = product.Name,
-                ProductCategory = ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory),
+                ProductCategory = product.ProductCategory != null ? ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory) : null,
+                ProductCategoryId = product.ProductCategoryId,
                 SizeInfo = product.SizeInfo
             };
         }
