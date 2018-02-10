@@ -1,4 +1,6 @@
-﻿.company-view {
+﻿@import '../variables.scss';
+
+.company-view {
     .col-offer {
         margin-bottom: 1rem;
     }
@@ -9,6 +11,12 @@
 
     .col-market-info {
         align-self: center;
+
+        ul {
+            padding-left: .25rem;
+            margin: .1em;
+            list-style: none;
+        }
     }
 
     .col-offer-count {
@@ -25,10 +33,21 @@
         flex-flow: column;
         height: 100%;
         padding: 0.75rem;
+        position: relative;
+
+        a {
+            color: $color-font;
+        }
 
         .image {
-            text-align: center;
+            position: relative;
             margin-bottom: 1rem;
+
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto
+            }
         }
 
         .name {
@@ -42,22 +61,37 @@
         }
     }
 
+    .market-location-box {
+        position: absolute;
+        text-align: center;
+        top: 0.75rem;
+        left: 0.75rem;
+        border: 1px $color-warning solid;
+        padding: .5rem;
+        min-width: 42px;
+        min-height: 42px;
+        box-shadow: inset 0px 0px 2px $color-warning;
+        background-color: #fff;
+    }
+
     .market-list {
         display: none;
         position: absolute;
         background-color: rgba(0, 0, 0, .8);
         color: #fff;
-        z-index: 999;
         padding: .5em;
         font-size: .75rem;
+        top: calc(46px + .75rem);
+        border: 1px #000000 solid;
 
         ul {
             padding-left: .25rem;
             margin: .1em;
+            list-style: none;
         }
     }
 
-    .market-location:hover ~ .market-list {
+    .market-location-box:hover ~ .market-list {
         display: block;
     }
 }

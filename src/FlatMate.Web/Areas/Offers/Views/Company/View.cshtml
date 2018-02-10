@@ -23,10 +23,16 @@
     <div class="standard-box market-info-box">
 
         <div class="row">
-            <div class="col-sm-12 col-md-4 col-market-image">
+            <div class="col-sm-12 col-md-3 col-market-image">
                 <img data-bind="attr: { src: company.imagePath, alt: company.name }" height="66"/>
             </div>
-            <div class="col-sm-12 col-md-5 col-market-info">
+            <div class="d-none d-md-block col-md-6 col-market-info">
+                Angebote von:
+                <ul data-bind="foreach: {data: Object.keys(markets), as: '_propkey'}">
+                    <li>
+                        <span data-bind="text: markets[_propkey].name"></span> (<span data-bind="text: markets[_propkey].street"></span>)
+                    </li>
+                </ul>
             </div>
             <div class="col-sm-12 col-md-3 col-offer-count">
                 <span data-bind="text: offerCount"></span> Produkte im Angebot<br/>
@@ -68,44 +74,53 @@
 </script>
 
 <script type="text/html" id="offered-product-tile-template">
-    <a data-bind="attr: { 'href': productUrl }" class="standard-box offer-box">
 
-        <div class="image">
-            <img class="b-lazy"
-                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                 data-bind="attr: { 'data-src': imageUrl, 'alt': name }"
-                 width="150"
-                 alt=""/>
+    <div class="standard-box offer-box">
+
+        <a data-bind="attr: { 'href': productUrl }">
+
+            <div class="image" style="position: relative">
+                <img class="b-lazy"
+                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-bind="attr: { 'data-src': imageUrl, 'alt': name }"
+                     width="150"
+                     alt=""/>
+            </div>
+
+            <div class="name">
+                <strong>
+                    <span data-bind="text: name"></span>
+                </strong>
+            </div>
+
+            <div data-bind="if: isStartingLater">
+                ab <span data-bind="text: offerFrom"></span>
+            </div>
+
+            <div class="price">
+                <span style="font-size: 1.5rem"><span data-bind="text: price"></span> €</span>
+            </div>
+
+
+        </a>
+
+        <!-- ko if: !isEverywhereAvailable -->
+        <div class="market-location-box">
+            <i class="fa fa-map-marker market-location"></i>
         </div>
-
-        <div class="name">
-            <strong>
-                <span data-bind="text: name"></span>
-
-                <!-- ko if: !isEverywhereAvailable -->
-                <i class="fa fa-map-marker market-location"></i>
-                <div class="market-list">
-                    Nur verfügbar bei:
-                    <ul data-bind="foreach: offers">
-                        <li>
-                            <span data-bind="text: $parent.getMarketName(marketId).name"></span>
-                        </li>
-                    </ul>
-                </div>
-                <!-- /ko-->
-            </strong>
+        <div class="market-list">
+            <div>
+                Nur verfügbar bei:
+            </div>
+            <ul data-bind="foreach: offers">
+                <li>
+                    <span data-bind="text: $parent.getMarketName(marketId).name"></span>
+                </li>
+            </ul>
         </div>
+        <!-- /ko-->
 
-        <div data-bind="if: isStartingLater">
-            ab <span data-bind="text: offerFrom"></span>
-        </div>
-
-        <div class="price">
-            <span style="font-size: 1.5rem"><span data-bind="text: price"></span> €</span>
-        </div>
-
-
-    </a>
+    </div>
 </script>
 
 @section viewData {
