@@ -16,6 +16,10 @@ ALTER TABLE Offers.Offer
   ALTER COLUMN SizeInfo VARCHAR(255) NOT NULL
 GO
 
+ALTER TABLE Offers.Product
+  DROP COLUMN SizeInfo;
+GO
+
 --
 -- Migration
 --

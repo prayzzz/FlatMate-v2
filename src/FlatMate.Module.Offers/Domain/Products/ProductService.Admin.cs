@@ -115,7 +115,7 @@ FROM Offers.Product
             foreach (var other in otherOffers)
             {
                 // only if main product doesn't contain the same offer
-                if (offers.All(x => x.From.Date != other.From.Date))
+                if (offers.All(x => x.From.Date != other.From.Date || x.MarketId != other.MarketId))
                 {
                     other.ProductId = productId;
                 }
