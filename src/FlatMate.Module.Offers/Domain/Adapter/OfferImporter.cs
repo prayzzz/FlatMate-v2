@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
@@ -39,15 +38,11 @@ namespace FlatMate.Module.Offers.Domain.Adapter
         protected void CheckForChangedProductProperties(Product product, OfferTemp offer)
         {
             Check(product.Brand, offer.Brand, nameof(product.Brand));
-
-            //            Check(product.ExternalProductCategory, offer.ExternalProductCategory, nameof(product.ExternalProductCategory));
-            //            Check(product.ExternalProductCategoryId, offer.ExternalProductCategoryId, nameof(product.ExternalProductCategoryId));
             Check(product.Name, offer.Name, nameof(product.Name));
-            Check(product.SizeInfo, offer.SizeInfo, nameof(product.SizeInfo));
 
             void Check(string current, string updated, string property)
             {
-                if (current != updated)
+                if (!string.Equals(current, updated, StringComparison.CurrentCultureIgnoreCase))
                 {
                     Logger.LogWarning($"{property} of product #{product.Id} changed: '{current}' -> '{updated}'");
                 }
@@ -66,10 +61,11 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             offer.ExternalId = offerDto.ExternalOfferId;
             offer.From = offerDto.OfferedFrom;
             offer.ImageUrl = offerDto.ImageUrl;
-            offer.Price = offerDto.OfferPrice;
-            offer.To = offerDto.OfferedTo;
             offer.Market = offerDto.Market;
+            offer.Price = offerDto.OfferPrice;
             offer.Product = offerDto.Product;
+            offer.SizeInfo = offerDto.SizeInfo;
+            offer.To = offerDto.OfferedTo;
 
             return offer;
         }
@@ -95,7 +91,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter
                 product.ImageUrl = offerDto.ImageUrl;
                 product.Name = offerDto.Name;
                 product.ProductCategoryId = (int) offerDto.ProductCategory;
-                product.SizeInfo = offerDto.SizeInfo;
 
                 product.UpdatePrice(offerDto.RegularPrice, offerDto.Market);
             }
@@ -122,7 +117,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
         {
             return DbContext.Products
                             .Include(p => p.PriceHistoryEntries)
-                            .FirstOrDefault(p => p.CompanyId == (int) offerDto.Company && p.Name == offerDto.Name && p.SizeInfo == offerDto.SizeInfo);
+                            .FirstOrDefault(p => p.CompanyId == (int) offerDto.Company && p.Name== offerDto.Name);
         }
 
         protected class OfferTemp : IEquatable<OfferTemp>

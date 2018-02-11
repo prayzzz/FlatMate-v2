@@ -8,7 +8,7 @@ namespace FlatMate.Web.Areas.Offers.Data
 {
     public class AdminManageProductDuplicatesVm : MvcViewModel
     {
-        public List<IGrouping<(string Name, string SizeInfo, Company CompanyId), ProductJso>> GroupedProducts { get; set; }
+        public List<IGrouping<(string Name, Company CompanyId), ProductJso>> GroupedProducts { get; set; }
 
         public List<CompanyJso> Companies { get; set; }
     }

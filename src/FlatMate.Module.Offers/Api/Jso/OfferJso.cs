@@ -27,6 +27,8 @@ namespace FlatMate.Module.Offers.Api
 
         public int ProductId { get; set; }
 
+        public string SizeInfo { get; set; }
+
         public DateTime To { get; set; }
     }
 
@@ -61,6 +63,7 @@ namespace FlatMate.Module.Offers.Api
                 Price = dto.Price,
                 Product = ctx.Mapper.Map<ProductJso>(dto.Product),
                 ProductId = dto.ProductId,
+                SizeInfo = dto.SizeInfo,
                 To = dto.To
             };
         }

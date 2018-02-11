@@ -36,6 +36,8 @@ namespace FlatMate.Module.Offers.Domain
 
         Task<Result> MergeProducts(int productId, int otherProductId);
 
+        Task Migrate();
+
         Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter);
 
         Task<PartialList<ProductDto>> SearchFavoriteProducts(Company company, string searchTerm, PartialListParameter parameter);

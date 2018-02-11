@@ -43,8 +43,6 @@ namespace FlatMate.Module.Offers.Domain
         [Required]
         public int ProductCategoryId { get; set; }
 
-        public string SizeInfo { get; set; }
-
         public void UpdatePrice(decimal price, Market market)
         {
             if (price > 0)
@@ -73,8 +71,6 @@ namespace FlatMate.Module.Offers.Domain
         public ProductCategoryDto ProductCategory { get; set; }
 
         public int ProductCategoryId { get; set; }
-
-        public string SizeInfo { get; set; }
     }
 
     [Inject]
@@ -97,7 +93,6 @@ namespace FlatMate.Module.Offers.Domain
                 Name = product.Name,
                 ProductCategory = product.ProductCategory != null ? ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory) : null,
                 ProductCategoryId = product.ProductCategoryId,
-                SizeInfo = product.SizeInfo
             };
         }
     }

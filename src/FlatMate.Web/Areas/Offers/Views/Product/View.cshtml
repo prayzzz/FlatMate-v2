@@ -18,20 +18,21 @@
                          src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                          data-src="@OfferImageHelper.Get(Model.Product.ImageUrl, Model.Product.CompanyId, 150)"
                          width="150"
-                         height="150" />
+                         height="150"/>
                 </div>
             </div>
             <div class="col-md col-product-info">
-                <div style="font-size:1.5rem;">@Model.Product.Name</div>
+                <div style="font-size: 1.5rem;">@Model.Product.Name</div>
 
                 <div>@Model.Product.Description</div>
-                <div>@Model.Product.SizeInfo</div>
 
                 <div class="product-price">
 
                     @if (Model.Offers.Count > 0)
                     {
-                        <div><text>Letztes Angebot: @Model.Offers.Last().Price €</text></div>
+                        <div>
+                            <text>Letztes Angebot: @Model.Offers.Last().Price €</text>
+                        </div>
                     }
                 </div>
 
@@ -62,24 +63,30 @@
     <div class="standard-box">
         <table>
             <thead>
-                <tr>
-                    <th width="20%">Von</th>
-                    <th width="20%">Bis</th>
-                    <th width="20%">Preis</th>
-                    <th width="40%">Markt</th>
-                </tr>
+            <tr>
+                <th style="width: 1%;">Von</th>
+                <th style="width: 1%;">Bis</th>
+                <th style="width: 1%;">Preis</th>
+                <th style="width: 1%;">Größe</th>
+                <th></th>
+            </tr>
             </thead>
 
             <tbody>
-                @foreach (var offer in Model.Offers.OrderByDescending(o => o.From))
-                {
-                    <tr>
-                        <td>@offer.From.ToShortDateString()</td>
-                        <td>@offer.To.ToShortDateString()</td>
-                        <td>@offer.Price €</td>
-                        <td><a asp-area="Offers" asp-controller="Company" asp-action="View" asp-route-id="@offer.MarketId">TODO MARKT</a></td>
-                    </tr>
-                }
+            @foreach (var offer in Model.Offers.OrderByDescending(o => o.From))
+            {
+                <tr>
+                    <td>@offer.From.ToShortDateString()</td>
+                    <td>@offer.To.ToShortDateString()</td>
+                    <td>
+                        <span style="white-space: nowrap">@offer.Price €</span>
+                    </td>
+                    <td>
+                        <span style="white-space: nowrap">@offer.SizeInfo</span>
+                    </td>
+                    <td></td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>
@@ -90,20 +97,20 @@
         <div class="standard-box">
             <table>
                 <thead>
-                    <tr>
-                        <th width="50%">Von</th>
-                        <th width="50%">Preis</th>
-                    </tr>
+                <tr>
+                    <th width="50%">Von</th>
+                    <th width="50%">Preis</th>
+                </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var history in Model.PriceHistory.OrderByDescending(p => p.Date))
+                @foreach (var history in Model.PriceHistory.OrderByDescending(p => p.Date))
                 {
-                        <tr>
-                            <td>@history.Date.ToShortDateString()</td>
-                            <td>@history.Price €</td>
-                        </tr>
-                    }
+                    <tr>
+                        <td>@history.Date.ToShortDateString()</td>
+                        <td>@history.Price €</td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>

@@ -31,5 +31,11 @@ namespace FlatMate.Module.Offers.Api
         {
             return await _productService.MergeProducts(productId, otherProductId);
         }
+
+        [HttpGet("migrate")]
+        public Task Migrate()
+        {
+            return _productService.Migrate();
+        }
     }
 }

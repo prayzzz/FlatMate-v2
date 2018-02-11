@@ -33,6 +33,38 @@ namespace FlatMate.Module.Offers.Domain
             return products;
         }
 
+        public async Task Migrate()
+        {
+            while (true)
+            {
+                var productsToMerge = _dbContext.Products.FromSql(@"SELECT Product.*
+FROM Offers.Product
+  INNER JOIN (SELECT TOP 100
+                 Name,
+                 CompanyId
+               FROM Offers.Product
+               GROUP BY name, CompanyId
+               HAVING COUNT(*) > 1) AS sub ON sub.Name = Product.Name AND sub.CompanyId = Product.CompanyId").ToList();
+                if (!productsToMerge.Any())
+                {
+                    return;
+                }
+
+                var groupByName = productsToMerge.GroupBy(x => x.Name.ToLower());
+
+                foreach (var productGroup in groupByName)
+                {
+                    var productIds = productGroup.Select(x => x.Id).ToList();
+                    var minId = productIds.Min();
+
+                    foreach (var productId in productIds.Where(x => x != minId))
+                    {
+                        await MergeProducts(minId, productId);
+                    }
+                }
+            }
+        }
+
         public async Task<Result> MergeProducts(int productId, int otherProductId)
         {
             // Move Price History

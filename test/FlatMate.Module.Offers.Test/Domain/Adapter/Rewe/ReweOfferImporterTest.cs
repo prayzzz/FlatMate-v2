@@ -99,11 +99,11 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.AreEqual(offer.Id, savedOffer.ExternalId);
             Assert.AreEqual(DayOfWeek.Monday, savedOffer.From.DayOfWeek);
             Assert.AreEqual(DayOfWeek.Sunday, savedOffer.To.DayOfWeek);
+            Assert.AreEqual(offer.QuantityAndUnit, savedOffer.SizeInfo);
 
             Assert.IsNotNull(savedProduct);
             Assert.AreEqual(offer.Brand, savedProduct.Brand);
             Assert.AreEqual(offer.Name, savedProduct.Name);
-            Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
             Assert.AreEqual(1, savedProduct.PriceHistoryEntries.Count);
         }
 
@@ -152,7 +152,6 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var (result2, importedOffers2) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             var savedProduct = dbContext.Products.FirstOrDefault();
-
             // Assert
             Assert.IsInstanceOfType(result, typeof(Result));
             Assert.IsInstanceOfType(result2, typeof(Result));
@@ -160,7 +159,6 @@ namespace FlatMate.Module.Offers.Test.Rewe
             Assert.IsNotNull(savedProduct);
             Assert.AreEqual(offer.Brand, savedProduct.Brand);
             Assert.AreEqual(offer.Name, savedProduct.Name);
-            Assert.AreEqual(offer.QuantityAndUnit, savedProduct.SizeInfo);
             Assert.AreEqual(2, savedProduct.PriceHistoryEntries.Count);
         }
 

@@ -33,7 +33,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             var model = ApplyTempResult(new AdminManageProductDuplicatesVm());
 
             var duplicates = await _adminApi.GetDuplicates();
-            model.GroupedProducts = duplicates.GroupBy(x => (x.Name, x.SizeInfo, x.CompanyId)).ToList();
+            model.GroupedProducts = duplicates.GroupBy(x => (x.Name, x.CompanyId)).ToList();
             model.Companies = (await _companyApi.GetList()).ToList();
 
             return View(model);
