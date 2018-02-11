@@ -14,25 +14,28 @@ namespace FlatMate.Module.Account.DataAccess.Users
     [Inject]
     public class UserRestrictedAreaRepository : IUserRestrictedAreaRepository
     {
+        private const string CacheKeyPrefix = "UserRestrictedArea_";
         private readonly AccountDbContext _dbContext;
         private readonly IMemoryCache _cache;
-        private readonly MemoryCacheEntryOptions _entryOptions;
 
         public UserRestrictedAreaRepository(AccountDbContext dbContext, IMemoryCache cache)
         {
             _dbContext = dbContext;
             _cache = cache;
-
-            _entryOptions = new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) };
         }
 
         public List<string> GetRestrictedAreas(int userId)
         {
-            return _cache.GetOrCreate(userId, entry =>
+            return _cache.GetOrCreate(BuildCacheKey(userId), entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
                 return _dbContext.UserRestrictedAreas.Where(t => t.UserId == userId).Select(a => a.Area).ToList();
             });
+        }
+
+        private string BuildCacheKey(int userId)
+        {
+            return CacheKeyPrefix + userId;
         }
     }
 }

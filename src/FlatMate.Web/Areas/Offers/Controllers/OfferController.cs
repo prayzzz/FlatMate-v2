@@ -43,6 +43,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
             var model = new OfferViewVm();
 
+            var favoriteProductIdsTask = _productApi.GetFavoriteProductIds((Company) companyId.Value);
             var companyTask = _companyApi.Get(companyId.Value);
             var marketsTask = _marketApi.SearchMarkets((Company) companyId.Value);
 
@@ -63,7 +64,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
             // kick of tasks
             var offerPeriodTask = _offerViewApi.GetOffers(companyId.Value, string.Join(",", markets.Select(x => x.Id.Value)), date);
-            var favoriteProductIdsTask = _productApi.GetFavoriteProductIds(company.Id);
 
             var (offerPeriodResult, offerViewJso) = await offerPeriodTask;
             if (offerPeriodResult.IsError)
