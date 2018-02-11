@@ -7,7 +7,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
-      <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-unstable-45.develop"/>
+      <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-unstable-46.develop"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
