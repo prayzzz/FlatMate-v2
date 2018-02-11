@@ -51,7 +51,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
             model.Product = product;
             model.IsFavorite = (await productFavoritesTask).Any(pf => pf == product.Id);
-            model.Offers = (await offersTask).ToList();
+            model.Offers = (await offersTask).GroupBy(x => x.From).Select(x => x.First()).ToList();
             model.PriceHistory = (await priceHistoryTask).ToList();
 
             return View(model);

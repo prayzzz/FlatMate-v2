@@ -20,7 +20,7 @@
         @foreach (var company in Model.Companies)
         {
             <div class="col-sm-6 col-market">
-                <a asp-action="View" asp-route-id="@((int)company.Id)" class="standard-box market-box">
+                <a asp-action="View" asp-controller="Offer" asp-route-companyId="@((int)company.Id)" class="standard-box market-box">
                     @if (!string.IsNullOrEmpty(company.ImagePath))
                     {
                         <div class="image">
