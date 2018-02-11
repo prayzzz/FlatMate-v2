@@ -41,7 +41,7 @@ export class OfferedProductTile {
         }
     }
 
-    public getMarketName(marketId: number): MarketJso {
-        return this.model.markets[marketId];
+    public getMarketName(marketId: number): MarketJso | undefined {
+        return this.model.markets.find(m => m.id == marketId);
     }
 }

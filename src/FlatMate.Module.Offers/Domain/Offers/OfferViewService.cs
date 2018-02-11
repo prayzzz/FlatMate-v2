@@ -42,7 +42,7 @@ namespace FlatMate.Module.Offers.Domain
             var offers = await (from o in _dbContext.Offers.Include(of => of.Product)
                                 where validatedMarketIds.Contains(o.MarketId)
                                 where o.From >= offerDuration.From.Date && o.To <= offerDuration.To.Date
-                                select o).ToListAsync();
+                                select o).AsNoTracking().ToListAsync();
 
             return offers.Select(_mapper.Map<OfferDto>);
         }

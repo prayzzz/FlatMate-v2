@@ -47,7 +47,7 @@ namespace FlatMate.Module.Offers.Domain
 
         public async Task<IEnumerable<CompanyDto>> SearchCompanies()
         {
-            return (await _dbContext.Companies.ToListAsync()).Select(_mapper.Map<CompanyDto>);
+            return (await _dbContext.Companies.AsNoTracking().ToListAsync()).Select(_mapper.Map<CompanyDto>);
         }
 
         public async Task<(Result, CompanyDto)> UpdateCompany(int id, CompanyDto dto)

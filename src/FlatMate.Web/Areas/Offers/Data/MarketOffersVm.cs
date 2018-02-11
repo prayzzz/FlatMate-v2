@@ -2,7 +2,6 @@
 using FlatMate.Web.Mvc.Base;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace FlatMate.Web.Areas.Offers.Data
@@ -19,7 +18,7 @@ namespace FlatMate.Web.Areas.Offers.Data
 
         public IEnumerable<OfferViewJso.OfferedProductJso> FavoriteProducts { get; set; } = Enumerable.Empty<OfferViewJso.OfferedProductJso>();
 
-        public Dictionary<int, MarketJso> Markets { get; set; } = new Dictionary<int, MarketJso>();
+        public IEnumerable<MarketJso> Markets { get; set; } = Enumerable.Empty<MarketJso>();
 
         public int OfferCount { get; set; }
     }

@@ -62,12 +62,12 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 return RedirectToActionPreserveMethod("Index");
             }
 
-            var marketsTask = await _marketApi.SearchMarkets(company.Id);
+            var markets = await _marketApi.SearchMarkets(company.Id);
 
             var date = DateTime.Now.DayOfWeek == DayOfWeek.Sunday ? DateTime.Now.AddDays(1) : DateTime.Now;
 
             // kick of tasks
-            var offerPeriodTask = _offerViewApi.GetOffers(id, string.Join(",", marketsTask.Select(x => x.Id.Value)), date);
+            var offerPeriodTask = _offerViewApi.GetOffers(id, string.Join(",", markets.Select(x => x.Id.Value)), date);
             var favoriteProductIdsTask = _productApi.GetFavoriteProductIds(company.Id);
 
             // collect tasks
@@ -85,7 +85,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             model.OffersTo = offerViewJso.To;
             model.Categories = offerViewJso.Categories;
             model.OfferCount = offerViewJso.Categories.SelectMany(x => x.Products).Count();
-            model.Markets = offerViewJso.Markets;
+            model.Markets = markets;
             model.FavoriteProducts = offerViewJso.Categories.SelectMany(x => x.Products).Where(x => favoriteProductIds.Contains(x.ProductId));
 
             return View(model);

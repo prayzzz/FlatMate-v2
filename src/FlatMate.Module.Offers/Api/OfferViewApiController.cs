@@ -64,12 +64,10 @@ namespace FlatMate.Module.Offers.Api
 
             // kick of tasks
             var offersTask = _offerViewService.GetOffersInMarkets(marketIdList, offerDuration);
-            var marketsTask = _marketService.GetMarkets(marketIdList);
             var categoriesTask = _productService.GetProductCategories();
 
             // collect tasks
             var categories = (await categoriesTask).ToDictionary(c => c.Id, c => c);
-            var markets = (await marketsTask).ToDictionary(m => m.Id.Value, Mapper.Map<MarketJso>);
             var offers = await offersTask;
 
             var offeredProducts = new List<OfferViewJso.OfferedProductJso>();
@@ -85,7 +83,6 @@ namespace FlatMate.Module.Offers.Api
                     offersInMarket.Add(new OfferViewJso.OfferInMarket
                     {
                         From = offerDto.From,
-//                        IsStartingLater = offerDto.From != offerDuration.From,
                         MarketId = offerDto.MarketId,
                         OfferId = offerDto.Id.Value,
                         Price = offerDto.Price,
@@ -96,7 +93,6 @@ namespace FlatMate.Module.Offers.Api
                 offeredProducts.Add(new OfferViewJso.OfferedProductJso
                 {
                     ImageUrl = offersPerProduct[0].Product.ImageUrl,
-//                    IsEverywhereAvailable = marketIdList.Count == offersPerProduct.Count,
                     Offers = offersInMarket,
                     Name = offersPerProduct[0].Product.Name,
                     ProductId = offersPerProduct[0].Product.Id.Value,
@@ -121,7 +117,6 @@ namespace FlatMate.Module.Offers.Api
             {
                 From = offerDuration.From,
                 Categories = offeredProductsPerCategory.OrderByDescending(x => x.Weight).ToList(),
-                Markets = markets,
                 To = offerDuration.To
             };
 
@@ -135,8 +130,6 @@ namespace FlatMate.Module.Offers.Api
         public DateTime From { get; set; }
 
         public List<ProductCategoriesWithOffers> Categories { get; set; } = new List<ProductCategoriesWithOffers>();
-
-        public Dictionary<int, MarketJso> Markets = new Dictionary<int, MarketJso>();
 
         public DateTime To { get; set; }
 
@@ -161,15 +154,11 @@ namespace FlatMate.Module.Offers.Api
             public int ProductId { get; set; }
 
             public int ProductCategoryId { get; set; }
-
-//            public bool IsEverywhereAvailable { get; set; }
         }
 
         public class OfferInMarket
         {
             public int OfferId { get; set; }
-
-//            public bool IsStartingLater { get; set; }
 
             public decimal Price { get; set; }
 

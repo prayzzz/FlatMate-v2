@@ -1,5 +1,4 @@
 import * as dateFormat from "dateformat";
-import {IDictionary} from "../../shared/types";
 import {CompanyJso, MarketJso, OfferedProduct, ProductCategoryWithOffers} from "./Jso";
 
 export interface MarketOffersVm {
@@ -9,16 +8,16 @@ export interface MarketOffersVm {
     offersTo: string;
     categories: ProductCategoryWithOffers[];
     favoriteProducts: OfferedProduct[];
-    markets: IDictionary<MarketJso>
+    markets: MarketJso[]
 }
 
 export class OfferedProductModel {
     public readonly product: OfferedProduct;
     public readonly company: CompanyJso;
-    public readonly markets: IDictionary<MarketJso>;
+    public readonly markets: MarketJso[];
     public readonly offersFrom: string;
 
-    constructor(product: OfferedProduct, company: CompanyJso, markets: IDictionary<MarketJso>, offersFrom: string) {
+    constructor(product: OfferedProduct, company: CompanyJso, markets: MarketJso[], offersFrom: string) {
         this.product = product;
         this.company = company;
         this.markets = markets;
@@ -30,7 +29,7 @@ export class MarketOffersView {
     public readonly categories: ProductCategoryWithOffers[];
     public readonly company: CompanyJso;
     public readonly favorites: OfferedProduct[];
-    public readonly markets: IDictionary<MarketJso>;
+    public readonly markets: MarketJso[];
     public readonly offerCount: number;
     public readonly offersFrom: string;
     public readonly offersFromFormatted: string;

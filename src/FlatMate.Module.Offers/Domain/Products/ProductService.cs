@@ -105,7 +105,7 @@ namespace FlatMate.Module.Offers.Domain
             return (from p in _dbContext.Products
                     join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
                     where f.UserId == CurrentUser.Id && p.CompanyId == (int) company
-                    select _mapper.Map<ProductDto>(p)).ToListAsync();
+                    select _mapper.Map<ProductDto>(p)).AsNoTracking().ToListAsync();
         }
 
         public async Task<(Result, ProductDto)> GetProduct(int id)
@@ -122,55 +122,44 @@ namespace FlatMate.Module.Offers.Domain
         public Task<List<ProductCategoryDto>> GetProductCategories()
         {
             return (from p in _dbContext.ProductCategories
-                    select _mapper.Map<ProductCategoryDto>(p)).ToListAsync();
+                    select _mapper.Map<ProductCategoryDto>(p)).AsNoTracking().ToListAsync();
         }
 
         public Task<List<OfferDto>> GetProductOffers(int id)
         {
             return (from o in _dbContext.Offers.Include(o => o.Market)
                     where o.ProductId == id
-                    select _mapper.Map<OfferDto>(o)).ToListAsync();
+                    select _mapper.Map<OfferDto>(o)).AsNoTracking().ToListAsync();
         }
 
         public Task<List<PriceHistoryDto>> GetProductPriceHistory(int productId)
         {
             return (from ph in _dbContext.PriceHistoryEntries.Include(ph => ph.Product)
                     where ph.ProductId == productId
-                    select _mapper.Map<PriceHistoryDto>(ph)).ToListAsync();
+                    select _mapper.Map<PriceHistoryDto>(ph)).AsNoTracking().ToListAsync();
         }
 
-        public async Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter)
+        public Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter)
+        {
+            return SearchProducts(company, searchTerm, false, parameter);
+        }
+
+        public Task<PartialList<ProductDto>> SearchFavoriteProducts(Company company, string searchTerm, PartialListParameter parameter)
+        {
+            return SearchProducts(company, searchTerm, true, parameter);
+        }
+
+        private async Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, bool isFavorite, PartialListParameter parameter)
         {
             IQueryable<Product> productsQuery = _dbContext.Products;
 
-            if (company != Company.None)
+            if (isFavorite)
             {
-                productsQuery = productsQuery.Where(p => p.CompanyId == (int) company);
-            }
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                productsQuery = productsQuery.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm) || p.Brand.Contains(searchTerm));
-            }
-
-            var totalCountTask = productsQuery.CountAsync();
-            var productsQueryTask = productsQuery.OrderByDescending(p => p.Id)
-                                                 .Skip(parameter.Offset)
-                                                 .Take(parameter.Limit)
-                                                 .ToListAsync();
-
-            var totalCount = await totalCountTask;
-            var products = await productsQueryTask;
-
-            return new PartialList<ProductDto>(products.Select(_mapper.Map<ProductDto>), parameter, totalCount);
-        }
-
-        public async Task<PartialList<ProductDto>> SearchFavoriteProducts(Company company, string searchTerm, PartialListParameter parameter)
-        {
-            var productsQuery = from p in _dbContext.Products
+                productsQuery = from p in productsQuery
                                 join f in _dbContext.ProductFavorites on p.Id equals f.ProductId
                                 where f.UserId == CurrentUser.Id
                                 select p;
+            }
 
             if (company != Company.None)
             {
@@ -186,6 +175,7 @@ namespace FlatMate.Module.Offers.Domain
             var productsQueryTask = productsQuery.OrderByDescending(p => p.Id)
                                                  .Skip(parameter.Offset)
                                                  .Take(parameter.Limit)
+                                                 .AsNoTracking()
                                                  .ToListAsync();
 
             var totalCount = await totalCountTask;
