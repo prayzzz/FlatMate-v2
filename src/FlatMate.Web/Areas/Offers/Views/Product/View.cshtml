@@ -65,9 +65,10 @@
             <thead>
             <tr>
                 <th style="width: 1%;">Von</th>
-                <th style="width: 1%;">Bis</th>
-                <th style="width: 1%;">Preis</th>
+                <th style="width: 1%;" class="show-large">Bis</th>
                 <th style="width: 1%;">Größe</th>
+                <th style="width: 1%;">Preis</th>
+                <th style="width: 1%;" class="show-large">Basispreis</th>
                 <th></th>
             </tr>
             </thead>
@@ -77,12 +78,15 @@
             {
                 <tr>
                     <td>@offer.From.ToShortDateString()</td>
-                    <td>@offer.To.ToShortDateString()</td>
+                    <td class="show-large">@offer.To.ToShortDateString()</td>
+                    <td>
+                        <span style="white-space: nowrap">@offer.SizeInfo</span>
+                    </td>
                     <td>
                         <span style="white-space: nowrap">@offer.Price €</span>
                     </td>
-                    <td>
-                        <span style="white-space: nowrap">@offer.SizeInfo</span>
+                    <td class="show-large">
+                        <span style="white-space: nowrap">@offer.BasePrice</span>
                     </td>
                     <td></td>
                 </tr>

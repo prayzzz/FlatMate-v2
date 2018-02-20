@@ -12,6 +12,8 @@ namespace FlatMate.Module.Offers.Domain
     [Table("Offer")]
     public class Offer : DboBase
     {
+        public string BasePrice { get; set; }
+
         [Required]
         public string ExternalId { get; set; }
 
@@ -43,6 +45,8 @@ namespace FlatMate.Module.Offers.Domain
 
     public class OfferDto : DtoBase
     {
+        public string BasePrice { get; set; }
+
         public string ExternalId { get; set; }
 
         public DateTime From { get; set; }
@@ -74,6 +78,7 @@ namespace FlatMate.Module.Offers.Domain
         {
             return new OfferDto
             {
+                BasePrice = offer.BasePrice,
                 From = offer.From,
                 Id = offer.Id,
                 ExternalId = offer.ExternalId,

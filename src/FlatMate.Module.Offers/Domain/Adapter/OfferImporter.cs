@@ -59,6 +59,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             }
 
             offer.ExternalId = offerDto.ExternalOfferId;
+            offer.BasePrice = offerDto.BasePrice;
             offer.From = offerDto.OfferedFrom;
             offer.ImageUrl = offerDto.ImageUrl;
             offer.Market = offerDto.Market;
@@ -122,6 +123,8 @@ namespace FlatMate.Module.Offers.Domain.Adapter
 
         protected class OfferTemp : IEquatable<OfferTemp>
         {
+            public string BasePrice { get; set; }
+
             public string Brand { get; set; }
 
             public Company Company { get; set; }

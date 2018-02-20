@@ -101,6 +101,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 
             return new OfferTemp
             {
+                BasePrice = _aldiUtils.Trim(article.Price_calc),
                 Brand = _aldiUtils.Trim(article.Producer),
                 Company = Company,
                 Description = _aldiUtils.StripHTML(article.Shorttext),

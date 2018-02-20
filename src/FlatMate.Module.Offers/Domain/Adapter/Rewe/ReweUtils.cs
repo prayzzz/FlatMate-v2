@@ -20,7 +20,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
         private const string DecimalPoint = ".";
 
         private static readonly CultureInfo DecimalCulture = new CultureInfo("en-US");
-        private static readonly char[] TrimChars = { ' ', '*', ',' };
+        private static readonly char[] TrimChars = { ' ', '*', ',', '(', ')' };
         private static readonly Regex TwoOrMoreWhitespaces = new Regex("[ ]{2,}");
 
         private readonly ILogger<ReweUtils> _logger;

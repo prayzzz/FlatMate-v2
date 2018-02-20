@@ -5,7 +5,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
     public class OfferJso
     {
-        public Dictionary<string, string> AdditionalFields { get; set; }
+        public Dictionary<string, string> AdditionalFields { get; set; } = new Dictionary<string, string>();
 
         public string AdditionalInformation { get; set; }
 

@@ -150,6 +150,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
 
             return new OfferTemp
             {
+                BasePrice = _pennyUtils.Trim(offerJso.Grundpreis),
                 Brand = PennyConstants.DefaultBrand,
                 Company = Company,
                 Description = _pennyUtils.StripHTML(offerJso.Beschreibung),

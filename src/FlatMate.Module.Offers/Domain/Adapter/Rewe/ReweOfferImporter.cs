@@ -185,6 +185,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
             return new OfferTemp
             {
+                BasePrice = _reweUtils.Trim(offer.BasePrice),
                 Brand = brand,
                 Company = Company,
                 Description = _reweUtils.Trim(offer.AdditionalInformation),

@@ -10,6 +10,8 @@ namespace FlatMate.Module.Offers.Api
 {
     public class OfferJso
     {
+        public string BasePrice { get; set; }
+
         public string ExternalId { get; set; }
 
         public DateTime From { get; set; }
@@ -55,6 +57,7 @@ namespace FlatMate.Module.Offers.Api
         {
             return new OfferJso
             {
+                BasePrice = dto.BasePrice,
                 ExternalId = dto.ExternalId,
                 From = dto.From,
                 Id = dto.Id,
