@@ -16,11 +16,11 @@
         cursor: move;
     }
 
-    .group-row {
-        background-color: #f6f6f9
-    }
-
     .add-item-cell {
         padding-left: calc(1rem + 16px)
+    }
+
+    .group-new {
+        margin-top: 0.5rem;
     }
 }
