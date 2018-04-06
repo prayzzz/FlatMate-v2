@@ -2,10 +2,18 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Produkt Favoriten";
-    ViewData["PageTitle"] = "Produkt Favoriten";
+    ViewData["Title"] = "Produkte suchen";
+    ViewData["PageTitle"] = "Produkte suchen";
     ViewData["MainClass"] = "productfavorite-manage";
 }
+
+<section class="container">
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["PageTitle"]</h1>
+        <div class="page-options d-flex">
+        </div>
+    </div>
+</section>
 
 <section class="container" style="min-height: 100vh">
 
@@ -15,26 +23,30 @@
 
 <script type="text/html" id="product-favorite-editor-template">
 
-    <div class="row select-company">
-        <div class="col-2 align-self-center">
-            Firma:
-        </div>
-        <div class="col-4 align-self-center">
-            <select data-bind="options: model.companies, optionsText: 'name', value: selectedCompany,"></select>
-        </div>
-    </div>
-
-    <div class="row filter">
-        <div class="col-2 align-self-center">
-            Suche:
-        </div>
-        <div class="col-4 align-self-center">
-            <input type="text" data-bind="value: searchTerm" placeholder="Name, Marke oder Beschreibung..."/>
-        </div>
-        <div class="col-6 align-self-center">
-            <label>
-                <input type="checkbox" data-bind="checked: onlyFavorites"/> Nur Favoriten
-            </label>
+    <div class="card">
+        <div class="card-body">
+            <form onsubmit="return false">
+                <div class="row">
+                    <div class="col-md-3 col-12">
+                        <div class="form-group">
+                            <label>Firma:</label>
+                            <select data-bind="options: model.companies, optionsText: 'name', value: selectedCompany"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="form-group">
+                            <label>Suche:</label>
+                            <input type="text" data-bind="value: searchTerm" placeholder="Name, Marke oder Beschreibung..."/>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <div class="form-group">
+                            <label>Nur Favoriten</label>
+                            <input type="checkbox" data-bind="checked: onlyFavorites"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -42,41 +54,35 @@
 
         <!-- ko foreach: productPage -->
 
-        <div class="col-sm-6 col-lg-3 col-xl-2 col-product">
-            <div class="standard-box product-box">
+        <div class="col-xl-3 col-md-4 col-sm-12 col-product">
+            <div class="card card-product">
+                <div class="card-body p-3">
 
-                <div class="image">
-                    <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-bind="attr: {  'data-src': imageUrl }" width="150" height="150"/>
-                </div>
+                    <div class="d-flex justify-content-center">
+                        <img class="b-lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-bind="attr: {  'data-src': imageUrl }" width="150" height="150"/>
+                    </div>
 
-                <div class="name">
-                    <span data-bind="text: name"></span><br/>
-                </div>
+                    <div class="pt-2 f-stretch">
+                        <span class="text-md" data-bind="text: name"></span>
+                    </div>
 
-                <div class="row no-gutters product-actions">
-                    <div class="col-12" data-bind="visible: showFavoriteBtn">
-                        <div class="btn btn-secondary" title="Als Favorit hinzufügen" data-bind="click: favorite">
+                    <div class="pt-2">
+                        <div class="btn btn-secondary" title="Als Favorit hinzufügen" data-bind="click: favorite, visible: showFavoriteBtn">
                             <i class="fa fa-heart" aria-hidden="true"></i> Als Favorit
                         </div>
-                    </div>
-                    <div class="col-12" data-bind="visible: showUnfavoriteBtn">
-                        <div class="btn btn-success" title="Als Favorit löschen" data-bind="click: unfavorite">
+                        <div class="btn btn-success" title="Als Favorit löschen" data-bind="click: unfavorite, visible: showUnfavoriteBtn">
                             <i class="fa fa-heart" aria-hidden="true"></i> Favorisiert
                         </div>
-                    </div>
-                    <div class="col-12" data-bind="visible: showLoadingButton">
-                        <div class="loading">
+                        <div class="btn btn-secondary" data-bind="visible: showLoadingButton">
                             <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i> Lade...
                         </div>
                     </div>
-                </div>
 
-                <div class="row no-gutters product-actions">
-                    <div class="col">
+                    <div class="pt-2">
                         <a href="#" data-bind="attr: { href: detailUrl }" target="_blank" class="btn btn-secondary" title="Details">Details</a>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
 

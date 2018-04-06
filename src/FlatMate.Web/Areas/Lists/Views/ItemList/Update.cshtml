@@ -2,24 +2,26 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Liste: " + Model.Name + " bearbeiten";
-    ViewData["PageTitle"] = Model.Name + " bearbeiten";
+    ViewData["Title"] = "Liste bearbeiten";
+    ViewData["PageTitle"] = "Liste bearbeiten";
 }
 
 <section class="container">
 
-    <div class="flex-row align-right actions">
-        <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@Model.Id">Zur Liste</a>
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["PageTitle"]</h1>
+        <div class="page-options d-flex">
+            <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@Model.Id" class="btn">Zur Liste</a>
+        </div>
     </div>
 
 </section>
 
-<section class="container">
+<section class="container centered-form">
 
-    <div class="standard-box centered-form">
-        <form asp-area="Lists" asp-controller="ItemList" asp-action="Update">
+    <form asp-area="Lists" asp-controller="ItemList" asp-action="Update" class="card">
+        <div class="card-body">
             <fieldset>
-
                 <div class="form-group">
                     <label asp-for="Name"></label>
                     <input asp-for="Name" required/>
@@ -34,20 +36,15 @@
                     <label asp-for="IsPublic"></label>
                     <input asp-for="IsPublic"/>
                 </div>
-
-                <div class="form-group flex-row">
-
-                    <div class="flex-row" style="width: 50%">
-                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Löschen</a>
-                    </div>
-
-                    <div class="flex-row align-right" style="width: 50%">
-                        <input class="btn-primary" type="submit" value="Speichern">
-                    </div>
-                </div>
-
             </fieldset>
-        </form>
-    </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="d-flex">
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Löschen</a>
+                <input class="btn btn-primary ml-auto" type="submit" value="Speichern">
+            </div>
+        </div>
+    </form>
 
 </section>

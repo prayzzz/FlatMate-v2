@@ -3,7 +3,7 @@
  */
 
 $color-primary: #1a8ee9;
-$color-secondary: #ddd;
+$color-secondary: #fff;
 $color-success: #5cb85c;
 $color-info: #5bc0de;
 $color-warning: #f0ad4e;
@@ -14,7 +14,10 @@ $color-input-placeholder: #ccc;
 
 $color-main-background: #f5f7fb;
 $color-border: rgba(0, 40, 100, 0.12);
+$color-shadow: rgba(0, 0, 0, 0.05);
 $color-background: #f4f5f6;
+
+$color-table-accent: rgba(0, 0, 0, .02);
 
 /**
  * Font
@@ -40,3 +43,14 @@ $nav-width-small: 15em;
 
 $icon-size: 14px;
 $icon-burger-size: 32px;
+
+$heading-height: 2.5rem;
+
+/**
+ * Mixins
+ */
+
+@mixin box-shadow {
+    box-shadow: 0 1px 2px 0 $color-shadow;
+    border: 1px solid $color-border;
+}

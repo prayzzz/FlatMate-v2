@@ -10,18 +10,14 @@
     }
 }
 
-.container {
-    padding-top: 15px;
-}
-
-
 .actions {
     margin-bottom: .5rem;
 
     a {
-        display:block;
+        display: block;
         background-color: #fff;
         border-bottom: 2px $color-border solid;
+        box-shadow: 0 1px 2px 0 $color-shadow;
         padding: .5rem;
 
         &:hover {
@@ -57,6 +53,35 @@ a {
 
         &:hover {
             color: $color-font;
+        }
+    }
+}
+
+.ml-auto {
+    margin-left: auto;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0 1.5rem;
+    flex-wrap: wrap;
+    min-height: $heading-height;
+}
+
+.page-options {
+    margin-left: auto;
+
+    .btn {
+        display: block;
+        background-color: #fff;
+        border-bottom: 2px $color-border solid;
+        box-shadow: 0 1px 2px 0 $color-shadow;
+        padding: .5rem;
+
+        &:hover {
+            background-color: darken(#fff, 3%);
+            border-bottom: 2px darken($color-border, 15%) solid;
         }
     }
 }

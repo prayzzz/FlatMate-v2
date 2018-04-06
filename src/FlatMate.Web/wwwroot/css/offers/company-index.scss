@@ -1,17 +1,16 @@
 ﻿.company-index {
-    .market-box {
-        display: flex;
-        flex-flow: column;
+    .card-company {
+        display: block;
+        color: #000;
         height: 100%;
-        padding: 0.75rem;
+        margin-bottom: 0;
 
-        .image {
-            text-align: center;
-            line-height: 0;
+        img {
+            display: block;
         }
     }
 
     .col-market {
-        margin-bottom: 1rem;
+        padding-bottom: 30px;
     }
 }

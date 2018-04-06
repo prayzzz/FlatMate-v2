@@ -2,66 +2,86 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = Model.Product.Name;
+    ViewData["Title"] = $"Produktdetails {Model.Product.Name}";
     ViewData["PageTitle"] = "Produktdetails";
     ViewData["MainClass"] = "product-view";
 }
 
 <section class="container">
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["PageTitle"]</h1>
+        <div class="page-options d-flex">
+        </div>
+    </div>
+</section>
 
-    <div class="standard-box product-info-box">
+<section class="container">
 
-        <div class="row">
-            <div class="col col-picture">
-                <div class="picture-wrapper">
-                    <img class="b-lazy"
-                         src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                         data-src="@OfferImageHelper.Get(Model.Product.ImageUrl, Model.Product.CompanyId, 150)"
-                         width="150"
-                         height="150"/>
-                </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">@Model.Product.Name</h3>
+            <div class="card-options">
+                @if (Model.IsFavorite)
+                {
+                    <a asp-area="Offers" asp-controller="Product" asp-action="Unfavorite" asp-route-id="@Model.Product.Id" class="btn btn-success" title="Als Favorit löschen">
+                        <i class="fa fa-heart" aria-hidden="true"></i> Favorisiert
+                    </a>
+                }
+                else
+                {
+                    <a asp-area="Offers" asp-controller="Product" asp-action="Favorite" asp-route-id="@Model.Product.Id" class="btn btn-secondary">
+                        <i class="fa fa-heart" aria-hidden="true"></i> Als Favorit
+                    </a>
+                }
             </div>
-            <div class="col-md col-product-info">
-                <div style="font-size: 1.5rem;">@Model.Product.Name</div>
-
-                <div>@Model.Product.Description</div>
-
-                <div class="product-price">
-
-                    @if (Model.Offers.Count > 0)
-                    {
-                        <div>
-                            <text>Letztes Angebot: @Model.Offers.Last().Price €</text>
-                        </div>
-                    }
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col col-picture">
+                    <div class="picture-wrapper">
+                        <img class="b-lazy"
+                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                             data-src="@OfferImageHelper.Get(Model.Product.ImageUrl, Model.Product.CompanyId, 150)"
+                             width="150"
+                             height="150"/>
+                    </div>
                 </div>
+                <div class="col-md col-product-info">
+                    <div>
+                        @if (string.IsNullOrEmpty(Model.Product.Description.Trim()))
+                        {
+                            @: keine Beschreibung vorhanden
+                        }
+                        else
+                        {
+                            @Model.Product.Description.Trim()
+                        }
+                    </div>
 
-                <div class="row no-gutters product-actions">
-                    @if (Model.IsFavorite)
-                    {
-                        <div class="col-auto">
-                            <a asp-area="Offers" asp-controller="Product" asp-action="Unfavorite" asp-route-id="@Model.Product.Id" class="btn btn-success" title="Als Favorit löschen">
-                                <i class="fa fa-heart" aria-hidden="true"></i> Favorisiert
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="col-auto">
-                            <a asp-area="Offers" asp-controller="Product" asp-action="Favorite" asp-route-id="@Model.Product.Id" class="btn btn-secondary">
-                                <i class="fa fa-heart" aria-hidden="true"></i> Als Favorit
-                            </a>
-                        </div>
-                    }
+                    <div class="product-price">
+
+                        @if (Model.Offers.Count > 0)
+                        {
+                            <div>
+                                <text>Letztes Angebot: @Model.Offers.Last().Price €</text>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="row no-gutters product-actions">
+
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <h3>Im Angebot</h3>
-    <div class="standard-box">
-        <table>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Im Angebot</h3>
+        </div>
+
+        <table class="table table-vcenter card-table">
             <thead>
             <tr>
                 <th style="width: 1%;">Von</th>
@@ -97,9 +117,12 @@
 
     @if (Model.PriceHistory.Count > 1)
     {
-        <h3>Preishistorie</h3>
-        <div class="standard-box">
-            <table>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Preishistorie</h3>
+            </div>
+
+            <table class="table table-vcenter card-table">
                 <thead>
                 <tr>
                     <th width="50%">Von</th>
@@ -119,6 +142,5 @@
             </table>
         </div>
     }
-
 
 </section>

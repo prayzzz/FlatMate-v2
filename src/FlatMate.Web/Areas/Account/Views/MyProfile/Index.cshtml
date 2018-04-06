@@ -9,18 +9,26 @@
 
 <section class="container">
 
-    <div class="flex-row align-right actions">
-        <a asp-action="ChangePassword">Passwort ändern</a>
+    <div class="page-header">
+        <h1 class="page-title"></h1>
+        <div class="page-options d-flex">
+            <a asp-action="ChangePassword" class="btn">Passwort ändern</a>
+        </div>
     </div>
 
 </section>
 
 <section class="container">
 
-    <h3>@Model.UserJso.UserName</h3>
-
-    <div class="standard-box flex-row" style="padding: 1em">
-        <div>Hier wird nie eine Profilübersicht entstehen.</div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                @Model.UserJso.UserName
+            </div>
+        </div>
+        <div class="card-body">
+            Hier wird nie eine Profilübersicht entstehen.
+        </div>
     </div>
 
 </section>

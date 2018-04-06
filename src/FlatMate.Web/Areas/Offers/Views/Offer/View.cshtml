@@ -2,10 +2,19 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = Model.Company.Name;
+    ViewData["Title"] = "Im Angebot bei " + Model.Company.Name;
     ViewData["PageTitle"] = "Im Angebot";
     ViewData["MainClass"] = "offer-view";
 }
+
+<section class="container">
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["PageTitle"]</h1>
+        <div class="page-options d-flex">
+            <a asp-controller="ProductFavorite" asp-action="Manage" asp-route-companyId="@Model.Company.Id" class="btn">Favoriten verwalten</a>
+        </div>
+    </div>
+</section>
 
 <section class="container" style="min-height: 100vh">
 
@@ -14,72 +23,61 @@
 </section>
 
 <script type="text/html" id="company-offers-list-template">
-    <div class="row align-right actions">
-        <div class="col-auto">
-            <a data-bind="attr: { href: productFavoriteLink }">Favoriten verwalten</a>
-        </div>
-    </div>
 
-    <div class="standard-box market-info-box">
+    <div class="card">
 
-        <div class="row">
-            <div class="col-sm-12 col-md-3 col-market-image">
-                <img data-bind="attr: { src: company.imagePath, alt: company.name }" height="66"/>
-            </div>
-            <div class="d-none d-md-block col-md-6 col-market-info">
-                Angebote von:
-                <ul data-bind="foreach: {data: Object.keys(markets), as: '_propkey'}">
-                    <li>
-                        <span data-bind="text: markets[_propkey].name"></span> (<span data-bind="text: markets[_propkey].street"></span>)
-                    </li>
-                </ul>
-            </div>
-            <div class="col-sm-12 col-md-3 col-offer-count">
-                <span data-bind="text: offerCount"></span> Produkte im Angebot<br/>
-                von <span data-bind="text: offersFromFormatted"></span> bis <span data-bind="text: offersToFormatted"></span>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 col-lg-3 d-flex align-items-center justify-content-center">
+                    <img data-bind="attr: { src: company.imagePath, alt: company.name }" height="66"/>
+                </div>
+                <div class="col-6 d-none d-lg-block col-market-list align-self-center">
+                    Angebote von:
+                    <ul data-bind="foreach: {data: Object.keys(markets), as: '_propkey'}">
+                        <li>
+                            <span data-bind="text: markets[_propkey].name"></span> (<span data-bind="text: markets[_propkey].street"></span>)
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-lg-3 col-offer-count align-self-center">
+                    <span data-bind="text: offerCount"></span> Produkte im Angebot<br/>
+                    von <span data-bind="text: offersFromFormatted"></span> bis <span data-bind="text: offersToFormatted"></span>
+                </div>
             </div>
         </div>
+
     </div>
 
     <!-- ko if: favorites.length > 0 -->
-
     <h3>Favoriten</h3>
     <div class="row">
 
         <!-- ko foreach: favorites -->
-
         <div class="col-sm-6 col-lg-4 col-xl-3 col-offer" data-bind="component: {name: 'offered-product-tile', params : {product: $parentContext.$component.getOfferedProductModel($data)}} "></div>
-
         <!-- /ko-->
 
     </div>
-
     <!-- /ko -->
 
     <!-- ko foreach: categories -->
-    <h3>
-        <span data-bind="text: name"></span>
-    </h3>
+    <h3 data-bind="text: name"></h3>
     <div class="row">
 
         <!-- ko foreach: products -->
-
         <div class="col-sm-6 col-lg-4 col-xl-3 col-offer" data-bind="component: {name: 'offered-product-tile', params : {product: $parentContext.$component.getOfferedProductModel($data)}} "></div>
-
         <!-- /ko-->
 
     </div>
-
     <!-- /ko-->
 </script>
 
 <script type="text/html" id="offered-product-tile-template">
 
-    <div class="standard-box offer-box">
 
-        <a data-bind="attr: { 'href': productUrl }">
+    <a class="card card-offer" data-bind="attr: { 'href': productUrl }">
+        <div class="card-body p-3">
 
-            <div class="image" style="position: relative">
+            <div class="d-flex align-items-center justify-content-center" style="position: relative">
                 <img class="b-lazy"
                      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                      data-bind="attr: { 'data-src': imageUrl, 'alt': name }"
@@ -87,22 +85,20 @@
                      alt=""/>
             </div>
 
-            <div class="name">
-                <strong>
-                    <span data-bind="text: name"></span>
-                </strong>
+            <div class="pt-2 f-stretch">
+                <span data-bind="text: name"></span>
             </div>
 
-            <div data-bind="if: isStartingLater">
+            <!-- ko if: isStartingLater -->
+            <div class="text-md">
                 ab <span data-bind="text: offerFrom"></span>
             </div>
+            <!-- /ko -->
 
-            <div class="price">
-                <span style="font-size: 1.5rem"><span data-bind="text: price"></span> €</span>
+            <div class="pt-2 d-flex">
+                <span class="ml-auto" style="font-size: 1.5rem"><span data-bind="text: price"></span> €</span>
             </div>
-
-
-        </a>
+        </div>
 
         <!-- ko if: !isEverywhereAvailable -->
         <div class="market-location-box">
@@ -120,7 +116,9 @@
         </div>
         <!-- /ko-->
 
-    </div>
+    </a>
+
+
 </script>
 
 @section viewData {

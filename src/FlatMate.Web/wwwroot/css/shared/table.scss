@@ -1,98 +1,214 @@
 ﻿@import '../variables.scss';
+//
+//table {
+//    border-collapse: collapse;
+//    width: 100%;
+//}
+//
+//thead {
+//    th {
+//        background-color: #f6f6f9;
+//    }
+//}
+//
+//th,
+//td {
+//    border-bottom: $border-thickness solid lighten($color-border, 10%);
+//    padding: .5rem 1rem;
+//    text-align: left;
+//
+//    &.centered {
+//        text-align: center;
+//    }
+//
+//    &.icon {
+//        width: $icon-size * 3;
+//        padding: 0;
+//        text-align: center;
+//    }
+//
+//    &.show-large {
+//        display: none;
+//    }
+//}
+//
+//th {
+//    border-bottom: 3px solid $color-border;
+//    font-weight: 400;
+//}
+//
+//td {
+//    input {
+//        margin-bottom: 0;
+//    }
+//}
+//
+///* desktop */
+//@media all and (min-width: 769px) {
+//    th,
+//    td {
+//        &.show-large {
+//            display: table-cell;
+//        }
+//    }
+//}
+//
+//div.table {
+//    display: table;
+//    width: 100%;
+//
+//    .body {
+//        display: table-row-group;
+//    }
+//
+//    .row {
+//        display: table-row;
+//        width: 100%;
+//
+//        .cell {
+//            display: table-cell;
+//            border-bottom: $border-thickness solid $color-border;
+//            padding: .5rem .5rem;
+//            vertical-align: middle;
+//
+//            &.icon {
+//                width: $icon-size * 3;
+//                padding: .5rem 0;
+//                text-align: center;
+//            }
+//
+//            &.collapsed {
+//                width: 0;
+//            }
+//        }
+//    }
+//
+//    input {
+//        margin-bottom: 0;
+//    }
+//
+//    .dragging {
+//        box-shadow: inset 0 0 10px #ddd;
+//    }
+//
+//    // hide all icons except the grip
+//    .drag-element [class^="icon-"]:not(.icon-grip) {
+//        display: none;
+//    }
+//}
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-thead {
-    th {
-        background-color: #f6f6f9;
-    }
-}
-
-th,
-td {
-    border-bottom: $border-thickness solid lighten($color-border, 10%);
-    padding: .5rem 1rem;
-    text-align: left;
-
-    &.centered {
-        text-align: center;
-    }
-
-    &.icon {
-        width: $icon-size * 3;
-        padding: 0;
-        text-align: center;
-    }
-
-    &.show-large {
-        display: none;
-    }
-}
+/**
+ * v2
+ */
 
 th {
-    border-bottom: 3px solid $color-border;
-    font-weight: 400;
+    text-align: inherit;
 }
 
-td {
-    input {
-        margin-bottom: 0;
+.table {
+    width: 100%;
+    max-width: 100%;
+    background-color: transparent; // Reset for nesting within parents with `background-color`.
+    border-collapse: collapse;
+
+    thead {
+        th {
+            border-top: 0;
+            border-bottom-width: 1px;
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+        }
     }
-}
 
-/* desktop */
-@media all and (min-width: 769px) {
     th,
     td {
-        &.show-large {
-            display: table-cell;
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid $color-border;
+
+        &.center {
+            text-align: center;
+        }
+    }
+
+    th {
+        font-weight: 400;
+
+        &.fit {
+            width: 1%;
+        }
+
+    }
+
+    thead th {
+        vertical-align: bottom;
+        border-bottom: 1px solid $color-border;
+    }
+
+    tbody + tbody {
+        border-top: 1px solid $color-border;
+    }
+}
+
+.table-bordered {
+    border: 1px solid $color-border;
+
+    th,
+    td {
+        border: 1px solid $color-border;
+    }
+
+    thead {
+        th,
+        td {
+            border-bottom-width: 1px;
         }
     }
 }
 
-div.table {
-    display: table;
-    width: 100%;
+.table-borderless {
+    th,
+    td,
+    thead th,
+    tbody + tbody {
+        border: 0;
+    }
+}
 
-    .body {
-        display: table-row-group;
+.table-sm {
+    th,
+    td {
+        padding: .25rem;
+    }
+}
+
+.table-md {
+    th,
+    td {
+        padding: .5rem;
+    }
+}
+
+.table-vcenter {
+    td,
+    th {
+        vertical-align: middle;
+    }
+}
+
+.table-center {
+    td,
+    th {
+        text-align: center;
+    }
+}
+
+.table-striped {
+    tbody tr:nth-of-type(odd) {
+        background: transparent;
     }
 
-    .row {
-        display: table-row;
-        width: 100%;
-
-        .cell {
-            display: table-cell;
-            border-bottom: $border-thickness solid $color-border;
-            padding: .5rem .5rem;
-            vertical-align: middle;
-
-            &.icon {
-                width: $icon-size * 3;
-                padding: .5rem 0;
-                text-align: center;
-            }
-
-            &.collapsed {
-                width: 0;
-            }
-        }
-    }
-
-    input {
-        margin-bottom: 0;
-    }
-
-    .dragging {
-        box-shadow: inset 0 0 10px #ddd;
-    }
-
-    // hide all icons except the grip
-    .drag-element [class^="icon-"]:not(.icon-grip) {
-        display: none;
+    tbody tr:nth-of-type(even) {
+        background-color: $color-table-accent;
     }
 }

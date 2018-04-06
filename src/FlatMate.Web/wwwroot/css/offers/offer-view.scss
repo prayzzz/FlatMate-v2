@@ -1,17 +1,8 @@
 ﻿@import '../variables.scss';
 
 .offer-view {
-    .col-offer {
-        margin-bottom: 1rem;
-    }
 
-    .col-market-image {
-        text-align: center;
-    }
-
-    .col-market-info {
-        align-self: center;
-
+    .col-market-list {
         ul {
             padding-left: .25rem;
             margin: .1em;
@@ -20,12 +11,30 @@
     }
 
     .col-offer-count {
-        align-self: center;
-        text-align: right;
+        text-align: center;
     }
 
-    .market-info-box {
-        padding: 1rem;
+    @media (min-width: 768px) {
+        .col-offer-count {
+            text-align: right;
+        }
+    }
+
+    .col-offer {
+        padding-bottom: 30px;
+    }
+
+    .card-offer {
+        display: block;
+        color: $color-font;
+        height: 100%;
+        margin-bottom: 0;
+
+        .card-body {
+            height: 100%;
+            display: flex;
+            flex-flow: column;
+        }
     }
 
     .offer-box {

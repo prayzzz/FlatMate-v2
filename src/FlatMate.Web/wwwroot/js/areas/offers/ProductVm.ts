@@ -32,7 +32,7 @@ export class ProductVm {
     }
 
     public get name(): string {
-        return this.model().name;
+        return this.model().name.trim();
     }
 
     public get description(): string | undefined {

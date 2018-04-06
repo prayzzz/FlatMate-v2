@@ -41,7 +41,7 @@ export class ProductFavoriteEditor {
 
         this.productPage = ko.observableArray([]);
         this.currentPage = ko.observable(1);
-        this.productsPerPage = ko.observable(15);
+        this.productsPerPage = ko.observable(12);
         this.totalCount = ko.observable(0);
 
         this.hasMoreProducts = ko.computed<boolean>(() => {
@@ -114,6 +114,9 @@ export class ProductFavoriteEditor {
             }
         }
 
-        setTimeout(() => FlatMate.blazy.revalidate(), 1);
+        setTimeout(() => {
+            FlatMate.blazy.revalidate();
+            window.scroll(0, 0);
+        }, 1);
     }
 }

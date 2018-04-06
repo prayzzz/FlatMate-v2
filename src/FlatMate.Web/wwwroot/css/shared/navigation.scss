@@ -61,7 +61,7 @@ nav {
 }
 
 nav + main {
-    padding-top: $header-height;
+    padding-top: $header-height + 15px;
 }
 
 @media all and (min-width: 1201px) {

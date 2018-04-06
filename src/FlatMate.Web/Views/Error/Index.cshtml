@@ -4,14 +4,24 @@
     ViewData["PageTitle"] = "Interner Fehler";
 }
 
+<section class="container">
+
+    <div class="page-header">
+        <h1 class="page-title"></h1>
+        <div class="page-options d-flex"></div>
+    </div>
+
+</section>
 
 <section class="container">
 
-    <div class="row">
-        <div class="col">
-            <div class="standard-box" style="padding: 1rem;">
-                Leider ist ein interner Fehler aufgetreten :(
-            </div>
+    <div class="card">
+        <div class="card-status bg-red"></div>
+        <div class="card-header">
+            <h3 class="card-title">@ViewData["PageTitle"]</h3>
+        </div>
+        <div class="card-body">
+            Leider ist ein interner Fehler aufgetreten :(
         </div>
     </div>
 
