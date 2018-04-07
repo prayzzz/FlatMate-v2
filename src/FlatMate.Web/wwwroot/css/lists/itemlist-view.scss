@@ -17,28 +17,40 @@
         }
     }
 
-
-
-    .lasteditor {
-        display: block;
+    .drag-item {
+        background-color: #fff;
     }
 
-    @media (max-width: 576px) {
-        .lasteditor {
-            display: none;
+    .drag-placeholder {
+        td {
+            background-color: #ddd;
         }
     }
 
-    .drag-handle {
-        margin-right: 1rem;
-        cursor: move;
+    .drag-hide {
+        display: none;
     }
 
-    .add-item-cell {
-        padding-left: calc(1rem + 16px)
-    }
-
-    .group-new {
-        margin-top: 0.5rem;
-    }
+    //.lasteditor {
+    //    display: block;
+    //}
+    //
+    //@media (max-width: 576px) {
+    //    .lasteditor {
+    //        display: none;
+    //    }
+    //}
+    //
+    //.drag-handle {
+    //    margin-right: 1rem;
+    //    cursor: move;
+    //}
+    //
+    //.add-item-cell {
+    //    padding-left: calc(1rem + 16px)
+    //}
+    //
+    //.group-new {
+    //    margin-top: 0.5rem;
+    //}
 }

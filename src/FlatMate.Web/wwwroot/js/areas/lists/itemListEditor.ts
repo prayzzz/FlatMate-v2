@@ -2,23 +2,6 @@ import * as ko from "knockout";
 import { ItemGroupJso, ItemGroupViewModel, ItemListJso } from ".";
 
 export class ItemListEditor {
-    public readonly newGroupName = ko.observable("");
-    public readonly groups = ko.observableArray<ItemGroupViewModel>();
-    public readonly isAddLoading = ko.observable(false);
-
-    private readonly model: ItemListJso;
-
-    constructor(model: ItemListJso) {
-        this.model = model;
-
-        this.groups(
-            this.model.itemGroups.map(g => {
-                const items = this.model.items.filter(i => i.itemGroupId === g.id);
-                return new ItemGroupViewModel(g, items);
-            })
-        );
-    }
-
     public addGroup = () => {
         const self = this;
 
@@ -41,12 +24,26 @@ export class ItemListEditor {
                 self.newGroupName("");
                 self.isAddLoading(false);
             },
-            err => {
+            () => {
                 self.isAddLoading(false);
             }
         );
     };
 
+    public readonly newGroupName = ko.observable("");
+    public readonly groups = ko.observableArray<ItemGroupViewModel>();
+    public readonly isAddLoading = ko.observable(false);
+
+    constructor(model: ItemListJso) {
+        this.model = model;
+
+        this.groups(
+            this.model.itemGroups.map(g => {
+                const items = this.model.items.filter(i => i.itemGroupId === g.id);
+                return new ItemGroupViewModel(g, items);
+            })
+        );
+    }
     public removeGroup = (group: ItemGroupViewModel) => {
         const self = this;
 
@@ -54,9 +51,10 @@ export class ItemListEditor {
             () => {
                 self.groups.remove(group);
             },
-            err => {
+            () => {
                 /* Handle error */
             }
         );
     };
+    private readonly model: ItemListJso;
 }

@@ -1,8 +1,13 @@
 import * as ko from "knockout";
 import { ItemGroupJso, ItemJso, ItemListApi, ItemViewModel } from ".";
-import { DragEvents, DragZone, DragZoneData } from "../../ko/dragdrop";
+import { ListActionManager } from "./ListActionManager";
 
 export class ItemGroupViewModel {
+    // dnd sorting
+    public readonly itemEvents: any;
+    public readonly zoneEvents: any;
+    public readonly handleEvents: any;
+
     // from model
     public readonly name = ko.observable("");
     public readonly sortIndex = ko.observable(0);
@@ -12,85 +17,8 @@ export class ItemGroupViewModel {
     public readonly isNewItemFocused = ko.observable(false);
     public readonly items = ko.observableArray<ItemViewModel>();
     public readonly newItemName = ko.observable("");
-    public readonly dragZone: DragZone<ItemViewModel>;
     public readonly isAddLoading = ko.observable(false);
     public readonly isRemoveLoading = ko.observable(false);
-
-    private readonly apiClient = new ItemListApi();
-    private readonly model = ko.observable<ItemGroupJso>();
-
-    constructor(model: ItemGroupJso, items?: ItemJso[]) {
-        this.model.subscribe(val => {
-            this.name(val.name);
-            this.sortIndex(val.sortIndex);
-        });
-
-        this.model(model);
-
-        if (items) {
-            this.items(items.map(i => new ItemViewModel(i)));
-            this.items.sort((a, b) => a.sortIndex() - b.sortIndex());
-        }
-
-        this.dragZone = new DragZone<ItemViewModel>(this.dragZoneName, this.dragStart, this.dragEnd);
-    }
-
-    private get dragZoneName(): string {
-        return `group-${this.id}`;
-    }
-
-    public get id(): number | undefined {
-        return this.model().id;
-    }
-
-    public dragEvents = (item: ItemViewModel): DragEvents<ItemViewModel> => {
-        return new DragEvents<ItemViewModel>(this.dragZoneName, this.reorder, new DragZoneData<ItemViewModel>(item, this.items));
-    };
-
-    public dragStart = (item: ItemViewModel, event: Event) => {
-        if (this.getClosest(event.srcElement, '.drag-handle') !== null) {
-            item.isDragging(true);
-            return true;
-        } else {
-            return false;
-        }
-    };
-
-    public dragEnd = (item: ItemViewModel) => {
-        item.isDragging(false);
-
-        this.resetSortIndex();
-    };
-
-    public reorder = (event: MouseEvent, dragData: ItemViewModel, zoneData: DragZoneData<ItemViewModel>) => {
-        if (dragData !== zoneData.item) {
-            const zoneDataIndex = zoneData.items.indexOf(zoneData.item);
-            zoneData.items.remove(dragData);
-            zoneData.items.splice(zoneDataIndex, 0, dragData);
-        }
-    };
-
-    public leaveEditMode = (): boolean => {
-        // prevent multiple updates
-        if (!this.isInEditMode()) {
-            return false;
-        }
-
-        this.isInEditMode(false);
-
-        if (this.name() !== this.model().name) {
-            this.save();
-        }
-
-        return false; // dont continue event propagation
-    };
-
-    public enterEditMode = (): boolean => {
-        this.isInEditMode(true);
-
-        return false; // dont continue event propagation
-    };
-
     /**
      * Creates an new item from the itemName textfield and saves it.
      */
@@ -116,12 +44,11 @@ export class ItemGroupViewModel {
                 this.newItemName("");
                 self.isAddLoading(false);
             },
-            err => {
+            () => {
                 self.isAddLoading(false);
             }
         );
     };
-
     /**
      * Removes the given item from the group
      */
@@ -132,11 +59,76 @@ export class ItemGroupViewModel {
             () => {
                 self.items.remove(item);
             },
-            err => {
+            () => {
                 /* Handle Error */
             }
         );
     };
+    private readonly apiClient = new ItemListApi();
+    private readonly listActionManager: ListActionManager<ItemViewModel>;
+
+    public get id(): number | undefined {
+        return this.model().id;
+    }
+
+    public leaveEditMode = (): boolean => {
+        // prevent multiple updates
+        if (!this.isInEditMode()) {
+            return false;
+        }
+
+        this.isInEditMode(false);
+
+        if (this.name() !== this.model().name) {
+            this.save();
+        }
+
+        return false; // dont continue event propagation
+    };
+
+    public enterEditMode = (): boolean => {
+        this.isInEditMode(true);
+
+        return false; // dont continue event propagation
+    };
+    private readonly model = ko.observable<ItemGroupJso>();
+
+    constructor(model: ItemGroupJso, items?: ItemJso[]) {
+        this.model.subscribe(val => {
+            this.name(val.name);
+            this.sortIndex(val.sortIndex);
+        });
+
+        this.model(model);
+
+        if (items) {
+            this.items(items.map(i => new ItemViewModel(i)));
+            this.items.sort((a, b) => a.sortIndex() - b.sortIndex());
+        }
+
+        this.listActionManager = new ListActionManager(
+            item => {
+                this.removeItem(item)
+            },
+            (newIndex, item) => {
+
+                // remove
+                const currentIndex = this.items.indexOf(item);
+
+                if (currentIndex !== -1) {
+                    this.items.splice(currentIndex, 1);
+                }
+
+                // insert
+                this.items.splice(newIndex, 0, item);
+                this.resetSortIndex();
+            }
+        );
+
+        this.handleEvents = this.listActionManager.handleHandlers();
+        this.itemEvents = this.listActionManager.itemHandlers();
+        this.zoneEvents = this.listActionManager.zoneHandlers();
+    }
 
     /**
      * Sets the sortindex for all items and saves them
@@ -195,26 +187,5 @@ export class ItemGroupViewModel {
         }
 
         return new Promise<void>((resolve, reject) => resolve());
-    }
-
-    private getClosest(element: Element | null, selector: string): Element | null {
-        if (!element) {
-            return null;
-        }
-
-        do {
-            if (document.documentElement.matches.call(element, selector)) {
-                return element;
-            }
-
-            if (!element.parentNode) {
-                return null;
-            }
-
-            element = element.parentNode as Element;
-
-        } while (element);
-
-        return null;
     }
 }

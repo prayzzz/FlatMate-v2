@@ -1,15 +1,14 @@
 ﻿import * as ko from "knockout";
 import { ItemJso, ItemListApi } from ".";
-import { IDraggable } from "../../ko/dragdrop";
 import { FlatMate } from "../../app";
+import { IDragItem } from "./ListActionManager";
 
-export class ItemViewModel implements IDraggable {
+export class ItemViewModel implements IDragItem {
     // from model
     public readonly name = ko.observable("");
     public readonly sortIndex = ko.observable(0);
 
     // ui
-    public readonly isDragging = ko.observable(false);
     public readonly isInEditMode = ko.observable(false);
     public readonly isRemoveLoading = ko.observable(false);
 
@@ -80,7 +79,7 @@ export class ItemViewModel implements IDraggable {
     }
 
     /**
-     * Deletes the this group
+     * Deletes this item
      */
     public delete(): Promise<void> {
         const self = this;
@@ -101,5 +100,17 @@ export class ItemViewModel implements IDraggable {
         }
 
         return new Promise<void>((resolve, reject) => resolve());
+    }
+
+    dragEnd(): void {
+    }
+
+    dragEnter(): void {
+    }
+
+    dragLeave(): void {
+    }
+
+    dragStart(): void {
     }
 }

@@ -30,9 +30,7 @@
 <script type="text/html" id="item-list-editor-template">
 
     <!-- ko foreach: groups -->
-
     <div class="card">
-
         <div class="card-header">
             <div class="group-title" data-bind="click: enterEditMode, visible: !isInEditMode()">
                 <h3 class="card-title" data-bind="text: name"></h3>
@@ -51,11 +49,11 @@
         </div>
 
         <table class="table table-vcenter card-table">
-            <tbody>
-            <!-- ko foreach: items -->
+            <tbody data-bind="event: zoneEvents">
 
-            <tr>
-                <td class="fit">
+            <!-- ko foreach: items -->
+            <tr class="drag-item" data-bind="event: $parent.itemEvents">
+                <td class="fit" draggable="true" data-bind="event: $parent.handleEvents">
                     <i class="fa fa-bars gray"></i>
                 </td>
                 <td class="item-name" data-bind="click: enterEditMode">
@@ -76,7 +74,6 @@
                     </span>
                 </td>
             </tr>
-
             <!-- /ko -->
 
             </tbody>
@@ -98,9 +95,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
     <!-- /ko -->
 
     <div class="card">
@@ -118,109 +113,6 @@
                 </span>
             </div>
         </div>
-    </div>
-
-</script>
-
-<script type="text/html" id="item-list-editor-template2">
-
-    <div class="standard-box table">
-
-        <div class="body">
-
-            <!-- ko foreach: groups -->
-            <div class="row group-row">
-
-                <div class="cell" data-bind="click: enterEditMode">
-                    <strong>
-                        <span data-bind="text: name, visible: !isInEditMode()"></span>
-                    </strong>
-                    <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode"/>
-                </div>
-
-                <div class="cell"></div>
-
-                <div class="cell icon">
-                    <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeGroup, visible: !isRemoveLoading()">
-                        <i class="fa fa-times danger" aria-hidden="true"></i>
-                    </a>
-                    <span class="fa-host" data-bind="visible: isRemoveLoading">
-                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i>
-                    </span>
-                </div>
-
-            </div>
-
-            <!-- ko foreach: items -->
-            <div class="row" data-bind="css: { dragging: isDragging }, dragZone: $parent.dragZone, dragEvents: $parent.dragEvents($data)">
-
-                <div class="cell">
-                    <div class="flex-v-center">
-                        <span class="fa-host drag-handle">
-                            <i class="fa fa-bars gray"></i>
-                        </span>
-                        <div class="flex-grow word-break-all" data-bind="click: enterEditMode">
-                            <span data-bind="text: name, visible: !isInEditMode()"></span>
-                            <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode"/>
-                        </div>
-                        <div class="lasteditor" data-bind="visible: isLastEditorVisible">von <span data-bind="text: lastEditor"></span></div>
-                    </div>
-                </div>
-
-                <div class="cell icon"></div>
-
-                <div class="cell icon">
-                    <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeItem, visible: !isRemoveLoading()">
-                        <i class="fa fa-times danger" aria-hidden="true"></i>
-                    </a>
-                    <span class="fa-host" data-bind="visible: isRemoveLoading">
-                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i>
-                    </span>
-                </div>
-
-            </div>
-            <!-- /ko -->
-
-            <div class="row">
-
-                <div class="cell add-item-cel">
-                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem"/>
-                </div>
-
-                <div class="cell icon">
-                    <a class="fa-host" aria-hidden="true" data-bind="click: addItem, visible: !isAddLoading()">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                    </a>
-                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isAddLoading"></i>
-                </div>
-
-                <div class="cell icon"></div>
-
-            </div>
-
-            <!-- /ko -->
-        </div>
-    </div>
-
-    <div class="standard-box table group-new">
-
-        <div class="row">
-
-            <div class="cell">
-                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: $component.newGroupName, enterkey: addGroup"/>
-            </div>
-
-            <div class="cell icon">
-                <a class="fa-host" aria-hidden="true" data-bind="click: addGroup, visible: !isAddLoading()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </a>
-                <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isAddLoading"></i>
-            </div>
-
-            <div class="cell icon"></div>
-
-        </div>
-
     </div>
 
 </script>
