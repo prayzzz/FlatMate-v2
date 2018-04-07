@@ -2,18 +2,21 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Liste: " + Model.List.Name;
+    ViewData["Title"] = Model.List.Name;
     ViewData["PageTitle"] = Model.List.Name;
     ViewData["MainClass"] = "itemlist-view";
 }
 
 <section class="container">
 
-    <div class="flex-row align-right actions">
-        @if (Model.List.Owner.Id == Model.CurrentUser.Id)
-        {
-            <a asp-action="Update" asp-route-id="@Model.List.Id">Liste bearbeiten</a>
-        }
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["PageTitle"]</h1>
+        <div class="page-options d-flex">
+            @if (Model.List.Owner.Id == Model.CurrentUser.Id)
+            {
+                <a asp-action="Update" asp-route-id="@Model.List.Id" class="btn">Liste bearbeiten</a>
+            }
+        </div>
     </div>
 
 </section>
@@ -26,6 +29,101 @@
 
 <script type="text/html" id="item-list-editor-template">
 
+    <!-- ko foreach: groups -->
+
+    <div class="card">
+
+        <div class="card-header">
+            <div class="group-title" data-bind="click: enterEditMode, visible: !isInEditMode()">
+                <h3 class="card-title" data-bind="text: name"></h3>
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </div>
+            <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode"/>
+
+            <div class="card-options">
+                <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeGroup, visible: !isRemoveLoading()" title="Gruppe löschen">
+                    <i class="fa fa-times danger" aria-hidden="true"></i>
+                </a>
+                <span class="fa-host" data-bind="visible: isRemoveLoading">
+                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+
+        <table class="table table-vcenter card-table">
+            <tbody>
+            <!-- ko foreach: items -->
+
+            <tr>
+                <td class="fit">
+                    <i class="fa fa-bars gray"></i>
+                </td>
+                <td class="item-name" data-bind="click: enterEditMode">
+                    <div data-bind="visible: !isInEditMode()">
+                        <span data-bind="text: name"></span>
+                        <i class="fa fa-pencil" aria-hidden="true" data-bind="visible: !isInEditMode()"></i>
+                    </div>
+
+                    <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode"/>
+                </td>
+                <td></td>
+                <td class="fit">
+                    <a class="fa-host" aria-hidden="true" data-bind="click: $parent.removeItem, visible: !isRemoveLoading()" title="Eintrag löschen">
+                        <i class="fa fa-times danger" aria-hidden="true"></i>
+                    </a>
+                    <span class="fa-host" data-bind="visible: isRemoveLoading">
+                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true"></i>
+                    </span>
+                </td>
+            </tr>
+
+            <!-- /ko -->
+
+            </tbody>
+        </table>
+
+        <div class="card-footer">
+            <div class="d-flex">
+                <div class="f-stretch">
+                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem"/>
+                </div>
+
+                <div class="pl-5">
+                    <a class="fa-host" aria-hidden="true" data-bind="click: addItem, visible: !isAddLoading()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </a>
+                    <span class="fa-host" data-bind="visible: isAddLoading">
+                        <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isAddLoading"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- /ko -->
+
+    <div class="card">
+        <div class="card-body d-flex">
+            <div class="f-stretch">
+                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: $component.newGroupName, enterkey: addGroup"/>
+            </div>
+
+            <div class="pl-5">
+                <a class="fa-host" aria-hidden="true" data-bind="click: addGroup, visible: !isAddLoading()">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </a>
+                <span class="fa-host" data-bind="visible: isAddLoading">
+                    <i class="fa fa-circle-o-notch fa-spin fa-fw" aria-hidden="true" data-bind="visible: isAddLoading"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/html" id="item-list-editor-template2">
+
     <div class="standard-box table">
 
         <div class="body">
@@ -37,7 +135,7 @@
                     <strong>
                         <span data-bind="text: name, visible: !isInEditMode()"></span>
                     </strong>
-                    <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode" />
+                    <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode"/>
                 </div>
 
                 <div class="cell"></div>
@@ -63,7 +161,7 @@
                         </span>
                         <div class="flex-grow word-break-all" data-bind="click: enterEditMode">
                             <span data-bind="text: name, visible: !isInEditMode()"></span>
-                            <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode" />
+                            <input type="text" data-bind="value: name, visible: isInEditMode, hasFocus: isInEditMode, event: { blur: leaveEditMode }, enterkey: leaveEditMode"/>
                         </div>
                         <div class="lasteditor" data-bind="visible: isLastEditorVisible">von <span data-bind="text: lastEditor"></span></div>
                     </div>
@@ -86,7 +184,7 @@
             <div class="row">
 
                 <div class="cell add-item-cel">
-                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem" />
+                    <input type="text" placeholder="Neuen Eintrag hinzufügen" data-bind="textInput: newItemName, hasFocus: isNewItemFocused, enterkey: addItem"/>
                 </div>
 
                 <div class="cell icon">
@@ -109,7 +207,7 @@
         <div class="row">
 
             <div class="cell">
-                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: $component.newGroupName, enterkey: addGroup" />
+                <input type="text" placeholder="Neue Gruppe hinzufügen" data-bind="textInput: $component.newGroupName, enterkey: addGroup"/>
             </div>
 
             <div class="cell icon">

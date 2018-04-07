@@ -204,6 +204,10 @@ a {
     padding-bottom: 1.5rem !important;
 }
 
+.pl-5 {
+    padding-left: 1.5rem !important;
+}
+
 .text-md {
     font-size: .9rem;
 }
@@ -214,4 +218,8 @@ a {
 
 .bg-red {
     background-color: $color-danger;
+}
+
+.fa {
+    font-size: 14px;
 }

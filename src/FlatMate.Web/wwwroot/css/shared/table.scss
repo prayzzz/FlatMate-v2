@@ -114,9 +114,11 @@ th {
     thead {
         th {
             border-top: 0;
-            border-bottom-width: 1px;
+            border-bottom: 1px solid $color-border;
             padding-top: .5rem;
             padding-bottom: .5rem;
+            font-weight: 400;
+            vertical-align: bottom;
         }
     }
 
@@ -129,20 +131,13 @@ th {
         &.center {
             text-align: center;
         }
-    }
-
-    th {
-        font-weight: 400;
 
         &.fit {
             width: 1%;
         }
-
     }
 
     thead th {
-        vertical-align: bottom;
-        border-bottom: 1px solid $color-border;
     }
 
     tbody + tbody {

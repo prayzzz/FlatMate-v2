@@ -102,6 +102,12 @@ $card-spacer-y: 1.5rem;
     }
 }
 
+h3 {
+    &.card-title {
+        display: inline-block;
+    }
+}
+
 .card-title small,
 .card-subtitle {
     color: $color-font;
