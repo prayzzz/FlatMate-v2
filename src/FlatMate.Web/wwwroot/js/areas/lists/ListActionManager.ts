@@ -40,13 +40,18 @@ export class ListActionManager<T extends IDragItem> {
         this.draggedItemElement = null;
         this.dragZoneElement = null;
 
-        const el = document.createElement("tr");
-        el.classList.add("drag-placeholder");
-        el.insertCell(-1);
-        el.insertCell(-1).textContent = "move item here";
-        el.insertCell(-1);
-        el.insertCell(-1);
-        this.dragPlaceHolder = el;
+        this.dragPlaceHolder = this.getPlaceholder();
+    }
+
+    private getPlaceholder(): HTMLElement {
+        const temp = document.getElementById("drag-placeholder-template");
+        if (temp === null) {
+            throw "'drag-placeholder-template' not found"
+        }
+
+        const template = document.createElement('template');
+        template.innerHTML = temp.innerText.trim();
+        return template.content.firstChild as HTMLElement;
     }
 
     public zoneHandlers(): any {
@@ -134,14 +139,6 @@ export class ListActionManager<T extends IDragItem> {
 
         return true;
     }
-
-    // private calculateCss(offset: number, duration: number) {
-    //     if (offset < 0) {
-    //         offset = 0;
-    //     }
-    //
-    //     return `transition: transform ${duration}ms; transform: translate3d(${offset}px, 0px, 0px)`;
-    // }
 
     private dragStart(dragItem: T, event: DragEvent): boolean {
         const self = this;

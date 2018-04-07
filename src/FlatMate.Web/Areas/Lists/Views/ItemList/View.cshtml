@@ -117,6 +117,16 @@
 
 </script>
 
+<script type="text/html" id="drag-placeholder-template">
+
+    <tr class="drag-placeholder">
+        <td colspan="4">
+            <div></div>
+        </td>
+    </tr>
+
+</script>
+
 @section viewData {
     <script type="text/json" id="data-itemlist">
         @Json.Serialize(Model.List)
