@@ -46,12 +46,13 @@ export class ListActionManager<T extends IDragItem> {
     private getPlaceholder(): HTMLElement {
         const temp = document.getElementById("drag-placeholder-template");
         if (temp === null) {
-            throw "'drag-placeholder-template' not found"
+            throw "'drag-placeholder-template' not found";
         }
 
-        const template = document.createElement('template');
-        template.innerHTML = temp.innerText.trim();
-        return template.content.firstChild as HTMLElement;
+        return new DOMParser().parseFromString(
+            temp.innerText.trim(),
+            "text/html"
+        ).body.firstChild as HTMLElement;
     }
 
     public zoneHandlers(): any {
@@ -110,7 +111,6 @@ export class ListActionManager<T extends IDragItem> {
                 swipElement!!.style.transition = "";
                 swipElement!!.style.transform = "";
             }, 200);
-
         } else {
             // Threshold reached
             const x = this.swipeElement!!.getBoundingClientRect().width;

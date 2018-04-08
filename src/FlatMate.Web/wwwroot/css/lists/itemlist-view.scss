@@ -1,7 +1,6 @@
 ﻿@import '../variables.scss';
 
 .itemlist-view {
-
     .group-title, .item-name {
         cursor: pointer;
 
@@ -11,6 +10,7 @@
         }
 
         &:hover {
+            pac
             i {
                 display: inline-block;
             }
@@ -37,27 +37,4 @@
     .drag-hide {
         display: none;
     }
-
-    //.lasteditor {
-    //    display: block;
-    //}
-    //
-    //@media (max-width: 576px) {
-    //    .lasteditor {
-    //        display: none;
-    //    }
-    //}
-    //
-    //.drag-handle {
-    //    margin-right: 1rem;
-    //    cursor: move;
-    //}
-    //
-    //.add-item-cell {
-    //    padding-left: calc(1rem + 16px)
-    //}
-    //
-    //.group-new {
-    //    margin-top: 0.5rem;
-    //}
 }
