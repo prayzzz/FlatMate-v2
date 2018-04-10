@@ -49,10 +49,12 @@ export class ListActionManager<T extends IDragItem> {
             throw "'drag-placeholder-template' not found";
         }
 
-        return new DOMParser().parseFromString(
+        let parsedDocument = new DOMParser().parseFromString(
             temp.innerText.trim(),
             "text/html"
-        ).body.firstChild as HTMLElement;
+        );
+
+        return parsedDocument.getElementsByTagName("tr").item(0) as HTMLElement;
     }
 
     public zoneHandlers(): any {
@@ -156,7 +158,9 @@ export class ListActionManager<T extends IDragItem> {
         // const y = event.pageY - itemElement.offsetTop;
 
         event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setDragImage(itemElement, 0, 0);
+        if (event.dataTransfer.setDragImage) {
+            event.dataTransfer.setDragImage(itemElement, 0, 0);
+        }
 
         if (dragItem.dragStart) {
             dragItem.dragStart();

@@ -33,9 +33,9 @@
                 </div>
                 <div class="col-6 d-none d-lg-block col-market-list align-self-center">
                     Angebote von:
-                    <ul data-bind="foreach: {data: Object.keys(markets), as: '_propkey'}">
+                    <ul data-bind="foreach: markets">
                         <li>
-                            <span data-bind="text: markets[_propkey].name"></span> (<span data-bind="text: markets[_propkey].street"></span>)
+                            <span data-bind="text: name"></span> (<span data-bind="text: street"></span>)
                         </li>
                     </ul>
                 </div>

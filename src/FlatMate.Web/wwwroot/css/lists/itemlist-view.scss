@@ -21,6 +21,12 @@
         background-color: #fff;
     }
 
+    .drag-handle {
+        cursor: move;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
+    }
+
     .drag-placeholder {
         td {
             height: inherit;

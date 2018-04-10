@@ -1,5 +1,5 @@
 import * as dateFormat from "dateformat";
-import {CompanyJso, MarketJso, OfferedProduct, ProductCategoryWithOffers} from "./Jso";
+import { CompanyJso, MarketJso, OfferedProduct, ProductCategoryWithOffers } from "./Jso";
 
 export interface MarketOffersVm {
     company: CompanyJso;
@@ -34,7 +34,6 @@ export class MarketOffersView {
     public readonly offersFrom: string;
     public readonly offersFromFormatted: string;
     public readonly offersToFormatted: string;
-    public readonly productFavoriteLink: string;
 
     constructor(model: MarketOffersVm) {
         this.categories = model.categories;
@@ -45,7 +44,6 @@ export class MarketOffersView {
         this.offersFrom = model.offersFrom;
         this.offersFromFormatted = dateFormat(model.offersFrom, "dd.mm.yyyy");
         this.offersToFormatted = dateFormat(model.offersTo, "dd.mm.yyyy");
-        this.productFavoriteLink = `/Offers/ProductFavorite/Manage?companyId=${this.company.id}`;
     }
 
     public getOfferedProductModel(offeredProduct: OfferedProduct): OfferedProductModel {

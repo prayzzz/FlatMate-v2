@@ -54,7 +54,7 @@
             <!-- ko foreach: items -->
             <tr class="drag-item" data-bind="event: $parent.itemEvents">
                 <td class="fit" draggable="true" data-bind="event: $parent.handleEvents">
-                    <i class="fa fa-bars gray"></i>
+                    <i class="fa fa-bars gray drag-handle"></i>
                 </td>
                 <td class="item-name" data-bind="click: enterEditMode">
                     <div data-bind="visible: !isInEditMode()">
@@ -118,12 +118,13 @@
 </script>
 
 <script type="text/html" id="drag-placeholder-template">
-
-    <tr class="drag-placeholder">
-        <td colspan="4">
-            <div></div>
-        </td>
-    </tr>
+    <table>
+        <tr class="drag-placeholder">
+            <td colspan="4">
+                <div></div>
+            </td>
+        </tr>
+    </table>
 
 </script>
 
