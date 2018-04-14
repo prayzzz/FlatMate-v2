@@ -1,5 +1,6 @@
-.dashboard-index {
+@import '../variables.scss';
 
+.dashboard-index {
     .tile-grid {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -23,5 +24,4 @@
         padding: 1rem;
         overflow: auto;
     }
-
 }

@@ -19,7 +19,6 @@ form {
     border: 0;
     box-sizing: border-box;
     display: block;
-    //max-width: 500px;
     width: 100%;
 
     label {
@@ -118,9 +117,6 @@ select {
 button:focus,
 input[type=submit]:focus {
     outline: none;
-}
-
-.form-group {
 }
 
 .form-group + .form-group {

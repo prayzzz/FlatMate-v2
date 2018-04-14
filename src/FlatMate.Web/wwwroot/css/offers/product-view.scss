@@ -4,10 +4,6 @@ $picture-wrapper-padding: 15px;
 $picture-wrapper-width: 150px + (2 * $picture-wrapper-padding) + 4px;
 
 .product-view {
-    .product-info-box {
-        padding: 1rem;
-    }
-
     .col-picture {
         flex: 1 0 $picture-wrapper-width;
         justify-content: center;
@@ -34,10 +30,6 @@ $picture-wrapper-width: 150px + (2 * $picture-wrapper-padding) + 4px;
         justify-content: flex-end;
         flex-direction: column;
         text-align: right;
-    }
-
-    .product-actions {
-        margin-top: .5rem;
     }
 
     @media (min-width: 768px) {
