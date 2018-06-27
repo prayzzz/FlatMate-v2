@@ -1,6 +1,6 @@
 ﻿import { CompanyJso, ProductApi, ProductVm } from ".";
 import { FlatMate } from "app";
-import { PartialListParameter } from "Api/PartialList";
+import { PartialListParameter } from "api/partialList";
 
 export interface ProductFavoriteManageVm {
     companies: CompanyJso[];

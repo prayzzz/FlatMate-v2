@@ -1,6 +1,6 @@
 ﻿import { ProductJso } from ".";
-import ApiClient from "Api/ApiClient";
-import { PartialList, PartialListParameter } from "Api/PartialList";
+import ApiClient from "api/apiClient";
+import { PartialList, PartialListParameter } from "api/partialList";
 
 /**
  * Singleton

@@ -1,12 +1,12 @@
-﻿import * as ko from "knockout";
+﻿import * as findFill from "array.prototype.find";
 import * as Blazy from "blazy";
 import * as promiseFill from "es6-promise";
-import * as findFill from "array.prototype.find";
+import * as ko from "knockout";
+import { UserInfoJso } from "./areas/account/jso";
 import { KoStartup, StartupHelper } from "./koStartup";
+import "./shared/arrayExtensions";
 import "./shared/objectExtensions";
 import { IWindow } from "./window";
-import { UserInfoJso } from "./areas/account/jso";
-import "./shared/arrayExtensions";
 
 promiseFill.polyfill();
 findFill.shim();

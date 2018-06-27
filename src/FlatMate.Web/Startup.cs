@@ -88,7 +88,7 @@ namespace FlatMate.Web
             app.UseAuthentication();
             app.UseSession();
 
-            var supportedCultures = new[] { new CultureInfo("de-DE") };
+            var supportedCultures = new[] { new CultureInfo("de") };
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture("de-DE"),
