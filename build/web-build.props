@@ -8,7 +8,7 @@
         </ItemGroup>
         <Delete Files="@(FrontendFiles)"/>
         <Exec Command="yarn --force" WorkingDirectory="wwwroot"/>
-        <Exec Command="./node_modules/.bin/webpack --env=$(Configuration)" WorkingDirectory="wwwroot"/>
+        <Exec Command="./node_modules/.bin/webpack --mode=production" WorkingDirectory="wwwroot"/>
     </Target>
     <Target Name="PublishFrontend" AfterTargets="PrepareForPublish" DependsOnTargets="BuildFrontend">
         <ItemGroup>

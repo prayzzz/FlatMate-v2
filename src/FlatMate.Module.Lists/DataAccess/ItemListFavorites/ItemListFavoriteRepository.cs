@@ -30,6 +30,13 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
 
         protected IQueryable<ItemListFavoriteDbo> Dbos => _dbContext.ItemListFavorites.Include(x => x.ItemList);
 
+        public async Task<Result> DeleteAsync(int listId)
+        {
+
+
+            return await SaveChanges();
+        }
+
         public async Task<Result> DeleteAsync(int userId, int listId)
         {
             var favorite = await Get(userId, listId);

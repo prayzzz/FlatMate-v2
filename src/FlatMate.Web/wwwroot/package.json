@@ -32,7 +32,7 @@
     "webpack-cli": "^3.0.8"
   },
   "scripts": {
-    "build": "./node_modules/.bin/webpack",
-    "watch": "./node_modules/.bin/webpack --watch"
+    "build": "./node_modules/.bin/webpack --mode=development",
+    "watch": "./node_modules/.bin/webpack --mode=development --watch"
   }
 }

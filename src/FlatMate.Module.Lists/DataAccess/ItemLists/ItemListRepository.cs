@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemLists
 {
@@ -39,6 +40,14 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
             }
 
             return (await set.ToListAsync()).Select(Mapper.Map<ItemList>);
+        }
+
+        public async Task<Result> DeleteWithDependenciesAsync(int listId)
+        {
+            var favorites = await _dbContext.ItemListFavorites.Where(f => f.ItemListId == listId).ToListAsync();
+            _dbContext.ItemListFavorites.RemoveRange(favorites);
+
+            return await DeleteAsync(listId);
         }
     }
 }

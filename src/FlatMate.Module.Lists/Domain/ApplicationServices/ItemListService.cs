@@ -88,7 +88,7 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 return Result.NotFound;
             }
 
-            return await _itemListRepository.DeleteAsync(listId);
+            return await _itemListRepository.DeleteWithDependenciesAsync(listId);
         }
 
         public async Task<(Result, ItemListDto)> GetListAsync(int listId)

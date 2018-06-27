@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Interfaces;
-using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Repositories;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
@@ -21,9 +20,6 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
         private readonly IItemListRepository _itemListRepository;
         private readonly IMapper _mapper;
 
-        /// <summary>
-        ///     TODO: Was passiert wenn eine Liste privat wird?
-        /// </summary>
         public ItemListFavoriteService(IItemListFavoriteRepository favoriteRepository,
                                        IItemListRepository itemListRepository,
                                        IAuthenticationContext authenticationContext,
