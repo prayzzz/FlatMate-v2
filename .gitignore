@@ -11,6 +11,7 @@
 
 # FlatMate
 typings/
+publish/
 
 /src/FlatMate.Web/wwwroot/css/**/*.css
 /src/FlatMate.Web/wwwroot/js/**/*.js.map
