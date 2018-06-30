@@ -217,6 +217,11 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             var offers = new List<Offer>();
             foreach (var offerJso in envelope.Items)
             {
+                if (offerJso.Name == "Artikel-Bezeichnung")
+                {
+                    continue;
+                }
+
                 var preprocessedOffer = PreprocessOffer(offerJso, categoryMap, market);
                 preprocessedOffer.Product = CreateOrUpdateProduct(preprocessedOffer);
 
