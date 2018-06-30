@@ -36,11 +36,4 @@
     <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
     <ProjectReference Include="..\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\dist\app.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\app.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\app.js.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.js.map" />
-  </ItemGroup>
 </Project>
