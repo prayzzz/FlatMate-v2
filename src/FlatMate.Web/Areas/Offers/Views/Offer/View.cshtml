@@ -11,7 +11,7 @@
     <div class="page-header">
         <h1 class="page-title">@ViewData["PageTitle"]</h1>
         <div class="page-options d-flex">
-            <a asp-controller="ProductFavorite" asp-action="Manage" asp-route-companyId="@Model.Company.Id" class="btn">Favoriten verwalten</a>
+            <a asp-controller="ProductFavorite" asp-action="Manage" asp-route-companyId="@((int)Model.Company.Id)" class="btn">Favoriten verwalten</a>
         </div>
     </div>
 </section>
