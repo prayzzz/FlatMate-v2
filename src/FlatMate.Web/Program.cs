@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FlatMate.Web
 {
@@ -19,20 +20,26 @@ namespace FlatMate.Web
             new WebHostBuilder().UseKestrel()
                                 .UseConfiguration(hostConfig)
                                 .UseContentRoot(Directory.GetCurrentDirectory())
-                                .ConfigureAppConfiguration(ConfigureConfiguration)
+                                .ConfigureAppConfiguration((context, builder) => ConfigureAppConfiguration(args, context, builder))
                                 .ConfigureLogging(ConfigureLogging)
                                 .UseStartup<Startup>()
                                 .Build()
                                 .Run();
         }
 
-        private static void ConfigureConfiguration(WebHostBuilderContext context, IConfigurationBuilder builder)
+        private static void ConfigureAppConfiguration(IReadOnlyList<string> args, WebHostBuilderContext context, IConfigurationBuilder builder)
         {
             var env = context.HostingEnvironment;
 
             builder.AddJsonFile("appsettings.json", true, true)
-                   .AddJsonFile($"appsettings.{env.EnvironmentName.ToLower()}.json", true, true)
-                   .AddEnvironmentVariables("flatmate_")
+                   .AddJsonFile($"appsettings.{env.EnvironmentName.ToLower()}.json", true, true);
+
+            if (args.Any() && !string.IsNullOrEmpty(args[0]))
+            {
+                builder.AddJsonFile(args[0], true);
+            }
+
+            builder.AddEnvironmentVariables("flatmate_")
                    .BuildConnectionString();
         }
 

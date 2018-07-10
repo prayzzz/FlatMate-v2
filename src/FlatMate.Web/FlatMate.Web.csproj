@@ -17,7 +17,7 @@
     <PackageReference Include="App.Metrics" Version="2.1.0" />
     <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.1" />
+      <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2"/>
     <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-unstable-46.develop" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
@@ -25,8 +25,7 @@
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="6.5.0" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
-    <PackageReference Include="SodaPop.ConfigExplorer" Version="1.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.5.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Migration\FlatMate.Migration.csproj" />

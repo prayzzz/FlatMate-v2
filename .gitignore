@@ -22,4 +22,6 @@ publish/
 node_modules/
 
 
+appsettings.development.json
+
 *.log
