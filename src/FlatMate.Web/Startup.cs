@@ -51,6 +51,8 @@ namespace FlatMate.Web
 
         public override void Configure(IApplicationBuilder app)
         {
+            app.LogServerAddresses(_logger);
+
             var env = app.ApplicationServices.GetService<IHostingEnvironment>();
             var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
 

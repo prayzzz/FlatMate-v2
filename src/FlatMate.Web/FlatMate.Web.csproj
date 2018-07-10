@@ -1,38 +1,38 @@
 ﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
-  <Import Project="..\..\build\common.props" />
-  <Import Project="..\..\build\web-build.props" />
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeIdentifiers>win-x64,linux-x64</RuntimeIdentifiers>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-    <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never" />
-    <Content Include="_Migrations/**" CopyToPublishDirectory="Always" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="App.Metrics" Version="2.1.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
-      <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2"/>
-    <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-unstable-46.develop" />
-    <PackageReference Include="Serilog" Version="2.7.1" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="6.5.0" />
-    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
-    <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FlatMate.Migration\FlatMate.Migration.csproj" />
-    <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj" />
-    <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />
-    <ProjectReference Include="..\FlatMate.Module.Infrastructure\FlatMate.Module.Infrastructure.csproj" />
-    <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
-    <ProjectReference Include="..\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj" />
-  </ItemGroup>
+    <Import Project="..\..\build\common.props"/>
+    <Import Project="..\..\build\web-build.props"/>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <RuntimeIdentifiers>win-x64,linux-x64</RuntimeIdentifiers>
+        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+        <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+        <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+        <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never"/>
+        <Content Include="_Migrations/**" CopyToPublishDirectory="Always"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="App.Metrics" Version="2.1.0"/>
+        <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0"/>
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2"/>
+        <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-unstable-46.develop"/>
+        <PackageReference Include="Serilog" Version="2.7.1"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="2.1.1"/>
+        <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1"/>
+        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="6.5.0"/>
+        <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0"/>
+        <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\FlatMate.Migration\FlatMate.Migration.csproj"/>
+        <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj"/>
+        <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj"/>
+        <ProjectReference Include="..\FlatMate.Module.Infrastructure\FlatMate.Module.Infrastructure.csproj"/>
+        <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj"/>
+        <ProjectReference Include="..\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj"/>
+    </ItemGroup>
 </Project>

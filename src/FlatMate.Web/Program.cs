@@ -1,11 +1,11 @@
-﻿using FlatMate.Web.Common;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FlatMate.Web.Common;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace FlatMate.Web
 {
@@ -13,18 +13,14 @@ namespace FlatMate.Web
     {
         public static void Main(string[] args)
         {
-            var hostConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string> { { "urls", "http://localhost:5000" } })
-                                                       .AddCommandLine(args)
-                                                       .Build();
-
-            new WebHostBuilder().UseKestrel()
-                                .UseConfiguration(hostConfig)
-                                .UseContentRoot(Directory.GetCurrentDirectory())
-                                .ConfigureAppConfiguration((context, builder) => ConfigureAppConfiguration(args, context, builder))
-                                .ConfigureLogging(ConfigureLogging)
-                                .UseStartup<Startup>()
-                                .Build()
-                                .Run();
+            WebHost.CreateDefaultBuilder()
+                   .UseContentRoot(Directory.GetCurrentDirectory())
+                   .UseSerilog(ConfigureLogging)
+                   .UseStartup<Startup>()
+                   .ConfigureAppConfiguration((context, builder) => ConfigureAppConfiguration(args, context, builder))
+                   .SuppressStatusMessages(true)
+                   .Build()
+                   .Run();
         }
 
         private static void ConfigureAppConfiguration(IReadOnlyList<string> args, WebHostBuilderContext context, IConfigurationBuilder builder)
@@ -43,15 +39,9 @@ namespace FlatMate.Web
                    .BuildConnectionString();
         }
 
-        private static void ConfigureLogging(WebHostBuilderContext context, ILoggingBuilder builder)
+        private static void ConfigureLogging(WebHostBuilderContext context, LoggerConfiguration config)
         {
-            // Enable all logs
-            builder.SetMinimumLevel(LogLevel.Trace);
-
-            var logger = new LoggerConfiguration().ReadFrom.Configuration(context.Configuration)
-                                                  .CreateLogger();
-
-            builder.AddSerilog(logger);
+            config.ReadFrom.Configuration(context.Configuration);
         }
     }
 }
