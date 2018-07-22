@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Tasks;
 using FlatMate.Module.Offers.Domain;
@@ -32,8 +33,15 @@ namespace FlatMate.Module.Offers.Tasks
 
             foreach (var market in await _marketService.SearchMarkets(Company.None))
             {
-                _logger.LogInformation("Importing offers for {market}", market.Name);
-                await _marketService.ImportOffersFromApi(market.Id.Value);
+                try
+                {
+                    _logger.LogInformation("Importing offers for {market}", market.Name);
+                    await _marketService.ImportOffersFromApi(market.Id.Value);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Error while processing offers", e);
+                }
             }
 
             _logger.LogInformation("Finished {taskName}", nameof(ImportOffersTask));

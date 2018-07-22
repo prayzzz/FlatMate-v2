@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso;
+using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 {
@@ -12,6 +15,8 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
         string StripHTML(string str);
 
         string Trim(string str);
+
+        (Result, DateTime) GetStartDateFromTitle(Article article);
     }
 
     [Inject]
@@ -23,8 +28,10 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
         private const string DecimalPoint = ".";
 
         private static readonly CultureInfo DecimalCulture = new CultureInfo("en-US");
-        private static readonly char[] TrimChars = new[] { ' ', '*', ',', '.' };
+        private static readonly char[] TrimChars = { ' ', '*', ',', '.' };
         private static readonly Regex TwoOrMoreWhitespaces = new Regex("[ ]{2,}");
+        private static readonly Regex TitleWithDate = new Regex(@"^(.*)(\d{2}\.\d{2}.)$");
+        private static readonly string DatePattern = "dd.MM.";
 
         private readonly ILogger<AldiUtils> _logger;
 
@@ -74,6 +81,21 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
                 _logger.LogWarning("Couldn't parse price '{price}'", p);
                 return AldiConstants.DefaultPrice;
             }
+        }
+
+        public (Result, DateTime) GetStartDateFromTitle(Article article)
+        {
+            var match = TitleWithDate.Match(article.Pack_title);
+            if (match.Success)
+            {
+                var date = match.Groups[2].Value;
+                if (DateTime.TryParseExact(date, DatePattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
+                {
+                    return (Result.Success, dt);
+                }
+            }
+
+            return (new Result(ErrorType.ValidationError, ""), DateTime.MinValue);
         }
 
         public string StripHTML(string str)

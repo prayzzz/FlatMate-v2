@@ -74,23 +74,32 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             return ProcessOffers(articles, market);
         }
 
-        private static OfferDuration GetOfferDuration(Article article)
+        private (Result, OfferDuration) GetOfferDuration(Article article)
         {
+            var (result, from) = _aldiUtils.GetStartDateFromTitle(article);
+            if (result.IsError)
+            {
+                Logger.LogWarning($"Cannot parse date from title {article.Pack_title}");
+                return (result, null);
+            }
 
-            var from = DateTimeOffset.FromUnixTimeSeconds(long.Parse(article.Pack_timestamp_actiondate)).DateTime;
             if (from.DayOfWeek == DayOfWeek.Sunday)
             {
                 from = from.GetNextWeekday(DayOfWeek.Monday);
             }
 
-            var to =  from.GetNextWeekday(DayOfWeek.Sunday);
+            var to = from.GetNextWeekday(DayOfWeek.Sunday);
 
-            return new OfferDuration(from, to);
+            return (Result.Success, new OfferDuration(from, to));
         }
 
-        private OfferTemp PreprocessOffer(Article article, Market market)
+        private (Result, OfferTemp) PreprocessOffer(Article article, Market market)
         {
-            var offerDuration = GetOfferDuration(article);
+            var (result, offerDuration) = GetOfferDuration(article);
+            if (result.IsError)
+            {
+                return (result, null);
+            }
 
             var imageUrl = string.Empty;
             var img = article.Images.Img.FirstOrDefault();
@@ -99,7 +108,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
                 imageUrl = "http://www.aldi-nord.de/" + img.Slider_normal;
             }
 
-            return new OfferTemp
+            var offerTemp = new OfferTemp
             {
                 BasePrice = _aldiUtils.Trim(article.Price_calc),
                 Brand = _aldiUtils.Trim(article.Producer),
@@ -118,6 +127,8 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
                 RegularPrice = _aldiUtils.ParsePrice(article.Price_old),
                 SizeInfo = article.Price_extra
             };
+
+            return (Result.Success, offerTemp);
         }
 
         private async Task<(Result, IEnumerable<Offer>)> ProcessOffers(List<Article> articles, Market market)
@@ -128,7 +139,11 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             var offerTemp = new HashSet<OfferTemp>();
             foreach (var article in articles)
             {
-                offerTemp.Add(PreprocessOffer(article, market));
+                var (result, offer) = PreprocessOffer(article, market);
+                if (result.IsSuccess)
+                {
+                    offerTemp.Add(offer);
+                }
             }
 
             var offers = new List<Offer>();
@@ -138,12 +153,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
                 offers.Add(CreateOrUpdateOffer(o));
             }
 
-            var result = await DbContext.SaveChangesAsync();
+            var saveResult = await DbContext.SaveChangesAsync();
 
             stopwatch.Stop();
             Logger.LogInformation($"Processed {articles.Count} offers in {stopwatch.ElapsedMilliseconds}ms");
 
-            return (result, offers);
+            return (saveResult, offers);
         }
     }
 }

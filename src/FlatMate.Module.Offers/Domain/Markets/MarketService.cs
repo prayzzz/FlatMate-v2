@@ -66,9 +66,6 @@ namespace FlatMate.Module.Offers.Domain
             return markets.Select(_mapper.Map<MarketDto>).ToList();
         }
 
-        /// <summary>
-        ///     TODO only works for REWE
-        /// </summary>
         public async Task<(Result, MarketDto)> ImportMarket(string externalId)
         {
             var (result, market) = await _marketImporter.ImportMarketFromApi(externalId);
