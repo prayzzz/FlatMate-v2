@@ -1,16 +1,24 @@
+<p align="center">
+  <img src=".github/icon.png" width="100" height="100" />
+</p>
+
 # FlatMate
 
-Multipurpose home application 
+Multipurpose home application
 
-## Developement Requirements
+## Features
 
-* .NET Core 2.0 SDK
-* Yarn
-* Rider 2017.3
-* (Visual Studio 2017 (15.3))
-  * Command Task Runner Extension
+**Lists**
+* with Groups and text-based Items
+* custom drag-n-drop sorting
 
-## LoggingEvent Ids:
+**Offers**
+* show current offers from nearby stores
+* manage product favorites
+
+
+
+#### LoggingEvent Ids:
 | Assembly                          | Id Range        |
 |-----------------------------------|-----------------|
 | FlatMate.Web                      | 10.000 - 19.999 |
