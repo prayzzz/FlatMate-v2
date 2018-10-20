@@ -16,6 +16,12 @@ Multipurpose home application running in my local network
 * show current offers from nearby stores
 * manage product favorites
 
+**Technologies:**
+* .NET Core (https://github.com/dotnet/core)
+* ASP.NET Core (https://github.com/aspnet/Home)
+* Knockout (https://github.com/knockout/knockout)
+* Sass
+* Webpack (https://github.com/webpack/webpack) 😣
 
 
 #### LoggingEvent Ids:
