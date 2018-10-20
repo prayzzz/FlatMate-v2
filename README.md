@@ -23,6 +23,7 @@ Multipurpose home application running in my local network
 * Sass
 * Webpack (https://github.com/webpack/webpack) 😣
 
+## Notes
 
 #### LoggingEvent Ids:
 | Assembly                          | Id Range        |
