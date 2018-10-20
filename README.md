@@ -4,7 +4,7 @@
 
 # FlatMate
 
-Multipurpose home application
+Multipurpose home application running in my local network
 
 ## Features
 
