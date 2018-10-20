@@ -16,7 +16,7 @@ Multipurpose home application running in my local network
 * show current offers from nearby stores
 * manage product favorites
 
-**Technologies:**
+## Technologies
 * .NET Core (https://github.com/dotnet/core)
 * ASP.NET Core (https://github.com/aspnet/Home)
 * Knockout (https://github.com/knockout/knockout)
