@@ -1,4 +1,4 @@
-import Dictionary from "../../shared/Dictionary";
+import Dictionary from "../../shared/dictionary";
 
 export interface IDragItem {
     dragStart(): void;

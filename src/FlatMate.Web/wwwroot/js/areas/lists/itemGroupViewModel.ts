@@ -1,6 +1,6 @@
 import * as ko from "knockout";
 import { ItemGroupJso, ItemJso, ItemListApi, ItemViewModel } from ".";
-import { ListActionManager } from "./ListActionManager";
+import { ListActionManager } from "./listActionManager";
 
 export class ItemGroupViewModel {
     // dnd sorting

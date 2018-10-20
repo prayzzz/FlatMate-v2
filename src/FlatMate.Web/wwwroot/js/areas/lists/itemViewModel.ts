@@ -1,7 +1,7 @@
 ﻿import * as ko from "knockout";
 import { ItemJso, ItemListApi } from ".";
 import { FlatMate } from "../../app";
-import { IDragItem } from "./ListActionManager";
+import { IDragItem } from "./listActionManager";
 
 export class ItemViewModel implements IDragItem {
     // from model
