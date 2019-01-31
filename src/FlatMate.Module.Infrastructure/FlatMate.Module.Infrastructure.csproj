@@ -10,7 +10,7 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1"/>
       <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1"/>
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.1"/>
-      <PackageReference Include="prayzzz.Common" Version="1.0.0-unstable-46.develop"/>
+      <PackageReference Include="prayzzz.Common" Version="1.0.0.141-master"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlatMate.Module.Common\FlatMate.Module.Common.csproj" />

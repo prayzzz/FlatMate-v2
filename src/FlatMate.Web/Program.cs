@@ -25,11 +25,6 @@ namespace FlatMate.Web
 
         private static void ConfigureAppConfiguration(IReadOnlyList<string> args, WebHostBuilderContext context, IConfigurationBuilder builder)
         {
-            var env = context.HostingEnvironment;
-
-            builder.AddJsonFile("appsettings.json", true, true)
-                   .AddJsonFile($"appsettings.{env.EnvironmentName.ToLower()}.json", true, true);
-
             if (args.Any() && !string.IsNullOrEmpty(args[0]))
             {
                 builder.AddJsonFile(args[0], true);

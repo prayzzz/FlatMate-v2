@@ -2,10 +2,10 @@
     <Import Project="..\..\build\common.props"/>
     <Import Project="..\..\build\web-build.props"/>
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
         <RuntimeIdentifiers>win-x64,linux-x64</RuntimeIdentifiers>
         <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-        <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+        <!--<MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>-->
         <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
         <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     </PropertyGroup>
@@ -17,8 +17,8 @@
         <PackageReference Include="App.Metrics" Version="2.1.0"/>
         <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0"/>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.2"/>
-        <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0-unstable-46.develop"/>
+        <PackageReference Include="Microsoft.AspNetCore.App"/>
+        <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0.141-master"/>
         <PackageReference Include="Serilog" Version="2.7.1"/>
         <PackageReference Include="Serilog.AspNetCore" Version="2.1.1"/>
         <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1"/>
