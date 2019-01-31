@@ -1,5 +1,5 @@
 import * as dateFormat from "dateformat";
-import { CompanyJso, MarketJso, OfferedProduct, ProductCategoryWithOffers } from "./Jso";
+import { CompanyJso, MarketJso, OfferedProduct, ProductCategoryWithOffers } from "./jso";
 
 export interface MarketOffersVm {
     company: CompanyJso;

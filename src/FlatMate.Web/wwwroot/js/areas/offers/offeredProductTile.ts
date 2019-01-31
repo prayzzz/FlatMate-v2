@@ -1,5 +1,5 @@
-import {OfferedProductModel} from "./MarketOffersView";
-import {MarketJso, OfferInMarket} from "./Jso";
+import { OfferedProductModel } from "./marketOffersView";
+import { MarketJso, OfferInMarket } from "./jso";
 import * as dateFormat from "dateformat";
 
 export class OfferedProductTile {
