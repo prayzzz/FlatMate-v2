@@ -13,7 +13,6 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
         [Required]
         public DateTime Created { get; set; }
 
-        [Required]
         public string Description { get; set; }
 
         [InverseProperty("ItemList")]
