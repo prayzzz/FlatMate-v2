@@ -10,18 +10,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
-ging;
-using prayzzz.Common.Results;
-
 namespace FlatMate.Web.Areas.Offers.Controllers
 {
     [Area("Offers")]
     public class OfferController : MvcController
     {
         private readonly CompanyApiController _companyApi;
+        private readonly MarketApiController _marketApi;
         private readonly OfferViewApiController _offerViewApi;
         private readonly ProductApiController _productApi;
-        private readonly MarketApiController _marketApi;
 
         public OfferController(CompanyApiController companyApi,
                                OfferViewApiController offerViewApi,
@@ -85,8 +82,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             var favoriteProductIds = await favoriteProductIdsTask;
             model.FavoriteProducts = offerViewJso.Categories.SelectMany(x => x.Products).Where(x => favoriteProductIds.Contains(x.ProductId));
 
-    
-       return View(model);
+            return View(model);
         }
     }
 }

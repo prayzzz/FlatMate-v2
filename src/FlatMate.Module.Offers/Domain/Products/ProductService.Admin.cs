@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
@@ -13,12 +15,11 @@ namespace FlatMate.Module.Offers.Domain.Products
                 SELECT p.*, offers.OfferCount
                 FROM Offers.Product p
                 INNER JOIN (
-                    SELECT Name, SizeInfo, CompanyId, Brand
+                    SELECT Name, CompanyId, Brand
                     FROM Offers.Product
-                    GROUP BY Name, SizeInfo, CompanyId, Brand
+                    GROUP BY Name, CompanyId, Brand
                     HAVING COUNT(*) > 1
                 ) pInner ON p.Name = pInner.Name
-                        AND p.SizeInfo = pInner.SizeInfo
                         AND p.CompanyId = pInner.CompanyId
                         AND p.Brand = pInner.Brand
                 LEFT JOIN (
@@ -91,6 +92,11 @@ namespace FlatMate.Module.Offers.Domain.Products
             }
 
             var otherProduct = _dbContext.Products.FirstOrDefault(x => x.Id == otherProductId);
+            if (otherProduct == null)
+            {
+                return Result.Success;
+            }
+
             _dbContext.Products.Remove(otherProduct);
             var result = await _dbContext.SaveChangesAsync();
 
@@ -104,38 +110,6 @@ namespace FlatMate.Module.Offers.Domain.Products
             }
 
             return result;
-        }
-
-        public async Task Migrate()
-        {
-            while (true)
-            {
-                var productsToMerge = _dbContext.Products.FromSql(@"SELECT Product.*
-FROM Offers.Product
-  INNER JOIN (SELECT TOP 100
-                 Name,
-                 CompanyId
-               FROM Offers.Product
-               GROUP BY name, CompanyId
-               HAVING COUNT(*) > 1) AS sub ON sub.Name = Product.Name AND sub.CompanyId = Product.CompanyId").ToList();
-                if (!productsToMerge.Any())
-                {
-                    return;
-                }
-
-                var groupByName = productsToMerge.GroupBy(x => x.Name.ToLower());
-
-                foreach (var productGroup in groupByName)
-                {
-                    var productIds = productGroup.Select(x => x.Id).ToList();
-                    var minId = productIds.Min();
-
-                    foreach (var productId in productIds.Where(x => x != minId))
-                    {
-                        await MergeProducts(minId, productId);
-                    }
-                }
-            }
         }
     }
 }

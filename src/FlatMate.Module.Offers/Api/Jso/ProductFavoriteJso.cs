@@ -23,6 +23,6 @@ namespace FlatMate.Module.Offers.Api.Jso
             {
                 ProductId = dto.ProductId,
             };
-        
-     }
+        }
+    }
 }

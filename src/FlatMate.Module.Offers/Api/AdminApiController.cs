@@ -7,10 +7,6 @@ using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
 
-ts;
-using Microsoft.AspNetCore.Mvc;
-using prayzzz.Common.Results;
-
 namespace FlatMate.Module.Offers.Api
 {
     [Route(RouteTemplate)]
@@ -34,12 +30,6 @@ namespace FlatMate.Module.Offers.Api
         public async Task<Result> MergeProducts(int productId, int otherProductId)
         {
             return await _productService.MergeProducts(productId, otherProductId);
-        }
-
-        [HttpGet("migrate")]
-        public Task Migrate(
-         {
-            return _productService.Migrate();
         }
     }
 }

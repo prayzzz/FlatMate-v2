@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Markets;

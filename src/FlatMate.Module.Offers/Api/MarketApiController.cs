@@ -13,9 +13,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using prayzzz.Common.Results;
 
-Linq;
-using prayzzz.Common.Results;
-
 namespace FlatMate.Module.Offers.Api
 {
     [Route(RouteTemplate)]
@@ -72,11 +69,11 @@ namespace FlatMate.Module.Offers.Api
             var offerDtos = await _offerViewService.GetOffers(marketId, offerDuration);
 
             return (Result.Success, new OfferPeriodJso
-            {
-                From = offerDuration.From,
-                Offers = offerDtos.Select(Mapper.Map<OfferJso>),
-                To = offerDuration.To
-            });
+                       {
+                           From = offerDuration.From,
+                           Offers = offerDtos.Select(Mapper.Map<OfferJso>),
+                           To = offerDuration.To
+                       });
         }
 
         [HttpGet("{marketId}/offer/import")]

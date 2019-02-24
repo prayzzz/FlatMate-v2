@@ -10,9 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
 
-.Mvc;
-using prayzzz.Common.Results;
-
 namespace FlatMate.Module.Offers.Api
 {
     [Route(RouteTemplate)]
@@ -64,8 +61,7 @@ namespace FlatMate.Module.Offers.Api
         [HttpGet]
         public async Task<IEnumerable<CompanyJso>> GetList()
         {
-            return (await _companyService.SearchCompanies(
-    lect(Map<CompanyJso>);
+            return (await _companyService.SearchCompanies()).Select(Map<CompanyJso>);
         }
     }
 }

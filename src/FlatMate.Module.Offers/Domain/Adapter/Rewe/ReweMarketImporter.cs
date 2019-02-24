@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso;
 using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Markets;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
