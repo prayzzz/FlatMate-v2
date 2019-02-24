@@ -3,10 +3,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
+using FlatMate.Module.Offers.Domain.Markets;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Products
 {
     [Table("PriceHistory")]
     public class PriceHistory : DboBase
@@ -43,6 +44,7 @@ namespace FlatMate.Module.Offers.Domain
         public int MarketId { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(7,2)")]
         public decimal Price { get; set; }
 
         [ForeignKey(nameof(ProductId))]

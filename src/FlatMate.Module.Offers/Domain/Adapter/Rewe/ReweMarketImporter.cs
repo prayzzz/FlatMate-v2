@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Threading.Tasks;
+using FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
-using System;
-using System.Threading.Tasks;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
@@ -58,7 +60,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             }
 
             market.City = marketJso.Company.City;
-            market.CompanyId = (int)Company.Rewe;
+            market.CompanyId = (int) Company.Rewe;
             market.ExternalId = marketJso.Id;
             market.Name = marketJso.Name;
             market.PostalCode = marketJso.Company.ZipCode;

@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Api.Jso;
+using FlatMate.Module.Offers.Domain.Products;
+using Microsoft.AspNetCore.Mvc;
+using prayzzz.Common.Results;
+
+ts;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
 
@@ -33,8 +37,8 @@ namespace FlatMate.Module.Offers.Api
         }
 
         [HttpGet("migrate")]
-        public Task Migrate()
-        {
+        public Task Migrate(
+         {
             return _productService.Migrate();
         }
     }

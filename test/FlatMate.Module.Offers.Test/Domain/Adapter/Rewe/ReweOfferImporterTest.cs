@@ -1,19 +1,20 @@
-﻿using FlatMate.Module.Common.Extensions;
-using FlatMate.Module.Offers.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlatMate.Module.Common.Extensions;
 using FlatMate.Module.Offers.Domain.Adapter.Rewe;
+using FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Raw;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
-using prayzzz.Common.Unit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FlatMate.Module.Common;
 using prayzzz.Common.Results;
+using prayzzz.Common.Unit;
 
-namespace FlatMate.Module.Offers.Test.Rewe
+namespace FlatMate.Module.Offers.Test.Domain.Adapter.Rewe
 {
     [TestClass]
     public class ReweOfferImporterTest
@@ -95,7 +96,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             // Assert
             Assert.IsInstanceOfType(result, typeof(Result));
             Assert.IsNotNull(savedOffer);
-            Assert.AreEqual((decimal)offer.Price, savedOffer.Price);
+            Assert.AreEqual((decimal) offer.Price, savedOffer.Price);
             Assert.AreEqual(offer.Id, savedOffer.ExternalId);
             Assert.AreEqual(DayOfWeek.Monday, savedOffer.From.DayOfWeek);
             Assert.AreEqual(DayOfWeek.Sunday, savedOffer.To.DayOfWeek);
@@ -133,6 +134,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
 
             var offer2 = JsonClone(offer);
             offer2.AdditionalFields["crossOutPrice"] = "339";
+            offer2.Brand = "Weimarer";
             var offers2 = new Envelope<OfferJso> { Items = new List<OfferJso> { offer2 }, Meta = new Dictionary<string, Newtonsoft.Json.Linq.JToken>() };
 
             var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
@@ -152,6 +154,7 @@ namespace FlatMate.Module.Offers.Test.Rewe
             var (result2, importedOffers2) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             var savedProduct = dbContext.Products.FirstOrDefault();
+
             // Assert
             Assert.IsInstanceOfType(result, typeof(Result));
             Assert.IsInstanceOfType(result2, typeof(Result));

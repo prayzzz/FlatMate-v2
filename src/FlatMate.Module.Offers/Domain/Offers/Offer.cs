@@ -4,10 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Offers
 {
     [Table("Offer")]
     public class Offer : DboBase
@@ -29,6 +32,7 @@ namespace FlatMate.Module.Offers.Domain
         public int MarketId { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(7,2)")]
         public decimal Price { get; set; }
 
         [ForeignKey(nameof(ProductId))]
@@ -95,9 +99,9 @@ namespace FlatMate.Module.Offers.Domain
 
     public class OfferPeriodDto : DtoBase
     {
-        public DateTime From { get; set; }
-
         public CompanyDto Company { get; set; }
+
+        public DateTime From { get; set; }
 
         public IEnumerable<OfferDto> Offers { get; set; }
 

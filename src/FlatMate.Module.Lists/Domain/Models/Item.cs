@@ -1,6 +1,6 @@
 ﻿using System;
 using FlatMate.Module.Account.Shared.Interfaces;
-using FlatMate.Module.Common.Domain;
+using FlatMate.Module.Common.Domain.Entities;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Domain.Models

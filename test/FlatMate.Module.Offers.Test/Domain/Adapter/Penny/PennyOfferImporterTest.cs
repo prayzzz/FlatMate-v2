@@ -1,14 +1,15 @@
-﻿using System.Linq;
-using Moq;
-using FlatMate.Module.Offers.Domain;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FlatMate.Module.Offers.Domain.Adapter.Penny;
+using FlatMate.Module.Offers.Domain.Adapter.Penny.Jso;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Raw;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using prayzzz.Common.Unit;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FlatMate.Module.Common;
+using Moq;
 using prayzzz.Common.Results;
+using prayzzz.Common.Unit;
 
 namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
 {
@@ -23,14 +24,14 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
         public async Task ImportOffersFromApiDuplicate()
         {
             var dbContext = new OffersDbContext(new DbContextOptionsBuilder<OffersDbContext>().UseInMemoryDatabase("ImportOffersFromApiDuplicate").Options,
-                                    new ConsoleLogger<OffersDbContext>());
+                                                new ConsoleLogger<OffersDbContext>());
 
             var offerEnvelop = new Envelope
             {
                 Offers = new List<OfferJso>
                 {
-                    new OfferJso { Titel ="Titel", Beschreibung="Offer1", Menge="Size"},
-                    new OfferJso { Titel ="Titel", Beschreibung="Offer2", Menge="Size"}
+                    new OfferJso { Titel = "Titel", Beschreibung = "Offer1", Menge = "Size" },
+                    new OfferJso { Titel = "Titel", Beschreibung = "Offer2", Menge = "Size" }
                 }
             };
 

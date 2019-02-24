@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FlatMate.Module.Account.Domain.Models;
-using FlatMate.Module.Common;
-using FlatMate.Module.Common.Domain;
+using FlatMate.Module.Common.Domain.Repositories;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Repositories

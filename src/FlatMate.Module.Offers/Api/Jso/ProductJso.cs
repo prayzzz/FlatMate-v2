@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Module.Offers.Api
+namespace FlatMate.Module.Offers.Api.Jso
 {
     public class ProductJso
     {
@@ -22,9 +23,9 @@ namespace FlatMate.Module.Offers.Api
 
         public string Name { get; set; }
 
-        public ProductCategoryJso ProductCategory { get; set; }
-
         public int OfferCount { get; set; }
+
+        public ProductCategoryJso ProductCategory { get; set; }
     }
 
     [Inject]

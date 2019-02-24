@@ -1,12 +1,13 @@
-﻿using FlatMate.Module.Offers.Api;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using FlatMate.Module.Offers.Api;
+using FlatMate.Module.Offers.Api.Jso;
 using FlatMate.Web.Areas.Offers.Data;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlatMate.Web.Areas.Offers.Controllers
 {

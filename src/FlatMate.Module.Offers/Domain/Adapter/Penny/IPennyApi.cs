@@ -1,5 +1,6 @@
-﻿using RestEase;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using FlatMate.Module.Offers.Domain.Adapter.Penny.Jso;
+using RestEase;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Penny
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using FlatMate.Module.Common.Domain;
+using FlatMate.Module.Common.Domain.Entities;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Domain.Models
@@ -21,9 +21,15 @@ namespace FlatMate.Module.Account.Domain.Models
 
         public string Email { get; }
 
+        public bool IsActivated { get; private set; }
+
         public string UserName { get; }
 
-        public bool IsActivated { get; private set; }
+        public Result Activate()
+        {
+            IsActivated = true;
+            return Result.Success;
+        }
 
         public static (Result, User) Create(string userName, string email)
         {
@@ -49,12 +55,6 @@ namespace FlatMate.Module.Account.Domain.Models
             #endregion
 
             return (Result.Success, new User(id, userName, email, created));
-        }
-
-        public Result Activate()
-        {
-            IsActivated = true;
-            return Result.Success;
         }
 
         private static Result ValidateEmail(string email)

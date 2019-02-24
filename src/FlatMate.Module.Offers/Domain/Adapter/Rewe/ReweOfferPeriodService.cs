@@ -1,6 +1,8 @@
-﻿using FlatMate.Module.Common.Extensions;
+﻿using System;
+using FlatMate.Module.Common.Extensions;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Offers;
 using prayzzz.Common.Attributes;
-using System;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {

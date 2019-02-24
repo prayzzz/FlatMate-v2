@@ -1,14 +1,14 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Penny
+namespace FlatMate.Module.Offers.Domain.Adapter.Penny.Jso
 {
     public class Envelope
     {
-        [JsonProperty("Angebote")]
-        public List<OfferJso> Offers { get; set; } = new List<OfferJso>();
-
         [JsonProperty("Themenwelten")]
         public List<CategoryJso> Categories { get; set; } = new List<CategoryJso>();
+
+        [JsonProperty("Angebote")]
+        public List<OfferJso> Offers { get; set; } = new List<OfferJso>();
     }
 }

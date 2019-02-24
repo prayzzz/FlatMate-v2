@@ -1,9 +1,9 @@
-﻿using FlatMate.Module.Offers.Domain;
+﻿using System;
+using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System;
 
-namespace FlatMate.Module.Offers.Api
+namespace FlatMate.Module.Offers.Api.Jso
 {
     public class PriceHistoryJso
     {

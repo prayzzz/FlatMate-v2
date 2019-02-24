@@ -4,10 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Products
 {
     [Table("Product")]
     public class Product : DboBase
@@ -94,6 +96,6 @@ namespace FlatMate.Module.Offers.Domain
                 ProductCategory = product.ProductCategory != null ? ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory) : null,
                 ProductCategoryId = product.ProductCategoryId,
             };
-        }
-    }
+        
+     }
 }

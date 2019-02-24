@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Domain.Offers;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Module.Offers.Api
+namespace FlatMate.Module.Offers.Api.Jso
 {
     public class OfferJso
     {

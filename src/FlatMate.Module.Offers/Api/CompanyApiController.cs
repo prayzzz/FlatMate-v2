@@ -4,9 +4,13 @@ using System.Threading.Tasks;
 using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Infrastructure.Images;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Api.Jso;
+using FlatMate.Module.Offers.Domain.Companies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using prayzzz.Common.Results;
+
+.Mvc;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Api
@@ -60,7 +64,8 @@ namespace FlatMate.Module.Offers.Api
         [HttpGet]
         public async Task<IEnumerable<CompanyJso>> GetList()
         {
-            return (await _companyService.SearchCompanies()).Select(Map<CompanyJso>);
+            return (await _companyService.SearchCompanies(
+    lect(Map<CompanyJso>);
         }
     }
 }

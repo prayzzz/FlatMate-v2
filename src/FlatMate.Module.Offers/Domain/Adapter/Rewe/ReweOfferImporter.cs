@@ -1,13 +1,19 @@
-﻿using FlatMate.Module.Common.Extensions;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using prayzzz.Common.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Common.Extensions;
+using FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Offers;
+using FlatMate.Module.Offers.Domain.Products;
+using FlatMate.Module.Offers.Domain.Raw;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe

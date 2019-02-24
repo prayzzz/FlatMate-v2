@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
+namespace FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso
 {
     public class LinksJso
     {

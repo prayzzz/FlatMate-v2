@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FlatMate.Module.Common.Api;
 
-namespace FlatMate.Module.Common.Domain
+namespace FlatMate.Module.Common
 {
     public static class PartialListExtension
     {

@@ -1,11 +1,11 @@
-﻿using FlatMate.Module.Common.DataAccess;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Products
 {
     public enum ProductCategoryEnum
     {
@@ -29,7 +29,7 @@ namespace FlatMate.Module.Offers.Domain
         [Required]
         public string Name { get; set; }
 
-        public ProductCategoryEnum ProductCategoryEnum => (ProductCategoryEnum)Id;
+        public ProductCategoryEnum ProductCategoryEnum => (ProductCategoryEnum) Id;
 
         [Required]
         public int SortWeight { get; set; }

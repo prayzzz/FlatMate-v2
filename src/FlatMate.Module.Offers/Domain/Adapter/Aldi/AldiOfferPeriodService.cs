@@ -1,5 +1,7 @@
 ﻿using System;
 using FlatMate.Module.Common.Extensions;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Offers;
 using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Aldi

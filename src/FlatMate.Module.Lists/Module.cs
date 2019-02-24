@@ -12,7 +12,7 @@ namespace FlatMate.Module.Lists
         {
             base.ConfigureServices(service, configuration);
 
-            service.AddDbContext<ListsDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            service.AddDbContext<ListsDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("FlatMate")));
         }
     }
 }

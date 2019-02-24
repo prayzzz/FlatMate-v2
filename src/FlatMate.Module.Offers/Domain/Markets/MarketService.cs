@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Common;
 using FlatMate.Module.Offers.Domain.Adapter;
 using FlatMate.Module.Offers.Domain.Adapter.Rewe;
+using FlatMate.Module.Offers.Domain.Companies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Markets
 {
     public interface IMarketService
     {

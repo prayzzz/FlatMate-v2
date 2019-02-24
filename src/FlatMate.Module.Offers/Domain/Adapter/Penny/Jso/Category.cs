@@ -1,4 +1,4 @@
-﻿namespace FlatMate.Module.Offers.Domain.Adapter.Penny
+﻿namespace FlatMate.Module.Offers.Domain.Adapter.Penny.Jso
 {
     public class CategoryJso
     {

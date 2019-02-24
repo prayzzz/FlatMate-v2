@@ -1,6 +1,6 @@
-﻿using FlatMate.Module.Offers.Api;
+﻿using System.Collections.Generic;
+using FlatMate.Module.Offers.Api.Jso;
 using FlatMate.Web.Mvc.Base;
-using System.Collections.Generic;
 
 namespace FlatMate.Web.Areas.Offers.Data
 {

@@ -1,13 +1,13 @@
-﻿using FlatMate.Module.Offers.Api;
+﻿using System.Collections.Generic;
+using FlatMate.Module.Offers.Api.Jso;
 using FlatMate.Web.Mvc.Base;
-using System.Collections.Generic;
 
 namespace FlatMate.Web.Areas.Offers.Data
 {
     public class ProductFavoriteManageVm : MvcViewModel
     {
-        public int? CurrentCompany { get; set; }
-
         public List<CompanyJso> Companies { get; set; }
+
+        public int? CurrentCompany { get; set; }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Offers;
+using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
@@ -118,7 +121,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
         {
             return DbContext.Products
                             .Include(p => p.PriceHistoryEntries)
-                            .FirstOrDefault(p => p.CompanyId == (int) offerDto.Company && p.Name== offerDto.Name);
+                            .FirstOrDefault(p => p.CompanyId == (int) offerDto.Company && p.Name == offerDto.Name);
         }
 
         protected class OfferTemp : IEquatable<OfferTemp>

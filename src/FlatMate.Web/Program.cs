@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using FlatMate.Web.Common;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,30 +11,30 @@ namespace FlatMate.Web
     {
         public static void Main(string[] args)
         {
-            WebHost.CreateDefaultBuilder()
-                   .UseContentRoot(Directory.GetCurrentDirectory())
-                   .UseSerilog(ConfigureLogging)
-                   .UseStartup<Startup>()
-                   .ConfigureAppConfiguration((context, builder) => ConfigureAppConfiguration(args, context, builder))
-                   .SuppressStatusMessages(true)
-                   .Build()
-                   .Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        private static void ConfigureAppConfiguration(IReadOnlyList<string> args, WebHostBuilderContext context, IConfigurationBuilder builder)
+        private static void ConfigureAppConfiguration(IReadOnlyList<string> args, IConfigurationBuilder builder)
         {
+            // Add JSON File passed by arguments
             if (args.Any() && !string.IsNullOrEmpty(args[0]))
             {
                 builder.AddJsonFile(args[0], true);
             }
-
-            builder.AddEnvironmentVariables("flatmate_")
-                   .BuildConnectionString();
         }
 
         private static void ConfigureLogging(WebHostBuilderContext context, LoggerConfiguration config)
         {
             config.ReadFrom.Configuration(context.Configuration);
+        }
+
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
+                          .ConfigureAppConfiguration((context, builder) => ConfigureAppConfiguration(args, builder))
+                          .UseStartup<Startup>()
+                          .UseSerilog(ConfigureLogging)
+                          .SuppressStatusMessages(true);
         }
     }
 }

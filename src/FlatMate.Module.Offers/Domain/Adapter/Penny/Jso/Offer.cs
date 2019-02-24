@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-namespace FlatMate.Module.Offers.Domain.Adapter.Penny
+
+namespace FlatMate.Module.Offers.Domain.Adapter.Penny.Jso
 {
     public class OfferJso
     {
@@ -22,6 +23,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
         public string Button_link { get; set; }
 
         public string Button_text { get; set; }
+
+        [JsonProperty("Themenwelt")]
+        public string CategoryId { get; set; }
 
         public int EndDate { get; set; }
 
@@ -54,9 +58,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
         public int StartDate { get; set; }
 
         public string Starttime { get; set; }
-
-        [JsonProperty("Themenwelt")]
-        public string CategoryId { get; set; }
 
         public string Titel { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using FlatMate.Module.Offers.Domain;
+﻿using FlatMate.Module.Offers.Domain.Companies;
 
 namespace FlatMate.Web.Areas.Offers
 {

@@ -4,8 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Api;
-using FlatMate.Module.Offers.Domain;
 using FlatMate.Module.Offers.Domain.Adapter;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Offers;
+using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
@@ -17,11 +20,11 @@ namespace FlatMate.Module.Offers.Api
     {
         private const string RouteTemplate = "api/v1/offers/offer/view/";
         private readonly ILogger<OfferViewApiController> _logger;
+        private readonly IMarketService _marketService;
         private readonly IEnumerable<IOfferPeriodService> _offerPeriodServices;
 
         private readonly IOfferViewService _offerViewService;
         private readonly IProductService _productService;
-        private readonly IMarketService _marketService;
 
         public OfferViewApiController(IApiControllerServices services,
                                       IOfferViewService offerViewService,
@@ -127,17 +130,17 @@ namespace FlatMate.Module.Offers.Api
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     public class OfferViewJso
     {
-        public DateTime From { get; set; }
-
         public List<ProductCategoriesWithOffers> Categories { get; set; } = new List<ProductCategoriesWithOffers>();
+
+        public DateTime From { get; set; }
 
         public DateTime To { get; set; }
 
         public class ProductCategoriesWithOffers
         {
-            public List<OfferedProductJso> Products { get; set; } = new List<OfferedProductJso>();
-
             public string Name { get; set; }
+
+            public List<OfferedProductJso> Products { get; set; } = new List<OfferedProductJso>();
 
             [Newtonsoft.Json.JsonIgnore]
             public int Weight { get; set; }
@@ -145,26 +148,26 @@ namespace FlatMate.Module.Offers.Api
 
         public class OfferedProductJso
         {
-            public string Name { get; set; }
-
             public string ImageUrl { get; set; }
+
+            public string Name { get; set; }
 
             public List<OfferInMarket> Offers { get; set; } = new List<OfferInMarket>();
 
-            public int ProductId { get; set; }
-
             public int ProductCategoryId { get; set; }
+
+            public int ProductId { get; set; }
         }
 
         public class OfferInMarket
         {
-            public int OfferId { get; set; }
-
-            public decimal Price { get; set; }
+            public DateTime From { get; set; }
 
             public int MarketId { get; set; }
 
-            public DateTime From { get; set; }
+            public int OfferId { get; set; }
+
+            public decimal Price { get; set; }
 
             public DateTime To { get; set; }
         }

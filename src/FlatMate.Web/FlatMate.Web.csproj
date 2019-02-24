@@ -1,32 +1,31 @@
 ﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
     <Import Project="..\..\build\common.props"/>
     <Import Project="..\..\build\web-build.props"/>
+
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <RuntimeIdentifiers>win-x64,linux-x64</RuntimeIdentifiers>
-        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-        <!--<MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>-->
-        <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-        <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     </PropertyGroup>
+
     <ItemGroup>
         <Content Update="wwwroot/node_modules/**" CopyToPublishDirectory="Never"/>
         <Content Include="_Migrations/**" CopyToPublishDirectory="Always"/>
     </ItemGroup>
+
     <ItemGroup>
-        <PackageReference Include="App.Metrics" Version="2.1.0"/>
-        <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0"/>
+        <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="3.0.0"/>
+        <PackageReference Include="App.Metrics.Formatters.InfluxDB" Version="3.0.0"/>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1"/>
         <PackageReference Include="Microsoft.AspNetCore.App"/>
         <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0.141-master"/>
         <PackageReference Include="Serilog" Version="2.8.0"/>
         <PackageReference Include="Serilog.AspNetCore" Version="2.1.1"/>
         <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1"/>
-        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="6.5.0"/>
+        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="7.1.0"/>
         <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1"/>
     </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\FlatMate.Migration\FlatMate.Migration.csproj"/>
         <ProjectReference Include="..\FlatMate.Module.Account\FlatMate.Module.Account.csproj"/>

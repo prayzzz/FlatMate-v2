@@ -1,4 +1,4 @@
-﻿namespace FlatMate.Module.Common.Domain
+﻿namespace FlatMate.Module.Common.Domain.Entities
 {
     public abstract class Entity
     {

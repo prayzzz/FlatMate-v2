@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Module.Offers.Api
+namespace FlatMate.Module.Offers.Api.Jso
 {
     public class MarketJso
     {

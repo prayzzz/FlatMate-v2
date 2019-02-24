@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Common.Domain;
+using FlatMate.Module.Common.Domain.Entities;
+using FlatMate.Module.Common.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Mapping;
@@ -84,14 +85,14 @@ namespace FlatMate.Module.Common.DataAccess
             return Result.Success;
         }
 
-        public async Task<(Result, TEntity)> GetAsync(int id)
+        public (Result, TEntity) Get(int id)
         {
             if (_requestCache.TryGetValue(id, out var cachedEntity))
             {
                 return (Result.Success, cachedEntity);
             }
 
-            var dbo = await DbosIncluded.FirstOrDefaultAsync(g => g.Id == id);
+            var dbo = DbosIncluded.FirstOrDefault(g => g.Id == id);
 
             if (dbo == null)
             {
@@ -104,14 +105,14 @@ namespace FlatMate.Module.Common.DataAccess
             return (Result.Success, entity);
         }
 
-        public (Result, TEntity) Get(int id)
+        public async Task<(Result, TEntity)> GetAsync(int id)
         {
             if (_requestCache.TryGetValue(id, out var cachedEntity))
             {
                 return (Result.Success, cachedEntity);
             }
 
-            var dbo = DbosIncluded.FirstOrDefault(g => g.Id == id);
+            var dbo = await DbosIncluded.FirstOrDefaultAsync(g => g.Id == id);
 
             if (dbo == null)
             {

@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Api;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Api.Jso;
 using FlatMate.Module.Offers.Domain.Adapter;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Offers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using prayzzz.Common.Results;
+
+Linq;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Api

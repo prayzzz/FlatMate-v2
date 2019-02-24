@@ -3,8 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
-using FlatMate.Module.Common.Domain;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Api.Jso;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
 
@@ -45,12 +46,6 @@ namespace FlatMate.Module.Offers.Api
             return await _productService.GetFavoriteProductIds(companyId);
         }
 
-        [HttpGet("favorite")]
-        public async Task<PartialList<ProductJso>> SearchFavoriteProducts([FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList, [FromQuery] int companyId = 0)
-        {
-            return (await _productService.SearchFavoriteProducts((Company) companyId, searchTerm, partialList)).MapTo(Map<ProductJso>);
-        }
-
         [HttpGet("{id}")]
         public async Task<(Result, ProductJso)> GetProduct(int id)
         {
@@ -73,6 +68,12 @@ namespace FlatMate.Module.Offers.Api
         public async Task<IEnumerable<PriceHistoryJso>> GetProductPriceHistory(int id)
         {
             return (await _productService.GetProductPriceHistory(id)).Select(Map<PriceHistoryJso>);
+        }
+
+        [HttpGet("favorite")]
+        public async Task<PartialList<ProductJso>> SearchFavoriteProducts([FromQuery] string searchTerm, [FromQuery] PartialListParameter partialList, [FromQuery] int companyId = 0)
+        {
+            return (await _productService.SearchFavoriteProducts((Company) companyId, searchTerm, partialList)).MapTo(Map<ProductJso>);
         }
 
         [HttpGet]

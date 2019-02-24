@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Offers
 {
     public interface IOfferViewService
     {
-        Task<IEnumerable<OfferDto>> GetOffersInMarkets(List<int> marketIds, OfferDuration offerDuration);
-
         Task<IEnumerable<OfferDto>> GetOffers(int marketId, OfferDuration offerDuration);
+
+        Task<IEnumerable<OfferDto>> GetOffersInMarkets(List<int> marketIds, OfferDuration offerDuration);
     }
 
     [Inject]

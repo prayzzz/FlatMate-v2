@@ -1,9 +1,10 @@
-﻿using App.Metrics;
+﻿using System;
+using System.Security.Claims;
+using App.Metrics;
+using FlatMate.Module.Common.Api.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Mapping;
-using System;
-using System.Security.Claims;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Common.Api
@@ -12,8 +13,8 @@ namespace FlatMate.Module.Common.Api
     [EnsurePostBodyFilter]
     public class ApiController : Controller
     {
-        protected readonly MappingContext MappingContext;
         private readonly IApiControllerServices _services;
+        protected readonly MappingContext MappingContext;
 
         public ApiController(IApiControllerServices services)
         {
@@ -21,10 +22,6 @@ namespace FlatMate.Module.Common.Api
 
             MappingContext = new MappingContext();
         }
-
-        protected IMapper Mapper => _services.Mapper;
-
-        protected IMetricsRoot MetricsRoot => _services.MetricsRoot;
 
         protected int CurrentUserId
         {
@@ -34,6 +31,10 @@ namespace FlatMate.Module.Common.Api
                 return userId == null ? 0 : Convert.ToInt32(userId);
             }
         }
+
+        protected IMapper Mapper => _services.Mapper;
+
+        protected IMetricsRoot MetricsRoot => _services.MetricsRoot;
 
         protected T Map<T>(object data) where T : class
         {

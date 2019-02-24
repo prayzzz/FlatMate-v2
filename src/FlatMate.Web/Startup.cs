@@ -1,15 +1,15 @@
-﻿using App.Metrics;
+﻿using System;
+using System.Globalization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Migration;
 using FlatMate.Module.Common;
 using FlatMate.Web.Common;
-using FlatMate.Web.Metrics;
+using FlatMate.Web.Mvc.Api;
 using FlatMate.Web.Mvc.Json;
 using FlatMate.Web.Mvc.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Rewrite;
@@ -21,10 +21,6 @@ using Microsoft.Net.Http.Headers;
 using prayzzz.Common;
 using prayzzz.Common.Mapping;
 using Swashbuckle.AspNetCore.Swagger;
-using System;
-using System.Globalization;
-using FlatMate.Web.Mvc.Api;
-using FlatMate.Web.Mvc.Authorization;
 
 namespace FlatMate.Web
 {
@@ -51,6 +47,8 @@ namespace FlatMate.Web
 
         public override void Configure(IApplicationBuilder app)
         {
+            _logger.LogInformation("Culture: {currentCulture}", CultureInfo.CurrentCulture);
+
             app.LogServerAddresses(_logger);
 
             var env = app.ApplicationServices.GetService<IHostingEnvironment>();
@@ -58,34 +56,29 @@ namespace FlatMate.Web
 
             // run migrations
             var migrationSettings = _configuration.GetSection("Migration").Get<MigrationSettings>();
-            migrationSettings.ConnectionString = _configuration.GetConnectionString("DefaultConnection");
+            migrationSettings.ConnectionString = _configuration.GetConnectionString("FlatMate");
             new Migrator(loggerFactory, migrationSettings).Run();
 
             // configure middleware
-            app.UseMiddleware<RequestMetricMiddleware>();
-
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
 
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"));
-
-//                app.UseConfigExplorer(_configuration, new ConfigExplorerOptions { TryRedactConnectionStrings = false });
             }
             else
             {
                 app.UseExceptionHandler("/Error");
             }
 
-            // metrics
-            app.UseMetricsEndpoint();
-
             app.UseRewriter(new RewriteOptions().AddRedirect("^favicon.ico", "img/favicon.ico"));
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx => ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + TimeSpan.FromDays(7).TotalSeconds
             });
+
+            app.UseFlatMateMetrics();
 
             app.UseAuthentication();
             app.UseSession();
@@ -111,31 +104,19 @@ namespace FlatMate.Web
             {
                 module.Configure(app, _configuration);
             }
-
-            // finish startup by logging server addresses
-            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
-            if (serverAddressesFeature != null)
-            {
-                _logger.LogInformation("Application listening on: {Url}", string.Join(", ", serverAddressesFeature.Addresses));
-            }
         }
 
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             // Framework
-            var mvc = services.AddMvc(o =>
-            {
-                o.Filters.Add<ApiResultFilter>();
-            });
+            var mvc = services.AddMvc(o => { o.Filters.Add<ApiResultFilter>(); });
 
             mvc.AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));
             mvc.ConfigureApplicationPartManager(c => Array.ForEach(Modules, m => c.ApplicationParts.Add(m)));
             mvc.AddControllersAsServices();
 
             // Metrics
-            var metrics = new MetricsBuilder().OutputMetrics.Using<TelegrafMetricFormatter>().Build();
-            services.AddMetrics(metrics);
-            services.AddMetricsEndpoints();
+            services.AddFlatMateMetrics(_configuration);
 
             services.AddOptions();
             services.AddResponseCaching();

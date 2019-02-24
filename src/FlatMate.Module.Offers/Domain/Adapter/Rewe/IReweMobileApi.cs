@@ -1,5 +1,6 @@
-﻿using RestEase;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso;
+using RestEase;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {
@@ -13,5 +14,5 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
         [Get("/products/offer-search")]
         Task<Envelope<OfferJso>> SearchOffers([Query]string marketId);
-    }
-}
+  
+    

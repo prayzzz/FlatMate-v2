@@ -3,16 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared;
 using FlatMate.Module.Account.Shared.Interfaces;
+using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
-using FlatMate.Module.Common.Domain;
-using FlatMate.Module.Offers.Domain.Products;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Offers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Products
 {
     public interface IProductService
     {
@@ -38,9 +39,9 @@ namespace FlatMate.Module.Offers.Domain
 
         Task Migrate();
 
-        Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter);
-
         Task<PartialList<ProductDto>> SearchFavoriteProducts(Company company, string searchTerm, PartialListParameter parameter);
+
+        Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter);
     }
 
     [Inject]
@@ -141,14 +142,14 @@ namespace FlatMate.Module.Offers.Domain
                     select _mapper.Map<PriceHistoryDto>(ph)).AsNoTracking().ToListAsync();
         }
 
-        public Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter)
-        {
-            return SearchProducts(company, searchTerm, false, parameter);
-        }
-
         public Task<PartialList<ProductDto>> SearchFavoriteProducts(Company company, string searchTerm, PartialListParameter parameter)
         {
             return SearchProducts(company, searchTerm, true, parameter);
+        }
+
+        public Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, PartialListParameter parameter)
+        {
+            return SearchProducts(company, searchTerm, false, parameter);
         }
 
         private async Task<PartialList<ProductDto>> SearchProducts(Company company, string searchTerm, bool isFavorite, PartialListParameter parameter)

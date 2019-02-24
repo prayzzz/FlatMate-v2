@@ -1,4 +1,4 @@
-﻿using FlatMate.Module.Common.Domain;
+﻿using FlatMate.Module.Common.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlatMate.Module.Common.DataAccess

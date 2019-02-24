@@ -2,12 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Offers.Api;
-using FlatMate.Module.Offers.Domain;
+using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Web.Areas.Offers.Data;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using prayzzz.Common.Results;
+
+ging;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Offers.Controllers
@@ -82,7 +85,8 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             var favoriteProductIds = await favoriteProductIdsTask;
             model.FavoriteProducts = offerViewJso.Categories.SelectMany(x => x.Products).Where(x => favoriteProductIds.Contains(x.ProductId));
 
-            return View(model);
+    
+       return View(model);
         }
     }
 }

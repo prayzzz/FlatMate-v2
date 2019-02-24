@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
+namespace FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso
 {
     public class Envelope<T>
     {

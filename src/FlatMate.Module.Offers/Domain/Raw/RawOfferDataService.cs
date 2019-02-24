@@ -9,7 +9,7 @@ using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Raw
 {
     public interface IRawOfferDataService
     {

@@ -1,11 +1,11 @@
-﻿using FlatMate.Module.Common.DataAccess;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using FlatMate.Module.Common.DataAccess;
 using FlatMate.Module.Common.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FlatMate.Module.Offers.Domain
+namespace FlatMate.Module.Offers.Domain.Companies
 {
     public enum Company
     {

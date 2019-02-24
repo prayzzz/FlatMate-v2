@@ -1,12 +1,15 @@
-using FlatMate.Module.Common.DataAccess;
-using FlatMate.Module.Offers.Domain;
-using FlatMate.Module.Offers.Domain.Products;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Markets;
+using FlatMate.Module.Offers.Domain.Offers;
+using FlatMate.Module.Offers.Domain.Products;
+using FlatMate.Module.Offers.Domain.Raw;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers
@@ -32,11 +35,11 @@ namespace FlatMate.Module.Offers
 
         public virtual DbSet<ProductFavorite> ProductFavorites { get; set; }
 
+        public virtual DbSet<ProductInfoDto> ProductInfoDtos { get; set; }
+
         public virtual DbSet<Product> Products { get; set; }
 
         public virtual DbSet<RawOfferData> RawOfferData { get; set; }
-
-        public virtual DbSet<ProductInfoDto> ProductInfoDtos { get; set; }
 
         public new Result SaveChanges()
         {

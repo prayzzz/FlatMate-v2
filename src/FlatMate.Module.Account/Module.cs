@@ -11,7 +11,7 @@ namespace FlatMate.Module.Account
         public override void ConfigureServices(IServiceCollection service, IConfiguration configuration)
         {
             base.ConfigureServices(service, configuration);
-            service.AddDbContext<AccountDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            service.AddDbContext<AccountDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("FlatMate")));
         }
     }
 }

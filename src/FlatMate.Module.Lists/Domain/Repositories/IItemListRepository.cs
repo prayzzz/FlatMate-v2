@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using FlatMate.Module.Common.Domain;
+using FlatMate.Module.Common.Domain.Repositories;
 using FlatMate.Module.Lists.Domain.Models;
 using prayzzz.Common.Results;
 

@@ -1,8 +1,8 @@
-﻿using FlatMate.Module.Offers.Domain.Products;
+﻿using System.ComponentModel.DataAnnotations;
+using FlatMate.Module.Offers.Domain.Products;
 using prayzzz.Common.Mapping;
-using System.ComponentModel.DataAnnotations;
 
-namespace FlatMate.Module.Offers.Api
+namespace FlatMate.Module.Offers.Api.Jso
 {
     public class ProductFavoriteJso
     {
@@ -23,6 +23,6 @@ namespace FlatMate.Module.Offers.Api
             {
                 ProductId = dto.ProductId,
             };
-        }
-    }
+        
+     }
 }
