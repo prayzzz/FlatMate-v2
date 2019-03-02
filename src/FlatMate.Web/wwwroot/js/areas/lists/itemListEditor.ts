@@ -1,5 +1,5 @@
-import * as ko from "knockout";
 import { ItemGroupJso, ItemGroupViewModel, ItemListJso } from ".";
+import { observable, observableArray } from "knockout";
 
 export class ItemListEditor {
     public addGroup = () => {
@@ -30,9 +30,9 @@ export class ItemListEditor {
         );
     };
 
-    public readonly newGroupName = ko.observable("");
-    public readonly groups = ko.observableArray<ItemGroupViewModel>();
-    public readonly isAddLoading = ko.observable(false);
+    public readonly newGroupName = observable("");
+    public readonly groups = observableArray<ItemGroupViewModel>();
+    public readonly isAddLoading = observable(false);
 
     constructor(model: ItemListJso) {
         this.model = model;

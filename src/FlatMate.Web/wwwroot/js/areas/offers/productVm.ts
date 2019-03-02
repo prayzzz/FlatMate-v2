@@ -1,30 +1,31 @@
 ﻿import { CompanyJso, ProductApi, ProductJso } from ".";
+import { computed, Computed, observable, Observable } from "knockout";
 
 export class ProductVm {
-    public isFavorite: KnockoutObservable<boolean>;
-    public isLoading: KnockoutObservable<boolean>;
-    public showLoadingButton: KnockoutComputed<boolean>;
-    public showFavoriteBtn: KnockoutComputed<boolean>;
-    public showUnfavoriteBtn: KnockoutComputed<boolean>;
+    public isFavorite: Observable<boolean>;
+    public isLoading: Observable<boolean>;
+    public showLoadingButton: Computed<boolean>;
+    public showFavoriteBtn: Computed<boolean>;
+    public showUnfavoriteBtn: Computed<boolean>;
     public detailUrl: string;
 
     private productApi = new ProductApi();
-    private model: KnockoutObservable<ProductJso>;
+    private model: Observable<ProductJso>;
     private company: CompanyJso;
 
     constructor(model: ProductJso, company: CompanyJso) {
         const self = this;
 
-        this.model = ko.observable(model);
+        this.model = observable(model);
         this.company = company;
 
         this.detailUrl = "/Offers/Product/View/" + this.model().id;
-        this.isFavorite = ko.observable(false);
-        this.isLoading = ko.observable(false);
+        this.isFavorite = observable(false);
+        this.isLoading = observable(false);
 
-        this.showLoadingButton = ko.computed(() => self.isLoading());
-        this.showFavoriteBtn = ko.computed(() => !self.isLoading() && !self.isFavorite());
-        this.showUnfavoriteBtn = ko.computed(() => !self.isLoading() && self.isFavorite());
+        this.showLoadingButton = computed(() => self.isLoading());
+        this.showFavoriteBtn = computed(() => !self.isLoading() && !self.isFavorite());
+        this.showUnfavoriteBtn = computed(() => !self.isLoading() && self.isFavorite());
     }
 
     public get id(): number {

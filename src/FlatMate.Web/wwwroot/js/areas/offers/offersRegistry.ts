@@ -7,20 +7,20 @@ import { OfferedProductTile as OfferTile } from "./offeredProductTile";
 export class OffersRegistry {
     public static registerComponents() {
         ko.components.register("product-favorite-editor", {
-            template: {element: "product-favorite-editor-template"},
+            template: { element: "product-favorite-editor-template" },
             viewModel: function () {
                 return new ProductFavoriteEditor(StartupHelper.readViewData<ProductFavoriteManageVm>("product-favorite-manage"));
             }
         });
         ko.components.register("company-offers-list", {
-            template: {element: "company-offers-list-template"},
+            template: { element: "company-offers-list-template" },
             viewModel: function () {
                 return new CompanyOffersList(StartupHelper.readViewData<CompanyOffersListVm>("company-offers-list"));
             }
         });
         ko.components.register("offered-product-tile", {
-            template: {element: "offered-product-tile-template"},
-            viewModel: function (params) {
+            template: { element: "offered-product-tile-template" },
+            viewModel: function (params: any) {
                 return new OfferTile(params);
             }
         });

@@ -1,5 +1,7 @@
-﻿export default {
-    init: (element: HTMLElement, valueAccessor: () => any, allBindings: KnockoutAllBindingsAccessor | undefined, viewModel: any) => {
+﻿import { AllBindings } from "knockout";
+
+export default {
+    init: (element: HTMLElement, valueAccessor: () => any, allBindings: AllBindings | undefined, viewModel: any) => {
         const callback = valueAccessor();
 
         element.addEventListener("keypress", event => {

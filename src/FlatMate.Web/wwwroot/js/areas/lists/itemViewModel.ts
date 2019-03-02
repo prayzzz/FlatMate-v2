@@ -1,19 +1,19 @@
-﻿import * as ko from "knockout";
-import { ItemJso, ItemListApi } from ".";
+﻿import { ItemJso, ItemListApi } from ".";
 import { FlatMate } from "../../app";
 import { IDragItem } from "./listActionManager";
+import { observable } from "knockout";
 
 export class ItemViewModel implements IDragItem {
     // from model
-    public readonly name = ko.observable("");
-    public readonly sortIndex = ko.observable(0);
+    public readonly name = observable("");
+    public readonly sortIndex = observable(0);
 
     // ui
-    public readonly isInEditMode = ko.observable(false);
-    public readonly isRemoveLoading = ko.observable(false);
+    public readonly isInEditMode = observable(false);
+    public readonly isRemoveLoading = observable(false);
 
     private readonly apiClient = new ItemListApi();
-    private readonly model = ko.observable<ItemJso>();
+    private readonly model = observable<ItemJso>();
 
     constructor(model: ItemJso) {
         this.model.subscribe(val => {

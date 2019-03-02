@@ -1,6 +1,6 @@
-import * as ko from "knockout";
 import { ItemGroupJso, ItemJso, ItemListApi, ItemViewModel } from ".";
 import { ListActionManager } from "./listActionManager";
+import { observable, observableArray } from "knockout";
 
 export class ItemGroupViewModel {
     // dnd sorting
@@ -9,16 +9,16 @@ export class ItemGroupViewModel {
     public readonly handleEvents: any;
 
     // from model
-    public readonly name = ko.observable("");
-    public readonly sortIndex = ko.observable(0);
+    public readonly name = observable("");
+    public readonly sortIndex = observable(0);
 
     // ui
-    public readonly isInEditMode = ko.observable(false);
-    public readonly isNewItemFocused = ko.observable(false);
-    public readonly items = ko.observableArray<ItemViewModel>();
-    public readonly newItemName = ko.observable("");
-    public readonly isAddLoading = ko.observable(false);
-    public readonly isRemoveLoading = ko.observable(false);
+    public readonly isInEditMode = observable(false);
+    public readonly isNewItemFocused = observable(false);
+    public readonly items = observableArray<ItemViewModel>();
+    public readonly newItemName = observable("");
+    public readonly isAddLoading = observable(false);
+    public readonly isRemoveLoading = observable(false);
     /**
      * Creates an new item from the itemName textfield and saves it.
      */
@@ -91,7 +91,7 @@ export class ItemGroupViewModel {
 
         return false; // dont continue event propagation
     };
-    private readonly model = ko.observable<ItemGroupJso>();
+    private readonly model = observable<ItemGroupJso>();
 
     constructor(model: ItemGroupJso, items?: ItemJso[]) {
         this.model.subscribe(val => {

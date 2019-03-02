@@ -1,9 +1,10 @@
 ﻿import { AlertLevel } from "./";
+import { computed, observable } from "knockout";
 
 export class AlertViewModel {
-    public level = ko.observable<AlertLevel>();
-    public levelString = ko.computed(() => AlertLevel[this.level()]);
-    public message = ko.observable<string>();
+    public level = observable<AlertLevel>();
+    public levelString = computed(() => AlertLevel[this.level()]);
+    public message = observable<string>();
 
     constructor(level: AlertLevel, message: string) {
         this.level(level);

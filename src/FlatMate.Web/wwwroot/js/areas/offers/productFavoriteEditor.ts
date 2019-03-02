@@ -1,6 +1,7 @@
 ﻿import { CompanyJso, ProductApi, ProductVm } from ".";
 import { FlatMate } from "app";
 import { PartialListParameter } from "api/partialList";
+import { computed, Computed, observable, Observable, observableArray, ObservableArray } from "knockout";
 
 export interface ProductFavoriteManageVm {
     companies: CompanyJso[];
@@ -8,20 +9,20 @@ export interface ProductFavoriteManageVm {
 }
 
 export class ProductFavoriteEditor {
-    private selectedCompany: KnockoutObservable<CompanyJso | undefined>;
+    private selectedCompany: Observable<CompanyJso | undefined>;
 
-    private productPage: KnockoutObservableArray<ProductVm>;
-    private totalCount: KnockoutObservable<number>;
+    private productPage: ObservableArray<ProductVm>;
+    private totalCount: Observable<number>;
 
     // @ts-ignore: used by view
-    private hasMoreProducts: KnockoutComputed<boolean>;
+    private hasMoreProducts: Computed<boolean>;
     // @ts-ignore: used by view
-    private pageString: KnockoutComputed<string>;
+    private pageString: Computed<string>;
 
-    private productsPerPage: KnockoutObservable<number>;
-    private currentPage: KnockoutObservable<number>;
-    private searchTerm: KnockoutObservable<string>;
-    private onlyFavorites: KnockoutObservable<boolean>;
+    private productsPerPage: Observable<number>;
+    private currentPage: Observable<number>;
+    private searchTerm: Observable<string>;
+    private onlyFavorites: Observable<boolean>;
 
     private readonly apiClient = new ProductApi();
     private readonly model: ProductFavoriteManageVm;
@@ -30,25 +31,25 @@ export class ProductFavoriteEditor {
         this.model = model;
 
         // setup observables
-        this.selectedCompany = ko.observable(undefined);
+        this.selectedCompany = observable(undefined);
         this.selectedCompany.subscribe(() => this.showPage(0));
 
-        this.searchTerm = ko.observable("");
+        this.searchTerm = observable("");
         this.searchTerm.subscribe(() => this.showPage(0));
 
-        this.onlyFavorites = ko.observable(false);
+        this.onlyFavorites = observable(false);
         this.onlyFavorites.subscribe(() => this.showPage(0));
 
-        this.productPage = ko.observableArray([]);
-        this.currentPage = ko.observable(1);
-        this.productsPerPage = ko.observable(12);
-        this.totalCount = ko.observable(0);
+        this.productPage = observableArray([]);
+        this.currentPage = observable(1);
+        this.productsPerPage = observable(12);
+        this.totalCount = observable(0);
 
-        this.hasMoreProducts = ko.computed<boolean>(() => {
+        this.hasMoreProducts = computed<boolean>(() => {
             return this.productsPerPage() * (this.currentPage() + 1) < this.totalCount();
         });
 
-        this.pageString = ko.computed<string>(() => {
+        this.pageString = computed<string>(() => {
             let totalPages = Math.ceil(this.totalCount() / this.productsPerPage());
             if (totalPages < 1) {
                 totalPages = 1;

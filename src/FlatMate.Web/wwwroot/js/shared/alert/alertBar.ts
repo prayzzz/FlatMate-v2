@@ -1,8 +1,9 @@
 import { IDictionary } from "../types";
 import { AlertLevel, AlertViewModel, ResultJso } from "./";
+import { observableArray } from "knockout";
 
 export class AlertBar {
-    public readonly alerts = ko.observableArray<AlertViewModel>();
+    public readonly alerts = observableArray<AlertViewModel>();
 
     private readonly timeouts: IDictionary<number> = {};
 

@@ -1,21 +1,22 @@
 ﻿// tslint:disable:max-classes-per-file
 
-import * as ko from "knockout";
 import { ListsRegistry } from "./areas/lists/";
 import { OffersRegistry } from "./areas/offers/";
 import { SharedRegistry } from "./shared/";
 import EnterKey from "./ko/bindingHandlers/enterKey";
+import { applyBindings, bindingHandlers } from "knockout";
 
 export class KoStartup {
     public static start() {
         KoStartup.registerComponents();
         KoStartup.registerBindingHandlers();
 
-        ko.applyBindings();
+        // @ts-ignore: used by view
+        applyBindings();
     }
 
     private static registerBindingHandlers() {
-        ko.bindingHandlers.enterkey = EnterKey;
+        bindingHandlers.enterkey = EnterKey;
     }
 
     private static registerComponents() {
