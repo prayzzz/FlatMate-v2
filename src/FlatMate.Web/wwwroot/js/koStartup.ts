@@ -11,7 +11,7 @@ export class KoStartup {
         KoStartup.registerComponents();
         KoStartup.registerBindingHandlers();
 
-        // @ts-ignore: used by view
+        // @ts-ignore
         applyBindings();
     }
 
