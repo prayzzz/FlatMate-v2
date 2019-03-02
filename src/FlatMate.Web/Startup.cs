@@ -95,7 +95,7 @@ namespace FlatMate.Web
             app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
             app.UseMvc(routes =>
             {
-                routes.MapRoute("default_area", "{area:exists}/{controller}/{action}/{id?}");
+                routes.MapRoute("default_area", "{area:exists}/{controller}/{action=Index}/{id?}");
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
 
