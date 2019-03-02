@@ -95,10 +95,8 @@ namespace FlatMate.Web
             app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
             app.UseMvc(routes =>
             {
-                routes.MapRoute("error", "Error", new { controller = "Error", action = "Index" });
-                routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("default", "{area=Home}/{controller=Dashboard}/{action=Index}");
-                routes.MapRoute("404", "{*url}", new { controller = "Error", action = "PageNotFound" });
+                routes.MapRoute("default_area", "{area:exists}/{controller}/{action}/{id?}");
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
 
             foreach (var module in Modules)

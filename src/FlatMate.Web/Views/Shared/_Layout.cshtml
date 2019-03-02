@@ -19,9 +19,6 @@
 
 <header>
     <div class="header-wrapper">
-        <div class="page-title">
-            @* <h1>@ViewData["PageTitle"]</h1> *@
-        </div>
         <div class="flex-row nav-toggle">
             <div class="menu-toggle">
                 <label for="menu-checkbox">
@@ -51,20 +48,33 @@
 <input id="menu-checkbox" type="checkbox" style="display: none"/>
 
 <nav>
+
+    <div class="cat">Listen</div>
     <ul>
         <li>
-            <a asp-area="Home" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Meine Listen</a>
+            <a asp-area="Lists" asp-controller="ItemList" asp-action="Browse">Listen Suchen</a>
         </li>
+    </ul>
+
+    <div class="cat">Angebote</div>
+    <ul>
         <li>
-            <a asp-area="Lists" asp-controller="ItemList" asp-action="My">Listen</a>
+            @{
+                var rewe = new Dictionary<string, string> { { "companyId", "1" } };
+                var penny = new Dictionary<string, string> { { "companyId", "2" } };
+                var aldi = new Dictionary<string, string> { { "companyId", "5" } };
+            }
+            <a asp-area="Offers" asp-controller="Offer" asp-action="View" asp-all-route-data="rewe">REWE</a>
+            <a asp-area="Offers" asp-controller="Offer" asp-action="View" asp-all-route-data="penny">Penny</a>
+            <a asp-area="Offers" asp-controller="Offer" asp-action="View" asp-all-route-data="aldi">Aldi</a>
         </li>
+    </ul>
+
+    <div class="cat">Profil</div>
+    <ul>
         <li>
-            <a asp-area="Offers" asp-controller="Company" asp-action="Index">Angebote</a>
-        </li>
-        <li>
-            <a asp-area="Account" asp-controller="MyProfile" asp-action="Index">Profil</a>
-        </li>
-        <li>
+            <a asp-area="Account" asp-controller="MyProfile" asp-action="ChangePassword">Password ändern</a>
             <a asp-area="Account" asp-controller="Logout" asp-action="Index">Logout</a>
         </li>
     </ul>

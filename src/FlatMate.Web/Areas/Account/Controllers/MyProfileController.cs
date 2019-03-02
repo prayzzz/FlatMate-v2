@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
+using FlatMate.Module.Account.Api;
+using FlatMate.Module.Account.Api.Jso;
 using FlatMate.Web.Areas.Account.Data;
+using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using FlatMate.Web.Mvc;
-using FlatMate.Module.Account.Api;
-using FlatMate.Module.Account.Api.Jso;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Account.Controllers
@@ -20,6 +20,7 @@ namespace FlatMate.Web.Areas.Account.Controllers
                                    IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _userApi = userApi;
+           var v = new { Asd = "" };
         }
 
         [HttpGet]
