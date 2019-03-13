@@ -16,7 +16,8 @@
         <PackageReference Include="App.Metrics.Formatters.InfluxDB" Version="3.0.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
-        <PackageReference Include="prayzzz.Common.Mvc" Version="1.0.0.141-master" />
+        <PackageReference Include="prayzzz.Common.Mvc" Version="1.1.0.1" />
+        <PackageReference Include="prayzzz.Common.Mvc.AppMetrics" Version="1.1.0.1" />
         <PackageReference Include="Serilog" Version="2.8.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />

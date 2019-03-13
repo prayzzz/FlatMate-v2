@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Security.Policy;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FlatMate.Migration;
@@ -21,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using prayzzz.Common;
 using prayzzz.Common.Mapping;
+using prayzzz.Common.Mvc.AppMetrics;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace FlatMate.Web
@@ -79,7 +81,7 @@ namespace FlatMate.Web
                 OnPrepareResponse = ctx => ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + TimeSpan.FromDays(7).TotalSeconds
             });
 
-            app.UseFlatMateMetrics();
+            app.UsePrzMetrics();
 
             app.UseAuthentication();
             app.UseSession();
@@ -108,14 +110,17 @@ namespace FlatMate.Web
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             // Framework
-            var mvc = services.AddMvc(o => { o.Filters.Add<ApiResultFilter>(); });
+            var mvc = services.AddMvc();
             mvc.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            mvc.AddMvcOptions(o => o.Filters.Add<ApiResultFilter>());
             mvc.AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));
             mvc.ConfigureApplicationPartManager(c => Array.ForEach(Modules, m => c.ApplicationParts.Add(m)));
             mvc.AddControllersAsServices();
+            mvc.AddPrzMetrics();
 
             // Metrics
-            services.AddFlatMateMetrics(_configuration);
+            var metricsEndpoint = _configuration.GetValue<string>(PrzMetricConstants.MetricsEndpointConfigKey);
+            services.AddPrzMetrics("FlatMate", new Uri(metricsEndpoint).Port);
 
             services.AddOptions();
             services.AddResponseCaching();
