@@ -24,10 +24,7 @@ export class ListActionManager<T extends IDragItem> {
     private dragZoneElement: Element | null;
     private dragPlaceHolder: HTMLElement;
 
-    constructor(
-        onSwipeEnd: (item: any) => void,
-        onSortCompleted: (i: number, item: T) => void
-    ) {
+    constructor(onSwipeEnd: (item: any) => void, onSortCompleted: (i: number, item: T) => void) {
         this.onSwipeEnd = onSwipeEnd;
         this.onSortCompleted = onSortCompleted;
 
@@ -49,10 +46,7 @@ export class ListActionManager<T extends IDragItem> {
             throw "'drag-placeholder-template' not found";
         }
 
-        let parsedDocument = new DOMParser().parseFromString(
-            temp.innerText.trim(),
-            "text/html"
-        );
+        let parsedDocument = new DOMParser().parseFromString(temp.innerText.trim(), "text/html");
 
         return parsedDocument.getElementsByTagName("tr").item(0) as HTMLElement;
     }
@@ -145,10 +139,7 @@ export class ListActionManager<T extends IDragItem> {
     private dragStart(dragItem: T, event: DragEvent): boolean {
         const self = this;
 
-        const itemElement = this.findParentElementWithClass(
-            "drag-item",
-            event.srcElement
-        ) as HTMLElement | null;
+        const itemElement = this.findParentElementWithClass("drag-item", event.srcElement) as HTMLElement | null;
 
         if (itemElement == null) {
             return false;
@@ -175,10 +166,7 @@ export class ListActionManager<T extends IDragItem> {
         setTimeout(function () {
             self.draggedItemElement!!.classList.add("drag-hide");
 
-            itemElement.parentNode!!.insertBefore(
-                self.dragPlaceHolder,
-                itemElement.nextSibling
-            );
+            itemElement.parentNode!!.insertBefore(self.dragPlaceHolder, itemElement.nextSibling);
         }, 1);
 
         return true;
@@ -216,10 +204,7 @@ export class ListActionManager<T extends IDragItem> {
                 const curEl = el.children.item(i);
                 if (curEl == this.dragPlaceHolder) {
                     break;
-                } else if (
-                    curEl.classList.contains("drag-item") &&
-                    curEl != this.draggedItemElement
-                ) {
+                } else if (curEl.classList.contains("drag-item") && curEl != this.draggedItemElement) {
                     newIndex++;
                 }
             }
@@ -265,18 +250,14 @@ export class ListActionManager<T extends IDragItem> {
 
         this.allowDrop(event);
 
-        const el = this.findParentElementWithClass(
-            "drag-item",
-            event.srcElement
-        ) as HTMLElement | null;
+        const el = this.findParentElementWithClass("drag-item", event.srcElement) as HTMLElement | null;
 
         if (el == null) {
             return true;
         }
 
         // !! calculate before remove placeholder
-        const top =
-            el.getBoundingClientRect().top + el.offsetHeight / 2 - event.pageY;
+        const top = el.getBoundingClientRect().top + el.offsetHeight / 2 - event.pageY;
 
         this.removePlaceholder(el);
 
@@ -284,10 +265,7 @@ export class ListActionManager<T extends IDragItem> {
         if (top > 0) {
             el.parentNode!!.insertBefore(this.dragPlaceHolder, el);
         } else {
-            el.parentNode!!.insertBefore(
-                this.dragPlaceHolder,
-                el.nextElementSibling
-            );
+            el.parentNode!!.insertBefore(this.dragPlaceHolder, el.nextElementSibling);
         }
 
         return true;
@@ -308,10 +286,12 @@ export class ListActionManager<T extends IDragItem> {
         event.preventDefault();
     }
 
-    private enterElement(el: Element | null): number {
-        if (el == null) {
+    private enterElement(target: EventTarget | null): number {
+        if (target == null) {
             return 0;
         }
+
+        const el = target as Element;
 
         const counter = this.enterLeaveCount.get(el);
         if (counter == null) {
@@ -324,10 +304,12 @@ export class ListActionManager<T extends IDragItem> {
         return count;
     }
 
-    private leaveElement(el: Element | null): number {
-        if (el == null) {
+    private leaveElement(target: EventTarget | null): number {
+        if (target == null) {
             return 0;
         }
+
+        const el = target as Element;
 
         const counter = this.enterLeaveCount.get(el);
         if (counter == null) {
@@ -340,11 +322,8 @@ export class ListActionManager<T extends IDragItem> {
         return count;
     }
 
-    private findParentElementWithClass(
-        cssClass: string,
-        srcElement: Element | null
-    ): Element | null {
-        let el = srcElement;
+    private findParentElementWithClass(cssClass: string, srcElement: EventTarget | null): Element | null {
+        let el = srcElement as Element;
         while (el && !el.classList.contains(cssClass)) {
             el = el.parentElement;
         }

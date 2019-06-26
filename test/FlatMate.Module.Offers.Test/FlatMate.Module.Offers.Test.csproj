@@ -7,8 +7,8 @@
     <EmbeddedResource Include="Data\*.json" />
   </ItemGroup>
   <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.2" />
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.4" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
       <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
       <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
       <PackageReference Include="prayzzz.Common.Unit" Version="1.1.0.1" />

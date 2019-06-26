@@ -82,6 +82,25 @@ namespace FlatMate.Module.Offers.Api
             return await _marketService.ImportOffersFromApi(marketId);
         }
 
+        [HttpGet("all/offer/import")]
+        public async Task<Result> ImportOffers()
+        {
+            foreach (var market in await _marketService.SearchMarkets(Company.None))
+            {
+                try
+                {
+                    _logger.LogInformation("Importing offers for {market}", market.Name);
+                    await _marketService.ImportOffersFromApi(market.Id.Value);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Error while processing offers", e);
+                }
+            }
+
+            return Result.Success;
+        }
+
         [HttpPost("{marketId}/offer/import")]
         public async Task<Result> ImportOffersFromString(int marketId, [FromBody] JToken data)
         {
