@@ -1,9 +1,9 @@
+using System;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
-using System;
 
 namespace FlatMate.Web.Mvc
 {

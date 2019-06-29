@@ -145,7 +145,7 @@ namespace FlatMate.Module.Account.Domain.ApplicationServices
 
         public async Task<(Result, UserDto)> GetAsync(int id)
         {
-            var(result, user) = await _userRepository.GetAsync(id);
+            var (result, user) = await _userRepository.GetAsync(id);
             if (result.IsError)
             {
                 return (result, null);

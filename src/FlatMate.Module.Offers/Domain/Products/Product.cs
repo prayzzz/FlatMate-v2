@@ -94,7 +94,7 @@ namespace FlatMate.Module.Offers.Domain.Products
                 ImageUrl = product.ImageUrl,
                 Name = product.Name,
                 ProductCategory = product.ProductCategory != null ? ctx.Mapper.Map<ProductCategoryDto>(product.ProductCategory) : null,
-                ProductCategoryId = product.ProductCategoryId,
+                ProductCategoryId = product.ProductCategoryId
             };
         }
     }

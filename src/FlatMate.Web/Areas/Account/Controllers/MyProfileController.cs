@@ -20,7 +20,6 @@ namespace FlatMate.Web.Areas.Account.Controllers
                                    IMvcControllerServices controllerService) : base(logger, controllerService)
         {
             _userApi = userApi;
-           var v = new { Asd = "" };
         }
 
         [HttpGet]

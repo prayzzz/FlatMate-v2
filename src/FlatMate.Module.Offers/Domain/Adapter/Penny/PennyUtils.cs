@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using prayzzz.Common.Attributes;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
+using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Penny
 {
@@ -9,7 +9,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
     {
         decimal ParsePrice(string price);
 
-        string StripHTML(string str);
+        string StripHtml(string str);
 
         string Trim(string str);
     }
@@ -23,7 +23,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
         private const string DecimalPoint = ".";
 
         private static readonly CultureInfo DecimalCulture = new CultureInfo("en-US");
-        private static readonly char[] TrimChars = new[] { ' ', '*', ',', '.' };
+        private static readonly char[] TrimChars = { ' ', '*', ',', '.' };
         private static readonly Regex TwoOrMoreWhitespaces = new Regex("[ ]{2,}");
 
         private readonly ILogger<PennyUtils> _logger;
@@ -76,7 +76,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny
             }
         }
 
-        public string StripHTML(string str)
+        public string StripHtml(string str)
         {
             str = str.Replace("<li>", " ");
             return Trim(Regex.Replace(str, "<.*?>", string.Empty));

@@ -8,9 +8,9 @@ namespace FlatMate.Module.Common.Domain.Repositories
     {
         Task<Result> DeleteAsync(int id);
 
-        Task<(Result, TEntity)> GetAsync(int id);
-
         (Result, TEntity) Get(int id);
+
+        Task<(Result, TEntity)> GetAsync(int id);
 
         Task<(Result, TEntity)> SaveAsync(TEntity entity);
     }

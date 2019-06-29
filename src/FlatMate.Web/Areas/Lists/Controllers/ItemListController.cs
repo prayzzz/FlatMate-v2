@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
+using FlatMate.Module.Lists.Api;
+using FlatMate.Module.Lists.Api.Jso;
 using FlatMate.Web.Areas.Lists.Data;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using FlatMate.Module.Lists.Api.Jso;
-using FlatMate.Module.Lists.Api;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Areas.Lists.Controllers

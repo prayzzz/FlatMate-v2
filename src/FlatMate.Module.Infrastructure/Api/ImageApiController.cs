@@ -1,11 +1,11 @@
-﻿using FlatMate.Module.Common;
+﻿using System;
+using System.Threading.Tasks;
+using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Infrastructure.Images;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;
-using System;
-using System.Threading.Tasks;
 
 namespace FlatMate.Module.Infrastructure.Api
 {
@@ -21,11 +21,6 @@ namespace FlatMate.Module.Infrastructure.Api
             _imageService = imageService;
         }
 
-        public static string GetImagePath(Guid guid)
-        {
-            return RouteTemplate + guid;
-        }
-
         [HttpGet("{guid}")]
         [ResponseCache(Duration = 60 * 60 * 24)]
         public async Task<IActionResult> Get(Guid guid)
@@ -38,6 +33,11 @@ namespace FlatMate.Module.Infrastructure.Api
             }
 
             return new FileContentResult(imageDto.File, imageDto.ContentType);
+        }
+
+        public static string GetImagePath(Guid guid)
+        {
+            return RouteTemplate + guid;
         }
 
         [HttpPost]

@@ -2,23 +2,23 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using Microsoft.Extensions.Caching.Memory;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Infrastructure.Images
 {
     public interface IImageService
     {
+        Task<Result> Delete(Guid guid);
+
         Task<(Result, ImageDto)> Get(Guid hash);
 
         Task<(Result, ImageDto)> Get(int id);
 
         Task<(Result, ImageDto)> Save(byte[] file, string contentType);
-
-        Task<Result> Delete(Guid guid);
     }
 
     [Inject]
@@ -34,8 +34,8 @@ namespace FlatMate.Module.Infrastructure.Images
 
         private readonly IMemoryCache _cache;
         private readonly InfrastructureDbContext _dbContext;
-        private readonly IMapper _mapper;
         private readonly ILogger<ImageService> _logger;
+        private readonly IMapper _mapper;
 
         public ImageService(IMemoryCache cache, InfrastructureDbContext dbContext, IMapper mapper, ILogger<ImageService> logger)
         {
@@ -43,6 +43,12 @@ namespace FlatMate.Module.Infrastructure.Images
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        public Task<Result> Delete(Guid guid)
+        {
+            _dbContext.Images.RemoveRange(_dbContext.Images.Where(i => i.Guid == guid));
+            return Task.FromResult(Result.Success);
         }
 
         public async Task<(Result, ImageDto)> Get(int id)
@@ -99,12 +105,6 @@ namespace FlatMate.Module.Infrastructure.Images
             }
 
             return (Result.Success, _mapper.Map<ImageDto>(image));
-        }
-
-        public Task<Result> Delete(Guid guid)
-        {
-            _dbContext.Images.RemoveRange(_dbContext.Images.Where(i => i.Guid == guid));
-            return Task.FromResult(Result.Success);
         }
     }
 }

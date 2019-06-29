@@ -15,8 +15,8 @@ namespace FlatMate.Module.Account.DataAccess.Users
     public class UserRestrictedAreaRepository : IUserRestrictedAreaRepository
     {
         private const string CacheKeyPrefix = "UserRestrictedArea_";
-        private readonly AccountDbContext _dbContext;
         private readonly IMemoryCache _cache;
+        private readonly AccountDbContext _dbContext;
 
         public UserRestrictedAreaRepository(AccountDbContext dbContext, IMemoryCache cache)
         {

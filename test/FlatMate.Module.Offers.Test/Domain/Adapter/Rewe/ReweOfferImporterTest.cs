@@ -42,7 +42,7 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Rewe
 
             // Act
             var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
-            var (result, offers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var (result, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Result));
@@ -89,7 +89,7 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Rewe
 
             // Act
             var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
-            var (result, importedOffers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var (result, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
             var savedOffer = dbContext.Offers.FirstOrDefault(o => o.ExternalId == offer.Id);
             var savedProduct = dbContext.Products.FirstOrDefault();
 
@@ -150,8 +150,8 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Rewe
 
             // Act
             var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
-            var (result, importedOffers) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
-            var (result2, importedOffers2) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var (result, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var (result2, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             var savedProduct = dbContext.Products.FirstOrDefault();
 

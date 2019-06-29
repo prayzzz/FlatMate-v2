@@ -1,5 +1,4 @@
 ﻿using System;
-using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using prayzzz.Common.Results;

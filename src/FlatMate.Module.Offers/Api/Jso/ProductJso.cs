@@ -47,7 +47,7 @@ namespace FlatMate.Module.Offers.Api.Jso
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
                 Name = dto.Name,
-                ProductCategory = ctx.Mapper.Map<ProductCategoryJso>(dto.ProductCategory),
+                ProductCategory = ctx.Mapper.Map<ProductCategoryJso>(dto.ProductCategory)
             };
         }
 
@@ -61,7 +61,7 @@ namespace FlatMate.Module.Offers.Api.Jso
                 Id = dto.Id,
                 ImageUrl = dto.ImageUrl,
                 Name = dto.Name,
-                OfferCount = dto.OfferCount,
+                OfferCount = dto.OfferCount
             };
         }
     }

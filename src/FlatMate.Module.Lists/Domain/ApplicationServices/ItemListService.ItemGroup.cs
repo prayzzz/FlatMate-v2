@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Results;

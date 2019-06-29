@@ -7,16 +7,16 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso
     public class Area
     {
         [XmlElement(ElementName = "area_image")]
-        public string Area_image { get; set; }
+        public string AreaImage { get; set; }
 
         [XmlElement(ElementName = "area_image_retina")]
-        public string Area_image_retina { get; set; }
+        public string AreaImageRetina { get; set; }
 
         [XmlElement(ElementName = "area_image_tablet")]
-        public string Area_image_tablet { get; set; }
+        public string AreaImageTablet { get; set; }
 
         [XmlElement(ElementName = "area_image_tablet_retina")]
-        public string Area_image_tablet_retina { get; set; }
+        public string AreaImageTabletRetina { get; set; }
 
         [XmlElement(ElementName = "articles")]
         public Articles Articles { get; set; }
@@ -56,37 +56,37 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso
         public string Noprice { get; set; }
 
         [XmlElement(ElementName = "pack_subtitle")]
-        public string Pack_subtitle { get; set; }
+        public string PackSubtitle { get; set; }
 
         [XmlElement(ElementName = "pack_timestamp")]
-        public string Pack_timestamp { get; set; }
+        public string PackTimestamp { get; set; }
 
         [XmlElement(ElementName = "pack_timestamp_actiondate")]
-        public string Pack_timestamp_actiondate { get; set; }
+        public string PackTimestampActiondate { get; set; }
 
         [XmlElement(ElementName = "pack_timestamp_end")]
-        public string Pack_timestamp_end { get; set; }
+        public string PackTimestampEnd { get; set; }
 
         [XmlElement(ElementName = "pack_timestamp_remove")]
-        public string Pack_timestamp_remove { get; set; }
+        public string PackTimestampRemove { get; set; }
 
         [XmlElement(ElementName = "pack_timestamp_start")]
-        public string Pack_timestamp_start { get; set; }
+        public string PackTimestampStart { get; set; }
 
         [XmlElement(ElementName = "pack_title")]
-        public string Pack_title { get; set; }
+        public string PackTitle { get; set; }
 
         [XmlElement(ElementName = "price")]
         public string Price { get; set; }
 
         [XmlElement(ElementName = "price_calc")]
-        public string Price_calc { get; set; }
+        public string PriceCalc { get; set; }
 
         [XmlElement(ElementName = "price_extra")]
-        public string Price_extra { get; set; }
+        public string PriceExtra { get; set; }
 
         [XmlElement(ElementName = "price_old")]
-        public string Price_old { get; set; }
+        public string PriceOld { get; set; }
 
         [XmlElement(ElementName = "producer")]
         public string Producer { get; set; }
@@ -121,13 +121,13 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso
     public class Badge
     {
         [XmlElement(ElementName = "additional_text")]
-        public string Additional_text { get; set; }
+        public string AdditionalText { get; set; }
 
         [XmlElement(ElementName = "image_normal")]
-        public Image_normal Image_normal { get; set; }
+        public ImageNormal ImageNormal { get; set; }
 
         [XmlElement(ElementName = "image_retina")]
-        public Image_retina Image_retina { get; set; }
+        public ImageRetina ImageRetina { get; set; }
 
         [XmlElement(ElementName = "target")]
         public string Target { get; set; }
@@ -173,7 +173,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso
     }
 
     [XmlRoot(ElementName = "image_normal")]
-    public class Image_normal
+    public class ImageNormal
     {
         [XmlAttribute(AttributeName = "height")]
         public string Height { get; set; }
@@ -186,7 +186,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso
     }
 
     [XmlRoot(ElementName = "image_retina")]
-    public class Image_retina
+    public class ImageRetina
     {
         [XmlAttribute(AttributeName = "height")]
         public string Height { get; set; }
@@ -209,34 +209,34 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso
     public class Img
     {
         [XmlElement(ElementName = "detail_normal")]
-        public string Detail_normal { get; set; }
+        public string DetailNormal { get; set; }
 
         [XmlElement(ElementName = "detail_retina")]
-        public string Detail_retina { get; set; }
+        public string DetailRetina { get; set; }
 
         [XmlElement(ElementName = "overview_normal")]
-        public string Overview_normal { get; set; }
+        public string OverviewNormal { get; set; }
 
         [XmlElement(ElementName = "overview_retina")]
-        public string Overview_retina { get; set; }
+        public string OverviewRetina { get; set; }
 
         [XmlElement(ElementName = "shoplist_normal")]
-        public string Shoplist_normal { get; set; }
+        public string ShoplistNormal { get; set; }
 
         [XmlElement(ElementName = "shoplist_retina")]
-        public string Shoplist_retina { get; set; }
+        public string ShoplistRetina { get; set; }
 
         [XmlElement(ElementName = "slider_normal")]
-        public string Slider_normal { get; set; }
+        public string SliderNormal { get; set; }
 
         [XmlElement(ElementName = "slider_retina")]
-        public string Slider_retina { get; set; }
+        public string SliderRetina { get; set; }
 
         [XmlElement(ElementName = "thumb_normal")]
-        public string Thumb_normal { get; set; }
+        public string ThumbNormal { get; set; }
 
         [XmlElement(ElementName = "thumb_retina")]
-        public string Thumb_retina { get; set; }
+        public string ThumbRetina { get; set; }
     }
 
     [XmlRoot(ElementName = "teaser")]

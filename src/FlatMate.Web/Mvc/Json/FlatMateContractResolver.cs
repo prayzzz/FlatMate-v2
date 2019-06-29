@@ -1,5 +1,4 @@
 ﻿using System;
-using FlatMate.Module.Common;
 using Newtonsoft.Json.Serialization;
 using prayzzz.Common.Mvc.Json;
 

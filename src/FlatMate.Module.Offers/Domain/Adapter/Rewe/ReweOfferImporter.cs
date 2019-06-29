@@ -34,7 +34,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             { "Baby & Kind", ProductCategoryEnum.Baby },
             { "Haushalt", ProductCategoryEnum.Household },
             { "Drogerie", ProductCategoryEnum.PersonalCare },
-            { "Weitere Bereiche", ProductCategoryEnum.Other },
+            { "Weitere Bereiche", ProductCategoryEnum.Other }
         };
 
         private readonly ILogger<ReweOfferImporter> _logger;
@@ -97,7 +97,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
         }
 
         /// <summary>
-        /// Some product properties should not change. This method logs them if they change.
+        ///     Some product properties should not change. This method logs them if they change.
         /// </summary>
         private Dictionary<string, ProductCategoryTemp> ExtractCategoryMap(Envelope<OfferJso> envelope)
         {

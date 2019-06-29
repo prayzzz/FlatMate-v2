@@ -84,7 +84,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             var (result, from) = _aldiUtils.GetStartDateFromTitle(article);
             if (result.IsError)
             {
-                Logger.LogWarning($"Cannot parse date from title {article.Pack_title}");
+                Logger.LogWarning($"Cannot parse date from title {article.PackTitle}");
                 return (result, null);
             }
 
@@ -110,15 +110,15 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             var img = article.Images.Img.FirstOrDefault();
             if (img != null)
             {
-                imageUrl = "http://www.aldi-nord.de/" + img.Slider_normal;
+                imageUrl = "http://www.aldi-nord.de/" + img.SliderNormal;
             }
 
             var offerTemp = new OfferTemp
             {
-                BasePrice = _aldiUtils.Trim(article.Price_calc),
+                BasePrice = _aldiUtils.Trim(article.PriceCalc),
                 Brand = _aldiUtils.Trim(article.Producer),
                 Company = Company,
-                Description = _aldiUtils.StripHTML(article.Shorttext),
+                Description = _aldiUtils.StripHtml(article.Shorttext),
                 ExternalOfferId = $"{((DateTimeOffset) offerDuration.From).ToUnixTimeSeconds()}_{article.Articleid}",
                 ExternalProductCategory = string.Empty,
                 ExternalProductCategoryId = article.Catrel,
@@ -129,8 +129,8 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
                 OfferedTo = offerDuration.To,
                 OfferPrice = _aldiUtils.ParsePrice(article.Price),
                 ProductCategory = ProductCategoryEnum.Other,
-                RegularPrice = _aldiUtils.ParsePrice(article.Price_old),
-                SizeInfo = article.Price_extra
+                RegularPrice = _aldiUtils.ParsePrice(article.PriceOld),
+                SizeInfo = article.PriceExtra
             };
 
             return (Result.Success, offerTemp);

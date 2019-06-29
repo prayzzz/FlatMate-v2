@@ -24,9 +24,45 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Favorite(int id)
+        {
+            var favoriteResult = await _apiController.AddProductFavorite(new ProductFavoriteJso { ProductId = id });
+            if (favoriteResult.IsError)
+            {
+                TempData[Constants.TempData.Result] = JsonService.Serialize(favoriteResult);
+            }
+
+            var referer = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return RedirectToAction("View", id);
+        }
+
+        [HttpGet]
         public IActionResult Index()
         {
             return NotFound();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Unfavorite(int id)
+        {
+            var unfavoriteResult = await _apiController.DeleteProductFavorite(new ProductFavoriteJso { ProductId = id });
+            if (unfavoriteResult.IsError)
+            {
+                TempData[Constants.TempData.Result] = JsonService.Serialize(unfavoriteResult);
+            }
+
+            var referer = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return RedirectToAction("View", id);
         }
 
         [HttpGet]
@@ -56,42 +92,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             model.PriceHistory = (await priceHistoryTask).ToList();
 
             return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Favorite(int id)
-        {
-            var favoriteResult = await _apiController.AddProductFavorite(new ProductFavoriteJso { ProductId = id });
-            if (favoriteResult.IsError)
-            {
-                TempData[Constants.TempData.Result] = JsonService.Serialize(favoriteResult);
-            }
-
-            var referer = HttpContext.Request.Headers["Referer"].ToString();
-            if (!string.IsNullOrEmpty(referer))
-            {
-                return Redirect(referer);
-            }
-
-            return RedirectToAction("View", id);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Unfavorite(int id)
-        {
-            var unfavoriteResult = await _apiController.DeleteProductFavorite(new ProductFavoriteJso { ProductId = id });
-            if (unfavoriteResult.IsError)
-            {
-                TempData[Constants.TempData.Result] = JsonService.Serialize(unfavoriteResult);
-            }
-
-            var referer = HttpContext.Request.Headers["Referer"].ToString();
-            if (!string.IsNullOrEmpty(referer))
-            {
-                return Redirect(referer);
-            }
-
-            return RedirectToAction("View", id);
         }
     }
 }

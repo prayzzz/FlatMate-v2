@@ -32,8 +32,6 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
 
         public async Task<Result> DeleteAsync(int listId)
         {
-
-
             return await SaveChanges();
         }
 

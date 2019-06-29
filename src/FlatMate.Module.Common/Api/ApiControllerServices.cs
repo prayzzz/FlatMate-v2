@@ -1,14 +1,14 @@
-﻿using prayzzz.Common.Mapping;
+﻿using App.Metrics;
 using prayzzz.Common.Attributes;
-using App.Metrics;
+using prayzzz.Common.Mapping;
 
 namespace FlatMate.Module.Common.Api
 {
     public interface IApiControllerServices
     {
-        IMetricsRoot MetricsRoot { get; }
-
         IMapper Mapper { get; }
+
+        IMetricsRoot MetricsRoot { get; }
     }
 
     [Inject]
@@ -20,8 +20,8 @@ namespace FlatMate.Module.Common.Api
             Mapper = mapper;
         }
 
-        public IMetricsRoot MetricsRoot { get; }
-
         public IMapper Mapper { get; }
+
+        public IMetricsRoot MetricsRoot { get; }
     }
 }

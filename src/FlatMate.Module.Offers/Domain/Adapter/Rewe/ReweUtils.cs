@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 {

@@ -1,7 +1,7 @@
-﻿using FlatMate.Module.Account.Shared.Dtos;
+﻿using System.ComponentModel;
+using FlatMate.Module.Account.Shared.Dtos;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
-using System.ComponentModel;
 
 namespace FlatMate.Module.Account.Api.Jso
 {

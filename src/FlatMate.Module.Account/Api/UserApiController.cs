@@ -5,7 +5,6 @@ using FlatMate.Module.Account.Api.Jso;
 using FlatMate.Module.Account.DataAccess.Users;
 using FlatMate.Module.Account.Shared.Dtos;
 using FlatMate.Module.Account.Shared.Interfaces;
-using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Mvc;
 using prayzzz.Common.Results;

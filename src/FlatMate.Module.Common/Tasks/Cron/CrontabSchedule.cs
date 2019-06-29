@@ -7,7 +7,7 @@ using System.IO;
 namespace FlatMate.Module.Common.Tasks.Cron
 {
     /// <summary>
-    /// Represents a schedule initialized from the crontab expression.
+    ///     Represents a schedule initialized from the crontab expression.
     /// </summary>
     [Serializable]
     public sealed class CrontabSchedule
@@ -28,14 +28,14 @@ namespace FlatMate.Module.Common.Tasks.Cron
         {
             Debug.Assert(expression != null);
 
-            var fields = expression.Split((char[])Separators, StringSplitOptions.RemoveEmptyEntries);
+            var fields = expression.Split(Separators, StringSplitOptions.RemoveEmptyEntries);
 
             if (fields.Length != 5)
             {
                 throw new FormatException(string.Format(
-                    "'{0}' is not a valid crontab expression. It must contain at least 5 components of a schedule "
-                    + "(in the sequence of minutes, hours, days, months, days of week).",
-                    expression));
+                                                        "'{0}' is not a valid crontab expression. It must contain at least 5 components of a schedule "
+                                                        + "(in the sequence of minutes, hours, days, months, days of week).",
+                                                        expression));
             }
 
             _minutes = CrontabField.Minutes(fields[0]);
@@ -45,20 +45,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
             _daysOfWeek = CrontabField.DaysOfWeek(fields[4]);
         }
 
-        private static Calendar Calendar
-        {
-            get { return CultureInfo.InvariantCulture.Calendar; }
-        }
-
-        public static CrontabSchedule Parse(string expression)
-        {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
-
-            return new CrontabSchedule(expression);
-        }
+        private static Calendar Calendar => CultureInfo.InvariantCulture.Calendar;
 
         public DateTime GetNextOccurrence(DateTime baseTime)
         {
@@ -197,7 +184,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
             // Day of week
             //
 
-            if (_daysOfWeek.Contains((int)nextTime.DayOfWeek))
+            if (_daysOfWeek.Contains((int) nextTime.DayOfWeek))
             {
                 return nextTime;
             }
@@ -208,11 +195,21 @@ namespace FlatMate.Module.Common.Tasks.Cron
         public IEnumerable<DateTime> GetNextOccurrences(DateTime baseTime, DateTime endTime)
         {
             for (var occurrence = GetNextOccurrence(baseTime, endTime);
-                occurrence < endTime;
-                occurrence = GetNextOccurrence(occurrence, endTime))
+                 occurrence < endTime;
+                 occurrence = GetNextOccurrence(occurrence, endTime))
             {
                 yield return occurrence;
             }
+        }
+
+        public static CrontabSchedule Parse(string expression)
+        {
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            return new CrontabSchedule(expression);
         }
 
         public override string ToString()

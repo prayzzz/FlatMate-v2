@@ -1,8 +1,8 @@
-﻿using FlatMate.Module.Common.Extensions;
+﻿using System;
+using FlatMate.Module.Common.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
-namespace FlatMate.Module.Common.Test
+namespace FlatMate.Module.Common.Test.Extensions
 {
     [TestClass]
     public class DateTimeExtensionTest

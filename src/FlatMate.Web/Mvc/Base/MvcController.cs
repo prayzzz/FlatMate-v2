@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Security.Claims;
+using FlatMate.Module.Account.Api.Jso;
+using FlatMate.Web.Mvc.Authorization;
 using FlatMate.Web.Mvc.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using FlatMate.Module.Account.Api.Jso;
-using FlatMate.Module.Common;
-using FlatMate.Web.Mvc.Authorization;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Web.Mvc.Base
@@ -76,13 +75,8 @@ namespace FlatMate.Web.Mvc.Base
             };
         }
 
-        protected void SetTempResult(Result result)
-        {
-            TempData[Constants.TempData.Result] = JsonService.Serialize(result);
-        }
-
         /// <summary>
-        /// check for passed result from redirect and sets it to the given model.
+        ///     check for passed result from redirect and sets it to the given model.
         /// </summary>
         protected T ApplyTempResult<T>(T model) where T : MvcViewModel
         {
@@ -101,6 +95,11 @@ namespace FlatMate.Web.Mvc.Base
             }
 
             return model;
+        }
+
+        protected void SetTempResult(Result result)
+        {
+            TempData[Constants.TempData.Result] = JsonService.Serialize(result);
         }
 
         protected IActionResult TryRedirectToReferer(IActionResult fallback)

@@ -6,7 +6,7 @@ using System.IO;
 namespace FlatMate.Module.Common.Tasks.Cron
 {
     /// <summary>
-    /// Represents a single crontab field.
+    ///     Represents a single crontab field.
     /// </summary>
     [Serializable]
     public sealed class CrontabField
@@ -32,7 +32,15 @@ namespace FlatMate.Module.Common.Tasks.Cron
         }
 
         /// <summary>
-        /// Parses a crontab field expression representing days in any given month.
+        ///     Determines if the given value occurs in the field.
+        /// </summary>
+        public bool Contains(int value)
+        {
+            return _bits[ValueToIndex(value)];
+        }
+
+        /// <summary>
+        ///     Parses a crontab field expression representing days in any given month.
         /// </summary>
         public static CrontabField Days(string expression)
         {
@@ -40,51 +48,11 @@ namespace FlatMate.Module.Common.Tasks.Cron
         }
 
         /// <summary>
-        /// Parses a crontab field expression representing days of a week.
+        ///     Parses a crontab field expression representing days of a week.
         /// </summary>
         public static CrontabField DaysOfWeek(string expression)
         {
             return new CrontabField(CrontabFieldImpl.DayOfWeek, expression);
-        }
-
-        /// <summary>
-        /// Parses a crontab field expression representing hours.
-        /// </summary>
-        public static CrontabField Hours(string expression)
-        {
-            return new CrontabField(CrontabFieldImpl.Hour, expression);
-        }
-
-        /// <summary>
-        /// Parses a crontab field expression representing minutes.
-        /// </summary>
-        public static CrontabField Minutes(string expression)
-        {
-            return new CrontabField(CrontabFieldImpl.Minute, expression);
-        }
-
-        /// <summary>
-        /// Parses a crontab field expression representing months.
-        /// </summary>
-        public static CrontabField Months(string expression)
-        {
-            return new CrontabField(CrontabFieldImpl.Month, expression);
-        }
-
-        /// <summary>
-        /// Parses a crontab field expression given its kind.
-        /// </summary>
-        public static CrontabField Parse(CrontabFieldKind kind, string expression)
-        {
-            return new CrontabField(CrontabFieldImpl.FromKind(kind), expression);
-        }
-
-        /// <summary>
-        /// Determines if the given value occurs in the field.
-        /// </summary>
-        public bool Contains(int value)
-        {
-            return _bits[ValueToIndex(value)];
         }
 
         public void Format(TextWriter writer)
@@ -98,7 +66,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
         }
 
         /// <summary>
-        /// Gets the first value of the field or -1.
+        ///     Gets the first value of the field or -1.
         /// </summary>
         public int GetFirst()
         {
@@ -106,8 +74,32 @@ namespace FlatMate.Module.Common.Tasks.Cron
         }
 
         /// <summary>
-        /// Gets the next value of the field that occurs after the given 
-        /// start value or -1 if there is no next value available.
+        ///     Parses a crontab field expression representing hours.
+        /// </summary>
+        public static CrontabField Hours(string expression)
+        {
+            return new CrontabField(CrontabFieldImpl.Hour, expression);
+        }
+
+        /// <summary>
+        ///     Parses a crontab field expression representing minutes.
+        /// </summary>
+        public static CrontabField Minutes(string expression)
+        {
+            return new CrontabField(CrontabFieldImpl.Minute, expression);
+        }
+
+        /// <summary>
+        ///     Parses a crontab field expression representing months.
+        /// </summary>
+        public static CrontabField Months(string expression)
+        {
+            return new CrontabField(CrontabFieldImpl.Month, expression);
+        }
+
+        /// <summary>
+        ///     Gets the next value of the field that occurs after the given
+        ///     start value or -1 if there is no next value available.
         /// </summary>
         public int Next(int start)
         {
@@ -128,6 +120,14 @@ namespace FlatMate.Module.Common.Tasks.Cron
             }
 
             return -1;
+        }
+
+        /// <summary>
+        ///     Parses a crontab field expression given its kind.
+        /// </summary>
+        public static CrontabField Parse(CrontabFieldKind kind, string expression)
+        {
+            return new CrontabField(CrontabFieldImpl.FromKind(kind), expression);
         }
 
         public override string ToString()
@@ -156,13 +156,18 @@ namespace FlatMate.Module.Common.Tasks.Cron
         }
 
         /// <summary>
-        /// Accumulates the given range (start to end) and interval of values
-        /// into the current set of the field.
+        ///     Accumulates the given range (start to end) and interval of values
+        ///     into the current set of the field.
         /// </summary>
         /// <remarks>
-        /// To set the entire range of values representable by the field,
-        /// set <param name="start" /> and <param name="end" /> to -1 and
-        /// <param name="interval" /> to 1.
+        ///     To set the entire range of values representable by the field,
+        ///     set
+        ///     <param name="start" />
+        ///     and
+        ///     <param name="end" />
+        ///     to -1 and
+        ///     <param name="interval" />
+        ///     to 1.
         /// </remarks>
         private void Accumulate(int start, int end, int interval)
         {
@@ -197,15 +202,15 @@ namespace FlatMate.Module.Common.Tasks.Cron
                     if (start < minValue)
                     {
                         throw new FormatException(string.Format(
-                            "'{0} is lower than the minimum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
-                            start, _impl.MinValue, _impl.MaxValue));
+                                                                "'{0} is lower than the minimum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
+                                                                start, _impl.MinValue, _impl.MaxValue));
                     }
 
                     if (start > maxValue)
                     {
                         throw new FormatException(string.Format(
-                            "'{0} is higher than the maximum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
-                            end, _impl.MinValue, _impl.MaxValue));
+                                                                "'{0} is higher than the maximum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
+                                                                end, _impl.MinValue, _impl.MaxValue));
                     }
                 }
             }
@@ -230,8 +235,8 @@ namespace FlatMate.Module.Common.Tasks.Cron
                 else if (start < minValue)
                 {
                     throw new FormatException(string.Format(
-                        "'{0} is lower than the minimum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
-                        start, _impl.MinValue, _impl.MaxValue));
+                                                            "'{0} is lower than the minimum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
+                                                            start, _impl.MinValue, _impl.MaxValue));
                 }
 
                 if (end < 0)
@@ -241,8 +246,8 @@ namespace FlatMate.Module.Common.Tasks.Cron
                 else if (end > maxValue)
                 {
                     throw new FormatException(string.Format(
-                        "'{0} is higher than the maximum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
-                        end, _impl.MinValue, _impl.MaxValue));
+                                                            "'{0} is higher than the maximum allowable value for this field. Value must be between {1} and {2} (all inclusive).",
+                                                            end, _impl.MinValue, _impl.MaxValue));
                 }
             }
 
@@ -258,7 +263,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
             // the valid field values.
             //
 
-            for (i = start - minValue; i <= (end - minValue); i += interval)
+            for (i = start - minValue; i <= end - minValue; i += interval)
             {
                 _bits[i] = true;
             }
@@ -274,7 +279,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
                 _minValueSet = start;
             }
 
-            i += (minValue - interval);
+            i += minValue - interval;
 
             if (_maxValueSet < i)
             {

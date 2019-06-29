@@ -9,7 +9,7 @@ namespace FlatMate.Module.Common
         {
             using (TextReader reader = new StringReader(objectData))
             {
-                return (T)new XmlSerializer(typeof(T)).Deserialize(reader);
+                return (T) new XmlSerializer(typeof(T)).Deserialize(reader);
             }
         }
 

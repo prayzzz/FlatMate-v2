@@ -8,21 +8,28 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny.Jso
 
         public string Bild { get; set; }
 
-        public string Bild_full { get; set; }
-
-        public string Bild_high { get; set; }
-
-        public string Bild_normal { get; set; }
-
-        public string Bild_original { get; set; }
-
-        public string Bild_preview { get; set; }
-
         public string Bilder { get; set; }
 
-        public string Button_link { get; set; }
+        [JsonProperty("Bild_full")]
+        public string BildFull { get; set; }
 
-        public string Button_text { get; set; }
+        [JsonProperty("Bild_high")]
+        public string BildHigh { get; set; }
+
+        [JsonProperty("Bild_normal")]
+        public string BildNormal { get; set; }
+
+        [JsonProperty("Bild_original")]
+        public string BildOriginal { get; set; }
+
+        [JsonProperty("Bild_preview")]
+        public string BildPreview { get; set; }
+
+        [JsonProperty("Button_link")]
+        public string ButtonLink { get; set; }
+
+        [JsonProperty("Button_text")]
+        public string ButtonText { get; set; }
 
         [JsonProperty("Themenwelt")]
         public string CategoryId { get; set; }
@@ -31,7 +38,8 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Penny.Jso
 
         public string Endtime { get; set; }
 
-        public string Flag_text { get; set; }
+        [JsonProperty("Flag_text")]
+        public string FlagText { get; set; }
 
         public string Grundpreis { get; set; }
 

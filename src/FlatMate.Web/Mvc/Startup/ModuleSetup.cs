@@ -1,7 +1,7 @@
-﻿using FlatMate.Module.Common;
+﻿using System.Collections.Generic;
+using FlatMate.Module.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 namespace FlatMate.Web.Mvc.Startup
 {

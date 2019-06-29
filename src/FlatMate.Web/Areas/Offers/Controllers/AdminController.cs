@@ -16,7 +16,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
     {
         private readonly AdminApiController _adminApi;
         private readonly CompanyApiController _companyApi;
-        private readonly ILogger<AdminController> _logger;
 
         public AdminController(AdminApiController adminApi,
                                CompanyApiController companyApi,
@@ -25,7 +24,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         {
             _adminApi = adminApi;
             _companyApi = companyApi;
-            _logger = logger;
         }
 
         public async Task<IActionResult> ManageProductDuplicates()
@@ -39,7 +37,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Merge(int id, [FromQuery]List<int> otherProductIds)
+        public async Task<IActionResult> Merge(int id, [FromQuery] List<int> otherProductIds)
         {
             foreach (var otherProductId in otherProductIds)
             {

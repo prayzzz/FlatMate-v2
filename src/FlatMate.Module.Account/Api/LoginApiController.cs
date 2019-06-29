@@ -1,11 +1,11 @@
-﻿using FlatMate.Module.Account.Api.Jso;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using FlatMate.Module.Account.Api.Jso;
 using FlatMate.Module.Account.Shared.Interfaces;
 using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Api

@@ -11,25 +11,25 @@ namespace FlatMate.Module.Common.Tasks.Cron
         public static readonly CrontabFieldImpl Day = new CrontabFieldImpl(CrontabFieldKind.Day, 1, 31, null);
 
         public static readonly CrontabFieldImpl DayOfWeek = new CrontabFieldImpl(CrontabFieldKind.DayOfWeek, 0, 6,
-            new[]
-            {
-                "Sunday", "Monday", "Tuesday",
-                "Wednesday", "Thursday", "Friday",
-                "Saturday"
-            });
+                                                                                 new[]
+                                                                                 {
+                                                                                     "Sunday", "Monday", "Tuesday",
+                                                                                     "Wednesday", "Thursday", "Friday",
+                                                                                     "Saturday"
+                                                                                 });
 
         public static readonly CrontabFieldImpl Hour = new CrontabFieldImpl(CrontabFieldKind.Hour, 0, 23, null);
 
         public static readonly CrontabFieldImpl Minute = new CrontabFieldImpl(CrontabFieldKind.Minute, 0, 59, null);
 
         public static readonly CrontabFieldImpl Month = new CrontabFieldImpl(CrontabFieldKind.Month, 1, 12,
-            new[]
-            {
-                "January", "February", "March", "April",
-                "May", "June", "July", "August",
-                "September", "October", "November",
-                "December"
-            });
+                                                                             new[]
+                                                                             {
+                                                                                 "January", "February", "March", "April",
+                                                                                 "May", "June", "July", "August",
+                                                                                 "September", "October", "November",
+                                                                                 "December"
+                                                                             });
 
         private static readonly char[] Comma = { ',' };
 
@@ -44,7 +44,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
             Debug.Assert(Enum.IsDefined(typeof(CrontabFieldKind), kind));
             Debug.Assert(minValue >= 0);
             Debug.Assert(maxValue >= minValue);
-            Debug.Assert(names == null || names.Length == (maxValue - minValue + 1));
+            Debug.Assert(names == null || names.Length == maxValue - minValue + 1);
 
             Kind = kind;
             MinValue = minValue;
@@ -58,22 +58,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
 
         public int MinValue { get; }
 
-        public int ValueCount
-        {
-            get { return MaxValue - MinValue + 1; }
-        }
-
-        public static CrontabFieldImpl FromKind(CrontabFieldKind kind)
-        {
-            if (!Enum.IsDefined(typeof(CrontabFieldKind), kind))
-            {
-                throw new ArgumentException(string.Format(
-                    "Invalid crontab field kind. Valid values are {0}.",
-                    string.Join(", ", Enum.GetNames(typeof(CrontabFieldKind)))), nameof(kind));
-            }
-
-            return FieldByKind[(int)kind];
-        }
+        public int ValueCount => MaxValue - MinValue + 1;
 
         public void Format(CrontabField field, TextWriter writer, bool noNames)
         {
@@ -127,6 +112,18 @@ namespace FlatMate.Module.Common.Tasks.Cron
             }
         }
 
+        public static CrontabFieldImpl FromKind(CrontabFieldKind kind)
+        {
+            if (!Enum.IsDefined(typeof(CrontabFieldKind), kind))
+            {
+                throw new ArgumentException(string.Format(
+                                                          "Invalid crontab field kind. Valid values are {0}.",
+                                                          string.Join(", ", Enum.GetNames(typeof(CrontabFieldKind)))), nameof(kind));
+            }
+
+            return FieldByKind[(int) kind];
+        }
+
         public void Parse(string str, CrontabFieldAccumulator acc)
         {
             if (acc == null)
@@ -156,22 +153,13 @@ namespace FlatMate.Module.Common.Tasks.Cron
 
             if (value >= 10)
             {
-                writer.Write((char)('0' + (value / 10)));
-                writer.Write((char)('0' + (value % 10)));
+                writer.Write((char) ('0' + value / 10));
+                writer.Write((char) ('0' + value % 10));
             }
             else
             {
-                writer.Write((char)('0' + value));
+                writer.Write((char) ('0' + value));
             }
-        }
-
-        private static void ThrowParseException(Exception innerException, string str)
-        {
-            Debug.Assert(str != null);
-            Debug.Assert(innerException != null);
-
-            throw new FormatException(string.Format("'{0}' is not a valid crontab field expression.", str),
-                innerException);
         }
 
         private void FormatValue(int value, TextWriter writer, bool noNames)
@@ -192,7 +180,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
             else
             {
                 var index = value - MinValue;
-                writer.Write((string)_names[index]);
+                writer.Write(_names[index]);
             }
         }
 
@@ -225,7 +213,7 @@ namespace FlatMate.Module.Common.Tasks.Cron
 
                 //
                 // Look for stepping first (e.g. */2 = every 2nd).
-                // 
+                //
 
                 var slashIndex = str.IndexOf("/", StringComparison.Ordinal);
 
@@ -309,6 +297,15 @@ namespace FlatMate.Module.Common.Tasks.Cron
             }
 
             throw new FormatException(string.Format("'{0}' is not a known value name. Use one of the following: {1}.", str, string.Join(", ", _names)));
+        }
+
+        private static void ThrowParseException(Exception innerException, string str)
+        {
+            Debug.Assert(str != null);
+            Debug.Assert(innerException != null);
+
+            throw new FormatException(string.Format("'{0}' is not a valid crontab field expression.", str),
+                                      innerException);
         }
     }
 }

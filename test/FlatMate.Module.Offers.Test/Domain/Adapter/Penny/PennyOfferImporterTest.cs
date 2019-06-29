@@ -42,7 +42,7 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
             rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), 0)).Returns(Task.FromResult<(Result, RawOfferDataDto)>((Result.Success, null)));
 
             var utilsMocks = TestHelper.Mock<IPennyUtils>();
-            utilsMocks.Setup(x => x.StripHTML(It.IsAny<string>())).Returns((string x) => x);
+            utilsMocks.Setup(x => x.StripHtml(It.IsAny<string>())).Returns((string x) => x);
             utilsMocks.Setup(x => x.ParsePrice(It.IsAny<string>())).Returns((string x) => 0);
             utilsMocks.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x);
 

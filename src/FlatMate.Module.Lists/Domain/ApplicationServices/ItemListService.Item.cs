@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Shared.Dtos;
 using prayzzz.Common.Results;
@@ -29,34 +28,6 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             item.SortIndex = itemDto.SortIndex;
 
             return await SaveAsync(item);
-        }
-
-        private async Task<(Result, Item)> ItemCreate(int listId, int? groupId, ItemDto itemDto)
-        {
-            if (!groupId.HasValue)
-            {
-                // get ItemList
-                var (result, itemList) = await _itemListRepository.GetAsync(listId);
-                if (result.IsError)
-                {
-                    return (result, null);
-                }
-
-                // create Item without group
-                return Item.Create(itemDto.Name, CurrentUser.Id, itemList);
-            }
-            else
-            {
-                // get ItemGroup
-                var (result, itemGroup) = await _itemGroupRepository.GetAsync(groupId.Value);
-                if (result.IsError)
-                {
-                    return(result, null);
-                }
-
-                // create Item with group
-                return Item.Create(itemDto.Name, CurrentUser.Id, itemGroup);
-            }
         }
 
         public async Task<Result> DeleteItemAsync(int itemId)
@@ -145,6 +116,34 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
             item.SortIndex = dto.SortIndex;
 
             return await SaveAsync(item);
+        }
+
+        private async Task<(Result, Item)> ItemCreate(int listId, int? groupId, ItemDto itemDto)
+        {
+            if (!groupId.HasValue)
+            {
+                // get ItemList
+                var (result, itemList) = await _itemListRepository.GetAsync(listId);
+                if (result.IsError)
+                {
+                    return (result, null);
+                }
+
+                // create Item without group
+                return Item.Create(itemDto.Name, CurrentUser.Id, itemList);
+            }
+            else
+            {
+                // get ItemGroup
+                var (result, itemGroup) = await _itemGroupRepository.GetAsync(groupId.Value);
+                if (result.IsError)
+                {
+                    return (result, null);
+                }
+
+                // create Item with group
+                return Item.Create(itemDto.Name, CurrentUser.Id, itemGroup);
+            }
         }
 
         private async Task<(Result, ItemDto)> SaveAsync(Item item)

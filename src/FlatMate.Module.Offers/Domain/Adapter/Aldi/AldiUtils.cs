@@ -1,22 +1,22 @@
 ﻿using System;
-using Microsoft.Extensions.Logging;
-using prayzzz.Common.Attributes;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso;
+using Microsoft.Extensions.Logging;
+using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 {
     public interface IAldiUtils
     {
+        (Result, DateTime) GetStartDateFromTitle(Article article);
+
         decimal ParsePrice(string price);
 
-        string StripHTML(string str);
+        string StripHtml(string str);
 
         string Trim(string str);
-
-        (Result, DateTime) GetStartDateFromTitle(Article article);
     }
 
     [Inject]
@@ -38,6 +38,21 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
         public AldiUtils(ILogger<AldiUtils> logger)
         {
             _logger = logger;
+        }
+
+        public (Result, DateTime) GetStartDateFromTitle(Article article)
+        {
+            var match = TitleWithDate.Match(article.PackTitle);
+            if (match.Success)
+            {
+                var date = match.Groups[2].Value;
+                if (DateTime.TryParseExact(date, DatePattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
+                {
+                    return (Result.Success, dt);
+                }
+            }
+
+            return (new Result(ErrorType.ValidationError, ""), DateTime.MinValue);
         }
 
         public decimal ParsePrice(string price)
@@ -83,22 +98,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
             }
         }
 
-        public (Result, DateTime) GetStartDateFromTitle(Article article)
-        {
-            var match = TitleWithDate.Match(article.Pack_title);
-            if (match.Success)
-            {
-                var date = match.Groups[2].Value;
-                if (DateTime.TryParseExact(date, DatePattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
-                {
-                    return (Result.Success, dt);
-                }
-            }
-
-            return (new Result(ErrorType.ValidationError, ""), DateTime.MinValue);
-        }
-
-        public string StripHTML(string str)
+        public string StripHtml(string str)
         {
             str = str.Replace("<li>", " ");
             return Trim(Regex.Replace(str, "<.*?>", string.Empty));

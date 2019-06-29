@@ -1,11 +1,11 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using FlatMate.Module.Offers.Api;
 using FlatMate.Web.Areas.Offers.Data;
 using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace FlatMate.Web.Areas.Offers.Controllers
 {
@@ -15,7 +15,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
         private readonly CompanyApiController _companyApi;
 
         public ProductFavoriteController(CompanyApiController companyApi,
-                                         ProductApiController productApi,
                                          ILogger<ProductFavoriteController> logger,
                                          IMvcControllerServices services) : base(logger, services)
         {

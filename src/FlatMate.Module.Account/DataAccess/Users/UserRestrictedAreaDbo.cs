@@ -8,9 +8,9 @@ namespace FlatMate.Module.Account.DataAccess.Users
     public class UserRestrictedAreaDbo : DboBase
     {
         [Required]
-        public int UserId { get; set; }
+        public string Area { get; set; }
 
         [Required]
-        public string Area { get; set; }
+        public int UserId { get; set; }
     }
 }

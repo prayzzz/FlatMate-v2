@@ -21,7 +21,7 @@ namespace FlatMate.Module.Offers.Api.Jso
         {
             return new ProductFavoriteJso
             {
-                ProductId = dto.ProductId,
+                ProductId = dto.ProductId
             };
         }
     }

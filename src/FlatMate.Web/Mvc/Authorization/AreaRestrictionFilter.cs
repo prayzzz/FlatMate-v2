@@ -10,8 +10,8 @@ namespace FlatMate.Web.Mvc.Authorization
     [Inject(DependencyLifetime.Scoped, typeof(AreaRestrictionFilter))]
     public class AreaRestrictionFilter : IAuthorizationFilter
     {
-        private readonly ICurrentSession _session;
         private readonly IUserRestrictedAreaRepository _areaRepository;
+        private readonly ICurrentSession _session;
 
         public AreaRestrictionFilter(ICurrentSession session, IUserRestrictedAreaRepository areaRepository)
         {

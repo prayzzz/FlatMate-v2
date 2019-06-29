@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using FlatMate.Module.Common;
 using FlatMate.Module.Common.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -36,12 +35,13 @@ namespace FlatMate.Web.Mvc.Api
                 case ITuple tuple:
                     context.Result = CreateResultFromTuple(context, tuple);
                     return;
-//                case IResult<object> result:
-//                    context.Result = _resultService.Get(result, result.Data, context.HttpContext);
-//                    return;
-//                case Result result:
-//                    context.Result = _resultService.Get(result, context.HttpContext);
-//                    break;
+
+                //                case IResult<object> result:
+                //                    context.Result = _resultService.Get(result, result.Data, context.HttpContext);
+                //                    return;
+                //                case Result result:
+                //                    context.Result = _resultService.Get(result, context.HttpContext);
+                //                    break;
             }
         }
 

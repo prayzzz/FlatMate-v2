@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using FlatMate.Module.Common;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Enums;
-using FlatMate.Module.Common;
 
 namespace FlatMate.Web.Common
 {

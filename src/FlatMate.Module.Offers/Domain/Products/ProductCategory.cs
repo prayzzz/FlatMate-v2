@@ -56,7 +56,7 @@ namespace FlatMate.Module.Offers.Domain.Products
             {
                 Name = category.Name,
                 Id = category.Id,
-                SortWeight = category.SortWeight,
+                SortWeight = category.SortWeight
             };
         }
     }

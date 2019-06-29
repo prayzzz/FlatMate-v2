@@ -1,13 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FlatMate.Module.Account.Api;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Lists.Api.Jso;
 using FlatMate.Module.Lists.Shared.Dtos;
 using FlatMate.Module.Lists.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FlatMate.Module.Common;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Lists.Api

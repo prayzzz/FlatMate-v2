@@ -1,6 +1,6 @@
-﻿using App.Metrics.Meter;
-using App.Metrics;
+﻿using App.Metrics;
 using App.Metrics.Histogram;
+using App.Metrics.Meter;
 
 namespace FlatMate.Web
 {

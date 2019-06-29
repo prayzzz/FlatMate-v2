@@ -47,7 +47,7 @@
                             </table>
                             <a asp-area="Offers" asp-controller="Product" asp-action="View" asp-route-id="@productJso.Id" class="btn btn-secondary">Details</a>
                             <a href="@Url.Action("Merge", "Admin", new { id = productJso.Id, otherProductIds = otherIds })" class="btn btn-secondary">Merge to this</a>
-@*                            <a asp-area="Offers" asp-controller="Admin" asp-action="Merge" asp-route-id="@productJso.Id" asp-route-otherProductIds="@string.Join(",", otherIds)" class="btn btn-secondary">Merge to this</a>*@
+                            @*                            <a asp-area="Offers" asp-controller="Admin" asp-action="Merge" asp-route-id="@productJso.Id" asp-route-otherProductIds="@string.Join(",", otherIds)" class="btn btn-secondary">Merge to this</a>*@
                         </div>
                     }
                 </div>

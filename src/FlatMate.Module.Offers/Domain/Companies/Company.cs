@@ -15,13 +15,13 @@ namespace FlatMate.Module.Offers.Domain.Companies
         NettoDiscount = 3,
         Netto = 4,
         AldiNord = 5,
-        AldiSued = 6,
+        AldiSued = 6
     }
 
     [Table("CompanyData")]
     public class CompanyData : DboBase
     {
-        public Company Company => (Company)Id;
+        public Company Company => (Company) Id;
 
         public Guid? ImageGuid { get; set; }
 

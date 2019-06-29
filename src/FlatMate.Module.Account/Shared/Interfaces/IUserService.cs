@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using FlatMate.Module.Account.Shared.Dtos;
-using FlatMate.Module.Common;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Account.Shared.Interfaces

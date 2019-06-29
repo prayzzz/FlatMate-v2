@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FlatMate.Module.Common.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using FlatMate.Module.Common.Tasks;
 
 namespace FlatMate.Module.Common
 {

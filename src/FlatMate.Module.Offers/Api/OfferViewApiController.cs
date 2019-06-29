@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using FlatMate.Module.Common.Api;
 using FlatMate.Module.Offers.Domain.Adapter;
 using FlatMate.Module.Offers.Domain.Companies;
-using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Api
@@ -20,7 +20,6 @@ namespace FlatMate.Module.Offers.Api
     {
         private const string RouteTemplate = "api/v1/offers/offer/view/";
         private readonly ILogger<OfferViewApiController> _logger;
-        private readonly IMarketService _marketService;
         private readonly IEnumerable<IOfferPeriodService> _offerPeriodServices;
 
         private readonly IOfferViewService _offerViewService;
@@ -29,13 +28,11 @@ namespace FlatMate.Module.Offers.Api
         public OfferViewApiController(IApiControllerServices services,
                                       IOfferViewService offerViewService,
                                       IProductService productService,
-                                      IMarketService marketService,
                                       IEnumerable<IOfferPeriodService> offerPeriodServices,
                                       ILogger<OfferViewApiController> logger) : base(services)
         {
             _offerViewService = offerViewService;
             _productService = productService;
-            _marketService = marketService;
             _offerPeriodServices = offerPeriodServices;
             _logger = logger;
         }
@@ -99,7 +96,7 @@ namespace FlatMate.Module.Offers.Api
                     Offers = offersInMarket,
                     Name = offersPerProduct[0].Product.Name,
                     ProductId = offersPerProduct[0].Product.Id.Value,
-                    ProductCategoryId = offersPerProduct[0].Product.ProductCategoryId,
+                    ProductCategoryId = offersPerProduct[0].Product.ProductCategoryId
                 });
             }
 
@@ -142,7 +139,7 @@ namespace FlatMate.Module.Offers.Api
 
             public List<OfferedProductJso> Products { get; set; } = new List<OfferedProductJso>();
 
-            [Newtonsoft.Json.JsonIgnore]
+            [JsonIgnore]
             public int Weight { get; set; }
         }
 

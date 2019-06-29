@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Results;
@@ -23,15 +22,12 @@ namespace FlatMate.Module.Offers.Domain.Companies
     {
         private readonly OffersDbContext _dbContext;
 
-        private readonly ILogger<CompanyService> _logger;
-
         private readonly IMapper _mapper;
 
-        public CompanyService(OffersDbContext dbContext, IMapper mapper, ILogger<CompanyService> logger)
+        public CompanyService(OffersDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<(Result, CompanyDto)> Get(int id)

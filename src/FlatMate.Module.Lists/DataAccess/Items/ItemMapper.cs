@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using FlatMate.Module.Common;
 using FlatMate.Module.Lists.Domain.Models;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Mapping;
@@ -14,21 +13,6 @@ namespace FlatMate.Module.Lists.DataAccess.Items
         {
             mapper.Configure<Item, ItemDbo>(EntityToDbo);
             mapper.Configure<ItemDbo, Item>(DboToEntity);
-        }
-
-        private static Item DboToEntity(ItemDbo dbo, MappingContext ctx)
-        {
-            var (result, item) = CreateItem(dbo, ctx);
-            if (result.IsError)
-            {
-                throw new ValidationException(result.Message);
-            }
-
-            item.LastEditorId = dbo.LastEditorId;
-            item.Modified = dbo.Modified;
-            item.SortIndex = dbo.SortIndex;
-
-            return item;
         }
 
         private static (Result Result, Item Item) CreateItem(ItemDbo dbo, MappingContext ctx)
@@ -46,6 +30,21 @@ namespace FlatMate.Module.Lists.DataAccess.Items
             }
 
             return createResult;
+        }
+
+        private static Item DboToEntity(ItemDbo dbo, MappingContext ctx)
+        {
+            var (result, item) = CreateItem(dbo, ctx);
+            if (result.IsError)
+            {
+                throw new ValidationException(result.Message);
+            }
+
+            item.LastEditorId = dbo.LastEditorId;
+            item.Modified = dbo.Modified;
+            item.SortIndex = dbo.SortIndex;
+
+            return item;
         }
 
         private static ItemDbo EntityToDbo(Item entity, ItemDbo dbo, MappingContext ctx)

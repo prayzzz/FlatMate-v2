@@ -1,8 +1,8 @@
 ﻿using System;
+using FlatMate.Web.Mvc;
 using FlatMate.Web.Mvc.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using FlatMate.Web.Mvc;
 
 namespace FlatMate.Web.Controllers
 {

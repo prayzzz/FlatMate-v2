@@ -1,8 +1,8 @@
-﻿using FlatMate.Module.Common.Tasks.Cron;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FlatMate.Module.Common.Tasks.Cron;
 
 namespace FlatMate.Module.Common.Tasks
 {
@@ -59,25 +59,25 @@ namespace FlatMate.Module.Common.Tasks
                 task.Increment();
 
                 await taskFactory.StartNew(
-                    async () =>
-                    {
-                        try
-                        {
-                            await task.Task.ExecuteAsync(cancellationToken);
-                        }
-                        catch (Exception ex)
-                        {
-                            var args = new UnobservedTaskExceptionEventArgs(ex as AggregateException ?? new AggregateException(ex));
+                                           async () =>
+                                           {
+                                               try
+                                               {
+                                                   await task.Task.ExecuteAsync(cancellationToken);
+                                               }
+                                               catch (Exception ex)
+                                               {
+                                                   var args = new UnobservedTaskExceptionEventArgs(ex as AggregateException ?? new AggregateException(ex));
 
-                            UnobservedTaskException?.Invoke(this, args);
+                                                   UnobservedTaskException?.Invoke(this, args);
 
-                            if (!args.Observed)
-                            {
-                                throw;
-                            }
-                        }
-                    },
-                    cancellationToken);
+                                                   if (!args.Observed)
+                                                   {
+                                                       throw;
+                                                   }
+                                               }
+                                           },
+                                           cancellationToken);
             }
         }
 

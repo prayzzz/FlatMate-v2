@@ -1,5 +1,5 @@
-﻿using RestEase;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using RestEase;
 
 namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
 {
@@ -9,6 +9,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
         Task<string> GetAreas();
 
         [Get("/aldiAngebot/teaser/{catrel}/{teaserXml}")]
-        Task<string> GetOffers([Path]string catrel, [Path]string teaserXml);
+        Task<string> GetOffers([Path] string catrel, [Path] string teaserXml);
     }
 }

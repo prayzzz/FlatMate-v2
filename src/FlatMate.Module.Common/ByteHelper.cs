@@ -31,9 +31,10 @@ namespace FlatMate.Module.Common
             for (var i = 0; i < bytes.Length; i++)
             {
                 var val = lookup32[bytes[i]];
-                result[2 * i] = (char)val;
-                result[(2 * i) + 1] = (char)(val >> 16);
+                result[2 * i] = (char) val;
+                result[2 * i + 1] = (char) (val >> 16);
             }
+
             return new string(result);
         }
 
@@ -43,8 +44,9 @@ namespace FlatMate.Module.Common
             for (var i = 0; i < 256; i++)
             {
                 var s = i.ToString("X2");
-                result[i] = s[0] + ((uint)s[1] << 16);
+                result[i] = s[0] + ((uint) s[1] << 16);
             }
+
             return result;
         }
     }

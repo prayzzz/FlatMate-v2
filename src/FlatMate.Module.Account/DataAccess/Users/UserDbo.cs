@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FlatMate.Module.Common.DataAccess;
@@ -16,6 +15,9 @@ namespace FlatMate.Module.Account.DataAccess.Users
         public string Email { get; set; }
 
         [Required]
+        public bool IsActivated { get; set; }
+
+        [Required]
         public string PasswordHash { get; set; }
 
         [Required]
@@ -23,8 +25,5 @@ namespace FlatMate.Module.Account.DataAccess.Users
 
         [Required]
         public string UserName { get; set; }
-
-        [Required]
-        public bool IsActivated { get; set; }
     }
 }

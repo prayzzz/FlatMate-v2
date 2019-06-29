@@ -10,10 +10,10 @@ namespace FlatMate.Module.Account.Shared.Dtos
 
         public string Email { get; set; }
 
-        public string UserName { get; set; }
+        public bool IsActivated { get; set; }
 
         public List<string> RestrictedAreas { get; set; }
 
-        public bool IsActivated { get; set; }
+        public string UserName { get; set; }
     }
 }

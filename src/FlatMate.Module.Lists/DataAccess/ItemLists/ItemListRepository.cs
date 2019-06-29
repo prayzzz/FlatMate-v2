@@ -30,6 +30,14 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
         protected override IQueryable<ItemListDbo> DbosIncluded => Dbos.Include(x => x.Groups).ThenInclude(x => x.Items);
 
+        public async Task<Result> DeleteWithDependenciesAsync(int listId)
+        {
+            var favorites = await _dbContext.ItemListFavorites.Where(f => f.ItemListId == listId).ToListAsync();
+            _dbContext.ItemListFavorites.RemoveRange(favorites);
+
+            return await DeleteAsync(listId);
+        }
+
         public async Task<IEnumerable<ItemList>> GetAllAsync(int? ownerId)
         {
             IQueryable<ItemListDbo> set = _dbContext.ItemLists;
@@ -40,14 +48,6 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
             }
 
             return (await set.ToListAsync()).Select(Mapper.Map<ItemList>);
-        }
-
-        public async Task<Result> DeleteWithDependenciesAsync(int listId)
-        {
-            var favorites = await _dbContext.ItemListFavorites.Where(f => f.ItemListId == listId).ToListAsync();
-            _dbContext.ItemListFavorites.RemoveRange(favorites);
-
-            return await DeleteAsync(listId);
         }
     }
 }
