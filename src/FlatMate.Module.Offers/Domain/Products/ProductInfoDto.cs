@@ -15,7 +15,5 @@ namespace FlatMate.Module.Offers.Domain.Products
         public string Name { get; set; }
 
         public int OfferCount { get; set; }
-
-        public string SizeInfo { get; set; }
     }
 }

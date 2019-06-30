@@ -12,7 +12,7 @@ namespace FlatMate.Module.Offers.Domain.Products
         public async Task<List<ProductInfoDto>> GetDuplicateProducts()
         {
             var products = await _dbContext.ProductInfoDtos.FromSql(@"
-                SELECT p.*, offers.OfferCount
+                SELECT p.*, ISNULL(offers.OfferCount, 0) as OfferCount
                 FROM Offers.Product p
                 INNER JOIN (
                     SELECT Name, CompanyId, Brand

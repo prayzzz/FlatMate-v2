@@ -26,6 +26,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             _companyApi = companyApi;
         }
 
+        [HttpGet]
         public async Task<IActionResult> ManageProductDuplicates()
         {
             var model = ApplyTempResult(new AdminManageProductDuplicatesVm());
@@ -37,6 +38,7 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Merge(int id, [FromQuery] List<int> otherProductIds)
         {
             foreach (var otherProductId in otherProductIds)

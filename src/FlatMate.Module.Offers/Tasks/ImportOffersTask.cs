@@ -23,7 +23,6 @@ namespace FlatMate.Module.Offers.Tasks
             _logger = logger;
         }
 
-        /// <inheritdoc />
         /// <summary>
         ///     Every Day 10:00
         /// </summary>

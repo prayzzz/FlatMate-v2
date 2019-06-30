@@ -7,6 +7,7 @@ using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
 using FlatMate.Module.Offers.Domain.Raw;
+using FlatMate.Module.Offers.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,8 @@ namespace FlatMate.Module.Offers
         public virtual DbSet<Market> Markets { get; set; }
 
         public virtual DbSet<Offer> Offers { get; set; }
+
+        public virtual DbQuery<OldProductDto> OldProductDtos { get; set; }
 
         public virtual DbSet<PriceHistory> PriceHistoryEntries { get; set; }
 
