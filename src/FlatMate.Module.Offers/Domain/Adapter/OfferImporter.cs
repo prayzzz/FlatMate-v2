@@ -103,6 +103,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             {
                 CheckForChangedProductProperties(product, offerDto);
 
+                product.Brand = offerDto.Brand;
                 product.Description = offerDto.Description;
                 product.ImageUrl = offerDto.ImageUrl;
                 product.ProductCategoryId = (int) offerDto.ProductCategory;
