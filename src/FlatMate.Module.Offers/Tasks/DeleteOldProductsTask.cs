@@ -46,7 +46,7 @@ namespace FlatMate.Module.Offers.Tasks
 	                  (SELECT COUNT(*) FROM Offers.Offer WHERE ProductId = product.Id AND [To] > {0}) = 0
 	              AND
 	                  NOT EXISTS (SELECT * FROM Offers.ProductFavorite pf WHERE pf.ProductId = product.Id)
-            ", date);
+            ", date).AsNoTracking();
 
             var offerIds = dtos.Select(x => x.OfferId).Distinct().ToList();
             var productIds = dtos.Select(x => x.ProductId).Distinct().ToList();

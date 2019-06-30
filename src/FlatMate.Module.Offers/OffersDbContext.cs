@@ -38,7 +38,7 @@ namespace FlatMate.Module.Offers
 
         public virtual DbSet<ProductFavorite> ProductFavorites { get; set; }
 
-        public virtual DbSet<ProductInfoDto> ProductInfoDtos { get; set; }
+        public virtual DbQuery<ProductInfoDto> ProductInfoDtos { get; set; }
 
         public virtual DbSet<Product> Products { get; set; }
 
