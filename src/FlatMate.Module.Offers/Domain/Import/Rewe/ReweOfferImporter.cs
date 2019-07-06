@@ -9,9 +9,7 @@ using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
-using FlatMate.Module.Offers.Domain.Raw;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
@@ -41,15 +39,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
         private readonly IReweMobileApi _mobileApi;
 
-        private readonly IRawOfferDataService _rawOfferService;
-
         private readonly OffersDbContext _repository;
 
         private readonly IReweUtils _reweUtils;
 
         public ReweOfferImporter(IReweMobileApi mobileApi,
                                  IReweUtils reweUtils,
-                                 IRawOfferDataService rawOfferService,
                                  OffersDbContext dbContext,
                                  ILogger<ReweOfferImporter> logger) : base(dbContext, logger)
         {
@@ -57,13 +52,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             _reweUtils = reweUtils;
             _repository = dbContext;
             _logger = logger;
-            _rawOfferService = rawOfferService;
         }
 
         public override Company Company => Company.Rewe;
 
         /// <inheritdoc />
-        public override async Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market)
+        public override async Task<Result> ImportOffersFromApi(Market market)
         {
             Envelope<OfferJso> offerEnvelope;
             try
@@ -74,26 +68,10 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             catch (Exception e)
             {
                 _logger.LogWarning(0, e, $"Error while requesting {nameof(IReweMobileApi)}");
-                return (new Result(ErrorType.InternalError, $"{nameof(IReweMobileApi)} nicht verfügbar."), null);
+                return new Result(ErrorType.InternalError, $"{nameof(IReweMobileApi)} nicht verfügbar.");
             }
 
-            var (result, _) = await _rawOfferService.Save(JsonConvert.SerializeObject(offerEnvelope), market.Id);
-            if (result.IsError)
-            {
-                _logger.LogWarning(0, "Failed saving raw offer data");
-            }
-
-            return await ProcessOffers(offerEnvelope, market);
-        }
-
-        /// <inheritdoc />
-        public override Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data)
-        {
-            var offerEnvelope = JsonConvert.DeserializeObject<Envelope<OfferJso>>(data);
-
-            _logger.LogInformation($"Importing {offerEnvelope.Items.Count} offers");
-
-            return ProcessOffers(offerEnvelope, market);
+            return await SaveOffers(market, offerEnvelope);
         }
 
         /// <summary>
@@ -168,12 +146,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
 
         private OfferTemp PreprocessOffer(OfferJso offer, Dictionary<string, ProductCategoryTemp> categoryToEnum, Market market)
         {
-            var brand = _reweUtils.Trim(offer.Brand);
-            if (brand.StartsWith("++"))
-            {
-                brand = ReweConstants.DefaultBrand;
-            }
-
             var productCategory = ProductCategoryTemp.Default;
             if (offer.CategoryIDs.Length > 0 && categoryToEnum.TryGetValue(offer.CategoryIDs.FirstOrDefault(), out var category))
             {
@@ -192,7 +164,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             return new OfferTemp
             {
                 BasePrice = _reweUtils.Trim(offer.BasePrice),
-                Brand = brand,
+                Brand = _reweUtils.Trim(offer.Brand),
                 Company = Company,
                 Description = _reweUtils.Trim(offer.AdditionalInformation),
                 ExternalOfferId = offer.Id,
@@ -213,14 +185,12 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
         /// <summary>
         ///     Creates or updates products based on the given offers
         /// </summary>
-        private async Task<(Result, IEnumerable<Offer>)> ProcessOffers(Envelope<OfferJso> envelope, Market market)
+        private async Task<Result> SaveOffers(Market market, Envelope<OfferJso> envelope)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            var stopwatch = Stopwatch.StartNew();
 
             var categoryMap = ExtractCategoryMap(envelope);
 
-            var offers = new List<Offer>();
             foreach (var offerJso in envelope.Items)
             {
                 if (offerJso.Name == "Artikel-Bezeichnung")
@@ -229,18 +199,17 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
                 }
 
                 var preprocessedOffer = PreprocessOffer(offerJso, categoryMap, market);
-                preprocessedOffer.Product = CreateOrUpdateProduct(preprocessedOffer);
 
-                var offerDbo = CreateOrUpdateOffer(preprocessedOffer);
-                offers.Add(offerDbo);
+                var product = CreateOrUpdateProduct(preprocessedOffer);
+                CreateOrUpdateOffer(preprocessedOffer, product);
             }
 
             var result = await _repository.SaveChangesAsync();
 
             stopwatch.Stop();
-            _logger.LogInformation($"Processed {envelope.Items.Count} offers in {stopwatch.ElapsedMilliseconds}ms");
+            _logger.LogInformation($"Processed {envelope.Items.Count} offers in {stopwatch.Elapsed}");
 
-            return (result, offers);
+            return result;
         }
     }
 }

@@ -49,7 +49,7 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
             var logger = new ConsoleLogger<PennyOfferImporter>();
 
             // Act
-            await new PennyOfferImporter(dbContext, apiMock.Object, rawOfferMock.Object, utilsMocks.Object, logger).ImportOffersFromApi(new Market());
+            await new PennyOfferImporter(dbContext, apiMock.Object, utilsMocks.Object, logger).ImportOffersFromApi(new Market());
 
             // Assert
             Assert.AreEqual(1, dbContext.Offers.Count());

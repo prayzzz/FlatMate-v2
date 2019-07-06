@@ -135,7 +135,7 @@ namespace FlatMate.Module.Offers.Domain.Products
 
         public Task<List<PriceHistoryDto>> GetProductPriceHistory(int productId)
         {
-            return (from ph in _dbContext.PriceHistoryEntries.Include(ph => ph.Product)
+            return (from ph in _dbContext.PriceHistories.Include(ph => ph.Product)
                     where ph.ProductId == productId
                     select _mapper.Map<PriceHistoryDto>(ph)).AsNoTracking().ToListAsync();
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Tasks;
@@ -31,7 +30,6 @@ namespace FlatMate.Module.Offers.Tasks
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Starting {taskName}", nameof(ImportOffersTask));
-            _logger.LogInformation("Culture: {currentCulture}", CultureInfo.CurrentCulture);
 
             foreach (var market in await _marketService.SearchMarkets(Company.None))
             {

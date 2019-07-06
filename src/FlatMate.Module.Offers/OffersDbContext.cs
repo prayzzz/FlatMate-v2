@@ -32,7 +32,7 @@ namespace FlatMate.Module.Offers
 
         public virtual DbQuery<OldProductDto> OldProductDtos { get; set; }
 
-        public virtual DbSet<PriceHistory> PriceHistoryEntries { get; set; }
+        public virtual DbSet<PriceHistory> PriceHistories { get; set; }
 
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 

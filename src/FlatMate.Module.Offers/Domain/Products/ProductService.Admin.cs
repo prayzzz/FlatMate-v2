@@ -34,8 +34,8 @@ namespace FlatMate.Module.Offers.Domain.Products
         public async Task<Result> MergeProducts(int productId, int otherProductId)
         {
             // Move Price History
-            var priceHistories = _dbContext.PriceHistoryEntries.Where(x => x.ProductId == productId).ToList();
-            var otherPriceHistories = _dbContext.PriceHistoryEntries.Where(x => x.ProductId == otherProductId).ToList();
+            var priceHistories = _dbContext.PriceHistories.Where(x => x.ProductId == productId).ToList();
+            var otherPriceHistories = _dbContext.PriceHistories.Where(x => x.ProductId == otherProductId).ToList();
 
             foreach (var other in otherPriceHistories)
             {
@@ -47,13 +47,13 @@ namespace FlatMate.Module.Offers.Domain.Products
                 }
                 else
                 {
-                    _dbContext.PriceHistoryEntries.Remove(other);
+                    _dbContext.PriceHistories.Remove(other);
                 }
 
                 var nextPrice = priceHistories.Where(p => p.Date > other.Date).OrderBy(p => p.Date).FirstOrDefault();
                 if (nextPrice != null && nextPrice.Price == other.Price)
                 {
-                    _dbContext.PriceHistoryEntries.Remove(nextPrice);
+                    _dbContext.PriceHistories.Remove(nextPrice);
                 }
             }
 

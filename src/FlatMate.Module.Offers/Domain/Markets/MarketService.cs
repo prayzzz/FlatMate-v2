@@ -22,8 +22,6 @@ namespace FlatMate.Module.Offers.Domain.Markets
 
         Task<Result> ImportOffersFromApi(int marketId);
 
-        Task<Result> ImportOffersFromString(int marketId, string offers);
-
         Task<IEnumerable<MarketDto>> SearchMarkets(Company company);
     }
 
@@ -95,38 +93,11 @@ namespace FlatMate.Module.Offers.Domain.Markets
                 return new Result(ErrorType.InternalError, $"No importer found for company {company}");
             }
 
-            var (result, _) = await importer.ImportOffersFromApi(market);
+            var result = await importer.ImportOffersFromApi(market);
             if (result.IsError)
             {
                 _logger.LogWarning("Offer import failed: {error}", result.ToMessageString());
                 return new Result(result);
-            }
-
-            return Result.Success;
-        }
-
-        public async Task<Result> ImportOffersFromString(int marketId, string offers)
-        {
-            var market = await _dbContext.Markets.FirstOrDefaultAsync(m => m.Id == marketId);
-            if (market == null)
-            {
-                return new Result(ErrorType.NotFound, "Market not found");
-            }
-
-            var company = (Company) market.CompanyId;
-
-            var importer = _offerImporters.FirstOrDefault(o => o.Company == company);
-            if (importer == null)
-            {
-                _logger.LogError($"No importer found for company {company}");
-                return new Result(ErrorType.InternalError, $"No importer found for company {company}");
-            }
-
-            var (result, _) = await importer.ImportOffersFromRaw(market, offers);
-            if (result.IsError)
-            {
-                _logger.LogWarning("Offer import failed: {error}", result.ToMessageString());
-                return result;
             }
 
             return Result.Success;

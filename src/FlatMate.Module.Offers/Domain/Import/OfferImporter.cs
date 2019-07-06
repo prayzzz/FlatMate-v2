@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Offers.Domain.Companies;
@@ -16,9 +15,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
     {
         Company Company { get; }
 
-        Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market);
-
-        Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data);
+        Task<Result> ImportOffersFromApi(Market market);
     }
 
     public abstract class OfferImporter : IOfferImporter
@@ -35,9 +32,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
 
         protected ILogger Logger { get; }
 
-        public abstract Task<(Result, IEnumerable<Offer>)> ImportOffersFromApi(Market market);
-
-        public abstract Task<(Result, IEnumerable<Offer>)> ImportOffersFromRaw(Market market, string data);
+        public abstract Task<Result> ImportOffersFromApi(Market market);
 
         protected void CheckForChangedProductProperties(Product product, OfferTemp offer)
         {
@@ -53,7 +48,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             }
         }
 
-        protected Offer CreateOrUpdateOffer(OfferTemp offerDto)
+        protected void CreateOrUpdateOffer(OfferTemp offerDto, Product product)
         {
             var offer = FindExistingOffer(offerDto);
             if (offer == null)
@@ -68,11 +63,9 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             offer.ImageUrl = offerDto.ImageUrl;
             offer.Market = offerDto.Market;
             offer.Price = offerDto.OfferPrice;
-            offer.Product = offerDto.Product;
+            offer.Product = product;
             offer.SizeInfo = offerDto.SizeInfo;
             offer.To = offerDto.OfferedTo;
-
-            return offer;
         }
 
         /// <summary>
@@ -153,8 +146,6 @@ namespace FlatMate.Module.Offers.Domain.Adapter
             public DateTime OfferedTo { get; set; }
 
             public decimal OfferPrice { get; set; }
-
-            public Product Product { get; set; }
 
             public ProductCategoryEnum ProductCategory { get; set; }
 

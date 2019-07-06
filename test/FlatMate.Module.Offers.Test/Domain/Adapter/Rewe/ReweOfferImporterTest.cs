@@ -41,8 +41,8 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Rewe
             utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x ?? string.Empty);
 
             // Act
-            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
-            var (result, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
+            var result = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Result));
@@ -88,8 +88,8 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Rewe
             utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x);
 
             // Act
-            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
-            var (result, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
+            var result = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
             var savedOffer = dbContext.Offers.FirstOrDefault(o => o.ExternalId == offer.Id);
             var savedProduct = dbContext.Products.FirstOrDefault();
 
@@ -149,9 +149,9 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Rewe
             utilsMock.Setup(x => x.Trim(It.IsAny<string>())).Returns((string x) => x);
 
             // Act
-            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, rawOfferMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
-            var (result, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
-            var (result2, _) = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var loader = new ReweOfferImporter(mobileApiMock.Object, utilsMock.Object, dbContext, new ConsoleLogger<ReweOfferImporter>());
+            var result = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
+            var result2 = await loader.ImportOffersFromApi(new Market { ExternalId = MarketId });
 
             var savedProduct = dbContext.Products.FirstOrDefault();
 

@@ -10,13 +10,6 @@ using prayzzz.Common.Attributes;
 
 namespace FlatMate.Module.Offers.Tasks
 {
-    public class OldProductDto
-    {
-        public int OfferId { get; set; }
-
-        public int ProductId { get; set; }
-    }
-
     [Inject(typeof(ScheduledTask))]
     public class DeleteOldProductsTask : ScheduledTask
     {
@@ -56,8 +49,8 @@ namespace FlatMate.Module.Offers.Tasks
             var offers = _context.Offers.Where(o => offerIds.Contains(o.Id));
             _context.Offers.RemoveRange(offers);
 
-            var priceHistory = _context.PriceHistoryEntries.Where(ph => productIds.Contains(ph.ProductId));
-            _context.PriceHistoryEntries.RemoveRange(priceHistory);
+            var priceHistory = _context.PriceHistories.Where(ph => productIds.Contains(ph.ProductId));
+            _context.PriceHistories.RemoveRange(priceHistory);
 
             var products = _context.Products.Where(ph => productIds.Contains(ph.Id));
             _context.Products.RemoveRange(products);
@@ -67,5 +60,12 @@ namespace FlatMate.Module.Offers.Tasks
                 await _context.SaveChangesAsync(cancellationToken);
             }
         }
+    }
+
+    public class OldProductDto
+    {
+        public int OfferId { get; set; }
+
+        public int ProductId { get; set; }
     }
 }

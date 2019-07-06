@@ -10,7 +10,6 @@ using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using prayzzz.Common.Results;
 
 namespace FlatMate.Module.Offers.Api
@@ -99,12 +98,6 @@ namespace FlatMate.Module.Offers.Api
             }
 
             return Result.Success;
-        }
-
-        [HttpPost("{marketId}/offer/import")]
-        public async Task<Result> ImportOffersFromString(int marketId, [FromBody] JToken data)
-        {
-            return await _marketService.ImportOffersFromString(marketId, data.ToString());
         }
 
         [HttpGet]

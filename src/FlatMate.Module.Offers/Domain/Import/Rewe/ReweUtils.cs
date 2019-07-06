@@ -82,6 +82,7 @@ namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
             str = str.Trim(TrimChars);
             str = str.Replace("\r\n", " ");
             str = str.Replace("\n", " ");
+            str = Regex.Replace(str, "^\\+\\+L\\s", string.Empty);
             str = Regex.Replace(str, "^EW\\s", string.Empty);
             str = Regex.Replace(str, "^MW\\s", string.Empty);
             str = Regex.Replace(str, "^L\\s", string.Empty);

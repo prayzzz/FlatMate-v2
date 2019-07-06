@@ -11,7 +11,6 @@ using FlatMate.Web.Mvc.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
@@ -85,13 +84,13 @@ namespace FlatMate.Web
             app.UseAuthentication();
             app.UseSession();
 
-            var supportedCultures = new[] { new CultureInfo("de") };
-            app.UseRequestLocalization(new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("de-DE"),
-                SupportedCultures = supportedCultures, // Formatting numbers, dates, etc.
-                SupportedUICultures = supportedCultures // UI strings that we have localized.
-            });
+            // var supportedCultures = new[] { new CultureInfo("de") };
+            // app.UseRequestLocalization(new RequestLocalizationOptions
+            // {
+            //     DefaultRequestCulture = new RequestCulture("en-US"),
+            //     SupportedCultures = supportedCultures, // Formatting numbers, dates, etc.
+            //     SupportedUICultures = supportedCultures // UI strings that we have localized.
+            // });
 
             app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
             app.UseMvc(routes =>
