@@ -29,6 +29,7 @@ namespace FlatMate.Migration.Tasks
                 using (var command = connection.CreateCommand())
                 {
                     command.Transaction = transaction;
+                    command.CommandTimeout = 3600;
 
                     foreach (var sqlBatch in GoRegexPattern.Split(scriptContent))
                     {
