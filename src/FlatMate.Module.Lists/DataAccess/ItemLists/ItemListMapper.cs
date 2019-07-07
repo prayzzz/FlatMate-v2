@@ -12,6 +12,7 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
         {
             mapper.Configure<ItemList, ItemListDbo>(EntityToDbo);
             mapper.Configure<ItemListDbo, ItemList>(DboToEntity);
+            mapper.Configure<ItemListWithMetaData, ItemList>(DboToEntity);
         }
 
         private static ItemList DboToEntity(ItemListDbo dbo, MappingContext arg2)
@@ -26,6 +27,23 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
             itemList.IsPublic = dbo.IsPublic;
             itemList.LastEditorId = dbo.LastEditorId;
             itemList.Modified = dbo.Modified;
+
+            return itemList;
+        }
+
+        private static ItemList DboToEntity(ItemListWithMetaData dbo, MappingContext arg2)
+        {
+            var (result, itemList) = ItemList.Create(dbo.Id, dbo.Name, dbo.OwnerId, dbo.Created);
+            if (!result.IsSuccess)
+            {
+                throw new ValidationException(result.Message);
+            }
+
+            itemList.Description = dbo.Description;
+            itemList.IsPublic = dbo.IsPublic;
+            itemList.LastEditorId = dbo.LastEditorId;
+            itemList.Modified = dbo.Modified;
+            itemList.ItemCount = dbo.ItemCount;
 
             return itemList;
         }

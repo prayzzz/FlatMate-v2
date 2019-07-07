@@ -19,6 +19,8 @@ namespace FlatMate.Module.Lists.DataAccess
 
         public DbSet<ItemListDbo> ItemLists { get; set; }
 
+        public DbQuery<ItemListWithMetaData> ItemListWithMetaData { get; set; }
+
         public DbSet<ItemDbo> Items { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

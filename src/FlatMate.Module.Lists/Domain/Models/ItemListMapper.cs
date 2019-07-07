@@ -21,6 +21,7 @@ namespace FlatMate.Module.Lists.Domain.Models
                 Id = itemList.Id,
                 IsPublic = itemList.IsPublic,
                 LastEditorId = itemList.LastEditorId,
+                Meta = new ItemListMetaDto { ItemCount = itemList.ItemCount.GetValueOrDefault(0) },
                 Modified = itemList.Modified,
                 Name = itemList.Name,
                 OwnerId = itemList.OwnerId

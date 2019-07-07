@@ -27,6 +27,8 @@ namespace FlatMate.Module.Lists.Domain.Models
 
         public bool IsPublic { get; set; }
 
+        public int? ItemCount { get; set; }
+
         public int LastEditorId { get; set; }
 
         public DateTime Modified { get; set; }
