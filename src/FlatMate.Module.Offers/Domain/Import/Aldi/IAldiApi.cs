@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using RestEase;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
+namespace FlatMate.Module.Offers.Domain.Import.Aldi
 {
     public interface IAldiApi
     {

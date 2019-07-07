@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common;
 using FlatMate.Module.Common.Extensions;
-using FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso;
 using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Import.Aldi.Jso;
 using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
+namespace FlatMate.Module.Offers.Domain.Import.Aldi
 {
     [Inject]
     public class AldiOfferImporter : OfferImporter

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso
+namespace FlatMate.Module.Offers.Domain.Import.Aldi.Jso
 {
     [XmlRoot(ElementName = "area")]
     public class Area

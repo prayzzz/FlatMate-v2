@@ -1,4 +1,4 @@
-﻿namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
+﻿namespace FlatMate.Module.Offers.Domain.Import.Aldi
 {
     public static class AldiConstants
     {

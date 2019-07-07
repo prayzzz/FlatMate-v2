@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Adapter;
-using FlatMate.Module.Offers.Domain.Adapter.Rewe;
 using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Import;
+using FlatMate.Module.Offers.Domain.Import.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;

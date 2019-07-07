@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso;
+using FlatMate.Module.Offers.Domain.Import.Rewe.Jso;
 using RestEase;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
+namespace FlatMate.Module.Offers.Domain.Import.Rewe
 {
     public interface IReweMobileApi
     {

@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FlatMate.Module.Lists.DataAccess.ItemLists
 {
+    [Table("ItemList")]
     public class ItemListWithMetaData
     {
         public DateTime Created { get; set; }

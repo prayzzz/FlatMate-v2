@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Offers.Domain.Adapter
+namespace FlatMate.Module.Offers.Domain.Import
 {
     public interface IOfferImporter
     {

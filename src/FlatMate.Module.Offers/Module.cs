@@ -1,8 +1,8 @@
 ﻿using FlatMate.Module.Common;
 using FlatMate.Module.Offers.Configuration;
-using FlatMate.Module.Offers.Domain.Adapter.Aldi;
-using FlatMate.Module.Offers.Domain.Adapter.Penny;
-using FlatMate.Module.Offers.Domain.Adapter.Rewe;
+using FlatMate.Module.Offers.Domain.Import.Aldi;
+using FlatMate.Module.Offers.Domain.Import.Penny;
+using FlatMate.Module.Offers.Domain.Import.Rewe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

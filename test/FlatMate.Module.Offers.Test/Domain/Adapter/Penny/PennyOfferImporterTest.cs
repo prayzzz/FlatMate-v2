@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Adapter.Penny;
-using FlatMate.Module.Offers.Domain.Adapter.Penny.Jso;
+using FlatMate.Module.Offers.Domain.Import.Penny;
+using FlatMate.Module.Offers.Domain.Import.Penny.Jso;
 using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Raw;
 using Microsoft.EntityFrameworkCore;

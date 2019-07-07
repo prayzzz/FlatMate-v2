@@ -70,6 +70,12 @@ namespace FlatMate.Module.Lists.Domain.ApplicationServices
                 return result;
             }
 
+            // is authorized
+            if (!itemList.IsPublic)
+            {
+                return new Result(ErrorType.Unauthorized, "Private Listen können nicht als Favorit markiert werden.");
+            }
+
             // save
             return await _favoriteRepository.SaveAsync(CurrentUser.Id, itemList.Id);
         }

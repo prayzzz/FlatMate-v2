@@ -40,21 +40,19 @@ namespace FlatMate.Module.Lists.DataAccess.ItemLists
 
         public async Task<IEnumerable<ItemList>> GetAllAsync(int? ownerId)
         {
-            // IQueryable<ItemListDbo> set = _dbContext.ItemLists;
-            //
-            // if (ownerId.HasValue)
-            // {
-            //     set = set.Where(x => x.OwnerId == ownerId);
-            // }
-
-            var set = _dbContext.ItemListWithMetaData.FromSql(@"
-                SELECT il.*, counts.Count as [ItemCount]
-                FROM List.ItemList il
-                JOIN (SELECT il.id, COUNT(i.id) as [Count]
-	                  FROM List.ItemList il
-	                  LEFT JOIN List.Item i ON i.ItemListId = il.Id
-	                  GROUP BY il.Id) counts on counts.Id = il.Id
-	        ");
+            var set = _dbContext.ItemLists
+                                .Select(itemlist => new ItemListWithMetaData
+                                {
+                                    Created = itemlist.Created,
+                                    Description = itemlist.Description,
+                                    Id = itemlist.Id,
+                                    IsPublic = itemlist.IsPublic,
+                                    ItemCount = itemlist.Groups.SelectMany(g => g.Items).Count(),
+                                    LastEditorId = itemlist.LastEditorId,
+                                    Modified = itemlist.Modified,
+                                    Name = itemlist.Name,
+                                    OwnerId = itemlist.OwnerId
+                                });
 
             if (ownerId.HasValue)
             {

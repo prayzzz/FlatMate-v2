@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Extensions;
-using FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso;
 using FlatMate.Module.Offers.Domain.Companies;
+using FlatMate.Module.Offers.Domain.Import.Rewe.Jso;
 using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Rewe
+namespace FlatMate.Module.Offers.Domain.Import.Rewe
 {
     [Inject]
     public class ReweOfferImporter : OfferImporter

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Rewe.Jso
+namespace FlatMate.Module.Offers.Domain.Import.Rewe.Jso
 {
     public class OfferDurationJso
     {

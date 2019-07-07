@@ -4,7 +4,7 @@ using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Offers;
 using prayzzz.Common.Attributes;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
+namespace FlatMate.Module.Offers.Domain.Import.Aldi
 {
     [Inject]
     public class AldiOfferPeriodService : IOfferPeriodService

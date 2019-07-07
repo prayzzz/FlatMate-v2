@@ -2,7 +2,7 @@
 using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Offers;
 
-namespace FlatMate.Module.Offers.Domain.Adapter
+namespace FlatMate.Module.Offers.Domain.Import
 {
     public interface IOfferPeriodService
     {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Penny
+namespace FlatMate.Module.Offers.Domain.Import.Penny
 {
     public interface IPennyUtils
     {

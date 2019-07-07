@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using FlatMate.Module.Offers.Domain.Adapter.Aldi.Jso;
+using FlatMate.Module.Offers.Domain.Import.Aldi.Jso;
 using Microsoft.Extensions.Logging;
 using prayzzz.Common.Attributes;
 using prayzzz.Common.Results;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Aldi
+namespace FlatMate.Module.Offers.Domain.Import.Aldi
 {
     public interface IAldiUtils
     {

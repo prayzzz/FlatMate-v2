@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.DataAccess;
+using FlatMate.Module.Lists.DataAccess.ItemLists;
 using FlatMate.Module.Lists.Domain.Models;
 using FlatMate.Module.Lists.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -50,9 +51,25 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
 
         public async Task<IEnumerable<ItemList>> GetFavoritesAsync(int userId)
         {
-            var lists = await _dbContext.ItemListFavorites.Where(x => x.UserId == userId)
-                                        .Select(x => x.ItemList)
+            var lists = await _dbContext.ItemListFavorites
+                                        .Where(fav => fav.UserId == userId)
+                                        .Select(fav => new ItemListWithMetaData
+                                        {
+                                            Created = fav.ItemList.Created,
+                                            Description = fav.ItemList.Description,
+                                            Id = fav.ItemList.Id,
+                                            IsPublic = fav.ItemList.IsPublic,
+                                            ItemCount = fav.ItemList.Groups.SelectMany(g => g.Items).Count(),
+                                            LastEditorId = fav.ItemList.LastEditorId,
+                                            Modified = fav.ItemList.Modified,
+                                            Name = fav.ItemList.Name,
+                                            OwnerId = fav.ItemList.OwnerId
+                                        })
                                         .ToListAsync();
+
+            // var lists = await _dbContext.ItemListFavorites.Where(x => x.UserId == userId)
+            //                             .Select(x => x.ItemList)
+            //                             .ToListAsync();
 
             return lists.Select(_mapper.Map<ItemList>).ToList();
         }

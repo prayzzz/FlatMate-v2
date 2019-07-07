@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using FlatMate.Module.Offers.Domain.Adapter.Penny.Jso;
+using FlatMate.Module.Offers.Domain.Import.Penny.Jso;
 using RestEase;
 
-namespace FlatMate.Module.Offers.Domain.Adapter.Penny
+namespace FlatMate.Module.Offers.Domain.Import.Penny
 {
     public interface IPennyApi
     {

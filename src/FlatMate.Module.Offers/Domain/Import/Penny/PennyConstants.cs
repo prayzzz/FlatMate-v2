@@ -1,4 +1,4 @@
-﻿namespace FlatMate.Module.Offers.Domain.Adapter.Penny
+﻿namespace FlatMate.Module.Offers.Domain.Import.Penny
 {
     public static class PennyConstants
     {
