@@ -30,9 +30,9 @@
             <table class="table table-vcenter card-table">
                 <thead>
                 <tr>
-                    <th width="75%">Name</th>
-                    <th class="show-large center fit">Einträge</th>
+                    <th>Name</th>
                     <th class="show-large center fit">öffentlich?</th>
+                    <th class="show-large center fit">Einträge</th>
                     <th class="icon show-large fit"></th>
                 </tr>
                 </thead>
@@ -43,9 +43,6 @@
                     <tr>
                         <td>
                             <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
-                        </td>
-                        <td class="show-large center">
-                            @list.ItemCount
                         </td>
                         <td class="show-large center">
                             <span class="fa-inline-host">
@@ -59,6 +56,7 @@
                                 }
                             </span>
                         </td>
+                        <td class="show-large center">@list.ItemCount</td>
                         <td class="icon show-large">
                             <a asp-area="Lists" asp-controller="ItemList" asp-action="Update" asp-route-id="@list.Id" class="fa-host" title="Bearbeiten">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -92,9 +90,8 @@
                 <table class="table table-vcenter card-table ">
                     <thead>
                     <tr>
-                        <th width="75%">Name</th>
+                        <th>Name</th>
                         <th class="show-large center fit">Einträge</th>
-                        <th class="show-large">von</th>
                         <th class="icon fit"></th>
                     </tr>
                     </thead>
@@ -103,10 +100,9 @@
                     {
                         <tr>
                             <td>
-                                <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a>
+                                <a asp-area="Lists" asp-controller="ItemList" asp-action="View" asp-route-id="@list.Id">@list.Name</a> <small class="f-gray">von @list.Owner.UserName</small>
                             </td>
-                            <td class="show-large">@list.ItemCount</td>
-                            <td class="show-large">@list.Owner.UserName</td>
+                            <td class="show-large center">@list.ItemCount</td>
                             <td class="icon">
                                 <a asp-area="Lists" asp-controller="ItemList" asp-action="Unfavorite" asp-route-id="@list.Id" class="fa-host danger" aria-hidden="true" title="Als Favorit entfernen">
                                     <i class="fa fa-times danger" aria-hidden="true"></i>
