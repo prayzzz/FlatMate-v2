@@ -67,10 +67,6 @@ namespace FlatMate.Module.Lists.DataAccess.ItemListFavorites
                                         })
                                         .ToListAsync();
 
-            // var lists = await _dbContext.ItemListFavorites.Where(x => x.UserId == userId)
-            //                             .Select(x => x.ItemList)
-            //                             .ToListAsync();
-
             return lists.Select(_mapper.Map<ItemList>).ToList();
         }
 
