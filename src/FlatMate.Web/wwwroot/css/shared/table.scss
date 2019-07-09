@@ -34,6 +34,20 @@ th {
         &.fit {
             width: 1%;
         }
+
+        &.show-large {
+            display: none;
+        }
+    }
+
+    /* desktop */
+    @media all and (min-width: 769px) {
+        th,
+        td {
+            &.show-large {
+                display: table-cell;
+            }
+        }
     }
 
     thead th {
@@ -106,3 +120,4 @@ th {
         background-color: $color-table-accent;
     }
 }
+

@@ -6,6 +6,6 @@ insert_final_newline=false
 indent_style=space
 indent_size=4
 
-[{.babelrc,.stylelintrc,.eslintrc,jest.config,*.bowerrc,*.jsb3,*.jsb2,*.json, *.ddl,*.sql, *.scss}]
+[{.babelrc, .stylelintrc, .eslintrc, jest.config, *.bowerrc, *.jsb3, *.jsb2, *.json, *.ddl, *.sql}]
 indent_style=space
 indent_size=2
