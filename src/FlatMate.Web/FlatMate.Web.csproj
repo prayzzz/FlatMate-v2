@@ -36,4 +36,5 @@
         <ProjectReference Include="..\FlatMate.Module.Lists\FlatMate.Module.Lists.csproj" />
         <ProjectReference Include="..\FlatMate.Module.Offers\FlatMate.Module.Offers.csproj" />
     </ItemGroup>
+
 </Project>

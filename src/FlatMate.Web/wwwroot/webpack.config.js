@@ -1,6 +1,7 @@
 ﻿const glob = require("glob");
 const path = require("path");
 const webpack = require("webpack");
+const cssnano = require("cssnano");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (env, argv) => {
@@ -58,11 +59,6 @@ module.exports = (env, argv) => {
     /**
      * Setup CSS configuration
      */
-    const cssLoaderOptions = { minimize: false, url: false };
-    if ("production" === mode) {
-        cssLoaderOptions.minimize = true;
-    }
-
     const cssConfig = {};
     cssConfig.mode = mode;
     cssConfig.name = "css";
@@ -73,8 +69,9 @@ module.exports = (env, argv) => {
                 test: /\.scss$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    { loader: "css-loader", options: cssLoaderOptions },
-                    { loader: "sass-loader", options: {} }
+                    { loader: "css-loader", options: { url: false } },
+                    { loader: "postcss-loader", options: { plugins: () => [cssnano()] } },
+                    { loader: "sass-loader" }
                 ]
             }
         ]
