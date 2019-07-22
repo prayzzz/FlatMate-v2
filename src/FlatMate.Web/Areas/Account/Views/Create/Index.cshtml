@@ -1,19 +1,24 @@
 ﻿@model FlatMate.Web.Areas.Account.Data.CreateUserVm
 
 @{
-    Layout = "_LayoutBlank";
+    Layout = "_Layout";
     ViewData["Title"] = "Nutzer erstellen";
+    ViewData["PageTitle"] = "Nutzer erstellen";
     ViewData["MainClass"] = "account-create-index";
 }
+
+<section class="container">
+
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["PageTitle"]</h1>
+    </div>
+
+</section>
 
 <section class="container centered-form">
 
     <form asp-area="Account" asp-controller="Create" method="post" class="card">
         <div class="card-body">
-
-            <div class="card-title">
-                Account erstellen
-            </div>
 
             <div class="alert-wrapper">
                 @if (Model.IsError)
@@ -49,11 +54,13 @@
                     <input asp-for="PasswordConfirmation" required/>
                 </div>
 
-                <div class="form-group align-right">
-                    <input class="btn-primary" type="submit" value="Erstellen">
-                </div>
-
             </fieldset>
+        </div>
+
+        <div class="card-footer">
+            <div class="d-flex">
+                <input class="btn btn-primary ml-auto" type="submit" value="Erstellen">
+            </div>
         </div>
     </form>
 
