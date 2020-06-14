@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using FlatMate.Module.Offers.Domain.Import.Penny;
 using FlatMate.Module.Offers.Domain.Import.Penny.Jso;
 using FlatMate.Module.Offers.Domain.Markets;
-using FlatMate.Module.Offers.Domain.Raw;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using prayzzz.Common.Results;
 using prayzzz.Common.Unit;
 
 namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
@@ -38,9 +36,6 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
             var apiMock = TestHelper.Mock<IPennyApi>();
             apiMock.Setup(x => x.GetOffers()).Returns(Task.FromResult(offerEnvelop));
 
-            var rawOfferMock = TestHelper.Mock<IRawOfferDataService>();
-            rawOfferMock.Setup(x => x.Save(It.IsAny<string>(), 0)).Returns(Task.FromResult<(Result, RawOfferDataDto)>((Result.Success, null)));
-
             var utilsMocks = TestHelper.Mock<IPennyUtils>();
             utilsMocks.Setup(x => x.StripHtml(It.IsAny<string>())).Returns((string x) => x);
             utilsMocks.Setup(x => x.ParsePrice(It.IsAny<string>())).Returns((string x) => 0);
@@ -55,7 +50,6 @@ namespace FlatMate.Module.Offers.Test.Domain.Adapter.Penny
             Assert.AreEqual(1, dbContext.Offers.Count());
 
             apiMock.VerifyAll();
-            rawOfferMock.VerifyAll();
             utilsMocks.VerifyAll();
         }
     }

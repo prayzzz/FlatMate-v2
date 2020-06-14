@@ -26,7 +26,7 @@ namespace FlatMate.Module.Offers
             service.AddSingleton(container => RestClient.For<IPennyApi>(offersConfiguration.Penny.HostUrl, container.GetService<RestEaseRequestLogger>().RequestModifier));
             service.AddSingleton(container => RestClient.For<IAldiApi>(offersConfiguration.Aldi.HostUrl, container.GetService<RestEaseRequestLogger>().RequestModifier));
 
-            service.AddDbContext<OffersDbContext>(o => o.UseSqlServer(configuration.GetConnectionString("FlatMate")));
+            service.AddDbContext<OffersDbContext>(o => o.UseSqlServer(configuration.GetConnectionString("FlatMate")), ServiceLifetime.Transient);
         }
     }
 

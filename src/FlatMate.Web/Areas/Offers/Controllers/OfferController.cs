@@ -43,11 +43,10 @@ namespace FlatMate.Web.Areas.Offers.Controllers
 
             var model = new OfferViewVm();
 
-            var favoriteProductIdsTask = _productApi.GetFavoriteProductIds((Company) companyId.Value);
-            var companyTask = _companyApi.Get(companyId.Value);
-            var marketsTask = _marketApi.SearchMarkets((Company) companyId.Value);
+            var favoriteProductIds = await _productApi.GetFavoriteProductIds((Company) companyId.Value);
+            var (companyResult, company) = await _companyApi.Get(companyId.Value);
+            var markets = await _marketApi.SearchMarkets((Company) companyId.Value);
 
-            var (companyResult, company) = await companyTask;
             if (companyResult.IsError)
             {
                 if (companyResult.ErrorType == ErrorType.NotFound)
@@ -59,13 +58,10 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 return RedirectToActionPreserveMethod("Index");
             }
 
-            var markets = await marketsTask;
             var date = DateTime.Now.DayOfWeek == DayOfWeek.Sunday ? DateTime.Now.AddDays(1) : DateTime.Now;
 
             // kick of tasks
-            var offerPeriodTask = _offerViewApi.GetOffers(companyId.Value, string.Join(",", markets.Select(x => x.Id.Value)), date);
-
-            var (offerPeriodResult, offerViewJso) = await offerPeriodTask;
+            var (offerPeriodResult, offerViewJso) = await _offerViewApi.GetOffers(companyId.Value, string.Join(",", markets.Select(x => x.Id.Value)), date);
             if (offerPeriodResult.IsError)
             {
                 SetTempResult(offerPeriodResult);
@@ -79,7 +75,6 @@ namespace FlatMate.Web.Areas.Offers.Controllers
             model.OfferCount = offerViewJso.Categories.SelectMany(x => x.Products).Count();
             model.Markets = markets;
 
-            var favoriteProductIds = await favoriteProductIdsTask;
             model.FavoriteProducts = offerViewJso.Categories.SelectMany(x => x.Products).Where(x => favoriteProductIds.Contains(x.ProductId));
 
             return View(model);

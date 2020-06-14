@@ -31,12 +31,12 @@ namespace FlatMate.Module.Offers.Tasks
         {
             var date = DateTime.Now.AddMonths(-12).ToString("yyyy-MM-dd");
 
-            var dtos = _context.OldProductDtos.FromSql(@"
+            var dtos = _context.OldProductDtos.FromSqlRaw(@"
 	            SELECT product.Id as ProductId, offer.id as OfferId
 	            FROM Offers.Product product
 	            JOIN Offers.Offer offer on offer.ProductId = product.Id
 	            WHERE
-	                  (SELECT COUNT(*) FROM Offers.Offer WHERE ProductId = product.Id AND [To] > {0}) = 0
+	                  (SELECT COUNT(*) FROM Offers.Offer WHERE ProductId = product.Id AND [To] > ${0}) = 0
 	              AND
 	                  NOT EXISTS (SELECT * FROM Offers.ProductFavorite pf WHERE pf.ProductId = product.Id)
             ", date).AsNoTracking();

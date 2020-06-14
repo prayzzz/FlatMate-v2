@@ -82,14 +82,10 @@ namespace FlatMate.Web.Areas.Offers.Controllers
                 return RedirectToAction("Index");
             }
 
-            var offersTask = _apiController.GetProductOffers(id);
-            var priceHistoryTask = _apiController.GetProductPriceHistory(id);
-            var productFavoritesTask = _apiController.GetFavoriteProductIds(product.CompanyId);
-
             model.Product = product;
-            model.IsFavorite = (await productFavoritesTask).Any(pf => pf == product.Id);
-            model.Offers = (await offersTask).GroupBy(x => x.From).Select(x => x.First()).ToList();
-            model.PriceHistory = (await priceHistoryTask).ToList();
+            model.IsFavorite = (await _apiController.GetFavoriteProductIds(product.CompanyId)).Any(pf => pf == product.Id);
+            model.Offers = (await _apiController.GetProductOffers(id)).GroupBy(x => x.From).Select(x => x.First()).ToList();
+            model.PriceHistory = (await _apiController.GetProductPriceHistory(id)).ToList();
 
             return View(model);
         }

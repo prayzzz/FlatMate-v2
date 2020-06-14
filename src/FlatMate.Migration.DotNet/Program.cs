@@ -25,14 +25,14 @@ namespace FlatMate.Migration.DotNet
             { "--file", "File" }
         };
 
-        private static readonly ILoggerFactory LoggerFactory;
+        private static readonly ILoggerFactory Factory;
         private static readonly ILogger Logger;
         private static CommandLibrary _commandLibrary;
 
         static Program()
         {
-            LoggerFactory = new LoggerFactory().AddConsole();
-            Logger = LoggerFactory.CreateLogger("Migrations");
+            Factory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+            Logger = Factory.CreateLogger("Migrations");
         }
 
         public static void Main(string[] args)
@@ -43,7 +43,7 @@ namespace FlatMate.Migration.DotNet
                 Exit(result);
             }
 
-            _commandLibrary = new CommandLibrary(LoggerFactory, settings);
+            _commandLibrary = new CommandLibrary(Factory, settings);
 
             var checkSettings = CheckSettings(settings);
             if (checkSettings.IsError)

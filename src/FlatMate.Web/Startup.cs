@@ -11,17 +11,17 @@ using FlatMate.Web.Mvc.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using prayzzz.Common;
 using prayzzz.Common.Mapping;
 using prayzzz.Common.Mvc.AppMetrics;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace FlatMate.Web
 {
@@ -52,7 +52,7 @@ namespace FlatMate.Web
 
             app.LogServerAddresses(_logger);
 
-            var env = app.ApplicationServices.GetService<IHostingEnvironment>();
+            var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
             var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
 
             // run migrations
@@ -64,7 +64,6 @@ namespace FlatMate.Web
             if (env.IsDevelopment() || env.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
-
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlatMate API"));
             }
@@ -108,10 +107,12 @@ namespace FlatMate.Web
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             // Framework
-            var mvc = services.AddMvc();
-            mvc.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            mvc.AddMvcOptions(o => o.Filters.Add<ApiResultFilter>());
-            mvc.AddJsonOptions(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));
+            var mvc = services.AddMvc().AddNewtonsoftJson(o => FlatMateSerializerSettings.Apply(o.SerializerSettings));
+            mvc.AddMvcOptions(o =>
+            {
+                o.Filters.Add<ApiResultFilter>();
+                o.EnableEndpointRouting = false;
+            });
             mvc.ConfigureApplicationPartManager(c => Array.ForEach(Modules, m => c.ApplicationParts.Add(m)));
             mvc.AddControllersAsServices();
             mvc.AddPrzMetrics();
@@ -123,7 +124,7 @@ namespace FlatMate.Web
             services.AddOptions();
             services.AddResponseCaching();
             services.AddSession();
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "FlatMate API", Version = "v1" }));
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "FlatMate API", Version = "v1" }));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // FlatMate

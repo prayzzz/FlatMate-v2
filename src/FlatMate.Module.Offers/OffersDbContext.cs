@@ -6,7 +6,6 @@ using FlatMate.Module.Offers.Domain.Companies;
 using FlatMate.Module.Offers.Domain.Markets;
 using FlatMate.Module.Offers.Domain.Offers;
 using FlatMate.Module.Offers.Domain.Products;
-using FlatMate.Module.Offers.Domain.Raw;
 using FlatMate.Module.Offers.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -41,8 +40,6 @@ namespace FlatMate.Module.Offers
         public virtual DbQuery<ProductInfoDto> ProductInfoDtos { get; set; }
 
         public virtual DbSet<Product> Products { get; set; }
-
-        public virtual DbSet<RawOfferData> RawOfferData { get; set; }
 
         public new Result SaveChanges()
         {
