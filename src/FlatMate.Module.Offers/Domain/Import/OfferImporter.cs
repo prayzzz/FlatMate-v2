@@ -156,7 +156,7 @@ namespace FlatMate.Module.Offers.Domain.Import
             public bool Equals(OfferTemp other)
             {
                 return Name.Equals(other.Name, StringComparison.CurrentCultureIgnoreCase)
-                       && SizeInfo.Equals(other.SizeInfo, StringComparison.CurrentCultureIgnoreCase);
+                    && SizeInfo.Equals(other.SizeInfo, StringComparison.CurrentCultureIgnoreCase);
             }
 
             public override int GetHashCode()

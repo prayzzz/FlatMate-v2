@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FlatMate.Module.Common.Tasks;
@@ -31,7 +32,8 @@ namespace FlatMate.Module.Offers.Tasks
         {
             _logger.LogInformation("Starting {taskName}", nameof(ImportOffersTask));
 
-            foreach (var market in await _marketService.SearchMarkets(Company.None))
+            var searchMarkets = (await _marketService.SearchMarkets(Company.None)).ToList();
+            foreach (var market in searchMarkets)
             {
                 try
                 {
